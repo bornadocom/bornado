@@ -1,0 +1,566 @@
+<wpml-config>
+  <elementor-widgets>
+    <!-- Brands Carousel -->
+    <widget name="brands_carousel_short_base">
+      <fields>
+        <field type="Title" editor_type="LINE">title</field>
+      </fields>
+    </widget>
+
+    <!-- Multivendor Products Grid -->
+    <widget name="adforest_multivendor_products_grid">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Button" editor_type="LINE">btn_title</field>
+        <field type="URL" editor_type="LINK">btn_link</field>
+      </fields>
+    </widget>
+
+    <!-- Sign Up -->
+    <widget name="register_user_elementor">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Description" editor_type="AREA">description</field>
+        <field type="Title" editor_type="LINE">section_title_2</field>
+        <field type="Description" editor_type="AREA">description_2</field>
+        <field type="Title" editor_type="LINE">terms_title</field>
+        <field type="URL" editor_type="LINK">terms_link</field>
+        <field type="Button" editor_type="LINE">button_title</field>
+        <field type="URL" editor_type="LINK">button_link</field>
+      </fields>
+    </widget>
+
+    <!-- Sign In -->
+    <widget name="login_user_elementor">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Description" editor_type="AREA">description</field>
+        <field type="Title" editor_type="LINE">section_title_2</field>
+        <field type="Description" editor_type="AREA">description_2</field>
+        <field type="Button" editor_type="LINE">button_title</field>
+        <field type="URL" editor_type="LINK">button_link</field>
+      </fields>
+    </widget>
+
+    <!-- About Us (Modern) -->
+    <widget name="about_us_modern_short_base">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Tagline" editor_type="LINE">section_tagline</field>
+        <field type="Description" editor_type="AREA">section_description</field>
+        <field type="Title" editor_type="LINE">exp_head</field>
+        <field type="Title" editor_type="LINE">exp_desc</field>
+        <field type="Button" editor_type="LINE">btn_text</field>
+        <field type="URL" editor_type="LINK">btn_link</field>
+        <!-- Repeater: features.title -->
+        <field type="Title" editor_type="LINE">title</field>
+      </fields>
+    </widget>
+
+    <!-- About Us (Classic) -->
+    <widget name="about_us_short_base">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Tagline" editor_type="LINE">section_tagline</field>
+        <field type="Description" editor_type="AREA">section_description</field>
+        <field type="Title" editor_type="LINE">exp_head</field>
+        <field type="Title" editor_type="LINE">exp_desc</field>
+        <!-- Repeater: features.small_title, features.small_desc -->
+        <field type="Title" editor_type="LINE">small_title</field>
+        <field type="Description" editor_type="AREA">small_desc</field>
+      </fields>
+    </widget>
+
+    <!-- About Us (Events Experience) -->
+    <widget name="about_us_events_exp_short_base">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Tagline" editor_type="LINE">section_tagline</field>
+        <field type="Description" editor_type="AREA">section_description</field>
+        <field type="Title" editor_type="LINE">exp_head</field>
+        <field type="Title" editor_type="LINE">exp_desc</field>
+        <field type="Button" editor_type="LINE">btn_text</field>
+        <field type="URL" editor_type="LINK">btn_link</field>
+        <!-- Repeater: features.title -->
+        <field type="Title" editor_type="LINE">title</field>
+      </fields>
+    </widget>
+
+    <!-- Contact Us -->
+    <widget name="contact_us_elementor">
+      <fields>
+        <field type="Title" editor_type="LINE">right_title</field>
+        <field type="Description" editor_type="AREA">right_description</field>
+        <field type="Title" editor_type="LINE">left_title_1</field>
+        <field type="Description" editor_type="AREA">left_desc_1</field>
+        <field type="Title" editor_type="LINE">left_title_2</field>
+        <field type="Description" editor_type="AREA">left_desc_2</field>
+        <field type="VISUAL" editor_type="VISUAL">address</field>
+        <field type="VISUAL" editor_type="VISUAL">phone</field>
+        <field type="VISUAL" editor_type="VISUAL">email</field>
+        <!-- Repeater social_icons_list: social_link -->
+        <field type="URL" editor_type="LINK">social_link</field>
+      </fields>
+    </widget>
+
+    <!-- Packages / Pricing -->
+    <widget name="price_modern2_short_base">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Description" editor_type="AREA">section_description</field>
+      </fields>
+    </widget>
+
+    <!-- Workflow -->
+    <widget name="workflow_short_base_func">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Title" editor_type="LINE">section_tagline</field>
+        <field type="Title" editor_type="LINE">workflow_title_1</field>
+        <field type="Title" editor_type="LINE">workflow_tagline_1</field>
+        <field type="Title" editor_type="LINE">workflow_title_2</field>
+        <field type="Title" editor_type="LINE">workflow_tagline_2</field>
+        <field type="Title" editor_type="LINE">workflow_title_3</field>
+        <field type="Title" editor_type="LINE">workflow_tagline_3</field>
+      </fields>
+    </widget>
+
+    <!-- Ad Grid Fancy / Carousels -->
+    <widget name="adforest_ad_grid_fancy">
+      <fields>
+        <field type="Title" editor_type="LINE">title</field>
+        <field type="Description" editor_type="AREA">desc</field>
+      </fields>
+    </widget>
+    <widget name="adforest_ad_grid_carousel_modern">
+      <fields>
+        <field type="Title" editor_type="LINE">title</field>
+        <field type="Description" editor_type="AREA">desc</field>
+        <field type="Button" editor_type="LINE">button_text</field>
+        <field type="URL" editor_type="LINK">button_link</field>
+      </fields>
+    </widget>
+    <widget name="adforest_ad_grid_carousel_fancy">
+      <fields>
+        <field type="Title" editor_type="LINE">title</field>
+        <field type="Description" editor_type="AREA">desc</field>
+        <field type="Button" editor_type="LINE">btn_title</field>
+        <field type="URL" editor_type="LINK">btn_link</field>
+      </fields>
+    </widget>
+
+    <!-- Ads List Modern -->
+    <widget name="ads_list_modern_shortcode">
+      <fields>
+        <field type="Title" editor_type="LINE">title</field>
+        <field type="Description" editor_type="AREA">description</field>
+      </fields>
+    </widget>
+
+    <!-- Ad Locations -->
+    <widget name="ad_locations_shortcode">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Button" editor_type="LINE">section_left_btn_text</field>
+        <field type="URL" editor_type="LINK">section_btn_link</field>
+      </fields>
+    </widget>
+
+    <!-- Ad Post (Modern) -->
+    <widget name="ad_post_short_base">
+      <fields>
+        <field type="Title" editor_type="LINE">form_title</field>
+        <field type="Title" editor_type="LINE">terms_title</field>
+        <field type="URL" editor_type="LINK">terms_link</field>
+      </fields>
+    </widget>
+
+    <!-- Mini Ads & Locations -->
+    <widget name="adforest_mini_ad_and_location">
+      <fields>
+        <field type="Title" editor_type="LINE">main_sec_ad_type_1_title</field>
+        <field type="Button" editor_type="LINE">main_sec_ad_type_1_btn_text</field>
+        <field type="URL" editor_type="LINK">main_sec_ad_type_1_btn_link</field>
+        <field type="Title" editor_type="LINE">main_sec_ad_type_2_title</field>
+        <field type="Button" editor_type="LINE">main_sec_ad_type_2_btn_text</field>
+        <field type="URL" editor_type="LINK">main_sec_ad_type_2_btn_link</field>
+        <field type="Title" editor_type="LINE">location_section_title</field>
+        <field type="Button" editor_type="LINE">location_section_btn_text</field>
+        <field type="URL" editor_type="LINK">location_section_btn_link</field>
+        <field type="Title" editor_type="LINE">right_sec_ad_type_title</field>
+      </fields>
+    </widget>
+
+    <!-- Ads Modern BG -->
+    <widget name="ads_modern_bg_shortcode">
+      <fields>
+        <field type="Title" editor_type="LINE">main_sec_title</field>
+        <field type="Button" editor_type="LINE">main_sec_btn_text</field>
+        <field type="URL" editor_type="LINK">main_sec_btn_link</field>
+      </fields>
+    </widget>
+
+    <!-- Call To Action -->
+    <widget name="adt_call_to_action_shortcode">
+      <fields>
+        <field type="Title" editor_type="LINE">right_title</field>
+        <field type="Description" editor_type="AREA">right_description</field>
+        <field type="Button" editor_type="LINE">right_btn_text</field>
+        <field type="URL" editor_type="LINK">right_btn_link</field>
+        <field type="Title" editor_type="LINE">left_title</field>
+        <field type="Description" editor_type="AREA">left_description</field>
+        <field type="Button" editor_type="LINE">left_btn_text</field>
+        <field type="URL" editor_type="LINK">left_btn_link</field>
+      </fields>
+    </widget>
+
+    <!-- Info Box -->
+    <widget name="adt_info_shortcode">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Description" editor_type="AREA">section_description</field>
+        <field type="Button" editor_type="LINE">section_btn_text</field>
+        <field type="URL" editor_type="LINK">section_btn_link</field>
+      </fields>
+    </widget>
+
+    <!-- Car Dealer Hero -->
+    <widget name="adforest_car_dealer_hero">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Tagline" editor_type="LINE">section_tagline</field>
+        <field type="Title" editor_type="LINE">section_description</field>
+        <field type="Title" editor_type="LINE">search_title_field_label</field>
+      </fields>
+    </widget>
+
+    <!-- Category Based Ads -->
+    <widget name="adforest_category_based_ads">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Button" editor_type="LINE">button_title</field>
+        <field type="URL" editor_type="LINK">button_link</field>
+      </fields>
+    </widget>
+
+    <!-- Category Slider (Types Carousel) -->
+    <widget name="category_carousel">
+      <fields>
+        <field type="Title" editor_type="LINE">title</field>
+      </fields>
+    </widget>
+
+    <!-- Classic Home -->
+    <widget name="classic_home_widget_base">
+      <fields>
+        <field type="Title" editor_type="LINE">filter_text</field>
+        <!-- Repeater: items.* titles per field type -->
+        <field type="Title" editor_type="LINE">ad_title_title</field>
+        <field type="Title" editor_type="LINE">ad_currency_title</field>
+        <field type="Title" editor_type="LINE">radius_search_title</field>
+        <field type="Title" editor_type="LINE">condition_title</field>
+        <field type="Title" editor_type="LINE">ad_locations_title</field>
+        <field type="Title" editor_type="LINE">ad_type_title</field>
+        <field type="Title" editor_type="LINE">warranty_title</field>
+      </fields>
+    </widget>
+
+    <!-- Cyber Sale Hero -->
+    <widget name="adforest_cyber_sale_hero">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Tagline" editor_type="LINE">section_tagline</field>
+        <field type="Title" editor_type="LINE">section_sale_text</field>
+      </fields>
+    </widget>
+
+    <!-- Deals Of The Day -->
+    <widget name="adforest_deals_of_the_day">
+      <fields>
+        <field type="Title" editor_type="LINE">title</field>
+        <field type="Description" editor_type="AREA">description</field>
+        <field type="Button" editor_type="LINE">button_text</field>
+        <field type="URL" editor_type="LINK">button_link</field>
+      </fields>
+    </widget>
+
+    <!-- Directory Hero -->
+    <widget name="adforest_directory_hero">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Tagline" editor_type="LINE">section_tagline</field>
+        <field type="Description" editor_type="AREA">section_description</field>
+        <field type="Title" editor_type="LINE">carousel_cat_title</field>
+      </fields>
+    </widget>
+
+    <!-- Ecommerce Home Hero -->
+    <widget name="ecommerce_home_widget">
+      <fields>
+        <field type="Title" editor_type="LINE">subtitle</field>
+        <field type="Title" editor_type="LINE">title</field>
+        <field type="Button" editor_type="LINE">button_text</field>
+        <field type="URL" editor_type="LINK">button_url</field>
+        <!-- Repeater: categories_list -->
+        <field type="Title" editor_type="LINE">custom_title</field>
+        <field type="Title" editor_type="LINE">custom_count_text</field>
+        <field type="URL" editor_type="LINK">cat_link</field>
+      </fields>
+    </widget>
+
+    <!-- Event Home Hero -->
+    <widget name="adforest_event_home_hero">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Tagline" editor_type="LINE">section_tagline</field>
+        <field type="Description" editor_type="AREA">section_description</field>
+        <field type="URL" editor_type="LINK">video_link</field>
+      </fields>
+    </widget>
+
+    <!-- Event List -->
+    <widget name="adforest_event_list_shortcode">
+      <fields>
+        <field type="Title" editor_type="LINE">main_sec_title</field>
+        <field type="Description" editor_type="AREA">main_sec_description</field>
+        <field type="Button" editor_type="LINE">main_sec_btn_text</field>
+        <field type="URL" editor_type="LINK">main_sec_btn_link</field>
+      </fields>
+    </widget>
+
+    <!-- Events Grid Carousel -->
+    <widget name="adforest_event_grid_carousel">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+      </fields>
+    </widget>
+
+    <!-- Featured Ads -->
+    <widget name="featured_ads">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Button" editor_type="LINE">section_top_btn_text</field>
+        <field type="URL" editor_type="LINK">section_top_btn_link</field>
+        <field type="Button" editor_type="LINE">section_bottom_btn_text</field>
+        <field type="URL" editor_type="LINK">section_bottom_btn_link</field>
+        <field type="Title" editor_type="LINE">left_sec_ads_title</field>
+      </fields>
+    </widget>
+
+    <!-- Flash Sale Widget -->
+    <widget name="adforest_flash_sale_shortcode">
+      <fields>
+        <!-- No human-facing titles beyond images; keep empty on purpose -->
+      </fields>
+    </widget>
+
+    <!-- Frequently Asked Questions -->
+    <widget name="faqs_short_base">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Title" editor_type="LINE">section_tagline</field>
+        <field type="Description" editor_type="AREA">section_description</field>
+        <!-- Repeater: faqs.question, faqs.answer -->
+        <field type="Title" editor_type="LINE">question</field>
+        <field type="Description" editor_type="AREA">answer</field>
+      </fields>
+    </widget>
+
+    <!-- Horizontal Ad (no translatable human text) -->
+    <widget name="adforest_horizontal_ad">
+      <fields></fields>
+    </widget>
+
+    <!-- How It Works Modern -->
+    <widget name="how_it_works_modern_shortcode">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Title" editor_type="LINE">section_tagline</field>
+        <field type="Title" editor_type="LINE">box_title_1</field>
+        <field type="Title" editor_type="LINE">box_tagline_1</field>
+        <field type="Button" editor_type="LINE">box_btn_text_1</field>
+        <field type="URL" editor_type="LINK">box_btn_link_1</field>
+        <field type="Title" editor_type="LINE">box_title_2</field>
+        <field type="Title" editor_type="LINE">box_tagline_2</field>
+        <field type="Button" editor_type="LINE">box_btn_text_2</field>
+        <field type="URL" editor_type="LINK">box_btn_link_2</field>
+      </fields>
+    </widget>
+
+    <!-- Locations Fancy / 2 / Modern -->
+    <widget name="locations_fancy_shortcode">
+      <fields>
+        <field type="Title" editor_type="LINE">main_sec_title</field>
+        <field type="Description" editor_type="AREA">main_sec_desc</field>
+      </fields>
+    </widget>
+    <widget name="locations_fancy_2_shortcode">
+      <fields>
+        <field type="Title" editor_type="LINE">main_sec_title</field>
+      </fields>
+    </widget>
+    <widget name="locations_modern_shortcode">
+      <fields>
+        <field type="Title" editor_type="LINE">main_sec_title</field>
+        <field type="Button" editor_type="LINE">main_sec_btn_text</field>
+        <field type="URL" editor_type="LINK">main_sec_btn_link</field>
+        <field type="Description" editor_type="AREA">top_text</field>
+      </fields>
+    </widget>
+
+    <!-- Main Heroes 1..6 -->
+    <widget name="adforest_main_hero1">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Tagline" editor_type="LINE">section_tagline</field>
+        <field type="Description" editor_type="AREA">section_description</field>
+      </fields>
+    </widget>
+    <widget name="adforest_main_hero2">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Tagline" editor_type="LINE">section_tagline</field>
+        <field type="Title" editor_type="LINE">badge_text_top</field>
+        <field type="Title" editor_type="LINE">badge_text_middle</field>
+        <field type="Title" editor_type="LINE">badge_text_btm</field>
+        <field type="Title" editor_type="LINE">cat_section_title</field>
+        <field type="Title" editor_type="LINE">cat_section_tagline</field>
+      </fields>
+    </widget>
+    <widget name="adforest_main_hero3">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Tagline" editor_type="LINE">section_tagline</field>
+        <field type="Title" editor_type="LINE">secondary_text_1</field>
+        <field type="Title" editor_type="LINE">secondary_text_2</field>
+        <field type="Title" editor_type="LINE">secondary_text_3</field>
+        <field type="Title" editor_type="LINE">search_section_title</field>
+      </fields>
+    </widget>
+    <widget name="adforest_main_hero4">
+      <fields>
+        <field type="Title" editor_type="LINE">featured_ads_title</field>
+        <field type="Button" editor_type="LINE">featured_ads_btn_text</field>
+        <field type="URL" editor_type="LINK">featured_ads_btn_link</field>
+        <field type="Title" editor_type="LINE">regular_ads_title</field>
+        <field type="Button" editor_type="LINE">regular_ads_btn_text</field>
+        <field type="URL" editor_type="LINK">regular_ads_btn_link</field>
+        <field type="Title" editor_type="LINE">search_title</field>
+        <field type="Title" editor_type="LINE">cat_title</field>
+      </fields>
+    </widget>
+    <widget name="adforest_main_hero5">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Tagline" editor_type="LINE">section_tagline</field>
+        <field type="Button" editor_type="LINE">section_btn_text</field>
+        <field type="URL" editor_type="LINK">section_btn_link</field>
+      </fields>
+    </widget>
+    <widget name="adforest_main_hero_6">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Tagline" editor_type="LINE">section_tagline</field>
+        <field type="Title" editor_type="LINE">section_description</field>
+        <field type="URL" editor_type="LINK">video_link</field>
+        <field type="Title" editor_type="LINE">cat_section_title</field>
+      </fields>
+    </widget>
+
+    <!-- Mini Category Slider (Classified) -->
+    <widget name="mini_category_slider">
+      <fields></fields>
+    </widget>
+
+    <!-- Multivendor Mini Category Slider (Woo) -->
+    <widget name="adforest_multivendor_mini_category_slider">
+      <fields></fields>
+    </widget>
+
+    <!-- Multivendor Hero / Carousels / Grids -->
+    <widget name="adforest_multivendor_hero">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Tagline" editor_type="LINE">section_tagline</field>
+        <field type="Button" editor_type="LINE">section_btn_text</field>
+        <field type="URL" editor_type="LINK">section_btn_link</field>
+      </fields>
+    </widget>
+    <widget name="adforest_multivendor_product_carousel">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Button" editor_type="LINE">btn_title</field>
+        <field type="URL" editor_type="LINK">btn_link</field>
+      </fields>
+    </widget>
+    <widget name="adforest_multivendor_product_carousel_w_ads">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Button" editor_type="LINE">section_btn_title</field>
+        <field type="URL" editor_type="LINK">section_btn_link</field>
+      </fields>
+    </widget>
+    <widget name="adforest_multivendor_product_categories">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Button" editor_type="LINE">btn_title</field>
+        <field type="URL" editor_type="LINK">btn_link</field>
+      </fields>
+    </widget>
+    <widget name="adforest_multivendor_product_w_sidebar">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Title" editor_type="LINE">sidebar_title</field>
+        <field type="Button" editor_type="LINE">button_text</field>
+        <field type="URL" editor_type="LINK">btn_link</field>
+      </fields>
+    </widget>
+
+    <!-- Our Articles -->
+    <widget name="our_articles_shortcode">
+      <fields>
+        <field type="Title" editor_type="LINE">main_sec_title</field>
+        <field type="Description" editor_type="AREA">main_sec_description</field>
+      </fields>
+    </widget>
+
+    <!-- Recent Ads -->
+    <widget name="recent_ads_shortcode">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Button" editor_type="LINE">btn_title</field>
+        <field type="URL" editor_type="LINK">btn_link</field>
+        <field type="Title" editor_type="LINE">left_sec_ads_title</field>
+      </fields>
+    </widget>
+
+    <!-- Real Estate Hero -->
+    <widget name="adforest_real_estate_hero">
+      <fields>
+        <field type="Title" editor_type="LINE">section_title</field>
+        <field type="Tagline" editor_type="LINE">section_tagline</field>
+        <field type="Title" editor_type="LINE">section_description</field>
+      </fields>
+    </widget>
+
+    <!-- Partners Slider (no text) -->
+    <widget name="client_partner_classic_short_base"><fields></fields></widget>
+
+    <!-- Category Slider Title -->
+    <widget name="category_carousel">
+      <fields>
+        <field type="Title" editor_type="LINE">title</field>
+      </fields>
+    </widget>
+  </elementor-widgets>
+
+  <custom-types>
+    <custom-type translate="1">ad_post</custom-type>
+    <custom-type translate="1">product</custom-type>
+  </custom-types>
+  <taxonomies>
+    <taxonomy translate="1">ad_cats</taxonomy>
+    <taxonomy translate="1">product_cat</taxonomy>
+    <taxonomy translate="1">product_type</taxonomy>
+  </taxonomies>
+</wpml-config>

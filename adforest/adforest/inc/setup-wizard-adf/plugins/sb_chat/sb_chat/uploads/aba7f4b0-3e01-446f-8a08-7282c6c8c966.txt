@@ -1,0 +1,17 @@
+1 - Ad post page.
+https://prnt.sc/_bEX3dvKSS_e
+https://prnt.sc/_mCHwf8ZV9yx
+
+2 - Ad Approval is set to "Auto Approve" but after posting an ad it's goes to admin approval.
+
+Please watch the video.
+
+https://app.screencast.com/43HhRdDNnVakR
+
+3 - At the time of registration, we've assigned three simple ads and one featured ad. After posting one simple Ad I've purchased a package that have thirty featured ads but at the time of ads posting the featured ad posting optoins doesn't show.
+
+For refference watch the above vide.
+
+4 - All the posted ads showing in the recently viewed section. (Profile page) not the recently viewd ads.
+
+5 - When the user have valid free package the purchased packages doesn't show while posting ad.

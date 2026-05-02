@@ -1,0 +1,39 @@
+.rtl .message-area .chatlist {
+	float: right;
+}
+.rtl .sb-avatar {
+	padding-right: 0;
+	padding-left: 10px;
+}
+.rtl .chatbox {
+	border-left: 0;
+	border-right: 1px solid #eee;
+}
+.rtl .msg-body ul li.sender {
+	text-align: right;
+}
+.rtl .msg-body ul li.sender::before {
+	left: unset;
+	right: -7px;
+	-webkit-transform: rotate(-37deg);
+  	-ms-transform: rotate(-37deg);
+  	transform: rotate(-80deg);
+}
+.rtl .msg-body ul li.sender p {
+	border-top-left-radius: 10px;
+	border-top-right-radius: 0;
+}
+.rtl .msg-body ul li.reply {
+	text-align: left;
+}
+.rtl .msg-body ul li.reply::before {
+	right: unset;
+	left: -7px;
+	-webkit-transform: rotate(37deg);
+  	-ms-transform: rotate(3deg);
+  	transform: rotate(80deg);
+}
+.rtl .msg-body ul li.reply p {
+	border-top-right-radius: 10px;
+	border-top-left-radius: 0;
+}

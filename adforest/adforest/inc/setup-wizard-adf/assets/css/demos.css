@@ -1,0 +1,385 @@
+/* File: assets/css/demos.css — Modern Design */
+
+:root {
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --card-radius: 16px;
+  --primary: #000;
+  --primary-hover: #e6002a;
+  --primary-light: #ffe6ea;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --bg-muted: #f8fafc;
+  --bg-gradient: linear-gradient(135deg, #000 0%, #000 100%);
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --transition-speed: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Demo Header */
+.demo-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: var(--bg-panel);
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+}
+
+.demo-header h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  color: var(--text);
+  /* background: var(--bg-gradient); */
+  /* -webkit-background-clip: text; */
+  /* -webkit-text-fill-color: transparent; */
+  background-clip: text;
+}
+
+.demo-header p {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin: 0.5rem 0;
+}
+
+/* Grid Layout */
+.demo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Modern Demo Card */
+.demo-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  padding: 1.5rem;
+  position: relative;
+  transition: all var(--transition-speed);
+  outline-offset: 2px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.demo-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-gradient);
+  opacity: 0;
+  transition: opacity var(--transition-speed);
+  z-index: -1;
+}
+
+.demo-card:hover,
+.demo-card:focus-within {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary);
+}
+
+.demo-card:hover::before {
+  opacity: 0.05;
+}
+
+.demo-card.imported {
+  border-color: var(--success);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, var(--card-bg) 100%);
+}
+
+.demo-card.is-locked {
+  opacity: 0.6;
+  pointer-events: none;
+  filter: grayscale(50%);
+}
+
+/* Modern Badge */
+.demo-card .badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: var(--bg-gradient);
+  color: #fff;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  border-radius: 20px;
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+  z-index: 2;
+}
+
+/* Thumbnail */
+.demo-thumb {
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+.demo-thumb img {
+  max-width: 100%;
+  border-radius: 4px;
+}
+.demo-placeholder {
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-muted);
+  border-radius: 4px;
+  color: var(--text-muted);
+}
+
+/* Modern Title */
+.demo-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+/* Modern Button Styles for Demo Import */
+.sb-btn, .button-primary, .button-secondary, .button-secondary1 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--card-radius);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  min-width: 120px;
+}
+
+.sb-btn::before, .button-primary::before, .button-secondary::before, .button-secondary1::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.sb-btn:hover::before, .button-primary:hover::before, .button-secondary:hover::before, .button-secondary1:hover::before {
+  left: 100%;
+}
+
+.sb-btn-primary, .button-primary {
+  background: var(--bg-gradient);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+.sb-btn-primary:hover:not(:disabled), .button-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.sb-btn-secondary, .button-secondary, .button-secondary1 {
+  background: var(--bg-panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.sb-btn-secondary:hover:not(:disabled), .button-secondary:hover:not(:disabled), .button-secondary1:hover:not(:disabled) {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.sb-btn:disabled, .button-primary:disabled, .button-secondary:disabled, .button-secondary1:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Actions */
+.actions {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.actions .sb-btn, .actions .button-primary, .actions .button-secondary {
+  position: relative;
+}
+.actions .sb-btn .spinner, .actions .button-primary .spinner, .actions .button-secondary .spinner {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  width: 1rem;
+  height: 1rem;
+  margin-top: -0.5rem;
+  border: 2px solid transparent;
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Confirmation & Import UI */
+.demo-card.is-confirming .import-confirmation,
+.demo-card.is-importing .import-ui {
+  display: block;
+  animation: fadeIn var(--transition-speed) ease;
+}
+.import-confirmation,
+.import-ui {
+  display: none;
+  background: var(--bg-muted);
+  border-top: 1px solid var(--card-border);
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 0 0 var(--card-radius) var(--card-radius);
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Fieldsets */
+.import-mode-fieldset,
+.parts-fieldset {
+  margin-bottom: 1rem;
+}
+.import-mode-fieldset legend,
+.parts-fieldset legend {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.import-mode-fieldset label,
+.parts-fieldset label {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.import-mode-fieldset input,
+.parts-fieldset input {
+  margin-right: 0.5rem;
+}
+
+/* Import Controls */
+.import-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.import-controls .sb-btn, .import-controls .button-primary, .import-controls .button-secondary {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+}
+
+/* Progress & Logs */
+.progress-container {
+  background: var(--bg-muted);
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+.progress-bar {
+  width: 0;
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.3s ease;
+}
+.import-status {
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  min-height: 1.2em;
+}
+.import-log {
+  background: var(--bg-muted);
+  padding: 0.5rem;
+  height: 8rem;
+  overflow: auto;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  white-space: pre-wrap;
+}
+
+/* Navigation */
+.sb-demo-importer-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--bg-panel);
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+}
+
+.sb-demo-importer-nav .sb-btn, .sb-demo-importer-nav .button-primary, .sb-demo-importer-nav .button-secondary, .sb-demo-importer-nav .button-secondary1 {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+}
+
+.sb-demo-importer-nav .sb-btn-continue, .sb-demo-importer-nav #demo-next {
+  margin-left: auto;
+}
+
+/* Modern Reset Button */
+#reset-demo {
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--card-radius);
+  transition: all var(--transition-speed);
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#reset-demo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+#reset-demo:hover::before {
+  left: 100%;
+}
+
+#reset-demo:hover {
+  background: var(--danger-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+

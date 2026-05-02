@@ -1,0 +1,694 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: SB Chat\n"
+"POT-Creation-Date: 2025-09-25 16:28+0500\n"
+"PO-Revision-Date: 2025-09-25 16:29+0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.3\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: sbchat.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+
+#: admin/templates/conversations.php:52
+msgid "SbChat Conversations"
+msgstr "البحث في المحادثة"
+
+#: admin/templates/conversations.php:81
+msgid "Select a user..."
+msgstr "حدد للمستخدم الذي تريد إضافة المبلغ إليه"
+
+#: admin/templates/conversations.php:93
+msgid "Search"
+msgstr "بحث"
+
+#: admin/templates/conversations.php:110 includes/page-template/index.php:17
+msgid "All Conversations"
+msgstr "جميع المواقع"
+
+#: admin/templates/conversations.php:146 includes/page-template/index.php:80
+#: includes/page-template/index.php:150 includes/utilities.php:1019
+#: includes/utilities.php:1046
+msgid "User has been removed"
+msgstr "تمت الموافقة على تذكرتك"
+
+#: admin/templates/conversations.php:193
+msgid "Please select a user to view their conversations."
+msgstr "يرجى تحديد مستخدم واحد على الأقل."
+
+#: admin/templates/conversations.php:195
+msgid "No conversations found for this user."
+msgstr "جميع الوصفات الطبية"
+
+#: admin/templates/conversations.php:228
+msgid "Select a conversation to view messages."
+msgstr "حدد محادثة لعرض الرسائل."
+
+#: admin/templates/conversations.php:230
+msgid "No conversation found."
+msgstr "حقل الموقع مطلوب"
+
+#: admin/templates/conversations.php:251
+msgid "User has been deleted"
+msgstr "تمت الموافقة على تذكرتك"
+
+#: admin/templates/conversations.php:278
+msgid "Are You Sure?"
+msgstr "هل أنت متأكد؟"
+
+#: admin/templates/conversations.php:281 api/chat-api.php:45
+#: api/chat-api.php:547 includes/page-template/index.php:169
+#: includes/utilities.php:1103
+msgid "Delete"
+msgstr "حذف"
+
+#: admin/templates/conversations.php:284 includes/page-template/index.php:170
+msgid "Conversation is removed"
+msgstr "حقل الموقع مطلوب"
+
+#: api/chat-api.php:35
+msgid "User ID is required"
+msgstr "مطلوب معرف المستخدم"
+
+#: api/chat-api.php:42
+msgid "All Chats"
+msgstr "گشت بابه‌ته‌كان"
+
+#: api/chat-api.php:43
+msgid "Search a chat"
+msgstr "البحث في دردشة"
+
+#: api/chat-api.php:44
+msgid "No chat Found!"
+msgstr "لم يتمّ إيجاد محادثات حتى الآن"
+
+#: api/chat-api.php:46 api/chat-api.php:534
+msgid "Offline"
+msgstr "غير متصل"
+
+#: api/chat-api.php:47 api/chat-api.php:532
+msgid "Online"
+msgstr "متصل"
+
+#: api/chat-api.php:48 api/chat-api.php:536
+msgid "Allowed File Types are"
+msgstr "أنواع MIME المسموح بها"
+
+#: api/chat-api.php:49 api/chat-api.php:537
+msgid "Image"
+msgstr "صورة"
+
+#: api/chat-api.php:50 api/chat-api.php:538
+msgid "Files"
+msgstr "الملفات"
+
+#: api/chat-api.php:51
+msgid "Please enter a message"
+msgstr "الرجاء إدخال رسالتك."
+
+#: api/chat-api.php:52
+msgid "File downloaded"
+msgstr "تم تنزيل الملف"
+
+#: api/chat-api.php:53
+msgid "Type a message..."
+msgstr "اكتب مراجعتك ..."
+
+#: api/chat-api.php:54 api/chat-api.php:539
+msgid ""
+"jpg, jpeg, png, bmp, gif, webp, pdf, txt, doc, docx, xls, xlxs, ppt, pptx"
+msgstr ""
+"JPG و JPEG و PNG و BMP و GIF و WebP و PDF و TXT و DOC و DOCX و XLS و XLXS و "
+"PPT و PPTX"
+
+#: api/chat-api.php:105 api/chat-api.php:337
+msgid "Removed User"
+msgstr "تمت إزالة المستخدم"
+
+#: api/chat-api.php:112 api/chat-api.php:1260
+msgid "ago"
+msgstr "منذ"
+
+#: api/chat-api.php:299
+msgid "Invalid conversation ID or user not authenticated"
+msgstr "معرف المحادثة غير صالح أو المستخدم غير مصادق عليه"
+
+#: api/chat-api.php:305 api/chat-api.php:314 api/chat-api.php:318
+msgid "Conversation not found"
+msgstr "حقل الموقع مطلوب"
+
+#: api/chat-api.php:309
+msgid "You do not have access to this conversation"
+msgstr "لا يمكنك الوصول إلى هذه المحادثة"
+
+#: api/chat-api.php:533 api/chat-api.php:797 includes/utilities.php:290
+msgid "View Post"
+msgstr "عرض المقالة"
+
+#: api/chat-api.php:535
+msgid "Gallery"
+msgstr "المعرض"
+
+#: api/chat-api.php:543
+msgid "Type a message"
+msgstr "اكتب رسالة هنا ..."
+
+#: api/chat-api.php:544
+msgid "Maximum upload size"
+msgstr "الحد الأقصى لحجم التحميل"
+
+#: api/chat-api.php:545
+msgid "Delete Chat"
+msgstr "حذف"
+
+#: api/chat-api.php:546
+msgid "Are you sure you want to delete this chat?"
+msgstr "هل أنت متأكد أنك تريد حذف هذا؟"
+
+#: api/chat-api.php:548
+msgid "Cancel"
+msgstr "إلغاء"
+
+#: api/chat-api.php:586
+msgid "Invalid conversation ID or not authenticated."
+msgstr "معرف المحادثة غير صالح أو غير مصادق عليه."
+
+#: api/chat-api.php:597
+msgid "Conversation not found."
+msgstr "حقل الموقع مطلوب"
+
+#: api/chat-api.php:601
+msgid "You are not part of this conversation."
+msgstr "أنت لست جزء من هذة المحادثة."
+
+#: api/chat-api.php:637
+msgid "Failed to delete conversation."
+msgstr "فشل حذف المحادثة."
+
+#: api/chat-api.php:672
+msgid "Conversation permanently deleted."
+msgstr "تنبيه: سيتم حذف حسابك بشكل دائم؟"
+
+#: api/chat-api.php:673
+msgid "Conversation deleted for you."
+msgstr "تم حذف المحادثة"
+
+#: api/chat-api.php:680
+msgid "Database error occurred while deleting conversation."
+msgstr "حدث خطأ في قاعدة البيانات أثناء حذف المحادثة."
+
+#: api/chat-api.php:700
+msgid "Unauthorized. Please log in."
+msgstr "غير المصرح به. يرجى تسجيل الدخول."
+
+#: api/chat-api.php:720
+msgid "Recipient is required."
+msgstr "المستلم مطلوب."
+
+#: api/chat-api.php:727
+msgid "You cannot send a message to yourself."
+msgstr "لا يمكنك إرسال رسالة إلى نفسك!"
+
+#: api/chat-api.php:734
+msgid "You are blocked from messaging."
+msgstr "تم حظرك من المراسلة."
+
+#: api/chat-api.php:742
+msgid "Message content or files are required."
+msgstr "محتوى الرسالة أو الملفات مطلوبة."
+
+#: api/chat-api.php:751 api/chat-api.php:987
+msgid "File attachment"
+msgstr "ملف مرفق"
+
+#: api/chat-api.php:757
+msgid "Conversation ID is required when not starting a new one."
+msgstr "معرف المحادثة مطلوب عند عدم بدء معرف محادثة جديد."
+
+#: api/chat-api.php:776
+msgid "Conversation does not exist or you are not a participant."
+msgstr "المحادثة غير موجودة أو أنك لست مشاركا."
+
+#: api/chat-api.php:824
+#, php-format
+msgid "Only %d files can be uploaded at a time."
+msgstr "يمكن تحميل ملفات %d فقط في المرة الواحدة."
+
+#: api/chat-api.php:959
+msgid "Invalid character encoding in message."
+msgstr "ترميز أحرف غير صالح في الرسالة."
+
+#: api/chat-api.php:974
+msgid "Emojis are not supported. Please use text only."
+msgstr "الرموز التعبيرية غير مدعومة. يرجى استخدام النص فقط."
+
+#: api/chat-api.php:989
+msgid "Shared a post"
+msgstr "شارك مشاركة"
+
+#: api/chat-api.php:1012
+msgid "Message sent successfully."
+msgstr "تم إرسال الرسالة بنجاح."
+
+#: api/chat-api.php:1034
+msgid "Character encoding error. Emojis may not be supported."
+msgstr "خطأ في ترميز الأحرف. قد لا تكون الرموز التعبيرية مدعومة."
+
+#: api/chat-api.php:1040 api/chat-api.php:1046
+msgid "Failed to send message."
+msgstr "فشل في إرسال الرسالة."
+
+#: api/chat-api.php:1126
+msgid "Could not upload the image!"
+msgstr "تعذر تحميل الصورة!"
+
+#: api/chat-api.php:1145 api/chat-api.php:1167
+msgid "KB"
+msgstr "كيلوبايت"
+
+#: api/chat-api.php:1146 api/chat-api.php:1168
+msgid "Uploaded"
+msgstr "تم الرفع بنجاح "
+
+#: api/chat-api.php:1175
+msgid "Failed to upload file!"
+msgstr "فشل تحميل الملف!"
+
+#: api/chat-api.php:1209
+msgid "User not authenticated"
+msgstr "لم تتم مصادقة المستخدم"
+
+#: api/chat-api.php:1213
+msgid "Invalid recipient ID"
+msgstr "مفتاح الاعلان غير صحيح"
+
+#: api/chat-api.php:1217
+msgid "Cannot check conversation with yourself"
+msgstr "لا يمكنك التحقق من المحادثة مع نفسك"
+
+#: api/chat-api.php:1222
+msgid "Recipient user not found"
+msgstr "لم يتم العثور على المستخدم المستلم"
+
+#: api/sb_chat_basic_auth.php:8
+msgid "Missing authorization headers"
+msgstr "رؤوس التفويض المفقودة"
+
+#: api/sb_chat_basic_auth.php:17
+msgid "Invalid credentials"
+msgstr "بيانات الاعتماد غير صحيحة"
+
+#: helpers/date_time.php:40
+msgid "second"
+msgstr "ثانية"
+
+#: helpers/date_time.php:41
+msgid "minute"
+msgstr "دقيقة"
+
+#: helpers/date_time.php:42
+msgid "hour"
+msgstr "ساعة"
+
+#: helpers/date_time.php:43
+msgid "day"
+msgstr "يوم"
+
+#: helpers/date_time.php:44
+msgid "month"
+msgstr "شهر"
+
+#: helpers/date_time.php:45
+msgid "year"
+msgstr "سنة"
+
+#: helpers/date_time.php:58
+msgid " ago"
+msgstr "منذ"
+
+#: helpers/date_time.php:62
+msgid "s ago"
+msgstr "%s منذ"
+
+#: includes/page-template/index.php:127
+msgid "No Message found."
+msgstr "لم يتم العثور علي الصورة"
+
+#: includes/page-template/index.php:169 includes/utilities.php:1103
+msgid "Are you sure you want to remove this?"
+msgstr "هل أنت متأكد أنك تريد القيام بهذا؟"
+
+#: includes/page-template/index.php:195 includes/utilities.php:1118
+msgid "Add Attachments"
+msgstr "المرفقات التي تم تحميلها"
+
+#: includes/sb-chat-temp-class.php:21
+msgid "SB Chat Dashboard"
+msgstr "SB الدردشة"
+
+#: includes/settings.php:88
+msgid "Settings"
+msgstr "الإعدادات"
+
+#: includes/settings.php:145
+msgid "Basic Settings"
+msgstr "الإعدادات الأساسية"
+
+#: includes/settings.php:146
+msgid "Here you can customize your chat settings."
+msgstr "هنا يمكنك تخصيص إعدادات الدردشة الخاصة بك."
+
+#: includes/settings.php:150
+msgid "SbChat"
+msgstr "سبتشات"
+
+#: includes/settings.php:151
+msgid "Use these options to completely stop/start the chat."
+msgstr "استخدم هذه الخيارات لإيقاف / بدء الدردشة تماما."
+
+#: includes/settings.php:154 includes/settings.php:165
+#: includes/settings.php:184
+msgid "Disable"
+msgstr "تعطيل"
+
+#: includes/settings.php:155 includes/settings.php:166
+#: includes/settings.php:185
+msgid "Enable"
+msgstr "تفعيل"
+
+#: includes/settings.php:161 includes/settings.php:245
+msgid "Notifications"
+msgstr "الإشعارات"
+
+#: includes/settings.php:162
+msgid "Turn On messages notifications."
+msgstr "فعل إشعارات الرسائل."
+
+#: includes/settings.php:172
+msgid "Notification time to refresh"
+msgstr "وقت الإشعار للتحديث"
+
+#: includes/settings.php:173
+msgid "Time should be in Seconds. 1 Minute = 60 Seconds. Minimum 5sec"
+msgstr "يجب أن يكون الوقت بالثواني. 1 دقيقة = 60 ثانية. الحد الأدنى 5 ثوان"
+
+#: includes/settings.php:176
+msgid "5"
+msgstr "الشبكة 5"
+
+#: includes/settings.php:180
+msgid "Bad Words Filter"
+msgstr "تصفيه الكلمات السيئة"
+
+#: includes/settings.php:181
+msgid "Use these options to enable or disable bad words filters."
+msgstr "استخدم هذه الخيارات لتمكين عوامل تصفية الكلمات السيئة أو تعطيلها."
+
+#: includes/settings.php:193
+msgid "Bad Words"
+msgstr "كلمات سيئة"
+
+#: includes/settings.php:195
+msgid "comma separated"
+msgstr "مفصوله بفاصله"
+
+#: includes/settings.php:196
+msgid "word1,word2"
+msgstr "word1, word2"
+
+#: includes/settings.php:197
+msgid ""
+"These words will be removed from all Titles and Descriptions. Please be "
+"carefull while adding words. if you enter space here then it will remove "
+"space between works with provided word as well."
+msgstr ""
+"ستتم إزالة هذه الكلمات من جميع العناوين والأوصاف. يرجى توخي الحذر أثناء "
+"إضافة الكلمات. إذا قمت بإدخال مساحة هنا ، فسيزيل المسافة بين الأعمال التي "
+"تحتوي على الكلمة المقدمة أيضا."
+
+#: includes/settings.php:205 includes/settings.php:207
+msgid "Bad Words Replace Word"
+msgstr "كلمات سيئة تستبدل الكلمة"
+
+#: includes/settings.php:208
+msgid ""
+"This words will be replace with above bad words list from AD Title and "
+"Description"
+msgstr ""
+"سيتم استبدال هذه الكلمات مع قائمه الكلمات السيئة أعلاه من عنوان الإعلان "
+"والوصف"
+
+#: includes/settings.php:215
+msgid "Dashboard Page"
+msgstr "صفحة لوحة تحكم"
+
+#: includes/settings.php:216
+msgid "Select the dashboard page for chat messenger."
+msgstr "حدد ارتباطات الصفحة للوحة معلومات المورد"
+
+#: includes/settings.php:223
+msgid "Allowed MIME Types"
+msgstr "أنواع MIME المسموح بها"
+
+#: includes/settings.php:224
+msgid "Restrict file uploads to only specific file extensions."
+msgstr "قصر عمليات تحميل الملفات على امتدادات ملفات محددة فقط."
+
+#: includes/settings.php:231
+msgid "Max. Files Upload"
+msgstr "إسقاط الملفات هنا للتحميل"
+
+#: includes/settings.php:237
+msgid "Max. File Upload Size (in KBs)"
+msgstr "الحد الأقصى للرفع"
+
+#: includes/settings.php:246
+msgid "Turn on notifications for email."
+msgstr "تشغيل إشعارات Exertio"
+
+#: includes/settings.php:250
+msgid "Send Unread Notifications"
+msgstr "إرسال إشعارات غير مقروءة"
+
+#: includes/settings.php:251
+msgid ""
+"Notifications for unread messages will be sent to users after every 'x' "
+"hours. For better performance, avoid any value less than 6."
+msgstr ""
+"سيتم إرسال إشعارات للرسائل غير المقروءة إلى المستخدمين بعد كل ساعة \"x\". "
+"للحصول على أداء أفضل ، تجنب أي قيمة أقل من 6."
+
+#: includes/settings.php:254
+msgid "e.g. 6 hours"
+msgstr "على سبيل المثال 6 ساعات"
+
+#: includes/settings.php:258
+msgid "Unread Messages Email Template"
+msgstr "قالب البريد الإلكتروني للرسائل غير المقروءة"
+
+#: includes/settings.php:574
+msgid "SbChat Settings"
+msgstr "إعدادات SbChat"
+
+#: includes/settings.php:575
+msgid ""
+"Sb Chat is a WordPress plugin based on Ajax Chat system where buyers and "
+"seller can communicate with each other."
+msgstr ""
+"Sb Chat هو مكون إضافي ل WordPress يعتمد على نظام Ajax Chat حيث يمكن للمشترين "
+"والبائع التواصل مع بعضهم البعض."
+
+#: includes/utilities.php:138
+msgid "Please log in first to Send Message"
+msgstr "يرجى تسجيل الدخول أولا إلى إرسال رسالة"
+
+#: includes/utilities.php:144
+msgid "You can not send message to yourself!"
+msgstr "لا يمكنك إرسال رسالة إلى نفسك!"
+
+#: includes/utilities.php:193
+msgid "Send message to "
+msgstr "إرسال رسالة إلى "
+
+#: includes/utilities.php:195
+msgid "Write message here"
+msgstr "اكتب رسالة هنا"
+
+#: includes/utilities.php:199
+msgid "Send Message"
+msgstr "إرسال رسالة"
+
+#: includes/utilities.php:244
+msgid "You must be logged in to send this message!"
+msgstr "يجب عليك تسجيل الدخول لإرسال هذه الرسالة!"
+
+#: includes/utilities.php:252
+msgid "Conversation is flawed. No known recipient found!"
+msgstr "المحادثة معيبة. لم يتم العثور على مستلم معروف!"
+
+#: includes/utilities.php:256
+msgid "Sorry you can not send message , please contact site admin"
+msgstr "عذرا لا يمكنك إرسال رسالة ، يرجى الاتصال بمسؤول الموقع"
+
+#: includes/utilities.php:282 sbchat.php:94 sbchat.php:118
+msgid "Related post"
+msgstr "مقالات ذات صلة"
+
+#: includes/utilities.php:656
+msgid "Message sent successfully!"
+msgstr "تم إرسال الرسالة بنجاح!"
+
+#: includes/utilities.php:1142
+msgid "No Messages Found"
+msgstr "لم يتم العثور على رسائل"
+
+#: includes/utilities.php:1155
+msgid "Conversation is deleted"
+msgstr "تم حذف المحادثة"
+
+#: includes/utilities.php:1215
+msgid ""
+"Sorry, only JPG, JPEG, PNG, docx, pptx, xlsx, pdf and zip files are allowed."
+msgstr "عذرا، يسمح فقط بملفات JPG وJPEG وPNG وDOCX وPPTX وXLSX وPDF وZIP."
+
+#: includes/utilities.php:1221
+msgid "Max allowd attachment size is "
+msgstr "الحد الأقصى المسموح به لحجم المرفق هو "
+
+#: includes/utilities.php:1240
+msgid "Attachments uploaded"
+msgstr "المرفقات التي تم تحميلها"
+
+#: includes/utilities.php:1253
+msgid "Attachment deleted"
+msgstr "تم حذف المرفق"
+
+#: includes/utilities.php:1256
+msgid "Error!!! attachment is not deleted"
+msgstr "خطأ!!! لا يتم حذف المرفق"
+
+#: models/conversations.php:38
+msgid " Join Zoom Meeting "
+msgstr " انضم إلى اجتماع Zoom "
+
+#: models/crons.php:8
+msgid "SBChat Cron Duration"
+msgstr "المدة: "
+
+#: models/crons.php:107
+#, php-format
+msgid "You have %d unread messages."
+msgstr "لديك %d رسائل غير مقروءة."
+
+#: models/crons.php:119
+msgid "Unread Message Notification"
+msgstr "إشعار برسالة غير مقروءة"
+
+#. translators: %s: sender's full name
+#: models/crons.php:87
+msgid "%s has sent you a new message."
+msgstr "%s أرسل لك رسالة جديدة."
+
+#: models/users.php:5
+msgid "The request sent is invalid."
+msgstr "الطلب المرسل غير صالح."
+
+#: models/users.php:8
+msgid "No search term provided."
+msgstr "لم يتم توفير مصطلح بحث."
+
+#: models/users.php:42
+msgid "No users found."
+msgstr "لا يوجد أعضاء."
+
+#: sbchat.php:215
+msgid "No plugins found for the current installation."
+msgstr "لم يتم العثور على مكونات إضافية للتثبيت الحالي."
+
+#: sbchat.php:221
+msgid "No active plugins found for the current installation."
+msgstr "لم يتم العثور على مكونات إضافية نشطة للتثبيت الحالي."
+
+#: sbchat.php:229
+msgid "SBChat plugin is installed and active."
+msgstr "تم تثبيت البرنامج المساعد SBChat ونشط."
+
+#: sbchat.php:235
+msgid ""
+"SBChat plugin is not installed or inactive on the current installation. "
+"Kindly, install or activate it to procees further."
+msgstr ""
+"لم يتم تثبيت المكون الإضافي SBChat أو غير نشط على التثبيت الحالي. يرجى "
+"تثبيته أو تنشيطه لمزيد من العمليات."
+
+#: sbchat.php:250
+msgid ""
+"Your account has been blocked by  admin. Please contact site admin for "
+"assistance."
+msgstr ""
+"تم حظر حسابك من قبل المسؤول. يرجى الاتصال بمسؤول الموقع للحصول على المساعدة."
+
+#: sbchat.php:257
+msgid "Block User"
+msgstr ""
+"كتلة المستخدم باستخدام البريد الإلكتروني مع عدد كبير جداً من الأحرف الكبيرة"
+
+#: sbchat.php:260
+msgid "Is User Blocked? This will block the user to send message"
+msgstr "هل تم حظر المستخدم؟ سيؤدي هذا إلى حظر المستخدم من إرسال رسالة"
+
+#: sbchat.php:263
+msgid "No"
+msgstr "لا"
+
+#: sbchat.php:264
+msgid "Yes"
+msgstr "نعم"
+
+#. Plugin Name of the plugin/theme
+msgid "SB Chat"
+msgstr "SB الدردشة"
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "https://themeforest.net/user/scriptsbundle/"
+msgstr "https://themeforest.net/user/scriptsbundle/"
+
+#. Description of the plugin/theme
+msgid ""
+"SB Chat is a WordPress plugin based on Ajax based Chat system where buyers "
+"and seller can communicate with each other."
+msgstr ""
+"SB Chat هو مكون إضافي ل WordPress يعتمد على نظام الدردشة المستند إلى Ajax "
+"حيث يمكن للمشترين والبائع التواصل مع بعضهم البعض."
+
+#. Author of the plugin/theme
+msgid "Scripts Bundle"
+msgstr "حزمه مخطوطات"
+
+#~ msgid "Unblock"
+#~ msgstr "فك الحظر"
+
+#~ msgid "Block"
+#~ msgstr "حظر"
+
+#~ msgid "All Conversation"
+#~ msgstr "كل المحادثات"
+
+#~ msgid "Conversation deleted successfully."
+#~ msgstr "تم حذف المحادثة"
+
+#~ msgid "Message cannot be empty!"
+#~ msgstr "لا يمكن أن تكون الرسالة فارغة!"

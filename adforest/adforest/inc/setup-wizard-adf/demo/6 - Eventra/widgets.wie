@@ -1,0 +1,47 @@
+[
+    {
+        "sidebar": "adforest_theme_sidebar",
+        "widget_id": "block-2",
+        "widget_type": "block",
+        "widget_num": "2",
+        "settings": {
+            "content": "<!-- wp:search \/-->"
+        }
+    },
+    {
+        "sidebar": "adforest_theme_sidebar",
+        "widget_id": "block-3",
+        "widget_type": "block",
+        "widget_num": "3",
+        "settings": {
+            "content": "<!-- wp:group --><div class=\"wp-block-group\"><!-- wp:heading --><h2>Recent Posts<\/h2><!-- \/wp:heading --><!-- wp:latest-posts \/--><\/div><!-- \/wp:group -->"
+        }
+    },
+    {
+        "sidebar": "adforest_theme_sidebar",
+        "widget_id": "block-4",
+        "widget_type": "block",
+        "widget_num": "4",
+        "settings": {
+            "content": "<!-- wp:group --><div class=\"wp-block-group\"><!-- wp:heading --><h2>Recent Comments<\/h2><!-- \/wp:heading --><!-- wp:latest-comments {\"displayAvatar\":false,\"displayDate\":false,\"displayExcerpt\":false} \/--><\/div><!-- \/wp:group -->"
+        }
+    },
+    {
+        "sidebar": "sb_themes_grid_sidebar",
+        "widget_id": "block-5",
+        "widget_type": "block",
+        "widget_num": "5",
+        "settings": {
+            "content": "<!-- wp:group --><div class=\"wp-block-group\"><!-- wp:heading --><h2>Archives<\/h2><!-- \/wp:heading --><!-- wp:archives \/--><\/div><!-- \/wp:group -->"
+        }
+    },
+    {
+        "sidebar": "sb_themes_grid_sidebar",
+        "widget_id": "block-6",
+        "widget_type": "block",
+        "widget_num": "6",
+        "settings": {
+            "content": "<!-- wp:group --><div class=\"wp-block-group\"><!-- wp:heading --><h2>Categories<\/h2><!-- \/wp:heading --><!-- wp:categories \/--><\/div><!-- \/wp:group -->"
+        }
+    }
+]

@@ -1,0 +1,3283 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Adforest Elementor\n"
+"POT-Creation-Date: 2025-09-26 16:05+0500\n"
+"PO-Revision-Date: 2026-04-18 21:49+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fa_IR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==0 || n==1);\n"
+"X-Generator: Poedit 3.9\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: adforest-elementor.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+
+#: AdPostMaphandler.php:607
+msgid "Map"
+msgstr "نقشه"
+
+#: AdPostMaphandler.php:611
+msgid "Drag pin for your pin-point location."
+msgstr "نشانگر را برای تعیین دقیق موقعیت مکانی خود بکشید."
+
+#: AdPostMaphandler.php:619 AdPostMaphandler.php:626
+msgid "Latitude"
+msgstr "عرض جغرافیایی"
+
+#: AdPostMaphandler.php:633 AdPostMaphandler.php:640
+msgid "Longitude"
+msgstr "طول جغرافیایی"
+
+#: ad_post_shortcode.php:42
+msgid "Post Ad"
+msgstr "ثبت آگهی"
+
+#: ad_post_shortcode.php:87 widgets/LocationsModern.php:88
+#: widgets/MainHero4.php:427
+msgid "Default"
+msgstr "پیش‌فرض"
+
+#: ad_post_shortcode.php:162
+msgid "Update Ad"
+msgstr "بروزرسانی آگهی"
+
+#: ad_post_shortcode.php:298
+msgid "Select Your Country"
+msgstr "کشور خود را انتخاب کنید"
+
+#: ad_post_shortcode.php:299
+msgid "Select Your State"
+msgstr "استان خود را انتخاب کنید"
+
+#: ad_post_shortcode.php:300
+msgid "Select Your City"
+msgstr "شهر خود را انتخاب کنید"
+
+#: ad_post_shortcode.php:301
+msgid "Select Your Town"
+msgstr "محله/منطقه خود را انتخاب کنید"
+
+#: ad_post_shortcode.php:320 ad_post_shortcode.php:572
+#: ad_post_shortcode.php:660 ad_post_shortcode.php:711
+#: ad_post_shortcode.php:875
+msgid "This field is required."
+msgstr "تکمیل این فیلد الزامی است."
+
+#: ad_post_shortcode.php:321 ad_post_shortcode.php:661
+#: ad_post_shortcode.php:752
+msgid "Select Option"
+msgstr "انتخاب گزینه"
+
+#: ad_post_shortcode.php:446 ad_post_shortcode.php:484
+msgid "Featured ads remaining: Unlimited"
+msgstr "آگهی‌های ویژه باقی‌مانده: نامحدود"
+
+#: ad_post_shortcode.php:450 ad_post_shortcode.php:487
+msgid "Featured ads remaining:"
+msgstr "آگهی‌های ویژه باقی‌مانده:"
+
+#: ad_post_shortcode.php:450 widget_shortcodes.php:861
+#: widget_shortcodes.php:868 widget_shortcodes.php:875
+#: widget_shortcodes.php:882 widget_shortcodes.php:889
+#: widget_shortcodes.php:896 widget_shortcodes.php:903
+#: widget_shortcodes.php:912 widget_shortcodes.php:983
+msgid "Unlimited"
+msgstr "نامحدود"
+
+#: ad_post_shortcode.php:462 ad_post_shortcode.php:498
+msgid "Make it featured"
+msgstr "ویژه کردن آگهی"
+
+#: ad_post_shortcode.php:477 ad_post_shortcode.php:514
+msgid "If you want to make it featured then please have a look on"
+msgstr "اگر می‌خواهید آگهی را ویژه کنید، لطفاً نگاهی بیندازید به"
+
+#: ad_post_shortcode.php:479 ad_post_shortcode.php:516
+msgid "Packages. "
+msgstr "پکیج‌ها. "
+
+#: ad_post_shortcode.php:524
+msgid "This ad is already featured."
+msgstr "این آگهی در حال حاضر ویژه است."
+
+#: ad_post_shortcode.php:568
+msgid "ON"
+msgstr "روشن"
+
+#: ad_post_shortcode.php:569
+msgid "OFF"
+msgstr "خاموش"
+
+#: ad_post_shortcode.php:571
+msgid "Choose Bidding option"
+msgstr "انتخاب گزینه مزایده"
+
+#: ad_post_shortcode.php:578
+msgid "Bidding close date"
+msgstr "تاریخ پایان مزایده"
+
+#: ad_post_shortcode.php:578
+msgid "For countdown"
+msgstr "برای شمارش معکوس"
+
+#: ad_post_shortcode.php:579
+msgid "Click to select"
+msgstr "برای انتخاب کلیک کنید"
+
+#: ad_post_shortcode.php:586
+msgid "Loading"
+msgstr "در حال بارگذاری"
+
+#: ad_post_shortcode.php:599 widget_shortcodes.php:7454
+msgid "All Categories"
+msgstr "همه دسته‌ها"
+
+#: ad_post_shortcode.php:624
+msgid "General Information"
+msgstr "اطلاعات عمومی"
+
+#: ad_post_shortcode.php:632
+msgid "Ad Details"
+msgstr "جزئیات آگهی"
+
+#: ad_post_shortcode.php:640 ad_post_shortcode.php:818
+msgid "Contact Information"
+msgstr "اطلاعات تماس"
+
+#: ad_post_shortcode.php:648
+msgid "Select Your Category"
+msgstr "دسته خود را انتخاب کنید"
+
+#: ad_post_shortcode.php:651
+msgid "Select Your Categories"
+msgstr "دسته‌های خود را انتخاب کنید"
+
+#: ad_post_shortcode.php:654
+msgid "Select Suitable Category For Your Ad"
+msgstr "دسته مناسب برای آگهی خود را انتخاب کنید"
+
+#: ad_post_shortcode.php:677
+msgid "Select Your Package"
+msgstr "پکیج خود را انتخاب کنید"
+
+#: ad_post_shortcode.php:680
+msgid "Select a package from which you want to post the Ad"
+msgstr "پکیجی را که می‌خواهید آگهی را با آن ثبت کنید، انتخاب نمایید"
+
+#: ad_post_shortcode.php:686 ad_post_shortcode.php:784
+#: ad_post_shortcode.php:811
+msgid "Next"
+msgstr "بعدی"
+
+#: ad_post_shortcode.php:693
+msgid "General information"
+msgstr "اطلاعات عمومی"
+
+#: ad_post_shortcode.php:705 widget_shortcodes.php:2221
+#: widgets/AdListModern.php:42 widgets/AdPostModern.php:113
+#: widgets/AdforestContactUs.php:88 widgets/AdforestContactUs.php:119
+#: widgets/AdsModernBg.php:44 widgets/AdtCallToAction.php:58
+#: widgets/AdtCallToAction.php:110 widgets/AdtInfo.php:42
+#: widgets/BrandsCarousel.php:44 widgets/CategorySlider.php:37
+#: widgets/ClassicHome.php:120 widgets/CyberSaleHero.php:41
+#: widgets/DealsOfTheDay.php:62 widgets/DirectoryHero.php:149
+#: widgets/DirectoryHero.php:185 widgets/DirectoryHero.php:188
+#: widgets/EcommerceDealsBoxes.php:73 widgets/EcommerceHome.php:68
+#: widgets/EventHomeHero.php:111 widgets/EventListWidget.php:42
+#: widgets/LocationsFancy.php:42 widgets/LocationsFancy2.php:42
+#: widgets/LocationsModern.php:64 widgets/MainHero2.php:146
+#: widgets/MainHero2.php:149 widgets/MainHero3.php:115
+#: widgets/MainHero3.php:118 widgets/MainHero3.php:160
+#: widgets/MainHero4.php:389 widgets/MainHero5.php:41 widgets/MainHero6.php:99
+#: widgets/MultivendorHero.php:41 widgets/MultivendorProductCarousel.php:58
+#: widgets/MultivendorProductCategories.php:41
+#: widgets/MultivendorProductsGrid.php:41
+#: widgets/MultivendorProductsWithSidebar.php:57 widgets/OurArticles.php:42
+#: widgets/RealEstateHero.php:142
+msgid "Title"
+msgstr "عنوان"
+
+#: ad_post_shortcode.php:709
+#, php-format
+msgid "Enter title character limit (%d)"
+msgstr "محدودیت تعداد نویسه عنوان را وارد کنید (%d)"
+
+#: ad_post_shortcode.php:721 widgets/CyberSaleHero.php:48
+#: widgets/MainHero2.php:154 widgets/MainHero2.php:157 widgets/MainHero5.php:48
+#: widgets/MultivendorHero.php:48
+#: widgets/CyberSaleHero.php:48
+msgid "Tagline"
+msgstr "شعار/توضیح کوتاه"
+
+#: ad_post_shortcode.php:725
+msgid "Ad Tagline"
+msgstr "توضیح کوتاه آگهی"
+
+#: ad_post_shortcode.php:733 widgets/AdListModern.php:48
+#: widgets/AdforestContactUs.php:110 widgets/AdforestContactUs.php:129
+#: widgets/AdtCallToAction.php:65 widgets/AdtCallToAction.php:117
+#: widgets/DealsOfTheDay.php:72 widgets/EcommerceDealsBoxes.php:83
+#: widgets/EventListWidget.php:49 widgets/LocationsFancy.php:48
+#: widgets/OurArticles.php:49
+msgid "Description"
+msgstr "توضیحات"
+
+#: ad_post_shortcode.php:736
+msgid "Ad Description"
+msgstr "توضیحات آگهی"
+
+#: ad_post_shortcode.php:748 widget_shortcodes.php:5936
+msgid "Currency"
+msgstr "واحد پول"
+
+#: ad_post_shortcode.php:751
+msgid "Choose option"
+msgstr "انتخاب گزینه"
+
+#: ad_post_shortcode.php:782 ad_post_shortcode.php:809
+#: ad_post_shortcode.php:933
+msgid "Previous"
+msgstr "قبلی"
+
+#: ad_post_shortcode.php:793
+msgid "Media"
+msgstr "رسانه"
+
+#: ad_post_shortcode.php:801
+msgid "Click the box below to ad Videos"
+msgstr "برای افزودن ویدیو، روی باکس زیر کلیک کنید"
+
+#: ad_post_shortcode.php:803
+msgid "upload only videos (mp4, ogg, webm) files with a max file size of "
+msgstr "فقط ویدیوهای (mp4, ogg, webm) با حداکثر حجم فایل "
+
+#: ad_post_shortcode.php:823 ad_post_shortcode.php:827
+msgid "Phone Number"
+msgstr "شماره تلفن"
+
+#: ad_post_shortcode.php:833
+msgid "Your Name"
+msgstr "نام شما"
+
+#: ad_post_shortcode.php:837 widget_shortcodes.php:138
+msgid "Enter Your Name"
+msgstr "نام خود را وارد کنید"
+
+#: ad_post_shortcode.php:844
+msgid "Website"
+msgstr "وب‌سایت"
+
+#: ad_post_shortcode.php:848
+msgid "Listing Website eg. http://example.com"
+msgstr "وب‌سایت آگهی، مثال: http://example.com"
+
+#: ad_post_shortcode.php:853 widget_shortcodes.php:2227
+#: widget_shortcodes.php:4063 widget_shortcodes.php:6257
+#: widget_shortcodes.php:6455 widget_shortcodes.php:6837
+#: widgets/DirectoryHero.php:150 widgets/EventHomeHero.php:112
+#: widgets/MainHero3.php:161 widgets/MainHero4.php:391
+#: widgets/MainHero6.php:100 widgets/RealEstateHero.php:143
+msgid "Location"
+msgstr "موقعیت"
+
+#: ad_post_shortcode.php:867 widget_shortcodes.php:697
+#: widgets/AdforestContactUs.php:185 widgets/AdforestContactUs.php:192
+msgid "Address"
+msgstr "آدرس"
+
+#: ad_post_shortcode.php:872
+msgid "Ad Address"
+msgstr "آدرس آگهی"
+
+#: ad_post_shortcode.php:882
+msgid "You Current Location"
+msgstr "موقعیت فعلی شما"
+
+#: ad_post_shortcode.php:915 widget_shortcodes.php:189
+#: widget_shortcodes.php:274
+msgid "Please accept terms and conditions."
+msgstr "لطفاً قوانین و مقررات را بپذیرید."
+
+#: ad_post_shortcode.php:917 widget_shortcodes.php:276
+msgid "I agree to "
+msgstr "موافقم با "
+
+#: ad_post_shortcode.php:943
+msgid "Maximum upload limit reached"
+msgstr "به حداکثر محدودیت بارگذاری رسیدید"
+
+#: ad_post_shortcode.php:945
+msgid "Drop your files here or click to upload."
+msgstr "فایل‌ها را اینجا رها کنید یا برای بارگذاری کلیک نمایید."
+
+#: ad_post_shortcode.php:947
+msgid "Your browser does not support drag'n'drop file uploads."
+msgstr "مرورگر شما از بارگذاری فایل با کشیدن و رها کردن پشتیبانی نمی‌کند."
+
+#: ad_post_shortcode.php:951
+msgid "Please use the fallback form below to upload your files like in the olden days."
+msgstr "لطفاً از فرم جایگزین زیر برای بارگذاری فایل‌های خود استفاده کنید."
+
+#: ad_post_shortcode.php:953
+msgid "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB."
+msgstr "فایل خیلی بزرگ است ({{filesize}} مگابایت). حداکثر حجم: {{maxFilesize}} مگابایت."
+
+#: ad_post_shortcode.php:955
+msgid "You can can't upload files of this type."
+msgstr "شما نمی‌توانید فایل‌هایی از این نوع را بارگذاری کنید."
+
+#: ad_post_shortcode.php:957
+msgid "Server responded with {{statusCode}} code."
+msgstr "سرور با کد {{statusCode}} پاسخ داد."
+
+#: ad_post_shortcode.php:959
+msgid "Cancel upload"
+msgstr "لغو بارگذاری"
+
+#: ad_post_shortcode.php:961
+msgid "Are you sure you want to cancel this upload?"
+msgstr "آیا مطمئن هستید که می‌خواهید این بارگذاری را لغو کنید؟"
+
+#: ad_post_shortcode.php:963
+msgid "Remove file"
+msgstr "حذف فایل"
+
+#: ad_post_shortcode.php:966
+msgid "You can not upload any more files."
+msgstr "شما نمی‌توانید فایل‌های بیشتری بارگذاری کنید."
+
+#: ad_post_shortcode.php:971
+#, php-format
+msgid "You can only upload %d images."
+msgstr "شما فقط می‌توانید %d تصویر بارگذاری کنید."
+
+#: ad_post_shortcode.php:978
+msgid "Your package has been used or expired, please purchase new."
+msgstr "پکیج شما تمام شده یا منقضی شده است، لطفاً پکیج جدیدی تهیه کنید."
+
+#: ad_post_shortcode.php:989
+msgid "Please Select Category first"
+msgstr "لطفاً ابتدا دسته را انتخاب کنید"
+
+#: adforest-elementor.php:98
+#, php-format
+msgid "\"%1$s\" requires \"%2$s\" to be installed and activated."
+msgstr "«%1$s» نیاز دارد که «%2$s» نصب و فعال شده باشد."
+
+#: adforest-elementor.php:99 adforest-elementor.php:112
+msgid "Adforest Elementor Widgets "
+msgstr "ابزارک‌های المنتور ادفارست "
+
+#: adforest-elementor.php:100 adforest-elementor.php:126
+msgid "Elementor "
+msgstr "المنتور "
+
+#: adforest-elementor.php:111 adforest-elementor.php:125
+#, php-format
+msgid "\"%1$s\" requires \"%2$s\" version %3$s or greater."
+msgstr "«%1$s» به «%2$s» نسخه %3$s یا بالاتر نیاز دارد."
+
+#: adforest-elementor.php:113
+msgid "Elementor"
+msgstr "المنتور"
+
+#: adforest-elementor.php:127
+msgid "PHP"
+msgstr "PHP"
+
+#: adforest_elementor_functions.php:75 widget_shortcodes.php:833
+#: widgets/AdsModernBg.php:69 widgets/FeaturedAds.php:89
+msgid "All"
+msgstr "همه"
+
+#: adforest_elementor_functions.php:77 widget_shortcodes.php:4065
+#: widget_shortcodes.php:6259 widget_shortcodes.php:6457
+#: widget_shortcodes.php:6839 widgets/AdLocations.php:83
+#: widgets/AdsAndLocationMiniBoxes.php:215 widgets/LocationsFancy.php:80
+#: widgets/LocationsFancy2.php:74 widgets/LocationsModern.php:120
+#: widgets/MainHero4.php:525
+msgid "Select Location"
+msgstr "انتخاب موقعیت"
+
+#: adforest_elementor_functions.php:79
+msgid "Select Warranty"
+msgstr "انتخاب گارانتی"
+
+#: adforest_elementor_functions.php:81
+msgid "Select Condition"
+msgstr "انتخاب وضعیت"
+
+#: adforest_elementor_functions.php:83 widgets/AdGridCarouselFancy.php:143
+#: widgets/AdGridCarouselModern.php:62 widgets/AdGridFancy.php:98
+#: widgets/AdListModern.php:55 widgets/CategoryBasedAds.php:117
+msgid "Select Ad Type"
+msgstr "انتخاب نوع آگهی"
+
+#: adforest_elementor_functions.php:85
+msgid "Select Product Type"
+msgstr "انتخاب نوع محصول"
+
+#: adforest_elementor_functions.php:87
+msgid "Select ad categories"
+msgstr "انتخاب دسته‌های آگهی"
+
+#: adforest_elementor_functions.php:110
+msgid "Select Layout Type"
+msgstr "انتخاب نوع چیدمان"
+
+#: adforest_elementor_functions.php:111
+msgid "Grid 1"
+msgstr "شبکه‌ای ۱"
+
+#: adforest_elementor_functions.php:112
+msgid "Grid 2"
+msgstr "شبکه‌ای ۲"
+
+#: adforest_elementor_functions.php:113
+msgid "Grid 3"
+msgstr "شبکه‌ای ۳"
+
+#: adforest_elementor_functions.php:114
+msgid "Grid 4"
+msgstr "شبکه‌ای ۴"
+
+#: adforest_elementor_functions.php:115
+msgid "Grid 5"
+msgstr "شبکه‌ای ۵"
+
+#: adforest_elementor_functions.php:116
+msgid "Grid 6"
+msgstr "شبکه‌ای ۶"
+
+#: adforest_elementor_functions.php:117
+msgid "Grid 7"
+msgstr "شبکه‌ای ۷"
+
+#: adforest_elementor_functions.php:118
+msgid "Grid 8"
+msgstr "شبکه‌ای ۸"
+
+#: adforest_elementor_functions.php:119
+msgid "Grid 9"
+msgstr "شبکه‌ای ۹"
+
+#: adforest_elementor_functions.php:120
+msgid "Grid 10"
+msgstr "شبکه‌ای ۱۰"
+
+#: adforest_elementor_functions.php:121 adforest_elementor_functions.php:122
+msgid "Grid 11"
+msgstr "شبکه‌ای ۱۱"
+
+#: adforest_elementor_functions.php:123
+msgid "List"
+msgstr "لیست"
+
+#: adforest_elementor_functions.php:301
+msgid "Added to your favourites."
+msgstr "به علاقه‌مندی‌های شما اضافه شد."
+
+#: adforest_elementor_functions.php:304
+msgid "Ad removed from your favourites."
+msgstr "آگهی از علاقه‌مندی‌های شما حذف شد."
+
+#: adforest_elementor_functions.php:359
+msgid "No Vendor Found!"
+msgstr "هیچ فروشنده‌ای یافت نشد!"
+
+#: adforest_elementor_functions.php:445
+msgid "Forgot Your Password?"
+msgstr "رمز عبور خود را فراموش کرده‌اید؟"
+
+#: adforest_elementor_functions.php:452 widget_shortcodes.php:154
+#: widget_shortcodes.php:468 widgets/AdforestContactUs.php:225
+#: widgets/AdforestContactUs.php:232
+msgid "Email"
+msgstr "ایمیل"
+
+#: adforest_elementor_functions.php:453
+msgid "Your Email"
+msgstr "ایمیل شما"
+
+#: adforest_elementor_functions.php:456
+msgid "Please enter valid email."
+msgstr "لطفاً ایمیل معتبر وارد کنید."
+
+#: adforest_elementor_functions.php:464
+msgid "Reset My Password"
+msgstr "بازیابی رمز عبور من"
+
+#: adforest_elementor_functions.php:466 widget_shortcodes.php:208
+msgid "Processing..."
+msgstr "در حال پردازش..."
+
+#: adforest_elementor_functions.php:483
+msgid "Enter code"
+msgstr "کد را وارد کنید"
+
+#: adforest_elementor_functions.php:489
+msgid "Verify now "
+msgstr "اکنون تأیید کنید "
+
+#: adforest_elementor_functions.php:490
+msgid "Processing ..."
+msgstr "در حال پردازش ..."
+
+#: adforest_elementor_functions.php:491
+msgid "Verify now"
+msgstr "اکنون تأیید کنید"
+
+#: adforest_elementor_functions.php:492
+msgid "Resend"
+msgstr "ارسال مجدد"
+
+#: adforest_elementor_functions.php:502
+msgid "Verify phone number"
+msgstr "تأیید شماره تلفن"
+
+#: adforest_elementor_functions.php:735 widget_shortcodes.php:5478
+msgid "Free"
+msgstr "رایگان"
+
+#: adforest_elementor_functions.php:737 adforest_elementor_functions.php:739
+msgid "No Price"
+msgstr "بدون قیمت"
+
+#: adforest_elementor_functions.php:741
+msgid "Price On Call"
+msgstr "قیمت از طریق تماس"
+
+#: adforest_elementor_functions.php:1035
+msgid "Product"
+msgstr "محصول"
+
+#: adforest_elementor_functions.php:1057 adforest_elementor_functions.php:1132
+#, php-format
+msgid "%s Reviews"
+msgstr "%s دیدگاه"
+
+#: adforest_elementor_functions.php:1075
+msgid "Add to cart"
+msgstr "افزودن به سبد خرید"
+
+#: adforest_elementor_functions.php:1077
+msgid "Cart icon"
+msgstr "آیکون سبد خرید"
+
+#: adforest_elementor_functions.php:1123
+msgid "Product image"
+msgstr "تصویر محصول"
+
+#: adforest_elementor_functions.php:1154 widget_shortcodes.php:3419
+#: widget_shortcodes.php:3811
+msgid "Detail Now"
+msgstr "مشاهده جزئیات"
+
+#: plugin.php:228 plugin.php:240
+msgid "Adforest Widgets"
+msgstr "ابزارک‌های ادفارست"
+
+#: widget_shortcodes.php:40 widget_shortcodes.php:374
+msgid "This field is required.Should be a valid integer value"
+msgstr "تکمیل این فیلد الزامی است. باید یک مقدار عددی صحیح معتبر باشد"
+
+#: widget_shortcodes.php:40 widget_shortcodes.php:42 widget_shortcodes.php:374
+#: widget_shortcodes.php:376
+msgid "Your Contact Number"
+msgstr "شماره تماس شما"
+
+#: widget_shortcodes.php:48 widget_shortcodes.php:73 widget_shortcodes.php:381
+#: widget_shortcodes.php:396
+msgid "+CountrycodePhonenumber"
+msgstr "+کدکشورشماره‌تلفن"
+
+#: widget_shortcodes.php:48 widget_shortcodes.php:73 widget_shortcodes.php:381
+#: widget_shortcodes.php:396
+msgid "Format should be +CountrycodePhonenumber"
+msgstr "فرمت باید به صورت +کدکشورشماره‌تلفن باشد"
+
+#: widget_shortcodes.php:69
+msgid "Register with Phone Number"
+msgstr "ثبت‌نام با شماره تلفن"
+
+#: widget_shortcodes.php:72
+msgid "Register with Email"
+msgstr "ثبت‌نام با ایمیل"
+
+#: widget_shortcodes.php:81 widget_shortcodes.php:414
+msgid "Signin With LinkedIn"
+msgstr "ورود با لینکدین"
+
+#: widget_shortcodes.php:90 widget_shortcodes.php:99 widget_shortcodes.php:423
+#: widget_shortcodes.php:432
+msgid "facebook logo"
+msgstr "لوگوی فیس‌بوک"
+
+#: widget_shortcodes.php:104 widget_shortcodes.php:437
+msgid "google logo"
+msgstr "لوگوی گوگل"
+
+#: widget_shortcodes.php:136 widget_shortcodes.php:257
+msgid "Name"
+msgstr "نام"
+
+#: widget_shortcodes.php:140
+msgid "Please enter your name."
+msgstr "لطفاً نام خود را وارد کنید."
+
+#: widget_shortcodes.php:147 widget_shortcodes.php:266
+#: widget_shortcodes.php:556
+msgid "Contact Number"
+msgstr "شماره تماس"
+
+#: widget_shortcodes.php:156 widget_shortcodes.php:470
+msgid "Enter Your Email Address"
+msgstr "آدرس ایمیل خود را وارد کنید"
+
+#: widget_shortcodes.php:159
+msgid "Please enter a valid email address."
+msgstr "لطفاً یک آدرس ایمیل معتبر وارد کنید."
+
+#: widget_shortcodes.php:164 widget_shortcodes.php:477
+msgid "Password"
+msgstr "رمز عبور"
+
+#: widget_shortcodes.php:167 widget_shortcodes.php:480
+msgid "Your Password"
+msgstr "رمز عبور شما"
+
+#: widget_shortcodes.php:169
+msgid "Please enter your password"
+msgstr "لطفاً رمز عبور خود را وارد کنید"
+
+#: widget_shortcodes.php:175 widget_shortcodes.php:179
+msgid "Confirm Password"
+msgstr "تأیید رمز عبور"
+
+#: widget_shortcodes.php:181
+msgid "Password does not match"
+msgstr "رمز عبور مطابقت ندارد"
+
+#: widget_shortcodes.php:192
+msgid "I agree to"
+msgstr "موافقم با"
+
+#: widget_shortcodes.php:206
+msgid "Register"
+msgstr "ثبت‌نام"
+
+#: widget_shortcodes.php:210
+msgid "Redirecting..."
+msgstr "در حال هدایت..."
+
+#: widget_shortcodes.php:215 widget_shortcodes.php:294
+#: widget_shortcodes.php:518 widget_shortcodes.php:583
+msgid "or"
+msgstr "یا"
+
+#: widget_shortcodes.php:234 widget_shortcodes.php:313
+msgid "Already have an account? "
+msgstr "حساب کاربری دارید؟ "
+
+#: widget_shortcodes.php:236 widget_shortcodes.php:315
+#: widget_shortcodes.php:508 widgets/AdforestSignIn.php:20
+msgid "Sign In"
+msgstr "ورود"
+
+#: widget_shortcodes.php:260
+msgid "Name is required."
+msgstr "وارد کردن نام الزامی است."
+
+#: widget_shortcodes.php:289
+msgid "Register Account"
+msgstr "ثبت‌نام حساب کاربری"
+
+#: widget_shortcodes.php:323
+msgid "Verification email has been sent to your email."
+msgstr "ایمیل تأیید به آدرس ایمیل شما ارسال شده است."
+
+#: widget_shortcodes.php:325 widget_shortcodes.php:608
+msgid "Verify Recaptcha to process"
+msgstr "برای پردازش، کد امنیتی (Recaptcha) را تأیید کنید"
+
+#: widget_shortcodes.php:327
+msgid "Admin will verify your account and let you know shortly."
+msgstr "مدیر حساب شما را تأیید خواهد کرد و به‌زودی به شما اطلاع می‌دهد."
+
+#: widget_shortcodes.php:392
+msgid "Login with Phone Number"
+msgstr "ورود با شماره تلفن"
+
+#: widget_shortcodes.php:395
+msgid "Login with Email"
+msgstr "ورود با ایمیل"
+
+#: widget_shortcodes.php:490 widget_shortcodes.php:565
+msgid "Remember Me"
+msgstr "مرا به خاطر بسپار"
+
+#: widget_shortcodes.php:497
+msgid "Forget Password"
+msgstr "فراموشی رمز عبور"
+
+#: widget_shortcodes.php:537 widget_shortcodes.php:602
+msgid "Don't have an account? "
+msgstr "حساب کاربری ندارید؟ "
+
+#: widget_shortcodes.php:539 widget_shortcodes.php:604
+#: widgets/AdforestSignUp.php:20
+msgid "Sign Up"
+msgstr "ثبت‌نام"
+
+#: widget_shortcodes.php:575
+msgid "Login"
+msgstr "ورود"
+
+#: widget_shortcodes.php:708 widgets/AdforestContactUs.php:205
+#: widgets/AdforestContactUs.php:212
+msgid "Phone"
+msgstr "تلفن"
+
+#: widget_shortcodes.php:719
+msgid "Email Address"
+msgstr "آدرس ایمیل"
+
+#: widget_shortcodes.php:823 widget_shortcodes.php:833
+#: widgets/ClassicHome.php:38 widgets/MainHero2.php:200
+msgid "Categories"
+msgstr "دسته‌ها"
+
+#: widget_shortcodes.php:823
+msgid "Show All"
+msgstr "نمایش همه"
+
+#: widget_shortcodes.php:860
+msgid "Validity (Days):"
+msgstr "اعتبار (روز):"
+
+#: widget_shortcodes.php:874
+msgid "Ads Expiry (Days):"
+msgstr "انقضای آگهی‌ها (روز):"
+
+#: widget_shortcodes.php:881
+msgid "Featured Ads:"
+msgstr "آگهی‌های ویژه:"
+
+#: widget_shortcodes.php:888
+msgid "Featured Ads Expiry:"
+msgstr "انقضای آگهی‌های ویژه:"
+
+#: widget_shortcodes.php:895
+msgid "Bump-up Ads:"
+msgstr "آگهی‌های نردبان:"
+
+#: widget_shortcodes.php:902
+msgid "No Of Images :"
+msgstr "تعداد تصاویر :"
+
+#: widget_shortcodes.php:911 widget_shortcodes.php:919
+msgid "Allow Bidding :"
+msgstr "اجازه مزایده :"
+
+#: widget_shortcodes.php:920 widget_shortcodes.php:945
+#: widget_shortcodes.php:972 widgets/AdLocations.php:124
+#: widgets/AdsAndLocationMiniBoxes.php:41
+#: widgets/AdsAndLocationMiniBoxes.php:158
+#: widgets/AdsAndLocationMiniBoxes.php:265
+#: widgets/AdsAndLocationMiniBoxes.php:316
+#: widgets/AdsAndLocationMiniBoxes.php:338 widgets/AdsModernBg.php:89
+#: widgets/ClassicHome.php:281 widgets/FeaturedAds.php:138
+#: widgets/FeaturedAds.php:169 widgets/FeaturedAds.php:228
+#: widgets/MainHero4.php:51 widgets/MainHero4.php:94 widgets/MainHero4.php:123
+#: widgets/MainHero4.php:242 widgets/MainHero4.php:364
+#: widgets/MainHero4.php:491 widgets/MainHero4.php:565
+#: widgets/MainHero4.php:595 widgets/MainHero4.php:617
+#: widgets/MainHero4.php:671 widgets/MiniCategorySlider.php:45
+#: widgets/MultivendorProductCarousel.php:130 widgets/RecentAds.php:94
+#: widgets/RecentAds.php:116 widgets/RecentAds.php:143
+#: widgets/RecentAds.php:197
+msgid "No"
+msgstr "خیر"
+
+#: widget_shortcodes.php:930 widget_shortcodes.php:942
+msgid "Video URL :"
+msgstr "آدرس ویدیو :"
+
+#: widget_shortcodes.php:933 widget_shortcodes.php:960
+#: widgets/AdLocations.php:123 widgets/AdsAndLocationMiniBoxes.php:40
+#: widgets/AdsAndLocationMiniBoxes.php:157
+#: widgets/AdsAndLocationMiniBoxes.php:264
+#: widgets/AdsAndLocationMiniBoxes.php:315
+#: widgets/AdsAndLocationMiniBoxes.php:337 widgets/AdsModernBg.php:88
+#: widgets/ClassicHome.php:280 widgets/FeaturedAds.php:137
+#: widgets/FeaturedAds.php:168 widgets/FeaturedAds.php:227
+#: widgets/MainHero4.php:50 widgets/MainHero4.php:93 widgets/MainHero4.php:122
+#: widgets/MainHero4.php:241 widgets/MainHero4.php:363
+#: widgets/MainHero4.php:490 widgets/MainHero4.php:564
+#: widgets/MainHero4.php:594 widgets/MainHero4.php:616
+#: widgets/MainHero4.php:670 widgets/MiniCategorySlider.php:44
+#: widgets/MultivendorProductCarousel.php:129 widgets/RecentAds.php:93
+#: widgets/RecentAds.php:115 widgets/RecentAds.php:142
+#: widgets/RecentAds.php:196
+msgid "Yes"
+msgstr "بله"
+
+#: widget_shortcodes.php:957 widget_shortcodes.php:969
+msgid "Allow Tags :"
+msgstr "اجازه برچسب‌ها :"
+
+#: widget_shortcodes.php:982
+msgid "No Of Events :"
+msgstr "تعداد رویدادها :"
+
+#: widget_shortcodes.php:990 widget_shortcodes.php:994
+#: widget_shortcodes.php:999 widget_shortcodes.php:1007
+msgid "Allowed Categories"
+msgstr "دسته‌های مجاز"
+
+#: widget_shortcodes.php:990
+msgid " All"
+msgstr " همه"
+
+#: widget_shortcodes.php:1007
+msgid " None"
+msgstr " هیچ‌کدام"
+
+#: widget_shortcodes.php:1014
+msgid "Buy Now"
+msgstr "هم‌اکنون بخرید"
+
+#: widget_shortcodes.php:1552
+msgid "Explore Categories."
+msgstr "در دسته‌ها جستجو کنید."
+
+#: widget_shortcodes.php:1554
+msgid "Browse All Different "
+msgstr "مرور تمامِ "
+
+#: widget_shortcodes.php:1554
+#, php-format
+msgid "%s Categories"
+msgstr "%s دسته مختلف"
+
+#: widget_shortcodes.php:1803
+msgid "("
+msgstr "("
+
+#: widget_shortcodes.php:2060 widgets/AdsAndLocationMiniBoxes.php:52
+#: widgets/AdsAndLocationMiniBoxes.php:113
+#: widgets/AdsAndLocationMiniBoxes.php:287 widgets/AdsModernBg.php:68
+#: widgets/CategoryBasedAds.php:121 widgets/FeaturedAds.php:88
+#: widgets/FeaturedAds.php:200 widgets/MainHero4.php:163
+#: widgets/MainHero4.php:285 widgets/MainHero4.php:628 widgets/RecentAds.php:40
+#: widgets/RecentAds.php:163
+msgid "Featured"
+msgstr "ویژه"
+
+#: widget_shortcodes.php:2086
+msgid "Detail"
+msgstr "جزئیات"
+
+#: widget_shortcodes.php:2224 widget_shortcodes.php:4041
+#: widget_shortcodes.php:4745 widget_shortcodes.php:6235
+#: widget_shortcodes.php:6433 widget_shortcodes.php:6815
+msgid "Enter Keywords"
+msgstr "کلمات کلیدی را وارد کنید"
+
+#: widget_shortcodes.php:2230
+msgid "Enter Location"
+msgstr "موقعیت را وارد کنید"
+
+#: widget_shortcodes.php:2238 widget_shortcodes.php:4047
+#: widget_shortcodes.php:6241 widget_shortcodes.php:6439
+#: widget_shortcodes.php:6821 widgets/DirectoryHero.php:151
+#: widgets/EcommerceHome.php:336 widgets/EventHomeHero.php:113
+#: widgets/MainHero3.php:162 widgets/MainHero4.php:390
+#: widgets/MainHero6.php:101 widgets/RealEstateHero.php:144
+msgid "Category"
+msgstr "دسته"
+
+#: widget_shortcodes.php:2241 widget_shortcodes.php:4049
+#: widget_shortcodes.php:6243 widget_shortcodes.php:6441
+#: widget_shortcodes.php:6823 widgets/BrandsCarousel.php:65
+#: widgets/ClassicHome.php:58 widgets/DirectoryHero.php:102
+#: widgets/DirectoryHero.php:208 widgets/MainHero1.php:117
+#: widgets/MainHero1.php:153 widgets/MainHero2.php:177
+#: widgets/MainHero6.php:158 widgets/MiniCategorySlider.php:65
+#: widgets/MultivendorCategorySliderMini.php:57 widgets/RealEstateHero.php:184
+#: widgets/RealEstateHero.php:238
+msgid "Select Category"
+msgstr "انتخاب دسته"
+
+#: widget_shortcodes.php:2259
+msgid "Reset Search"
+msgstr "بازنشانی جستجو"
+
+#: widget_shortcodes.php:2264
+msgid "Advanced Search"
+msgstr "جستجوی پیشرفته"
+
+#: widget_shortcodes.php:2266 widget_shortcodes.php:6048
+msgid "Search Now"
+msgstr "هم‌اکنون جستجو کنید"
+
+#: widget_shortcodes.php:2409 widget_shortcodes.php:3145
+#: widget_shortcodes.php:4571 widget_shortcodes.php:6754
+msgid " ads"
+msgstr " ads"
+
+#: widget_shortcodes.php:2629
+#, php-format
+msgid "%d ads"
+msgstr "%d آگهی"
+
+#: widget_shortcodes.php:2830 widgets/RecentAds.php:17
+msgid "Recent Ads"
+msgstr "آگهی‌های اخیر"
+
+#: widget_shortcodes.php:2830 widgets/FeaturedAds.php:17
+#: widgets/MainHero4.php:114
+msgid "Featured Ads"
+msgstr "آگهی‌های ویژه"
+
+#: widget_shortcodes.php:3391 widget_shortcodes.php:3780
+msgid "Add to Wishlist"
+msgstr "افزودن به علاقه‌مندی‌ها"
+
+#: widget_shortcodes.php:3395 widget_shortcodes.php:3784
+msgid "Remove From Wishlist"
+msgstr "حذف از علاقه‌مندی‌ها"
+
+#: widget_shortcodes.php:3411 widget_shortcodes.php:3803
+#: widget_shortcodes.php:5456
+msgid " Reviews"
+msgstr " دیدگاه"
+
+#: widget_shortcodes.php:3509 widget_shortcodes.php:3848
+#: widget_shortcodes.php:7367
+msgid "Reviews "
+msgstr "دیدگاه‌ها "
+
+#: widget_shortcodes.php:3722 widget_shortcodes.php:3919
+msgid "No products found."
+msgstr "محصولی یافت نشد."
+
+#: widget_shortcodes.php:4039 widget_shortcodes.php:4078
+#: widget_shortcodes.php:5753 widget_shortcodes.php:6233
+#: widget_shortcodes.php:6272 widget_shortcodes.php:6431
+#: widget_shortcodes.php:6470 widget_shortcodes.php:6813
+#: widget_shortcodes.php:6852
+msgid "Search"
+msgstr "جستجو"
+
+#: widget_shortcodes.php:4088 widget_shortcodes.php:6281
+#: widget_shortcodes.php:6861
+msgid "Popular:"
+msgstr "محبوب:"
+
+#: widget_shortcodes.php:4122 widgets/DirectoryHero.php:187
+msgid "Find by Categories"
+msgstr "یافتن بر اساس دسته‌ها"
+
+#: widget_shortcodes.php:4143 widget_shortcodes.php:4942
+#: widget_shortcodes.php:6359 widget_shortcodes.php:6549
+msgid " Ads"
+msgstr " آگهی"
+
+#: widget_shortcodes.php:4578
+msgid "No locations available"
+msgstr "موقعیتی در دسترس نیست"
+
+#: widget_shortcodes.php:4672
+msgid "No posts found"
+msgstr "نوشته‌ای یافت نشد"
+
+#: widget_shortcodes.php:4751
+msgid "Make"
+msgstr "برند/سازنده"
+
+#: widget_shortcodes.php:4753
+msgid "Select Make"
+msgstr "انتخاب برند"
+
+#: widget_shortcodes.php:4766
+msgid "Model"
+msgstr "مدل"
+
+#: widget_shortcodes.php:4768 widget_shortcodes.php:4793
+#: widget_shortcodes.php:4829 widget_shortcodes.php:4839
+msgid "Select Model"
+msgstr "انتخاب مدل"
+
+#: widget_shortcodes.php:4774
+msgid "Variant"
+msgstr "تیپ/گونه"
+
+#: widget_shortcodes.php:4776 widget_shortcodes.php:4794
+#: widget_shortcodes.php:4834 widget_shortcodes.php:4840
+#: widget_shortcodes.php:4860 widget_shortcodes.php:4869
+msgid "Select Variant"
+msgstr "انتخاب تیپ"
+
+#: widget_shortcodes.php:5448
+msgid "0.0"
+msgstr "۰.۰"
+
+#: widget_shortcodes.php:5476
+msgid "Price on Call"
+msgstr "قیمت از طریق تماس"
+
+#: widget_shortcodes.php:5493
+msgid "Details"
+msgstr "جزئیات"
+
+#: widget_shortcodes.php:5730 widget_shortcodes.php:6179
+msgid "Show More"
+msgstr "نمایش بیشتر"
+
+#: widget_shortcodes.php:5732
+msgid "Show Less"
+msgstr "نمایش کمتر"
+
+#: widget_shortcodes.php:5769
+msgid "Search Filter"
+msgstr "فیلتر جستجو"
+
+#: widget_shortcodes.php:5811
+msgid "Radius in km"
+msgstr "شعاع به کیلومتر"
+
+#: widget_shortcodes.php:5814
+msgid "Radius in Miles"
+msgstr "شعاع به مایل"
+
+#: widget_shortcodes.php:5825
+msgid "Type Location..."
+msgstr "تایپ موقعیت مکانی..."
+
+#: widget_shortcodes.php:5835
+msgid "Get Location..."
+msgstr "دریافت موقعیت..."
+
+#: widget_shortcodes.php:5842 widgets/ClassicHome.php:121
+msgid "Radius Search"
+msgstr "جستجوی شعاعی"
+
+#: widget_shortcodes.php:5911
+msgid "Locations"
+msgstr "موقعیت‌ها"
+
+#: widget_shortcodes.php:5914
+msgid "Select an Option"
+msgstr "انتخاب یک گزینه"
+
+#: widget_shortcodes.php:6022
+msgid "Ads Price"
+msgstr "قیمت آگهی‌ها"
+
+#: widget_shortcodes.php:6026
+msgid "Price ("
+msgstr "قیمت ("
+
+#: widget_shortcodes.php:6136
+msgid "No Ads found."
+msgstr "آگهی یافت نشد."
+
+#: widget_shortcodes.php:7076
+msgid " Events"
+msgstr " رویدادها"
+
+#: widgets/AboutUsEvents.php:20
+msgid "Event Experience"
+msgstr "تجربه رویداد"
+
+#: widgets/AboutUsEvents.php:38 widgets/AboutUsModern.php:38
+#: widgets/AdGridCarouselFancy.php:36 widgets/AdGridCarouselModern.php:37
+#: widgets/AdGridFancy.php:36 widgets/AdLocations.php:36
+#: widgets/AdforestAboutUs.php:38 widgets/AdforestPackages.php:44
+#: widgets/AdforestWorkflow.php:35 widgets/AdsAndLocationMiniBoxes.php:31
+#: widgets/AdsModernBg.php:31 widgets/AdtInfo.php:36
+#: widgets/CarDealerHero.php:36 widgets/CategoryBasedAds.php:36
+#: widgets/CategorySlider.php:31 widgets/DirectoryHero.php:35
+#: widgets/EventHomeHero.php:35 widgets/EventListWidget.php:36
+#: widgets/EventsGridCarousel.php:36 widgets/FeaturedAds.php:31
+#: widgets/FlashSaleWidget.php:36 widgets/FrequentlyAskedQuestions.php:36
+#: widgets/HorizontalAd.php:36 widgets/HowItWorksModern.php:35
+#: widgets/LocationsFancy.php:36 widgets/LocationsFancy2.php:36
+#: widgets/LocationsModern.php:36 widgets/MainHero1.php:37
+#: widgets/MainHero2.php:37 widgets/MainHero3.php:37 widgets/MainHero6.php:35
+#: widgets/MiniCategorySlider.php:35
+#: widgets/MultivendorCategorySliderMini.php:35 widgets/OurArticles.php:36
+#: widgets/PartnersSlider.php:41 widgets/RealEstateHero.php:43
+#: widgets/RecentAds.php:31
+msgid "Basic"
+msgstr "پایه / اصلی"
+
+#: widgets/AboutUsEvents.php:45 widgets/AdGridCarouselFancy.php:43
+#: widgets/AdGridFancy.php:43 widgets/AdforestAboutUs.php:45
+#: widgets/AdtInfo.php:67 widgets/CarDealerHero.php:42
+#: widgets/DealsOfTheDay.php:42 widgets/EcommerceDealsBoxes.php:64
+#: widgets/EcommerceHome.php:48 widgets/LocationsModern.php:54
+#: widgets/MainHero1.php:43 widgets/MainHero2.php:43 widgets/MainHero3.php:43
+msgid "Background Image"
+msgstr "تصویر پس‌زمینه"
+
+#: widgets/AboutUsEvents.php:53 widgets/AboutUsEvents.php:56
+#: widgets/AboutUsEvents.php:66 widgets/AboutUsModern.php:53
+#: widgets/AboutUsModern.php:56 widgets/AboutUsModern.php:66
+#: widgets/AdGridCarouselFancy.php:50 widgets/AdGridCarouselModern.php:43
+#: widgets/AdGridFancy.php:50 widgets/AdLocations.php:50
+#: widgets/AdforestAboutUs.php:52 widgets/AdforestAboutUs.php:55
+#: widgets/AdforestAboutUs.php:64 widgets/AdforestAboutUs.php:133
+#: widgets/AdforestAboutUs.php:136 widgets/AdforestAboutUs.php:145
+#: widgets/AdforestPackages.php:64 widgets/AdforestSignIn.php:45
+#: widgets/AdforestSignIn.php:49 widgets/AdforestSignIn.php:89
+#: widgets/AdforestSignIn.php:93 widgets/AdforestSignUp.php:46
+#: widgets/AdforestSignUp.php:50 widgets/AdforestSignUp.php:116
+#: widgets/AdforestSignUp.php:120 widgets/AdforestWorkflow.php:41
+#: widgets/AdforestWorkflow.php:44 widgets/AdforestWorkflow.php:53
+#: widgets/AdsAndLocationMiniBoxes.php:273 widgets/CarDealerHero.php:53
+#: widgets/CarDealerHero.php:56 widgets/CategoryBasedAds.php:75
+#: widgets/DirectoryHero.php:60 widgets/DirectoryHero.php:63
+#: widgets/EventHomeHero.php:60 widgets/EventHomeHero.php:63
+#: widgets/EventsGridCarousel.php:42 widgets/EventsGridCarousel.php:45
+#: widgets/FeaturedAds.php:37 widgets/FeaturedAds.php:40
+#: widgets/FrequentlyAskedQuestions.php:42
+#: widgets/FrequentlyAskedQuestions.php:45
+#: widgets/FrequentlyAskedQuestions.php:54 widgets/HowItWorksModern.php:54
+#: widgets/HowItWorksModern.php:57 widgets/HowItWorksModern.php:66
+#: widgets/MainHero1.php:54 widgets/MainHero1.php:57 widgets/MainHero2.php:54
+#: widgets/MainHero2.php:57 widgets/MainHero3.php:63 widgets/MainHero3.php:66
+#: widgets/MainHero6.php:49 widgets/MainHero6.php:52
+#: widgets/RealEstateHero.php:71 widgets/RealEstateHero.php:74
+#: widgets/RecentAds.php:57
+msgid "Section Title"
+msgstr "عنوان بخش"
+
+#: widgets/AboutUsEvents.php:63 widgets/AboutUsModern.php:63
+#: widgets/AdforestAboutUs.php:61 widgets/AdforestWorkflow.php:50
+#: widgets/FrequentlyAskedQuestions.php:51 widgets/HowItWorksModern.php:63
+msgid "Section Tag Line"
+msgstr "شعار یا توضیح کوتاه بخش"
+
+#: widgets/AboutUsEvents.php:73 widgets/AboutUsModern.php:73
+#: widgets/AdGridFancy.php:59 widgets/AdforestAboutUs.php:70
+#: widgets/AdforestAboutUs.php:142 widgets/AdforestPackages.php:73
+#: widgets/AdtInfo.php:49 widgets/CarDealerHero.php:71
+#: widgets/CarDealerHero.php:74 widgets/DirectoryHero.php:79
+#: widgets/DirectoryHero.php:82 widgets/EventHomeHero.php:78
+#: widgets/EventHomeHero.php:81 widgets/FrequentlyAskedQuestions.php:60
+#: widgets/MainHero1.php:69 widgets/MainHero6.php:67 widgets/MainHero6.php:70
+#: widgets/RealEstateHero.php:89 widgets/RealEstateHero.php:92
+msgid "Section Description"
+msgstr "توضیحات بخش"
+
+#: widgets/AboutUsEvents.php:84
+msgid "Image 1"
+msgstr "تصویر ۱"
+
+#: widgets/AboutUsEvents.php:92
+msgid "Image 2"
+msgstr "تصویر ۲"
+
+#: widgets/AboutUsEvents.php:100 widgets/AboutUsModern.php:92
+#: widgets/AdforestAboutUs.php:96
+msgid "URL or Link"
+msgstr "لینک یا URL"
+
+#: widgets/AboutUsEvents.php:102 widgets/AboutUsModern.php:94
+#: widgets/AdforestAboutUs.php:98
+msgid "Youtube video link"
+msgstr "لینک ویدیو یوتیوب"
+
+#: widgets/AboutUsEvents.php:110 widgets/AboutUsModern.php:102
+msgid "Experience Title"
+msgstr "عنوان تجربه"
+
+#: widgets/AboutUsEvents.php:112 widgets/AboutUsModern.php:104
+#: widgets/AdforestAboutUs.php:107
+msgid "Experience heading"
+msgstr "تیتر تجربه"
+
+#: widgets/AboutUsEvents.php:120 widgets/AboutUsModern.php:112
+#: widgets/AdforestAboutUs.php:114
+msgid "Experience Description"
+msgstr "توضیحات تجربه"
+
+#: widgets/AboutUsEvents.php:122 widgets/AboutUsModern.php:114
+#: widgets/AdforestAboutUs.php:116
+msgid "Experience description"
+msgstr "توضیحات تجربه"
+
+#: widgets/AboutUsEvents.php:129 widgets/AboutUsModern.php:121
+#: widgets/AdGridCarouselModern.php:116 widgets/AdsModernBg.php:51
+#: widgets/AdtCallToAction.php:72 widgets/AdtCallToAction.php:124
+#: widgets/DealsOfTheDay.php:82 widgets/EcommerceDealsBoxes.php:93
+#: widgets/EcommerceHome.php:77 widgets/EventListWidget.php:56
+#: widgets/LocationsModern.php:71 widgets/MainHero5.php:55
+#: widgets/MultivendorHero.php:55 widgets/MultivendorProductsWithSidebar.php:64
+msgid "Button Text"
+msgstr "متن دکمه"
+
+#: widgets/AboutUsEvents.php:137 widgets/AboutUsModern.php:129
+#: widgets/AdGridCarouselFancy.php:121 widgets/AdGridCarouselModern.php:125
+#: widgets/AdforestSignIn.php:135 widgets/AdforestSignUp.php:161
+#: widgets/AdsModernBg.php:58 widgets/AdtCallToAction.php:79
+#: widgets/AdtCallToAction.php:131 widgets/CategoryBasedAds.php:89
+#: widgets/DealsOfTheDay.php:91 widgets/EcommerceDealsBoxes.php:102
+#: widgets/EventListWidget.php:63 widgets/LocationsModern.php:78
+#: widgets/MainHero5.php:62 widgets/MultivendorHero.php:62
+#: widgets/MultivendorProductCarousel.php:89
+#: widgets/MultivendorProductCategories.php:55
+#: widgets/MultivendorProductsWithSidebar.php:71 widgets/RecentAds.php:70
+msgid "Button Link"
+msgstr "لینک دکمه"
+
+#: widgets/AboutUsEvents.php:147 widgets/AboutUsModern.php:139
+#: widgets/AdforestAboutUs.php:126
+msgid "Features Settings"
+msgstr "تنظیمات ویژگی‌ها"
+
+#: widgets/AboutUsEvents.php:154 widgets/AboutUsModern.php:146
+msgid "Service"
+msgstr "سرویس / خدمت"
+
+#: widgets/AboutUsEvents.php:157 widgets/AboutUsModern.php:149
+msgid "service"
+msgstr "سرویس"
+
+#: widgets/AboutUsEvents.php:164 widgets/AboutUsModern.php:156
+#: widgets/AdforestAboutUs.php:163 widgets/PartnersSlider.php:82
+msgid "Add Client"
+msgstr "افزودن مشتری"
+
+#: widgets/AboutUsModern.php:20
+msgid "About us Modern"
+msgstr "درباره ما - مدرن"
+
+#: widgets/AboutUsModern.php:84 widgets/AdforestAboutUs.php:80
+#: widgets/FrequentlyAskedQuestions.php:70
+msgid "large image"
+msgstr "تصویر بزرگ"
+
+#: widgets/AdGridCarouselFancy.php:19
+msgid "Ad Grid Carousel Fancy"
+msgstr "گردونه شبکه‌ای آگهی - فانتزی"
+
+#: widgets/AdGridCarouselFancy.php:53 widgets/AdGridCarouselModern.php:46
+#: widgets/AdGridFancy.php:53
+msgid "Enter Section Title"
+msgstr "عنوان بخش را وارد کنید"
+
+#: widgets/AdGridCarouselFancy.php:59 widgets/AdGridCarouselModern.php:53
+msgid "Section Desc"
+msgstr "توضیحات بخش"
+
+#: widgets/AdGridCarouselFancy.php:61 widgets/AdGridCarouselModern.php:55
+#: widgets/AdGridFancy.php:62
+msgid "Enter Section Description"
+msgstr "توضیحات بخش را وارد کنید"
+
+#: widgets/AdGridCarouselFancy.php:79 widgets/AdGridCarouselModern.php:83
+#: widgets/AdGridFancy.php:68
+msgid "Ad Title Limit(In Characters)"
+msgstr "محدودیت عنوان آگهی (به کاراکتر)"
+
+#: widgets/AdGridCarouselFancy.php:89 widgets/AdGridCarouselModern.php:93
+#: widgets/CategoryBasedAds.php:55
+msgid "Select Ad Category"
+msgstr "انتخاب دسته آگهی"
+
+#: widgets/AdGridCarouselFancy.php:101 widgets/AdGridCarouselModern.php:105
+msgid "Number of Ads"
+msgstr "تعداد آگهی‌ها"
+
+#: widgets/AdGridCarouselFancy.php:112 widgets/AdforestSignIn.php:126
+#: widgets/AdforestSignUp.php:152 widgets/CategoryBasedAds.php:82
+#: widgets/MultivendorProductCarousel.php:82
+#: widgets/MultivendorProductCategories.php:48
+#: widgets/MultivendorProductsGrid.php:49 widgets/RecentAds.php:63
+msgid "Button Title"
+msgstr "عنوان دکمه"
+
+#: widgets/AdGridCarouselFancy.php:115
+msgid "Enter Button Title"
+msgstr "عنوان دکمه را وارد کنید"
+
+#: widgets/AdGridCarouselFancy.php:124
+msgid "Enter Button Link"
+msgstr "لینک دکمه را وارد کنید"
+
+#: widgets/AdGridCarouselFancy.php:152 widgets/AdGridCarouselModern.php:148
+#: widgets/AdGridFancy.php:107 widgets/CategoryBasedAds.php:130
+#: widgets/FeaturedAds.php:121 widgets/MainHero4.php:215
+#: widgets/MainHero4.php:337
+msgid "Select No of Grid Columns"
+msgstr "انتخاب تعداد ستون‌های شبکه"
+
+#: widgets/AdGridCarouselFancy.php:155 widgets/AdGridCarouselModern.php:137
+#: widgets/AdGridCarouselModern.php:151 widgets/AdGridFancy.php:123
+#: widgets/CategoryBasedAds.php:133 widgets/MainHero4.php:203
+#: widgets/MainHero4.php:218 widgets/MainHero4.php:325
+#: widgets/MainHero4.php:340
+msgid "1"
+msgstr "۱"
+
+#: widgets/AdGridCarouselFancy.php:156 widgets/AdGridCarouselModern.php:138
+#: widgets/AdGridCarouselModern.php:152 widgets/AdGridFancy.php:110
+#: widgets/AdGridFancy.php:124 widgets/CategoryBasedAds.php:134
+#: widgets/ClassicHome.php:347 widgets/FeaturedAds.php:124
+#: widgets/MainHero4.php:204 widgets/MainHero4.php:219
+#: widgets/MainHero4.php:326 widgets/MainHero4.php:341
+msgid "2"
+msgstr "۲"
+
+#: widgets/AdGridCarouselFancy.php:157 widgets/AdGridCarouselModern.php:139
+#: widgets/AdGridCarouselModern.php:153 widgets/AdGridFancy.php:111
+#: widgets/AdGridFancy.php:125 widgets/CategoryBasedAds.php:135
+#: widgets/ClassicHome.php:348 widgets/FeaturedAds.php:125
+#: widgets/MainHero4.php:205 widgets/MainHero4.php:220
+#: widgets/MainHero4.php:327 widgets/MainHero4.php:342
+msgid "3"
+msgstr "۳"
+
+#: widgets/AdGridCarouselFancy.php:158 widgets/AdGridCarouselModern.php:140
+#: widgets/AdGridCarouselModern.php:154 widgets/AdGridFancy.php:112
+#: widgets/AdGridFancy.php:126 widgets/CategoryBasedAds.php:136
+#: widgets/ClassicHome.php:349 widgets/FeaturedAds.php:126
+msgid "4"
+msgstr "۴"
+
+#: widgets/AdGridCarouselFancy.php:159 widgets/AdGridCarouselModern.php:155
+#: widgets/AdGridFancy.php:113 widgets/CategoryBasedAds.php:137
+#: widgets/ClassicHome.php:350
+msgid "5"
+msgstr "۵"
+
+#: widgets/AdGridCarouselModern.php:20
+msgid "Ad Grid Carousel Modern"
+msgstr "گردونه شبکه‌ای مدرن آگهی"
+
+#: widgets/AdGridCarouselModern.php:134 widgets/AdGridFancy.php:120
+#: widgets/CategoryBasedAds.php:104
+msgid "Select Grid Style"
+msgstr "انتخاب استایل شبکه"
+
+#: widgets/AdGridFancy.php:19
+msgid "Ad Grid Fancy"
+msgstr "شبکه آگهی فانتزی"
+
+#: widgets/AdGridFancy.php:76
+msgid "Limit Number of Ads"
+msgstr "محدودیت تعداد آگهی‌ها"
+
+#: widgets/AdListModern.php:19
+msgid "Ads List Modern"
+msgstr "لیست آگهی مدرن"
+
+#: widgets/AdListModern.php:36 widgets/AdtCallToAction.php:88
+#: widgets/EcommerceDealsBoxes.php:54
+#: widgets/MultivendorProductsWithSidebar.php:97
+msgid "Right"
+msgstr "راست"
+
+#: widgets/AdListModern.php:65
+msgid "Select Number of Ads to Show"
+msgstr "انتخاب تعداد آگهی‌ها برای نمایش"
+
+#: widgets/AdLocations.php:19 widgets/ClassicHome.php:128
+msgid "Ad Locations"
+msgstr "موقعیت‌های آگهی"
+
+#: widgets/AdLocations.php:42 widgets/AdsModernBg.php:37
+#: widgets/AdtCallToAction.php:42 widgets/AdtCallToAction.php:94
+#: widgets/FlashSaleWidget.php:42 widgets/MainHero3.php:55
+#: widgets/PartnersSlider.php:48
+msgid "Background Color"
+msgstr "رنگ پس‌زمینه"
+
+#: widgets/AdLocations.php:56 widgets/AdtInfo.php:55
+msgid "Section Button Text"
+msgstr "متن دکمه بخش"
+
+#: widgets/AdLocations.php:63 widgets/AdtInfo.php:61
+msgid "Section Button Link"
+msgstr "لینک دکمه بخش"
+
+#: widgets/AdLocations.php:95 widgets/AdsAndLocationMiniBoxes.php:227
+#: widgets/BrandsCarousel.php:85 widgets/CategorySlider.php:69
+#: widgets/ClassicHome.php:70 widgets/DirectoryHero.php:114
+#: widgets/DirectoryHero.php:220 widgets/LocationsFancy.php:92
+#: widgets/LocationsFancy2.php:86 widgets/LocationsModern.php:132
+#: widgets/MainHero1.php:129 widgets/MainHero1.php:165
+#: widgets/MainHero2.php:189 widgets/MainHero4.php:537
+#: widgets/MainHero6.php:170 widgets/MiniCategorySlider.php:77
+#: widgets/MultivendorProductCategories.php:106
+#: widgets/MultivendorProductCategories.php:140 widgets/RealEstateHero.php:196
+#: widgets/RealEstateHero.php:250
+msgid "Upload Image"
+msgstr "آپلود تصویر"
+
+#: widgets/AdLocations.php:106 widgets/AdsAndLocationMiniBoxes.php:238
+msgid "Locations Repeater"
+msgstr "تکرارکننده موقعیت‌ها"
+
+#: widgets/AdLocations.php:120
+msgid "Do you want to show an Ad?"
+msgstr "آیا می‌خواهید یک آگهی نمایش دهید؟"
+
+#: widgets/AdLocations.php:130
+msgid "Advert Image"
+msgstr "تصویر تبلیغ"
+
+#: widgets/AdLocations.php:132
+msgid "302×464"
+msgstr "۳۰۲x۴۶۴"
+
+#: widgets/AdPostModern.php:20
+msgid "Ad Post - Modern"
+msgstr "ثبت آگهی - مدرن"
+
+#: widgets/AdPostModern.php:39
+msgid "General Settings"
+msgstr "تنظیمات عمومی"
+
+#: widgets/AdPostModern.php:45
+msgid "Form Title"
+msgstr "عنوان فرم"
+
+#: widgets/AdPostModern.php:47
+msgid "Ad Post"
+msgstr "ثبت آگهی"
+
+#: widgets/AdPostModern.php:54 widgets/AdPostModern.php:130
+msgid "Terms & Condition Field"
+msgstr "فیلد قوانین و مقررات"
+
+#: widgets/AdPostModern.php:57 widgets/EcommerceHome.php:165
+msgid "Hide"
+msgstr "مخفی کردن"
+
+#: widgets/AdPostModern.php:58 widgets/EcommerceHome.php:164
+msgid "Show"
+msgstr "نمایش"
+
+#: widgets/AdPostModern.php:66 widgets/AdforestSignUp.php:66
+#: widgets/AdforestSignUp.php:69
+msgid "Terms & Condition Title"
+msgstr "عنوان قوانین و مقررات"
+
+#: widgets/AdPostModern.php:86
+msgid "Terms & Conditions Link"
+msgstr "لینک قوانین و مقررات"
+
+#: widgets/AdPostModern.php:121
+msgid "Slug"
+msgstr "نامک (Slug)"
+
+#: widgets/AdPostModern.php:133
+msgid "Textfield"
+msgstr "فیلد متنی"
+
+#: widgets/AdPostModern.php:134
+msgid "Select/List"
+msgstr "انتخاب / لیست"
+
+#: widgets/AdPostModern.php:141
+msgid "Values for Select/List"
+msgstr "مقادیر برای انتخاب / لیست"
+
+#: widgets/AdPostModern.php:143
+msgid "Like: value1,value2,value3"
+msgstr "مثال: مقدار۱، مقدار۲، مقدار۳"
+
+#: widgets/AdforestAboutUs.php:20
+msgid "About us"
+msgstr "درباره ما"
+
+#: widgets/AdforestAboutUs.php:82 widgets/FrequentlyAskedQuestions.php:72
+msgid "524x464"
+msgstr "۵۲۴x۴۶۴"
+
+#: widgets/AdforestAboutUs.php:88 widgets/FrequentlyAskedQuestions.php:78
+msgid "small image"
+msgstr "تصویر کوچک"
+
+#: widgets/AdforestAboutUs.php:90 widgets/FrequentlyAskedQuestions.php:80
+msgid "294x280"
+msgstr "۲۹۴x۲۸۰"
+
+#: widgets/AdforestAboutUs.php:105
+msgid "Experience Header"
+msgstr "هدر تجربه"
+
+#: widgets/AdforestAboutUs.php:151 widgets/AdforestContactUs.php:148
+msgid "Icon"
+msgstr "آیکون"
+
+#: widgets/AdforestAboutUs.php:153
+msgid "Please use reguler font"
+msgstr "لطفاً از فونت استاندارد استفاده کنید"
+
+#: widgets/AdforestContactUs.php:20
+msgid "Contact Us"
+msgstr "تماس با ما"
+
+#: widgets/AdforestContactUs.php:39
+msgid "Basic Settings"
+msgstr "تنظیمات پایه"
+
+#: widgets/AdforestContactUs.php:46 widgets/AdforestContactUs.php:49
+msgid "Contact Form Title"
+msgstr "عنوان فرم تماس"
+
+#: widgets/AdforestContactUs.php:56 widgets/AdforestContactUs.php:59
+msgid "Contact Info Title"
+msgstr "عنوان اطلاعات تماس"
+
+#: widgets/AdforestContactUs.php:66
+msgid "Contact form 7 shortcode"
+msgstr "شورت‌کد فرم تماس ۷"
+
+#: widgets/AdforestContactUs.php:78
+msgid "Left Side Settings"
+msgstr "تنظیمات سمت چپ"
+
+#: widgets/AdforestContactUs.php:85
+msgid "Title 1"
+msgstr "عنوان ۱"
+
+#: widgets/AdforestContactUs.php:95 widgets/AdforestSignIn.php:111
+#: widgets/AdforestSignUp.php:138 widgets/DirectoryHero.php:49
+#: widgets/EventHomeHero.php:49 widgets/HowItWorksModern.php:42
+#: widgets/MainHero5.php:69 widgets/MultivendorHero.php:69
+msgid "Section Image"
+msgstr "تصویر بخش"
+
+#: widgets/AdforestContactUs.php:107
+msgid "Description 1"
+msgstr "توضیحات ۱"
+
+#: widgets/AdforestContactUs.php:116
+msgid "Title 2"
+msgstr "عنوان ۲"
+
+#: widgets/AdforestContactUs.php:126
+msgid "Description 2"
+msgstr "توضیحات ۲"
+
+#: widgets/AdforestContactUs.php:139
+msgid "Social Media Icons"
+msgstr "آیکون‌های شبکه‌های اجتماعی"
+
+#: widgets/AdforestContactUs.php:160
+msgid "Link"
+msgstr "لینک"
+
+#: widgets/AdforestContactUs.php:162 widgets/AdforestSignUp.php:78
+msgid "https://your-link.com"
+msgstr "https://your-link.com"
+
+#: widgets/AdforestContactUs.php:172
+msgid "Social Icons"
+msgstr "آیکون‌های اجتماعی"
+
+#: widgets/AdforestPackages.php:22
+msgid "Products - Modern 2"
+msgstr "محصولات - مدرن ۲"
+
+#: widgets/AdforestPackages.php:51
+msgid "Section Design"
+msgstr "طراحی بخش"
+
+#: widgets/AdforestPackages.php:54
+#: widgets/MultivendorProductsWithSidebar.php:185
+msgid "Modern"
+msgstr "مدرن"
+
+#: widgets/AdforestPackages.php:55
+#: widgets/MultivendorProductsWithSidebar.php:186
+msgid "Fancy"
+msgstr "فانتزی / شیک"
+
+#: widgets/AdforestPackages.php:66 widgets/AdforestSignIn.php:48
+#: widgets/AdforestSignIn.php:92 widgets/AdforestSignUp.php:49
+#: widgets/AdforestSignUp.php:119
+msgid "For color {color}warp text within this tag{/color}"
+msgstr "برای رنگی کردن {color}متن را داخل این تگ قرار دهید{/color}"
+
+#: widgets/AdforestPackages.php:75
+msgid "Type your description here"
+msgstr "توضیحات خود را اینجا تایپ کنید"
+
+#: widgets/AdforestPackages.php:88
+msgid "Products"
+msgstr "محصولات"
+
+#: widgets/AdforestPackages.php:96
+msgid "Select Product"
+msgstr "انتخاب محصول"
+
+#: widgets/AdforestPackages.php:106
+msgid "Product Items"
+msgstr "آیتم‌های محصول"
+
+#: widgets/AdforestPackages.php:121
+msgid "Select Columns"
+msgstr "انتخاب ستون‌ها"
+
+#: widgets/AdforestSignIn.php:39
+msgid "Form Setting"
+msgstr "تنظیمات فرم"
+
+#: widgets/AdforestSignIn.php:56 widgets/AdforestSignIn.php:100
+#: widgets/AdforestSignUp.php:56 widgets/AdforestSignUp.php:127
+msgid "Short Description"
+msgstr "توضیحات کوتاه"
+
+#: widgets/AdforestSignIn.php:67
+msgid "Captcha Code"
+msgstr "کد امنیتی (کپچا)"
+
+#: widgets/AdforestSignIn.php:69 widgets/AdforestSignUp.php:93
+msgid "Captcha is for stop spamming"
+msgstr "کپچا برای جلوگیری از اسپم است"
+
+#: widgets/AdforestSignIn.php:71 widgets/AdforestSignUp.php:95
+msgid "Please select"
+msgstr "لطفاً انتخاب کنید"
+
+#: widgets/AdforestSignIn.php:72 widgets/AdforestSignUp.php:96
+msgid "With Capcha"
+msgstr "با کپچا"
+
+#: widgets/AdforestSignIn.php:73 widgets/AdforestSignUp.php:97
+msgid "Without Capcha"
+msgstr "بدون کپچا"
+
+#: widgets/AdforestSignIn.php:81 widgets/AdforestSignUp.php:108
+msgid "Other section settings"
+msgstr "سایر تنظیمات بخش"
+
+#: widgets/AdforestSignIn.php:123 widgets/AdforestSignUp.php:149
+msgid "Button  Title"
+msgstr "عنوان دکمه"
+
+#: widgets/AdforestSignIn.php:132 widgets/AdforestSignUp.php:158
+msgid "Button link"
+msgstr "لینک دکمه"
+
+#: widgets/AdforestSignUp.php:39
+msgid "General"
+msgstr "عمومی"
+
+#: widgets/AdforestSignUp.php:76
+msgid "Terms & Conditions"
+msgstr "قوانین و مقررات"
+
+#: widgets/AdforestSignUp.php:91
+msgid "Capcha Code"
+msgstr "کد کپچا"
+
+#: widgets/AdforestWorkflow.php:18 widgets/AdforestWorkflow.php:61
+#: widgets/HowItWorksModern.php:74
+msgid "Workflow"
+msgstr "گردش کار"
+
+#: widgets/AdforestWorkflow.php:67 widgets/HowItWorksModern.php:80
+msgid "Icon 1"
+msgstr "آیکون ۱"
+
+#: widgets/AdforestWorkflow.php:90 widgets/AdforestWorkflow.php:93
+#: widgets/HowItWorksModern.php:103 widgets/HowItWorksModern.php:106
+msgid "Workflow Title 1"
+msgstr "عنوان گردش کار ۱"
+
+#: widgets/AdforestWorkflow.php:100 widgets/AdforestWorkflow.php:103
+#: widgets/HowItWorksModern.php:113 widgets/HowItWorksModern.php:116
+msgid "Workflow Tag Line 1"
+msgstr "توضیح کوتاه گردش کار ۱"
+
+#: widgets/AdforestWorkflow.php:110 widgets/HowItWorksModern.php:123
+msgid "Icon 2"
+msgstr "آیکون ۲"
+
+#: widgets/AdforestWorkflow.php:133 widgets/AdforestWorkflow.php:136
+#: widgets/HowItWorksModern.php:146 widgets/HowItWorksModern.php:149
+msgid "Workflow Title 2"
+msgstr "عنوان گردش کار ۲"
+
+#: widgets/AdforestWorkflow.php:142 widgets/AdforestWorkflow.php:145
+#: widgets/HowItWorksModern.php:155 widgets/HowItWorksModern.php:158
+msgid "Workflow Tag Line 2"
+msgstr "توضیح کوتاه گردش کار ۲"
+
+#: widgets/AdforestWorkflow.php:151 widgets/HowItWorksModern.php:164
+msgid "Icon 3"
+msgstr "آیکون ۳"
+
+#: widgets/AdforestWorkflow.php:174 widgets/AdforestWorkflow.php:177
+#: widgets/HowItWorksModern.php:187 widgets/HowItWorksModern.php:190
+msgid "Workflow Title 3"
+msgstr "عنوان گردش کار ۳"
+
+#: widgets/AdforestWorkflow.php:183 widgets/AdforestWorkflow.php:186
+#: widgets/HowItWorksModern.php:196 widgets/HowItWorksModern.php:199
+msgid "Workflow Tag Line 3"
+msgstr "توضیح کوتاه گردش کار ۳"
+
+#: widgets/AdsAndLocationMiniBoxes.php:17
+msgid "Mini ADs & Location"
+msgstr "مینی آگهی‌ها و موقعیت"
+
+#: widgets/AdsAndLocationMiniBoxes.php:37
+msgid "Show Main Section Top Carousel"
+msgstr "نمایش گردونه بالای بخش اصلی"
+
+#: widgets/AdsAndLocationMiniBoxes.php:48
+msgid "What type of ads do you want to show on the upper 1st section?"
+msgstr "چه نوع آگهی‌هایی را می‌خواهید در اولین بخش بالایی نمایش دهید؟"
+
+#: widgets/AdsAndLocationMiniBoxes.php:51
+#: widgets/AdsAndLocationMiniBoxes.php:112
+#: widgets/AdsAndLocationMiniBoxes.php:286 widgets/AdsModernBg.php:67
+#: widgets/FeaturedAds.php:199 widgets/MainHero4.php:627
+#: widgets/RecentAds.php:39 widgets/RecentAds.php:162
+msgid "Recent"
+msgstr "اخیر"
+
+#: widgets/AdsAndLocationMiniBoxes.php:63
+msgid "1st Section Title"
+msgstr "عنوان اولین بخش"
+
+#: widgets/AdsAndLocationMiniBoxes.php:74
+msgid "1st Section Button Text"
+msgstr "متن دکمه اولین بخش"
+
+#: widgets/AdsAndLocationMiniBoxes.php:85
+msgid "1st Section Button Link"
+msgstr "لینک دکمه اولین بخش"
+
+#: widgets/AdsAndLocationMiniBoxes.php:95
+#: widgets/AdsAndLocationMiniBoxes.php:143 widgets/AdsModernBg.php:75
+#: widgets/EventListWidget.php:77 widgets/RecentAds.php:47
+msgid "Number of Ads to show in main section?"
+msgstr "تعداد آگهی‌ها برای نمایش در بخش اصلی؟"
+
+#: widgets/AdsAndLocationMiniBoxes.php:109
+msgid "What type of ads do you want to show on the upper 2nd section?"
+msgstr "چه نوع آگهی‌هایی را می‌خواهید در دومین بخش بالایی نمایش دهید؟"
+
+#: widgets/AdsAndLocationMiniBoxes.php:121
+msgid "2nd Section Title"
+msgstr "عنوان دومین بخش"
+
+#: widgets/AdsAndLocationMiniBoxes.php:129
+msgid "2nd Section Button Text"
+msgstr "متن دکمه دومین بخش"
+
+#: widgets/AdsAndLocationMiniBoxes.php:136
+msgid "2nd Section Button Link"
+msgstr "لینک دکمه دومین بخش"
+
+#: widgets/AdsAndLocationMiniBoxes.php:154
+msgid "Show Horizontal Advertisement."
+msgstr "نمایش تبلیغات افقی."
+
+#: widgets/AdsAndLocationMiniBoxes.php:166 widgets/FeaturedAds.php:147
+#: widgets/HorizontalAd.php:43
+msgid "Horizontal Advertisement image"
+msgstr "تصویر تبلیغات افقی"
+
+#: widgets/AdsAndLocationMiniBoxes.php:168 widgets/HorizontalAd.php:45
+#: widgets/MainHero4.php:103
+msgid "1320×140"
+msgstr "۱۳۲۰x۱۴۰"
+
+#: widgets/AdsAndLocationMiniBoxes.php:178
+msgid "Location Section Title"
+msgstr "عنوان بخش موقعیت"
+
+#: widgets/AdsAndLocationMiniBoxes.php:186
+msgid "Locations Section Button Text"
+msgstr "متن دکمه بخش موقعیت‌ها"
+
+#: widgets/AdsAndLocationMiniBoxes.php:194
+msgid "Locations Section Button Link"
+msgstr "لینک دکمه بخش موقعیت‌ها"
+
+#: widgets/AdsAndLocationMiniBoxes.php:255
+msgid "Right Section Settings"
+msgstr "تنظیمات بخش سمت راست"
+
+#: widgets/AdsAndLocationMiniBoxes.php:261
+msgid "Show Ads in Right Sidebar."
+msgstr "نمایش آگهی‌ها در سایدبار سمت راست."
+
+#: widgets/AdsAndLocationMiniBoxes.php:283
+msgid "What type of ads do you want to show on the right sidebar?"
+msgstr "چه نوع آگهی‌هایی را می‌خواهید در سایدبار سمت راست نمایش دهید؟"
+
+#: widgets/AdsAndLocationMiniBoxes.php:298 widgets/MainHero4.php:639
+msgid "Number of Ads to show in Right Sidebar?"
+msgstr "تعداد آگهی‌ها برای نمایش در سایدبار سمت راست؟"
+
+#: widgets/AdsAndLocationMiniBoxes.php:312
+msgid "Show Ad 1 in Right Sidebar."
+msgstr "نمایش آگهی ۱ در سایدبار سمت راست."
+
+#: widgets/AdsAndLocationMiniBoxes.php:323
+msgid "Right Advert Image"
+msgstr "تصویر تبلیغ سمت راست"
+
+#: widgets/AdsAndLocationMiniBoxes.php:325 widgets/AdsModernBg.php:99
+#: widgets/FeaturedAds.php:238 widgets/MainHero4.php:575
+#: widgets/MainHero4.php:605 widgets/MainHero4.php:681
+#: widgets/MultivendorProductsWithSidebar.php:146 widgets/RecentAds.php:103
+#: widgets/RecentAds.php:124 widgets/RecentAds.php:206
+msgid "303x485"
+msgstr "۳۰۳x۴۸۵"
+
+#: widgets/AdsAndLocationMiniBoxes.php:334
+msgid "Show Ad 2 in Right Sidebar."
+msgstr "نمایش آگهی ۲ در سایدبار سمت راست."
+
+#: widgets/AdsAndLocationMiniBoxes.php:345 widgets/MainHero4.php:679
+msgid "Right Advert Image 2"
+msgstr "تصویر تبلیغ ۲ سمت راست"
+
+#: widgets/AdsAndLocationMiniBoxes.php:347
+msgid "303x294"
+msgstr "۳۰۳x۲۹۴"
+
+#: widgets/AdsModernBg.php:17
+msgid "Ads Modern with Background"
+msgstr "آگهی‌های مدرن با پس‌زمینه"
+
+#: widgets/AdsModernBg.php:64
+msgid "What type of ads do you want to show?"
+msgstr "چه نوع آگهی‌هایی را می‌خواهید نمایش دهید؟"
+
+#: widgets/AdsModernBg.php:85
+msgid "Show Ad?"
+msgstr "نمایش آگهی؟"
+
+#: widgets/AdsModernBg.php:97 widgets/AdtCallToAction.php:49
+#: widgets/AdtCallToAction.php:101
+msgid "Advert"
+msgstr "تبلیغ"
+
+#: widgets/AdtCallToAction.php:19
+msgid "ADT Call to Action"
+msgstr "فراخوان به عمل ADT"
+
+#: widgets/AdtCallToAction.php:36 widgets/EcommerceDealsBoxes.php:55
+#: widgets/MultivendorProductsWithSidebar.php:96
+msgid "Left"
+msgstr "چپ"
+
+#: widgets/AdtInfo.php:19
+msgid "Adt Info"
+msgstr "اطلاعات Adt"
+
+#: widgets/BrandsCarousel.php:20
+msgid "Brands Carousel"
+msgstr "گردونه برندها"
+
+#: widgets/BrandsCarousel.php:38
+msgid "Brands"
+msgstr "برندها"
+
+#: widgets/BrandsCarousel.php:96 widgets/RealEstateHero.php:261
+msgid "Carousel Categories"
+msgstr "دسته‌های گردونه"
+
+#: widgets/CarDealerHero.php:19
+msgid "Car Dealer Hero"
+msgstr "هیرو (Hero) نمایشگاه ماشین"
+
+#: widgets/CarDealerHero.php:62 widgets/CarDealerHero.php:65
+#: widgets/DirectoryHero.php:70 widgets/DirectoryHero.php:73
+#: widgets/EventHomeHero.php:69 widgets/EventHomeHero.php:72
+#: widgets/MainHero1.php:61 widgets/MainHero1.php:64 widgets/MainHero2.php:62
+#: widgets/MainHero2.php:65 widgets/MainHero3.php:71 widgets/MainHero3.php:74
+#: widgets/MainHero6.php:58 widgets/MainHero6.php:61 widgets/MainHero6.php:135
+#: widgets/MainHero6.php:138 widgets/RealEstateHero.php:80
+#: widgets/RealEstateHero.php:83
+msgid "Section Tagline"
+msgstr "شعار بخش"
+
+#: widgets/CarDealerHero.php:82 widgets/DirectoryHero.php:137
+#: widgets/EventHomeHero.php:99 widgets/MainHero3.php:109
+#: widgets/MainHero6.php:87 widgets/RealEstateHero.php:100
+msgid "Search Section"
+msgstr "بخش جستجو"
+
+#: widgets/CarDealerHero.php:99 widgets/ClassicHome.php:117
+#: widgets/DirectoryHero.php:146 widgets/EventHomeHero.php:108
+#: widgets/MainHero3.php:135 widgets/MainHero3.php:157
+#: widgets/MainHero4.php:386 widgets/MainHero4.php:402 widgets/MainHero6.php:96
+#: widgets/RealEstateHero.php:117 widgets/RealEstateHero.php:139
+msgid "Field Type"
+msgstr "نوع فیلد"
+
+#: widgets/CarDealerHero.php:110 widgets/MainHero3.php:146
+#: widgets/RealEstateHero.php:128
+msgid "Classified Ad Types"
+msgstr "انواع آگهی طبقه‌بندی شده"
+
+#: widgets/CarDealerHero.php:120
+msgid "Enable Title Search?"
+msgstr "فعال‌سازی جستجوی عنوان؟"
+
+#: widgets/CarDealerHero.php:129
+msgid "Title Field Label"
+msgstr "برچسب فیلد عنوان"
+
+#: widgets/CarDealerHero.php:131
+msgid "Explore"
+msgstr "گشت و گذار / جستجو"
+
+#: widgets/CarDealerHero.php:152
+msgid "Select Taxonomy"
+msgstr "انتخاب طبقه‌بندی (Taxonomy)"
+
+#: widgets/CarDealerHero.php:156
+msgid "Select a taxonomy to show on the search form."
+msgstr "یک طبقه‌بندی را برای نمایش در فرم جستجو انتخاب کنید."
+
+#: widgets/CategoryBasedAds.php:19
+msgid "Category Based Ads"
+msgstr "آگهی‌های مبتنی بر دسته"
+
+#: widgets/CategoryBasedAds.php:65
+msgid "Number of Ads to show?"
+msgstr "تعداد آگهی‌ها برای نمایش؟"
+
+#: widgets/CategoryBasedAds.php:77 widgets/ClassicHome.php:316
+msgid "Ads"
+msgstr "آگهی‌ها"
+
+#: widgets/CategoryBasedAds.php:84 widgets/FeaturedAds.php:49
+#: widgets/FeaturedAds.php:107 widgets/MultivendorProductCategories.php:50
+#: widgets/MultivendorProductsGrid.php:51 widgets/RecentAds.php:65
+msgid "View All"
+msgstr "مشاهده همه"
+
+#: widgets/CategoryBasedAds.php:91
+msgid "#"
+msgstr "#"
+
+#: widgets/CategoryBasedAds.php:96
+msgid "Ad Title Limit (In Characters)"
+msgstr "محدودیت عنوان آگهی (به کاراکتر)"
+
+#: widgets/CategoryBasedAds.php:107 widgets/ClassicHome.php:334
+#: widgets/FeaturedAds.php:74
+msgid "Style 1"
+msgstr "استایل ۱"
+
+#: widgets/CategoryBasedAds.php:108 widgets/ClassicHome.php:335
+#: widgets/FeaturedAds.php:75
+msgid "Style 2"
+msgstr ""
+
+#: widgets/CategoryBasedAds.php:109 widgets/ClassicHome.php:336
+#: widgets/FeaturedAds.php:76
+msgid "Style 3"
+msgstr "استایل ۳"
+
+#: widgets/CategoryBasedAds.php:120 widgets/FeaturedAds.php:87
+#: widgets/MainHero4.php:162 widgets/MainHero4.php:284
+msgid "Regular"
+msgstr "معمولی"
+
+#: widgets/CategoryBasedAds.php:122 widgets/MainHero4.php:164
+#: widgets/MainHero4.php:286 widgets/RecentAds.php:41
+msgid "Both"
+msgstr "هر دو"
+
+#: widgets/CategorySlider.php:17
+msgid "Types Carousel"
+msgstr "کاروسل انواع"
+
+#: widgets/CategorySlider.php:57
+msgid "Select Type"
+msgstr "انتخاب نوع"
+
+#: widgets/CategorySlider.php:80
+msgid "Carousel Types"
+msgstr "انواع کاروسل"
+
+#: widgets/ClassicHome.php:20
+msgid "Classic Home Widget"
+msgstr "ابزارک خانه کلاسیک"
+
+#: widgets/ClassicHome.php:81 widgets/MiniCategorySlider.php:88
+msgid "Categories Repeater"
+msgstr "تکرارکننده دسته‌ها"
+
+#: widgets/ClassicHome.php:97
+msgid "Filters"
+msgstr "فیلترها"
+
+#: widgets/ClassicHome.php:105 widgets/ClassicHome.php:107
+msgid "Filter Button Text"
+msgstr "متن دکمه فیلتر"
+
+#: widgets/ClassicHome.php:122
+msgid "Condition"
+msgstr "وضعیت کالا"
+
+#: widgets/ClassicHome.php:123
+msgid "Warranty"
+msgstr "گارانتی"
+
+#: widgets/ClassicHome.php:124
+msgid "Price"
+msgstr "قیمت"
+
+#: widgets/ClassicHome.php:125
+msgid "Ad"
+msgstr "آگهی"
+
+#: widgets/ClassicHome.php:126
+msgid "Ad Categories"
+msgstr "دسته‌های آگهی"
+
+#: widgets/ClassicHome.php:127 widgets/FeaturedAds.php:84
+msgid "Ad Type"
+msgstr "نوع آگهی"
+
+#: widgets/ClassicHome.php:129
+msgid "Ad Currency"
+msgstr "واحد پول آگهی"
+
+#: widgets/ClassicHome.php:132
+msgid "Select the field type for this item"
+msgstr "نوع فیلد را برای این آیتم انتخاب کنید"
+
+#: widgets/ClassicHome.php:139
+msgid "Ad Title Heading"
+msgstr "تیتر عنوان آگهی"
+
+#: widgets/ClassicHome.php:151
+msgid "Ad Currency Heading"
+msgstr "تیتر واحد پول آگهی"
+
+#: widgets/ClassicHome.php:163
+msgid "Radius Search Title"
+msgstr "عنوان جستجوی شعاعی"
+
+#: widgets/ClassicHome.php:175
+msgid "Condition Title"
+msgstr "عنوان وضعیت"
+
+#: widgets/ClassicHome.php:178
+msgid "Enter the title for the condition"
+msgstr "عنوان وضعیت را وارد کنید"
+
+#: widgets/ClassicHome.php:188
+msgid "Ad Locations Title"
+msgstr "عنوان موقعیت‌های آگهی"
+
+#: widgets/ClassicHome.php:191
+msgid "Enter the title for the Locations"
+msgstr "عنوان موقعیت‌ها را وارد کنید"
+
+#: widgets/ClassicHome.php:201
+msgid "Ad Type Title"
+msgstr "عنوان نوع آگهی"
+
+#: widgets/ClassicHome.php:204
+msgid "Enter the title for the Ad Type"
+msgstr "عنوان نوع آگهی را وارد کنید"
+
+#: widgets/ClassicHome.php:214
+msgid "Warranty Title"
+msgstr "عنوان گارانتی"
+
+#: widgets/ClassicHome.php:217
+msgid "Enter the title for the warranty"
+msgstr "عنوان گارانتی را وارد کنید"
+
+#: widgets/ClassicHome.php:227
+msgid "Minimum Price"
+msgstr "حداقل قیمت"
+
+#: widgets/ClassicHome.php:230
+msgid "Enter the minimum price"
+msgstr "حداقل قیمت را وارد کنید"
+
+#: widgets/ClassicHome.php:240
+msgid "Maximum Price"
+msgstr "حداکثر قیمت"
+
+#: widgets/ClassicHome.php:243
+msgid "Enter the maximum price"
+msgstr "حداکثر قیمت را وارد کنید"
+
+#: widgets/ClassicHome.php:253 widgets/MainHero4.php:62
+msgid "Ad Image"
+msgstr "تصویر آگهی"
+
+#: widgets/ClassicHome.php:255
+msgid "Upload an image for the ad"
+msgstr "یک تصویر برای آگهی بارگذاری کنید"
+
+#: widgets/ClassicHome.php:265
+msgid "Ad Categories Title"
+msgstr "عنوان دسته‌های آگهی"
+
+#: widgets/ClassicHome.php:268
+msgid "Enter the title for the Categories"
+msgstr "عنوان دسته‌ها را وارد کنید"
+
+#: widgets/ClassicHome.php:278
+msgid "Enable Show More On Categories"
+msgstr "فعال‌سازی «نمایش بیشتر» در دسته‌ها"
+
+#: widgets/ClassicHome.php:293
+msgid "Number Of Categories Before Show More"
+msgstr "تعداد دسته‌ها پیش از دکمه نمایش بیشتر"
+
+#: widgets/ClassicHome.php:305
+msgid "Repeater Items"
+msgstr "آیتم‌های تکرارکننده"
+
+#: widgets/ClassicHome.php:323
+msgid "Ad title (limit in characters)"
+msgstr "عنوان آگهی (محدودیت به نویسه)"
+
+#: widgets/ClassicHome.php:331 widgets/FeaturedAds.php:71
+msgid "Ad Grid Style"
+msgstr "استایل شبکه‌ای آگهی"
+
+#: widgets/ClassicHome.php:344
+msgid "Ad Grid Columns"
+msgstr "ستون‌های شبکه آگهی"
+
+#: widgets/ClassicHome.php:358
+msgid "Number of Ads Per page"
+msgstr "تعداد آگهی‌ها در هر صفحه"
+
+#: widgets/CyberSaleHero.php:19
+msgid "Cyber Sale Hero"
+msgstr "هیرو فروش سایبری"
+
+#: widgets/CyberSaleHero.php:36 widgets/MainHero5.php:36
+#: widgets/MultivendorHero.php:36 widgets/MultivendorProductCarousel.php:53
+#: widgets/MultivendorProductCarouselWithAds.php:36
+#: widgets/MultivendorProductCategories.php:36
+#: widgets/MultivendorProductsGrid.php:36
+#: widgets/MultivendorProductsWithSidebar.php:52
+#: widgets/MultivendorServices.php:36
+msgid "Main"
+msgstr "اصلی"
+
+#: widgets/CyberSaleHero.php:55
+msgid "Sale Text"
+msgstr "متن فروش"
+
+#: widgets/CyberSaleHero.php:62
+msgid "Sale End Date"
+msgstr "تاریخ پایان فروش"
+
+#: widgets/CyberSaleHero.php:68 widgets/DirectoryHero.php:41
+#: widgets/EventHomeHero.php:41 widgets/MainHero6.php:41
+#: widgets/RealEstateHero.php:60
+msgid "Section Background Image"
+msgstr "تصویر پس‌زمینه بخش"
+
+#: widgets/CyberSaleHero.php:70 widgets/MainHero5.php:71
+#: widgets/MultivendorHero.php:71
+msgid "724×335"
+msgstr "۷۲۴x۳۳۵"
+
+#: widgets/CyberSaleHero.php:78
+msgid "Section Main Image"
+msgstr "تصویر اصلی بخش"
+
+#: widgets/CyberSaleHero.php:87
+msgid "Section Sale Text Image"
+msgstr "تصویر متن فروش بخش"
+
+#: widgets/CyberSaleHero.php:96
+msgid "Section Discount Image"
+msgstr "تصویر تخفیف بخش"
+
+#: widgets/DealsOfTheDay.php:18
+msgid "Deals of the Day"
+msgstr "پیشنهادهای روز"
+
+#: widgets/DealsOfTheDay.php:34 widgets/EcommerceDealsBoxes.php:41
+msgid "Content"
+msgstr "محتوا"
+
+#: widgets/DealsOfTheDay.php:51
+msgid "Overlay Color"
+msgstr "رنگ هم‌پوشانی (Overlay)"
+
+#: widgets/DealsOfTheDay.php:64
+msgid "Deals Of The Day"
+msgstr "پیشنهادهای امروز"
+
+#: widgets/DealsOfTheDay.php:74
+#, no-php-format
+msgid "Get a chance, Save up to 50% discount"
+msgstr "فرصت را از دست ندهید، تا ۵۰٪ تخفیف بگیرید"
+
+#: widgets/DealsOfTheDay.php:84 widgets/EcommerceDealsBoxes.php:95
+#: widgets/EcommerceDealsBoxes.php:119 widgets/EcommerceDealsBoxes.php:126
+#: widgets/EcommerceHome.php:79
+msgid "Shop Now"
+msgstr "هم‌اکنون خرید کنید"
+
+#: widgets/DealsOfTheDay.php:103 widgets/EcommerceDealsBoxes.php:139
+#: widgets/LocationsModern.php:42
+msgid "Style"
+msgstr "استایل"
+
+#: widgets/DealsOfTheDay.php:112
+msgid "Box Background"
+msgstr "پس‌زمینه باکس"
+
+#: widgets/DealsOfTheDay.php:122 widgets/EcommerceDealsBoxes.php:148
+msgid "Title Typography"
+msgstr "تایپوگرافی عنوان"
+
+#: widgets/DealsOfTheDay.php:130 widgets/EcommerceDealsBoxes.php:156
+msgid "Title Color"
+msgstr "رنگ عنوان"
+
+#: widgets/DealsOfTheDay.php:142 widgets/EcommerceDealsBoxes.php:168
+msgid "Description Typography"
+msgstr "تایپوگرافی توضیحات"
+
+#: widgets/DealsOfTheDay.php:150 widgets/EcommerceDealsBoxes.php:176
+msgid "Description Color"
+msgstr "رنگ توضیحات"
+
+#: widgets/DealsOfTheDay.php:162 widgets/EcommerceDealsBoxes.php:188
+msgid "Button Typography"
+msgstr "تایپوگرافی دکمه"
+
+#: widgets/DealsOfTheDay.php:170 widgets/EcommerceDealsBoxes.php:196
+msgid "Button Text Color"
+msgstr "رنگ متن دکمه"
+
+#: widgets/DealsOfTheDay.php:181 widgets/EcommerceDealsBoxes.php:207
+msgid "Button Background Color"
+msgstr "رنگ پس‌زمینه دکمه"
+
+#: widgets/DirectoryHero.php:18
+msgid "Directory Hero"
+msgstr "هیرو دایرکتوری"
+
+#: widgets/DirectoryHero.php:125 widgets/DirectoryHero.php:231
+#: widgets/EventHomeHero.php:150 widgets/MainHero1.php:91
+#: widgets/RealEstateHero.php:207
+msgid "Popular Categories"
+msgstr "دسته‌های محبوب"
+
+#: widgets/DirectoryHero.php:160 widgets/EventHomeHero.php:122
+#: widgets/MainHero3.php:171 widgets/MainHero6.php:110
+#: widgets/RealEstateHero.php:153
+msgid "Classified Search Fields"
+msgstr "فیلدهای جستجوی آگهی"
+
+#: widgets/DirectoryHero.php:179
+msgid "Category Carousel Section"
+msgstr "بخش کاروسل دسته‌بندی"
+
+#: widgets/EcommerceDealsBoxes.php:23
+msgid "Ecommerce Deals Boxes"
+msgstr "باکس‌های پیشنهاد فروشگاهی"
+
+#: widgets/EcommerceDealsBoxes.php:51
+msgid "Content Alignment"
+msgstr "تراز محتوا"
+
+#: widgets/EcommerceDealsBoxes.php:76 widgets/EcommerceDealsBoxes.php:117
+msgid "Hand Gloves"
+msgstr "دستکش"
+
+#: widgets/EcommerceDealsBoxes.php:86 widgets/EcommerceDealsBoxes.php:118
+#: widgets/EcommerceDealsBoxes.php:125
+#, no-php-format
+msgid "Save up to 50% discount"
+msgstr "تا ۵۰٪ تخفیف بگیرید"
+
+#: widgets/EcommerceDealsBoxes.php:111
+msgid "Deals Boxes"
+msgstr "باکس‌های پیشنهاد"
+
+#: widgets/EcommerceDealsBoxes.php:124
+msgid "Best Earrings"
+msgstr "بهترین گوشواره‌ها"
+
+#: widgets/EcommerceHome.php:22
+msgid "Ecommerce Hero"
+msgstr "هیرو فروشگاهی"
+
+#: widgets/EcommerceHome.php:40
+msgid "Left Panel"
+msgstr "پنل سمت چپ"
+
+#: widgets/EcommerceHome.php:59
+msgid "Subtitle"
+msgstr "زیرعنوان"
+
+#: widgets/EcommerceHome.php:61
+msgid "Collection 2025"
+msgstr "کلکسیون ۲۰۲۵"
+
+#: widgets/EcommerceHome.php:70
+msgid "Luxury Furnitures"
+msgstr "مبلمان لوکس"
+
+#: widgets/EcommerceHome.php:85
+msgid "Button URL"
+msgstr "لینک دکمه"
+
+#: widgets/EcommerceHome.php:93 widgets/MultivendorProductCarousel.php:139
+msgid "Countdown End Date/Time"
+msgstr "تاریخ/زمان پایان شمارش معکوس"
+
+#: widgets/EcommerceHome.php:95 widgets/MultivendorProductCarousel.php:141
+msgid "When the sale ends."
+msgstr "زمانی که فروش پایان می‌یابد."
+
+#: widgets/EcommerceHome.php:111
+msgid "Product Category"
+msgstr "دسته محصول"
+
+#: widgets/EcommerceHome.php:120
+msgid "Custom Image (optional)"
+msgstr "تصویر سفارشی (اختیاری)"
+
+#: widgets/EcommerceHome.php:130
+msgid "Override Title (optional)"
+msgstr "تغییر عنوان (اختیاری)"
+
+#: widgets/EcommerceHome.php:138
+msgid "Override Count Text (e.g. “16 Products”)"
+msgstr "تغییر متن تعداد (مثلاً «۱۶ محصول»)"
+
+#: widgets/EcommerceHome.php:146 widgets/MultivendorProductsGrid.php:57
+msgid "Link URL"
+msgstr "لینک URL"
+
+#: widgets/EcommerceHome.php:155
+msgid "Right Panel Categories"
+msgstr "دسته‌های پنل سمت راست"
+
+#: widgets/EcommerceHome.php:162
+msgid "Show Categories Section"
+msgstr "نمایش بخش دسته‌بندی‌ها"
+
+#: widgets/EcommerceHome.php:173
+msgid "Categories Items"
+msgstr "آیتم‌های دسته‌بندی"
+
+#: widgets/EcommerceHome.php:186
+msgid "Columns"
+msgstr "ستون‌ها"
+
+#: widgets/EcommerceHome.php:205
+msgid "Layout & Spacing"
+msgstr "چیدمان و فاصله‌گذاری"
+
+#: widgets/EcommerceHome.php:212
+msgid "Container Max Width (px)"
+msgstr "حداکثر عرض نگهدارنده (px)"
+
+#: widgets/EcommerceHome.php:220
+msgid "Gutter between items (px)"
+msgstr "فاصله بین آیتم‌ها (px)"
+
+#: widgets/EcommerceHome.php:293
+msgid "Sale Ends In:"
+msgstr "پایان فروش در:"
+
+#: widgets/EcommerceHome.php:338
+#, php-format
+msgid "%s Product"
+msgid_plural "%s Products"
+msgstr[0] "%s محصول"
+msgstr[1] "%s محصول"
+
+#: widgets/EventHomeHero.php:18
+msgid "Event Home Hero"
+msgstr "هیرو خانه رویداد"
+
+#: widgets/EventHomeHero.php:87 widgets/EventHomeHero.php:90
+#: widgets/MainHero6.php:76 widgets/MainHero6.php:79
+msgid "Play Button Link"
+msgstr "لینک دکمه پخش"
+
+#: widgets/EventListWidget.php:19
+msgid "Event List Widget"
+msgstr "ابزارک لیست رویداد"
+
+#: widgets/EventListWidget.php:70
+msgid "Event Title Limit (In Characters)"
+msgstr "محدودیت عنوان رویداد (به نویسه)"
+
+#: widgets/EventsGridCarousel.php:19
+msgid "Event Grid Carousel"
+msgstr "کاروسل شبکه‌ای رویداد"
+
+#: widgets/EventsGridCarousel.php:51
+msgid "Event Title Limit(In Characters)"
+msgstr "محدودیت عنوان رویداد (به نویسه)"
+
+#: widgets/EventsGridCarousel.php:72
+msgid "Select Event Category"
+msgstr "انتخاب دسته رویداد"
+
+#: widgets/EventsGridCarousel.php:83
+msgid "Number of Events"
+msgstr "تعداد رویدادها"
+
+#: widgets/FeaturedAds.php:47
+msgid "Section Top Button Text"
+msgstr "متن دکمه بالای بخش"
+
+#: widgets/FeaturedAds.php:55
+msgid "Section Top Button Link"
+msgstr "لینک دکمه بالای بخش"
+
+#: widgets/FeaturedAds.php:63
+msgid "Grid Title Limit"
+msgstr "محدودیت عنوان شبکه"
+
+#: widgets/FeaturedAds.php:97
+msgid "No. of Featured Ads to Show"
+msgstr "تعداد آگهی‌های ویژه برای نمایش"
+
+#: widgets/FeaturedAds.php:105
+msgid "Section Bottom Button Text"
+msgstr "متن دکمه پایین بخش"
+
+#: widgets/FeaturedAds.php:113
+msgid "Section Bottom Button Link"
+msgstr "لینک دکمه پایین بخش"
+
+#: widgets/FeaturedAds.php:134 widgets/MainHero4.php:47
+msgid "Show Main Section Top Advert"
+msgstr "نمایش تبلیغ بالای بخش اصلی"
+
+#: widgets/FeaturedAds.php:149
+msgid "728x90"
+msgstr "۷۲۸x۹۰"
+
+#: widgets/FeaturedAds.php:165
+msgid "Show Ads in Left Sidebar."
+msgstr "نمایش آگهی‌ها در سایدبار سمت چپ."
+
+#: widgets/FeaturedAds.php:177 widgets/RecentAds.php:151
+msgid "Ads Sidebar Title"
+msgstr "عنوان سایدبار آگهی‌ها"
+
+#: widgets/FeaturedAds.php:187
+msgid "Ads Sidebar Title Limit"
+msgstr "محدودیت عنوان سایدبار آگهی‌ها"
+
+#: widgets/FeaturedAds.php:196
+msgid "What type of ads do you want to show on the sidebar?"
+msgstr "چه نوع آگهی‌هایی در سایدبار نمایش داده شود؟"
+
+#: widgets/FeaturedAds.php:211
+msgid "Number of Ads to show in Sidebar?"
+msgstr "تعداد آگهی‌ها در سایدبار؟"
+
+#: widgets/FeaturedAds.php:224 widgets/RecentAds.php:193
+msgid "Show Advert in Sidebar."
+msgstr "نمایش تبلیغ در سایدبار."
+
+#: widgets/FeaturedAds.php:236 widgets/MainHero4.php:573
+#: widgets/RecentAds.php:204
+msgid "Left Advert Image"
+msgstr "تصویر تبلیغ سمت چپ"
+
+#: widgets/FlashSaleWidget.php:18
+msgid "Flash Sale Widget"
+msgstr "ابزارک فروش فوری"
+
+#: widgets/FlashSaleWidget.php:50
+msgid "Header image"
+msgstr "تصویر هدر"
+
+#: widgets/FlashSaleWidget.php:58
+msgid "Left Image Ad"
+msgstr "تبلیغ تصویری سمت چپ"
+
+#: widgets/FlashSaleWidget.php:66
+msgid "Right Image Ad"
+msgstr "تبلیغ تصویری سمت راست"
+
+#: widgets/FlashSaleWidget.php:74
+msgid "No of Ads to Show"
+msgstr "تعداد آگهی‌ها برای نمایش"
+
+#: widgets/FrequentlyAskedQuestions.php:18
+msgid "Adforest FAQs"
+msgstr "سوالات متداول ادفارست"
+
+#: widgets/FrequentlyAskedQuestions.php:88
+msgid "FAQs Settings"
+msgstr "تنظیمات سوالات متداول"
+
+#: widgets/FrequentlyAskedQuestions.php:95
+#: widgets/FrequentlyAskedQuestions.php:98
+msgid "Question"
+msgstr "سوال"
+
+#: widgets/FrequentlyAskedQuestions.php:104
+#: widgets/FrequentlyAskedQuestions.php:107
+msgid "Answer"
+msgstr "پاسخ"
+
+#: widgets/FrequentlyAskedQuestions.php:114
+msgid "Add FAQ"
+msgstr "افزودن سوال متداول"
+
+#: widgets/HorizontalAd.php:19
+msgid "Horizontal AD"
+msgstr "تبلیغ افقی"
+
+#: widgets/HowItWorksModern.php:18
+msgid "How It Works Modern"
+msgstr "نحوه کار مدرن"
+
+#: widgets/HowItWorksModern.php:208
+msgid "3rd Section"
+msgstr "بخش سوم"
+
+#: widgets/HowItWorksModern.php:215 widgets/HowItWorksModern.php:218
+msgid "Box Title 1"
+msgstr "عنوان باکس ۱"
+
+#: widgets/HowItWorksModern.php:225 widgets/HowItWorksModern.php:286
+msgid "Box Background Color"
+msgstr "رنگ پس‌زمینه باکس"
+
+#: widgets/HowItWorksModern.php:234 widgets/HowItWorksModern.php:237
+msgid "Box Tagline 1"
+msgstr "شعار باکس ۱"
+
+#: widgets/HowItWorksModern.php:244 widgets/HowItWorksModern.php:247
+msgid "Box Btn Text 1"
+msgstr "متن دکمه باکس ۱"
+
+#: widgets/HowItWorksModern.php:254 widgets/HowItWorksModern.php:257
+msgid "Box Btn Link 1"
+msgstr "لینک دکمه باکس ۱"
+
+#: widgets/HowItWorksModern.php:264
+msgid "Box Image 1"
+msgstr "تصویر باکس ۱"
+
+#: widgets/HowItWorksModern.php:276 widgets/HowItWorksModern.php:279
+msgid "Box Title 2"
+msgstr "عنوان باکس ۲"
+
+#: widgets/HowItWorksModern.php:295 widgets/HowItWorksModern.php:298
+msgid "Box Tagline 2"
+msgstr "شعار باکس ۲"
+
+#: widgets/HowItWorksModern.php:305 widgets/HowItWorksModern.php:308
+msgid "Box Btn Text 2"
+msgstr "متن دکمه باکس ۲"
+
+#: widgets/HowItWorksModern.php:315 widgets/HowItWorksModern.php:318
+msgid "Box Btn Link 2"
+msgstr "لینک دکمه باکس ۲"
+
+#: widgets/HowItWorksModern.php:325
+msgid "Box Image 2"
+msgstr "تصویر باکس ۲"
+
+#: widgets/LocationsFancy.php:19
+msgid "Locations Fancy"
+msgstr "موقعیت‌های فانتزی"
+
+#: widgets/LocationsFancy.php:103
+msgid "Carousel Locations"
+msgstr "کاروسل موقعیت‌ها"
+
+#: widgets/LocationsFancy2.php:19
+msgid "Locations Fancy 2"
+msgstr "موقعیت‌های فانتزی ۲"
+
+#: widgets/LocationsFancy2.php:97 widgets/LocationsModern.php:143
+msgid "Select Locations"
+msgstr "انتخاب موقعیت‌ها"
+
+#: widgets/LocationsModern.php:19
+msgid "Locations Modern"
+msgstr "موقعیت‌های مدرن"
+
+#: widgets/LocationsModern.php:85
+msgid "Button Style"
+msgstr "استایل دکمه"
+
+#: widgets/LocationsModern.php:89 widgets/PartnersSlider.php:52
+msgid "Dark"
+msgstr "تیره"
+
+#: widgets/LocationsModern.php:96
+msgid "Top Text"
+msgstr "متن بالا"
+
+#: widgets/MainHero1.php:19
+msgid "Main Hero 1"
+msgstr "هیرو اصلی ۱"
+
+#: widgets/MainHero1.php:45
+msgid "1280x800"
+msgstr "۱۲۸۰x۸۰۰"
+
+#: widgets/MainHero1.php:140
+msgid "Sidebar Categories"
+msgstr "دسته‌های سایدبار"
+
+#: widgets/MainHero1.php:176 widgets/MainHero6.php:181
+msgid "Main Section Categories"
+msgstr "دسته‌های بخش اصلی"
+
+#: widgets/MainHero2.php:19
+msgid "Main Hero 2"
+msgstr "هیرو اصلی ۲"
+
+#: widgets/MainHero2.php:71
+msgid "Badge Text Top"
+msgstr "متن نشان بالا"
+
+#: widgets/MainHero2.php:73
+msgid "No 1"
+msgstr "شماره ۱"
+
+#: widgets/MainHero2.php:74 widgets/MainHero2.php:82 widgets/MainHero2.php:90
+msgid "Badge Text"
+msgstr "متن نشان (Badge)"
+
+#: widgets/MainHero2.php:79
+msgid "Badge Text Middle"
+msgstr "متن نشان وسط"
+
+#: widgets/MainHero2.php:81
+msgid "PETFOREST"
+msgstr "پت‌فارست"
+
+#: widgets/MainHero2.php:87
+msgid "Badge Text Bottom"
+msgstr "متن نشان پایین"
+
+#: widgets/MainHero2.php:89
+msgid "WordPress"
+msgstr "وردپرس"
+
+#: widgets/MainHero2.php:96
+msgid "Background Image 2"
+msgstr "تصویر پس‌زمینه ۲"
+
+#: widgets/MainHero2.php:107
+msgid "Background Image 3"
+msgstr "تصویر پس‌زمینه ۳"
+
+#: widgets/MainHero2.php:117
+msgid "Background Image 4"
+msgstr "تصویر پس‌زمینه ۴"
+
+#: widgets/MainHero2.php:127
+msgid "Arrow PNG"
+msgstr "تصویر فلش (PNG)"
+
+#: widgets/MainHero2.php:140 widgets/MainHero6.php:129
+#: widgets/RealEstateHero.php:218
+msgid "Category Section"
+msgstr "بخش دسته‌بندی"
+
+#: widgets/MainHero3.php:19
+msgid "Main Hero 3"
+msgstr "هیرو اصلی ۳"
+
+#: widgets/MainHero3.php:80 widgets/MainHero3.php:83
+msgid "Secondary Text Top"
+msgstr "متن ثانویه بالا"
+
+#: widgets/MainHero3.php:89 widgets/MainHero3.php:92
+msgid "Secondary Text Center"
+msgstr "متن ثانویه وسط"
+
+#: widgets/MainHero3.php:98 widgets/MainHero3.php:101
+msgid "Secondary Text Bottom"
+msgstr "متن ثانویه پایین"
+
+#: widgets/MainHero4.php:20
+msgid "Main Hero 4"
+msgstr "هیرو اصلی ۴"
+
+#: widgets/MainHero4.php:42
+msgid "Top Advertisement Carousel"
+msgstr "کاروسل تبلیغاتی بالا"
+
+#: widgets/MainHero4.php:64
+msgid "Image Size: 1320x140"
+msgstr "اندازه تصویر: ۱۳۲۰x۱۴۰"
+
+#: widgets/MainHero4.php:72
+msgid "Ads List"
+msgstr "لیست آگهی‌ها"
+
+#: widgets/MainHero4.php:86
+msgid "Middle Advertisement"
+msgstr "تبلیغ میانی"
+
+#: widgets/MainHero4.php:90
+msgid "Show Main Section Center Advert"
+msgstr "نمایش تبلیغ وسط بخش اصلی"
+
+#: widgets/MainHero4.php:101
+msgid "Main Section Center Advert"
+msgstr "تبلیغ وسط بخش اصلی"
+
+#: widgets/MainHero4.php:119
+msgid "Show Featured Ad Carousel"
+msgstr "نمایش کاروسل آگهی‌های ویژه"
+
+#: widgets/MainHero4.php:130
+msgid "Featured Ads Title"
+msgstr "عنوان آگهی‌های ویژه"
+
+#: widgets/MainHero4.php:140
+msgid "Featured Ads Button Text"
+msgstr "متن دکمه آگهی‌های ویژه"
+
+#: widgets/MainHero4.php:150
+msgid "Featured Ads Button Link"
+msgstr "لینک دکمه آگهی‌های ویژه"
+
+#: widgets/MainHero4.php:159
+msgid "Select Ad Type In Carousel"
+msgstr "انتخاب نوع آگهی در کاروسل"
+
+#: widgets/MainHero4.php:174
+msgid "Number of Ads to show in Featured ads."
+msgstr "تعداد آگهی‌ها در بخش ویژه"
+
+#: widgets/MainHero4.php:187 widgets/MainHero4.php:309
+msgid "Number of letters in Ad Title"
+msgstr "تعداد حروف در عنوان آگهی"
+
+#: widgets/MainHero4.php:200 widgets/MainHero4.php:322
+msgid "Select Grid Type"
+msgstr "انتخاب نوع شبکه"
+
+#: widgets/MainHero4.php:233
+msgid "Regular Ads"
+msgstr "آگهی‌های معمولی"
+
+#: widgets/MainHero4.php:238
+msgid "Show Regular Ad Section"
+msgstr "نمایش بخش آگهی‌های معمولی"
+
+#: widgets/MainHero4.php:249
+msgid "Regular Ads Title"
+msgstr "عنوان آگهی‌های معمولی"
+
+#: widgets/MainHero4.php:260
+msgid "Regular Ads Button Text"
+msgstr "متن دکمه آگهی‌های معمولی"
+
+#: widgets/MainHero4.php:271
+msgid "Regular Ads Button Link"
+msgstr "لینک دکمه آگهی‌های معمولی"
+
+#: widgets/MainHero4.php:281
+msgid "Select Ad Type In Section"
+msgstr "انتخاب نوع آگهی در این بخش"
+
+#: widgets/MainHero4.php:296
+msgid "Number of Ads to show in Regular ads."
+msgstr "تعداد آگهی‌ها در بخش معمولی"
+
+#: widgets/MainHero4.php:355
+msgid "Left Sidebar Settings"
+msgstr "تنظیمات سایدبار سمت چپ"
+
+#: widgets/MainHero4.php:360
+msgid "Show Search in the sidebar?"
+msgstr "نمایش جستجو در سایدبار؟"
+
+#: widgets/MainHero4.php:372
+msgid "Search Sidebar Title"
+msgstr "عنوان سایدبار جستجو"
+
+#: widgets/MainHero4.php:392
+msgid "Address (Map Autocomplete)"
+msgstr "آدرس (تکمیل خودکار نقشه)"
+
+#: widgets/MainHero4.php:412
+msgid "Placeholder Text"
+msgstr "متن جای‌نشین (Placeholder)"
+
+#: widgets/MainHero4.php:416
+msgid "Enter placeholder text..."
+msgstr "متن جای‌نشین را وارد کنید..."
+
+#: widgets/MainHero4.php:423
+msgid "Load Mode"
+msgstr "حالت بارگذاری"
+
+#: widgets/MainHero4.php:431
+msgid "AJAX Based"
+msgstr "مبتنی بر ایجکس"
+
+#: widgets/MainHero4.php:446
+msgid "Fields"
+msgstr "فیلدها"
+
+#: widgets/MainHero4.php:453
+msgid "Keywords"
+msgstr "کلمات کلیدی"
+
+#: widgets/MainHero4.php:458
+msgid "Select category..."
+msgstr "انتخاب دسته..."
+
+#: widgets/MainHero4.php:463
+msgid "Enter location..."
+msgstr "موقعیت را وارد کنید..."
+
+#: widgets/MainHero4.php:476
+msgid "Search Button Text"
+msgstr "متن دکمه جستجو"
+
+#: widgets/MainHero4.php:487
+msgid "Show Locations in the sidebar?"
+msgstr "نمایش موقعیت‌ها در سایدبار؟"
+
+#: widgets/MainHero4.php:499
+msgid "Location Sidebar Title"
+msgstr "عنوان سایدبار موقعیت"
+
+#: widgets/MainHero4.php:548
+msgid "Sidebar Locations Repeater"
+msgstr "تکرارکننده موقعیت‌های سایدبار"
+
+#: widgets/MainHero4.php:561
+msgid "Show Ad in the Left sidebar?"
+msgstr "نمایش آگهی در سایدبار سمت چپ؟"
+
+#: widgets/MainHero4.php:586
+msgid "Right Sidebar Settings"
+msgstr "تنظیمات سایدبار سمت راست"
+
+#: widgets/MainHero4.php:591
+msgid "Show Ad 1 in the right sidebar?"
+msgstr "نمایش آگهی ۱ در سایدبار سمت راست؟"
+
+#: widgets/MainHero4.php:603
+msgid "Right Advert Image 1"
+msgstr "تصویر تبلیغ سمت راست ۱"
+
+#: widgets/MainHero4.php:613
+msgid "Show Right sidebar Ads?"
+msgstr "نمایش آگهی‌های سایدبار سمت راست؟"
+
+#: widgets/MainHero4.php:624
+msgid "What type of ads do you want to show on the Right sidebar?"
+msgstr "چه نوع آگهی‌هایی در سایدبار سمت راست نمایش داده شود؟"
+
+#: widgets/MainHero4.php:653
+msgid "Number of letters in Ad Title?"
+msgstr "تعداد حروف در عنوان آگهی؟"
+
+#: widgets/MainHero4.php:667
+msgid "Show Ad 2 in the right sidebar?"
+msgstr "نمایش آگهی ۲ در سایدبار سمت راست؟"
+
+#: widgets/MainHero5.php:19
+msgid "Main Hero 5"
+msgstr "هیرو اصلی ۵"
+
+#: widgets/MainHero5.php:79
+msgid "Section Background Color"
+msgstr "رنگ پس‌زمینه بخش"
+
+#: widgets/MainHero6.php:18
+msgid "Main Hero 6"
+msgstr "هیرو اصلی ۶"
+
+#: widgets/MainHero6.php:137
+msgid "Find By Categories"
+msgstr "جستجو بر اساس دسته‌بندی‌ها"
+
+#: widgets/MiniCategorySlider.php:18
+msgid "Mini Category Slider"
+msgstr "اسلایدر کوچک دسته‌بندی"
+
+#: widgets/MiniCategorySlider.php:41
+msgid "Hide categories that have no ads?"
+msgstr "دسته‌بندی‌های بدون آگهی مخفی شوند؟"
+
+#: widgets/MultivendorCategorySliderMini.php:18
+msgid "Multivendor Mini Category Slider"
+msgstr "اسلایدر کوچک دسته‌بندی چندفروشندگی"
+
+#: widgets/MultivendorCategorySliderMini.php:69
+#: widgets/MultivendorProductCarousel.php:72
+#: widgets/MultivendorProductCategories.php:116
+msgid "Product Categories"
+msgstr "دسته‌بندی‌های محصول"
+
+#: widgets/MultivendorHero.php:19
+msgid "Multivendor Hero"
+msgstr "هیرو چندفروشندگی"
+
+#: widgets/MultivendorProductCarousel.php:19
+msgid "Multivendor Product Carousel"
+msgstr "کاروسل محصول چندفروشندگی"
+
+#: widgets/MultivendorProductCarousel.php:65
+#: widgets/MultivendorProductsWithSidebar.php:165
+msgid "Product Title Limit"
+msgstr "محدودیت عنوان محصول"
+
+#: widgets/MultivendorProductCarousel.php:77
+#: widgets/MultivendorProductsWithSidebar.php:177
+msgid "Select one or more product categories to show products from."
+msgstr "یک یا چند دسته محصول را برای نمایش محصولات انتخاب کنید."
+
+#: widgets/MultivendorProductCarousel.php:96
+#: widgets/MultivendorProductsWithSidebar.php:182
+msgid "Grid Style"
+msgstr "استایل شبکه"
+
+#: widgets/MultivendorProductCarousel.php:99
+#: widgets/MultivendorProductsGrid.php:89
+msgid "Grid Type 1"
+msgstr "نوع شبکه ۱"
+
+#: widgets/MultivendorProductCarousel.php:100
+#: widgets/MultivendorProductsGrid.php:90
+msgid "Grid Type 2"
+msgstr "نوع شبکه ۲"
+
+#: widgets/MultivendorProductCarousel.php:106
+#: widgets/MultivendorProductsGrid.php:111
+#: widgets/MultivendorProductsWithSidebar.php:192
+msgid "Grid Columns"
+msgstr "ستون‌های شبکه"
+
+#: widgets/MultivendorProductCarousel.php:109
+#: widgets/MultivendorProductsWithSidebar.php:195
+msgid "Two"
+msgstr "دو"
+
+#: widgets/MultivendorProductCarousel.php:110
+#: widgets/MultivendorProductsWithSidebar.php:196
+msgid "Three"
+msgstr "سه"
+
+#: widgets/MultivendorProductCarousel.php:111
+#: widgets/MultivendorProductsWithSidebar.php:197
+msgid "Four"
+msgstr "چهار"
+
+#: widgets/MultivendorProductCarousel.php:112
+#: widgets/MultivendorProductsWithSidebar.php:198
+msgid "Five"
+msgstr "پنج"
+
+#: widgets/MultivendorProductCarousel.php:118
+msgid "No of Products"
+msgstr "تعداد محصولات"
+
+#: widgets/MultivendorProductCarousel.php:126
+msgid "Show Countdown?"
+msgstr "نمایش شمارش معکوس؟"
+
+#: widgets/MultivendorProductCarouselWithAds.php:19
+msgid "Multivendor Product Carousel With Ads"
+msgstr "کاروسل محصول چندفروشندگی با تبلیغات"
+
+#: widgets/MultivendorProductCarouselWithAds.php:41
+msgid "Header Title"
+msgstr "عنوان هدر"
+
+#: widgets/MultivendorProductCarouselWithAds.php:48
+msgid "Header Image"
+msgstr "تصویر هدر"
+
+#: widgets/MultivendorProductCarouselWithAds.php:54
+msgid "Header Button Title"
+msgstr "عنوان دکمه هدر"
+
+#: widgets/MultivendorProductCarouselWithAds.php:61
+msgid "Header Button Link"
+msgstr "لینک دکمه هدر"
+
+#: widgets/MultivendorProductCarouselWithAds.php:68
+msgid "Limit Products"
+msgstr "محدودیت تعداد محصولات"
+
+#: widgets/MultivendorProductCarouselWithAds.php:75
+msgid "Limit Products Title"
+msgstr "محدودیت عنوان محصولات"
+
+#: widgets/MultivendorProductCarouselWithAds.php:82
+msgid "Left Advert"
+msgstr "تبلیغ سمت چپ"
+
+#: widgets/MultivendorProductCarouselWithAds.php:88
+msgid "Right Image"
+msgstr "تصویر سمت راست"
+
+#: widgets/MultivendorProductCategories.php:19
+msgid "Multivendor Product Categories"
+msgstr "دسته‌بندی محصولات چندفروشندگی"
+
+#: widgets/MultivendorProductCategories.php:63
+msgid "Category Source"
+msgstr "منبع دسته‌بندی"
+
+#: widgets/MultivendorProductCategories.php:66
+msgid "WooCommerce"
+msgstr "ووکامرس"
+
+#: widgets/MultivendorProductCategories.php:67
+msgid "Classified"
+msgstr "آگهی‌ها"
+
+#: widgets/MultivendorProductCategories.php:96
+#: widgets/MultivendorProductsWithSidebar.php:124
+msgid "Select Product Category"
+msgstr "انتخاب دسته محصول"
+
+#: widgets/MultivendorProductCategories.php:130
+msgid "Select Classified Category"
+msgstr "انتخاب دسته آگهی"
+
+#: widgets/MultivendorProductCategories.php:150
+msgid "Classified Categories"
+msgstr "دسته‌بندی‌های آگهی"
+
+#: widgets/MultivendorProductsGrid.php:19
+msgid "Multivendor Products Grid"
+msgstr "شبکه محصولات چندفروشندگی"
+
+#: widgets/MultivendorProductsGrid.php:43
+msgid "Our Products"
+msgstr "محصولات ما"
+
+#: widgets/MultivendorProductsGrid.php:65
+msgid "Button Position"
+msgstr "موقعیت دکمه"
+
+#: widgets/MultivendorProductsGrid.php:68
+#: widgets/MultivendorProductsWithSidebar.php:137
+msgid "Top"
+msgstr "بالا"
+
+#: widgets/MultivendorProductsGrid.php:69
+#: widgets/MultivendorProductsWithSidebar.php:138
+msgid "Bottom"
+msgstr "پایین"
+
+#: widgets/MultivendorProductsGrid.php:77
+msgid "Number of Posts"
+msgstr "تعداد نوشته‌ها"
+
+#: widgets/MultivendorProductsGrid.php:86
+msgid "Grid Type"
+msgstr "نوع شبکه"
+
+#: widgets/MultivendorProductsGrid.php:99
+msgid "Title Character Limit"
+msgstr "محدودیت نویسه عنوان"
+
+#: widgets/MultivendorProductsWithSidebar.php:19
+msgid "Multivendor Product With Sidebar"
+msgstr "محصول چندفروشندگی با سایدبار"
+
+#: widgets/MultivendorProductsWithSidebar.php:78
+msgid "Product Title Limit Sidebar"
+msgstr "محدودیت عنوان محصول در سایدبار"
+
+#: widgets/MultivendorProductsWithSidebar.php:85
+msgid "Product Limit Sidebar"
+msgstr "محدودیت تعداد محصول در سایدبار"
+
+#: widgets/MultivendorProductsWithSidebar.php:92
+msgid "Sidebar Position"
+msgstr "موقعیت سایدبار"
+
+#: widgets/MultivendorProductsWithSidebar.php:103
+msgid "Sidebar Title"
+msgstr "عنوان سایدبار"
+
+#: widgets/MultivendorProductsWithSidebar.php:128
+msgid "Choose a product category"
+msgstr "یک دسته محصول انتخاب کنید"
+
+#: widgets/MultivendorProductsWithSidebar.php:133
+msgid "Advert Position"
+msgstr "موقعیت تبلیغ"
+
+#: widgets/MultivendorProductsWithSidebar.php:144
+msgid "Vertical Advert"
+msgstr "تبلیغ عمودی"
+
+#: widgets/MultivendorProductsWithSidebar.php:153
+msgid "Products Grid"
+msgstr "شبکه محصولات"
+
+#: widgets/MultivendorProductsWithSidebar.php:158
+msgid "Product Limit"
+msgstr "محدودیت تعداد محصول"
+
+#: widgets/MultivendorProductsWithSidebar.php:172
+msgid "Grid Product Categories"
+msgstr "دسته‌بندی محصولات شبکه‌ای"
+
+#: widgets/MultivendorServices.php:19
+msgid "Multivendor Services"
+msgstr "خدمات چندفروشندگی"
+
+#: widgets/MultivendorServices.php:43 widgets/MultivendorServices.php:45
+msgid "Service Title"
+msgstr "عنوان خدمت"
+
+#: widgets/MultivendorServices.php:51 widgets/MultivendorServices.php:53
+msgid "Service Description"
+msgstr "توضیحات خدمت"
+
+#: widgets/MultivendorServices.php:59
+msgid "Icon Class (e.g., fas fa-shipping-fast)"
+msgstr "کلاس آیکون (مثلاً: fas fa-shipping-fast)"
+
+#: widgets/MultivendorServices.php:67
+msgid "Services Boxes"
+msgstr "باکس‌های خدمات"
+
+#: widgets/OurArticles.php:19
+msgid "Our Articles"
+msgstr "مقالات ما"
+
+#: widgets/OurArticles.php:56
+msgid "No. of Articles to show."
+msgstr "تعداد مقالات برای نمایش"
+
+#: widgets/PartnersSlider.php:20
+msgid "Clients/Partners"
+msgstr "مشتریان / همکاران"
+
+#: widgets/PartnersSlider.php:51
+msgid "Light"
+msgstr "روشن"
+
+#: widgets/PartnersSlider.php:62
+msgid "Client or Partners"
+msgstr "مشتری یا همکار"
+
+#: widgets/PartnersSlider.php:70
+msgid "Logo"
+msgstr "لوگو"
+
+#: widgets/PartnersSlider.php:72
+msgid "135x35"
+msgstr "۱۳۵x۳۵"
+
+#: widgets/RealEstateHero.php:18
+msgid "Real Estate Hero"
+msgstr "هیرو املاک"
+
+#: widgets/RealEstateHero.php:49
+msgid "Side Image"
+msgstr "تصویر جانبی"
+
+#: widgets/RealEstateHero.php:51
+msgid "This image will appear on the right side of the hero section"
+msgstr "این تصویر در سمت راست بخش هیرو ظاهر می‌شود"
+
+#: widgets/RealEstateHero.php:62
+msgid "This image will be used as the background for the entire hero section"
+msgstr "این تصویر به عنوان پس‌زمینه کل بخش هیرو استفاده خواهد شد"
+
+#: widgets/RecentAds.php:36
+msgid "What type of ads do you want to show on the main section?"
+msgstr "چه نوع آگهی‌هایی در بخش اصلی نمایش داده شود؟"
+
+#: widgets/RecentAds.php:76
+msgid "Ad Title Limit Main"
+msgstr "محدودیت عنوان آگهی در بخش اصلی"
+
+#: widgets/RecentAds.php:85
+msgid "Right Side Ads Section"
+msgstr "بخش آگهی‌های سمت راست"
+
+#: widgets/RecentAds.php:90
+msgid "Do you want to show Ad 1 on the right section?"
+msgstr "آیا می‌خواهید آگهی ۱ در بخش سمت راست نمایش داده شود؟"
+
+#: widgets/RecentAds.php:101
+msgid "Ad 1"
+msgstr "آگهی ۱"
+
+#: widgets/RecentAds.php:112
+msgid "Do you want to show Ad 2 on the right section?"
+msgstr "آیا می‌خواهید آگهی ۲ در بخش سمت راست نمایش داده شود؟"
+
+#: widgets/RecentAds.php:122
+msgid "Ad 2"
+msgstr "آگهی ۲"
+
+#: widgets/FeaturedAds.php:160 widgets/RecentAds.php:134
+#: widgets/RecentAds.php:134
+msgid "Left Section Settings"
+msgstr "تنظیمات بخش سمت چپ"
+
+#: widgets/RecentAds.php:139
+msgid "Show Sidebar Ads?"
+msgstr "نمایش آگهی‌های سایدبار؟"
+
+#: widgets/RecentAds.php:159
+msgid "What type of ads do you want to show on the left sidebar?"
+msgstr "چه نوع آگهی‌هایی در سایدبار سمت چپ نمایش داده شود؟"
+
+#: widgets/RecentAds.php:173
+msgid "Number of Ads to show in Left Sidebar?"
+msgstr "تعداد آگهی‌ها برای نمایش در سایدبار سمت چپ؟"
+
+#: widgets/RecentAds.php:186
+msgid "Ad Title Limit Sidebar"
+msgstr "محدودیت عنوان آگهی در سایدبار"
+
+#. Plugin Name of the plugin/theme
+msgid "Adforest Elementor"
+msgstr "المنتور ادفارست"
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "https://themeforest.net/user/scriptsbundle/"
+msgstr "https://themeforest.net/user/scriptsbundle/"
+
+#. Description of the plugin/theme
+msgid "This plugin is used to add shortcodes by Elementor Pagebuilder."
+msgstr "این افزونه برای افزودن کدهای کوتاه از طریق صفحه‌ساز المنتور استفاده می‌شود."
+
+#. Author of the plugin/theme
+msgid "Scripts Bundle"
+msgstr "اسکریپت‌باندل"
+

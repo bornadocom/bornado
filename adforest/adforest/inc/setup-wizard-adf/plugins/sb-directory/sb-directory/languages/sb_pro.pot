@@ -1,0 +1,2062 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: Sb Directory Plugin\n"
+"POT-Creation-Date: 2025-09-25 16:34+0500\n"
+"PO-Revision-Date: 2025-09-25 16:34+0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.3\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: sb_pro.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+
+#: custom-fields/ad_custom_fields.php:573
+msgid "Select Template"
+msgstr ""
+
+#: custom-fields/ad_custom_fields.php:576
+msgid "Select An Option"
+msgstr ""
+
+#: custom-fields/ad_custom_fields.php:577
+msgid "No Template"
+msgstr ""
+
+#: custom-fields/ad_custom_fields.php:580
+msgid "You can assign this template each level category."
+msgstr ""
+
+#: custom-fields/ad_custom_fields.php:616
+#: custom-fields/ad_custom_fields.php:622
+msgid "Adforest Category Template"
+msgstr ""
+
+#: custom-fields/ad_custom_fields.php:631
+#: custom-fields/ad_custom_fields.php:637
+msgid "Adforest Category Template WPML"
+msgstr ""
+
+#: custom-fields/ad_custom_fields.php:654
+msgid "Display in search"
+msgstr ""
+
+#: custom-fields/ad_custom_fields.php:655
+msgid "Enable/Disable this field to show in search page."
+msgstr ""
+
+#: inc/ajax_actions.php:53 inc/helper.php:1003
+msgid "Select Option"
+msgstr ""
+
+#: inc/ajax_actions.php:74
+msgid "Not Allowed in demo mode"
+msgstr ""
+
+#: inc/ajax_actions.php:78 inc/ajax_actions.php:327
+msgid "Please login first"
+msgstr ""
+
+#: inc/ajax_actions.php:82
+msgid "Select event id first"
+msgstr ""
+
+#: inc/ajax_actions.php:94
+msgid "Removed successfully"
+msgstr ""
+
+#: inc/ajax_actions.php:102
+msgid "Added successfully"
+msgstr ""
+
+#: inc/ajax_actions.php:307 inc/helper.php:1886 inc/helper.php:1999
+#: inc/helper.php:2127 inc/helper.php:2225 inc/helper.php:2779
+msgid "No Result Found"
+msgstr ""
+
+#: inc/ajax_actions.php:334 inc/ajax_actions.php:524 inc/ajax_actions.php:589
+#: inc/ajax_actions.php:765
+msgid "not Allowed in demo mode"
+msgstr ""
+
+#: inc/ajax_actions.php:341
+msgid "Removed from favourite"
+msgstr ""
+
+#: inc/ajax_actions.php:345
+msgid "Added in favourite events"
+msgstr ""
+
+#: inc/ajax_actions.php:357 inc/ajax_actions.php:445 inc/ajax_actions.php:882
+#: inc/ajax_actions.php:1100
+msgid "Not allowed in demo mode"
+msgstr ""
+
+#: inc/ajax_actions.php:364 inc/ajax_actions.php:451
+msgid "You are not logged in."
+msgstr ""
+
+#: inc/ajax_actions.php:380
+msgid "Ad author can't post rating."
+msgstr ""
+
+#: inc/ajax_actions.php:385
+msgid "You've posted rating already."
+msgstr ""
+
+#: inc/ajax_actions.php:407
+msgid "Your rating has been updated."
+msgstr ""
+
+#: inc/ajax_actions.php:434
+msgid "Your rating has been posted."
+msgstr ""
+
+#: inc/ajax_actions.php:463
+msgid "Only Ad owner can reply the rating."
+msgstr ""
+
+#: inc/ajax_actions.php:486
+msgid "Your reply has been updated."
+msgstr ""
+
+#: inc/ajax_actions.php:514
+msgid "Your reply has been posted."
+msgstr ""
+
+#: inc/ajax_actions.php:528 inc/ajax_actions.php:593
+msgid "Ad id required"
+msgstr ""
+
+#: inc/ajax_actions.php:532 inc/ajax_actions.php:597
+msgid "only author can do this"
+msgstr ""
+
+#: inc/ajax_actions.php:545 inc/helper.php:1267
+msgid "TimeKit widget"
+msgstr ""
+
+#: inc/ajax_actions.php:554
+msgid "Update Booking"
+msgstr ""
+
+#: inc/ajax_actions.php:559 inc/helper.php:1294
+msgid "Add minutes, time interval of booking"
+msgstr ""
+
+#: inc/ajax_actions.php:565 inc/helper.php:1259
+msgid "Select days to avoid booking"
+msgstr ""
+
+#: inc/ajax_actions.php:574 inc/helper.php:1221 inc/helper.php:1305
+#: template-parts/content-single-event.php:580
+msgid "Submit"
+msgstr ""
+
+#: inc/ajax_actions.php:601
+msgid "Removed Succesfully"
+msgstr ""
+
+#: inc/ajax_actions.php:613 inc/ajax_actions.php:806
+msgid "Login first to make an appointment"
+msgstr ""
+
+#: inc/ajax_actions.php:682 inc/ajax_actions.php:689 inc/helper.php:2394
+#: inc/helper.php:2495 inc/helper.php:2615
+msgid "Closed"
+msgstr ""
+
+#: inc/ajax_actions.php:704 inc/ajax_actions.php:771
+msgid "Something went wrong"
+msgstr ""
+
+#: inc/ajax_actions.php:721
+msgid "Booking Details"
+msgstr ""
+
+#: inc/ajax_actions.php:728
+msgid "Customer name"
+msgstr ""
+
+#: inc/ajax_actions.php:734
+msgid "Customer email"
+msgstr ""
+
+#: inc/ajax_actions.php:740
+msgid "Customer phone"
+msgstr ""
+
+#: inc/ajax_actions.php:746
+msgid "Time slot"
+msgstr ""
+
+#: inc/ajax_actions.php:777
+msgid "Status updated succesfully"
+msgstr ""
+
+#: inc/ajax_actions.php:837
+msgid "Booking Created succesfully"
+msgstr ""
+
+#: inc/ajax_actions.php:839
+msgid "something went wrong"
+msgstr ""
+
+#: inc/ajax_actions.php:849
+msgid "Add id first"
+msgstr ""
+
+#: inc/ajax_actions.php:860
+msgid "Select ad first"
+msgstr ""
+
+#: inc/ajax_actions.php:865
+msgid "Added succesfully"
+msgstr ""
+
+#: inc/ajax_actions.php:867
+msgid "updated successfully"
+msgstr ""
+
+#: inc/ajax_actions.php:889
+msgid "You can not delete this event"
+msgstr ""
+
+#: inc/ajax_actions.php:898
+msgid "Event removed successfully."
+msgstr ""
+
+#: inc/ajax_actions.php:900
+msgid "There's some problem, please try again later."
+msgstr ""
+
+#: inc/ajax_actions.php:940 inc/ajax_actions.php:944
+msgid "Minimum image dimension should be"
+msgstr ""
+
+#: inc/ajax_actions.php:956
+msgid "Sorry, only JPG, JPEG, and PNG files are allowed"
+msgstr ""
+
+#: inc/ajax_actions.php:961
+msgid "Max allowed image size is"
+msgstr ""
+
+#: inc/ajax_actions.php:971
+msgid "Please enter event title first in order to create event."
+msgstr ""
+
+#: inc/ajax_actions.php:977
+msgid "Sorry you cant upload more than "
+msgstr ""
+
+#: inc/ajax_actions.php:978
+msgid " images "
+msgstr ""
+
+#: inc/ajax_actions.php:994
+msgid "Something went wrong please try later"
+msgstr ""
+
+#: inc/ajax_actions.php:1105
+msgid "Login First to create an event"
+msgstr ""
+
+#: inc/ajax_actions.php:1137
+msgid "Event end date must be greater than start date"
+msgstr ""
+
+#: inc/ajax_actions.php:1160
+msgid "Buy a package first to create and event"
+msgstr ""
+
+#: inc/ajax_actions.php:1170
+msgid "Event Created successfully"
+msgstr ""
+
+#: inc/ajax_actions.php:1177
+msgid "Event updated successfully"
+msgstr ""
+
+#: inc/ajax_actions.php:1225
+msgid "Waiting For admin approval"
+msgstr ""
+
+#: inc/common-functions.php:55 inc/helper.php:1967 inc/helper.php:2096
+msgid "Accepted"
+msgstr ""
+
+#: inc/common-functions.php:57 inc/helper.php:96 inc/helper.php:1969
+#: inc/helper.php:2097
+msgid "Rejected"
+msgstr ""
+
+#: inc/common-functions.php:59 inc/helper.php:96 inc/helper.php:1971
+#: inc/helper.php:2095
+msgid "Pending"
+msgstr ""
+
+#: inc/common-functions.php:171
+msgid "Days"
+msgstr ""
+
+#: inc/common-functions.php:172
+msgid "Hours"
+msgstr ""
+
+#: inc/common-functions.php:173 template-parts/content-single-event.php:287
+msgid "minutes"
+msgstr ""
+
+#: inc/common-functions.php:174 template-parts/content-single-event.php:291
+msgid "seconds"
+msgstr ""
+
+#: inc/common-functions.php:227
+msgid "Event Will Begin In"
+msgstr ""
+
+#: inc/common-functions.php:232
+msgid "Event Started"
+msgstr ""
+
+#: inc/common-functions.php:336 inc/common-functions.php:402
+#: inc/common-functions.php:485 inc/common-functions.php:562
+#: inc/helper.php:2207
+msgid "Views"
+msgstr ""
+
+#: inc/common-functions.php:372 inc/common-functions.php:442
+#: inc/common-functions.php:527
+msgid "Featured"
+msgstr ""
+
+#: inc/common-functions.php:731
+msgid "Please subscribe to a package to post an event."
+msgstr ""
+
+#: inc/common-functions.php:740
+msgid "Your package has been expired."
+msgstr ""
+
+#: inc/elementor/elementor-main.php:87
+msgid "Adforest Widgets"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:65
+msgid "All"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:67
+#: inc/elementor/widgets/directory_hero.php:218
+#: inc/elementor/widgets/directory_hero.php:219
+#: inc/elementor/widgets/event_hero.php:363
+#: inc/elementor/widgets/event_hero.php:364
+#: inc/elementor/widgets/event_hero_2.php:443
+#: inc/elementor/widgets/event_hero_2.php:444
+#: inc/elementor/widgets/event_hero_2.php:661
+#: inc/elementor/widgets/event_hero_2.php:662
+msgid "Select Location"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:69
+msgid "Select Warranty"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:71
+msgid "Select Condition"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:73
+msgid "Select Ad Type"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:75
+msgid "Select Product Type"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:77
+msgid "Select ad categories"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:100
+msgid "Select Layout Type"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:101
+msgid "Grid 1"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:102
+msgid "Grid 2"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:103
+msgid "Grid 3"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:104
+msgid "Grid 4"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:105
+msgid "Grid 5"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:106
+msgid "Grid 6"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:107
+msgid "Grid 7"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:108
+msgid "Grid 8"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:109
+msgid "Grid 9"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:110
+msgid "Grid 10"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:111
+#: inc/elementor/sb-pro-elementor-functions.php:112
+msgid "Grid 11"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:113
+msgid "List"
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:207
+msgid "Added to your favourites."
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:210
+msgid "Ad removed from your favourites."
+msgstr ""
+
+#: inc/elementor/sb-pro-elementor-functions.php:264
+msgid "No Vendor Found!"
+msgstr ""
+
+#: inc/elementor/widgets/about_us.php:14
+msgid "About us Event"
+msgstr ""
+
+#: inc/elementor/widgets/about_us.php:28
+#: inc/elementor/widgets/cats_event.php:31
+#: inc/elementor/widgets/directory_hero.php:29
+#: inc/elementor/widgets/event_country.php:29
+#: inc/elementor/widgets/event_grids.php:31
+#: inc/elementor/widgets/event_hero.php:29
+#: inc/elementor/widgets/event_hero_2.php:39
+#: inc/elementor/widgets/process_cycle_event.php:31
+msgid "Basic"
+msgstr ""
+
+#: inc/elementor/widgets/about_us.php:33
+msgid "Section Tag Line"
+msgstr ""
+
+#: inc/elementor/widgets/about_us.php:36 inc/elementor/widgets/about_us.php:41
+#: inc/elementor/widgets/about_us.php:44 inc/elementor/widgets/about_us.php:74
+#: inc/elementor/widgets/about_us.php:77 inc/elementor/widgets/about_us.php:85
+#: inc/elementor/widgets/cats_event.php:106
+#: inc/elementor/widgets/cats_event.php:145
+#: inc/elementor/widgets/directory_hero.php:42
+#: inc/elementor/widgets/directory_hero.php:45
+#: inc/elementor/widgets/event_country.php:94
+#: inc/elementor/widgets/event_country.php:133
+#: inc/elementor/widgets/event_grids.php:82
+#: inc/elementor/widgets/event_grids.php:86
+#: inc/elementor/widgets/event_grids.php:102
+#: inc/elementor/widgets/event_grids.php:105
+#: inc/elementor/widgets/event_hero.php:35
+#: inc/elementor/widgets/event_hero.php:38
+#: inc/elementor/widgets/event_hero.php:61
+#: inc/elementor/widgets/event_hero_2.php:55
+#: inc/elementor/widgets/event_hero_2.php:58
+#: inc/elementor/widgets/process_cycle_event.php:46
+#: inc/elementor/widgets/process_cycle_event.php:50
+msgid "Section Title"
+msgstr ""
+
+#: inc/elementor/widgets/about_us.php:49 inc/elementor/widgets/about_us.php:82
+#: inc/elementor/widgets/cats_event.php:126
+#: inc/elementor/widgets/directory_hero.php:50
+#: inc/elementor/widgets/event_country.php:114
+#: inc/elementor/widgets/event_grids.php:122
+#: inc/elementor/widgets/event_hero.php:43
+#: inc/elementor/widgets/event_hero_2.php:63
+msgid "Section Description"
+msgstr ""
+
+#: inc/elementor/widgets/about_us.php:59
+msgid "URL or Link"
+msgstr ""
+
+#: inc/elementor/widgets/about_us.php:61
+msgid "Youtube video link"
+msgstr ""
+
+#: inc/elementor/widgets/about_us.php:68
+msgid "Client or Partners"
+msgstr ""
+
+#: inc/elementor/widgets/about_us.php:91
+#: inc/elementor/widgets/cats_event.php:185
+#: inc/elementor/widgets/process_cycle_event.php:66
+#: inc/elementor/widgets/process_cycle_event.php:106
+#: inc/elementor/widgets/process_cycle_event.php:145
+msgid "Icon"
+msgstr ""
+
+#: inc/elementor/widgets/about_us.php:93
+#: inc/elementor/widgets/process_cycle_event.php:68
+#: inc/elementor/widgets/process_cycle_event.php:108
+#: inc/elementor/widgets/process_cycle_event.php:147
+msgid "Please use reguler font"
+msgstr ""
+
+#: inc/elementor/widgets/about_us.php:102
+msgid "Add Client"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:14
+msgid "Event - Categories"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:39
+#: inc/elementor/widgets/event_grids.php:37
+msgid "Background"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:42
+#: inc/elementor/widgets/event_country.php:52
+#: inc/elementor/widgets/event_grids.php:40
+msgid "White"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:43
+#: inc/elementor/widgets/event_country.php:53
+#: inc/elementor/widgets/event_grids.php:41
+msgid "Gray"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:44
+#: inc/elementor/widgets/event_grids.php:42
+msgid "Image"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:51
+#: inc/elementor/widgets/event_grids.php:49
+msgid "Background Image"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:73
+#: inc/elementor/widgets/event_country.php:61
+#: inc/elementor/widgets/event_grids.php:70
+msgid "Header Style"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:76
+#: inc/elementor/widgets/event_country.php:64
+msgid "Choose Header Style"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:78
+#: inc/elementor/widgets/event_country.php:66
+#: inc/elementor/widgets/event_grids.php:73
+msgid "No Header"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:79
+#: inc/elementor/widgets/event_country.php:67
+#: inc/elementor/widgets/event_grids.php:74
+msgid "Classic"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:80
+#: inc/elementor/widgets/event_country.php:68
+#: inc/elementor/widgets/event_grids.php:75
+#: inc/elementor/widgets/event_hero_2.php:259
+msgid "Regular"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:81
+#: inc/elementor/widgets/event_country.php:69
+msgid "New"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:87
+#: inc/elementor/widgets/directory_hero.php:37
+#: inc/elementor/widgets/event_country.php:75
+#: inc/elementor/widgets/event_hero_2.php:45
+#: inc/elementor/widgets/process_cycle_event.php:39
+msgid "Section Tagline"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:108
+#: inc/elementor/widgets/event_country.php:96
+#: inc/elementor/widgets/event_grids.php:85
+#: inc/elementor/widgets/process_cycle_event.php:49
+msgid "For color {color}warp text within this tag{/color}"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:147
+#: inc/elementor/widgets/event_country.php:135
+msgid "For color {color}warp text within this tag{/color} d"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:169
+#: inc/elementor/widgets/event_grids.php:219
+#: inc/elementor/widgets/event_hero.php:178
+#: inc/elementor/widgets/event_hero.php:221
+#: inc/elementor/widgets/event_hero_2.php:191
+#: inc/elementor/widgets/event_hero_2.php:209
+msgid "Categories"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:177
+#: inc/elementor/widgets/event_grids.php:225
+#: inc/elementor/widgets/event_hero.php:268
+#: inc/elementor/widgets/event_hero.php:285
+#: inc/elementor/widgets/event_hero.php:442
+#: inc/elementor/widgets/event_hero_2.php:374
+#: inc/elementor/widgets/event_hero_2.php:389
+#: inc/elementor/widgets/event_hero_2.php:543
+#: inc/elementor/widgets/event_hero_2.php:592
+#: inc/elementor/widgets/event_hero_2.php:607
+#: inc/elementor/widgets/event_hero_2.php:772 inc/helper.php:687
+#: inc/helper.php:757
+msgid "Select Category"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:192
+msgid "Add Category"
+msgstr ""
+
+#: inc/elementor/widgets/cats_event.php:250
+#: inc/elementor/widgets/event_hero_2.php:123 inc/helper.php:312
+#: inc/helper.php:1493 inc/helper.php:2204
+msgid "Events"
+msgstr ""
+
+#: inc/elementor/widgets/directory_hero.php:14
+msgid "Directory Hero"
+msgstr ""
+
+#: inc/elementor/widgets/directory_hero.php:34
+#: inc/elementor/widgets/event_hero_2.php:48
+msgid "Section tagline"
+msgstr ""
+
+#: inc/elementor/widgets/directory_hero.php:59
+msgid "Section Backgorund"
+msgstr ""
+
+#: inc/elementor/widgets/directory_hero.php:67
+#: inc/elementor/widgets/event_hero.php:53
+#: inc/elementor/widgets/event_hero_2.php:74
+msgid "Search Settings"
+msgstr ""
+
+#: inc/elementor/widgets/directory_hero.php:72
+#: inc/elementor/widgets/directory_hero.php:74
+#: inc/elementor/widgets/event_hero.php:66
+#: inc/elementor/widgets/event_hero.php:68
+#: inc/elementor/widgets/event_hero_2.php:90
+#: inc/elementor/widgets/event_hero_2.php:92
+msgid "Search Keyword Placeholder"
+msgstr ""
+
+#: inc/elementor/widgets/directory_hero.php:75
+#: inc/elementor/widgets/event_hero.php:69
+#: inc/elementor/widgets/event_hero_2.php:93
+msgid "What are you looking for....."
+msgstr ""
+
+#: inc/elementor/widgets/directory_hero.php:81
+#: inc/elementor/widgets/directory_hero.php:83
+msgid "Location Placeholder"
+msgstr ""
+
+#: inc/elementor/widgets/directory_hero.php:84
+#: inc/elementor/widgets/event_hero_2.php:101
+msgid "Enter Location"
+msgstr ""
+
+#: inc/elementor/widgets/directory_hero.php:93
+#: inc/elementor/widgets/event_hero.php:129
+msgid "Custom Locations"
+msgstr ""
+
+#: inc/elementor/widgets/directory_hero.php:99
+#: inc/elementor/widgets/event_hero.php:141
+#: inc/elementor/widgets/event_hero_2.php:107
+msgid "Location type"
+msgstr ""
+
+#: inc/elementor/widgets/directory_hero.php:101
+#: inc/elementor/widgets/event_hero.php:143
+#: inc/elementor/widgets/event_hero_2.php:109
+msgid "Chose header style."
+msgstr ""
+
+#: inc/elementor/widgets/directory_hero.php:103
+#: inc/elementor/widgets/event_hero.php:145
+#: inc/elementor/widgets/event_hero_2.php:111
+msgid "Google"
+msgstr ""
+
+#: inc/elementor/widgets/directory_hero.php:104
+#: inc/elementor/widgets/event_hero.php:146
+#: inc/elementor/widgets/event_hero_2.php:112
+#: template-parts/event-search/search-filters/by-locationcustom.php:26
+msgid "Custom Location"
+msgstr ""
+
+#: inc/elementor/widgets/directory_hero.php:111
+#: inc/elementor/widgets/event_hero.php:153
+#: inc/elementor/widgets/event_hero_2.php:132
+#: inc/elementor/widgets/event_hero_2.php:155
+#: template-parts/event-search/search-filters/by-location.php:11
+msgid "Location"
+msgstr ""
+
+#: inc/elementor/widgets/directory_hero.php:196
+#: inc/elementor/widgets/event_hero.php:341
+#: inc/elementor/widgets/event_hero_2.php:431
+#: inc/elementor/widgets/event_hero_2.php:649
+msgid "Select location"
+msgstr ""
+
+#: inc/elementor/widgets/directory_hero.php:261
+#: inc/elementor/widgets/event_hero.php:454
+msgid "Search"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:14
+msgid "Event Custom Location"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:35
+#: inc/elementor/widgets/event_hero.php:210
+#: inc/elementor/widgets/event_hero_2.php:180
+msgid "Category link Page"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:39
+#: inc/elementor/widgets/event_hero.php:214
+#: inc/elementor/widgets/event_hero_2.php:184
+msgid "Search Page"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:40
+#: inc/elementor/widgets/event_hero.php:215
+#: inc/elementor/widgets/event_hero_2.php:185
+msgid "Category Page"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:47
+msgid "Background Color"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:50
+msgid "Select background color"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:155
+msgid "Locations"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:162
+msgid "Location style"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:164
+msgid "Select location frontend  view"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:166 inc/helper.php:1517
+msgid "Style 1"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:167
+msgid "Style 2"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:168
+msgid "Style 3"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:176
+#: inc/elementor/widgets/event_country.php:197
+msgid "Select Locations"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:186
+msgid "Location Background Image"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:188
+msgid "Recommended size 250x160"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:229
+msgid " location"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:277
+#: inc/elementor/widgets/event_country.php:306
+#: inc/elementor/widgets/event_country.php:330
+msgid "ads"
+msgstr ""
+
+#: inc/elementor/widgets/event_country.php:280
+#: inc/elementor/widgets/event_country.php:309
+msgid "icon"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:14
+msgid "Event Grids"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:131
+#: inc/elementor/widgets/event_grids.php:134
+msgid "Link Title"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:139
+msgid "Read More Link"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:154
+#: inc/elementor/widgets/event_hero_2.php:228
+msgid "Ads Settings"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:160
+msgid "Show Date Filters"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:163
+#: inc/elementor/widgets/event_hero.php:100
+#: template-parts/single-event/custom-fields.php:88
+msgid "Yes"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:164
+#: inc/elementor/widgets/event_hero.php:101
+msgid "No"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:171
+#: inc/elementor/widgets/event_hero_2.php:241
+msgid "Order By"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:174
+#: inc/elementor/widgets/event_hero_2.php:244
+#: inc/elementor/widgets/event_hero_2.php:257
+msgid "Select Ads order"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:175
+#: inc/elementor/widgets/event_hero_2.php:245
+msgid "Oldest"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:176
+#: inc/elementor/widgets/event_hero_2.php:246
+msgid "Latest"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:177
+#: inc/elementor/widgets/event_hero_2.php:247
+msgid "Random"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:184
+msgid "Layout Type"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:187
+msgid "Grid Style 1"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:188
+msgid "Grid Style 2"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:189
+msgid "Grid Style 3"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:196
+msgid "No. of event in row"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:199
+msgid "3"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:200
+msgid "4"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:207
+#: inc/elementor/widgets/event_hero_2.php:276
+msgid "Number fo Ads"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:265
+msgid "Today"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:266
+msgid "This Week"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:267
+msgid "This Month"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:268
+msgid "This year"
+msgstr ""
+
+#: inc/elementor/widgets/event_grids.php:269
+msgid "see All"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:14
+msgid "Event Hero"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:59
+msgid "Search Keyword Label"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:75
+msgid "Search Category Label"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:77
+#: template-parts/event-search/search-filters/by-category.php:23
+msgid "Category"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:84 inc/helper.php:353
+#: inc/helper.php:902
+msgid "Tags"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:89
+msgid "Tags Heading"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:91
+#: inc/elementor/widgets/event_hero.php:254
+#: inc/elementor/widgets/event_hero_2.php:356
+msgid "Trending Keywords"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:97
+msgid "Display tags ?"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:108
+msgid "Max number of tags"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:134
+msgid "Search Location Label"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:136
+msgid "Search Locaton"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:172
+msgid "Category List"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:190
+msgid "Category slider"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:195
+msgid "Slider tagline"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:197
+msgid "Explore Event"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:202
+msgid "Slider Heading"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:204
+msgid "Browse Categories"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero.php:402
+msgid "  Ads"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero_2.php:24
+msgid "Event Hero 2"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero_2.php:80
+msgid "Form Heading"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero_2.php:99
+msgid "Location Placeholer"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero_2.php:119
+msgid "post type"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero_2.php:121
+msgid "Select Post type "
+msgstr ""
+
+#: inc/elementor/widgets/event_hero_2.php:124
+msgid "Listings"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero_2.php:234
+msgid "Event Section Heading"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero_2.php:254
+msgid "Ad type"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero_2.php:258
+msgid "Feature"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero_2.php:260
+msgid "both"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero_2.php:286
+msgid "Select Category For Events"
+msgstr ""
+
+#: inc/elementor/widgets/event_hero_2.php:305
+msgid "Select Category For ads"
+msgstr ""
+
+#: inc/elementor/widgets/process_cycle_event.php:14
+msgid "Process Cycle event"
+msgstr ""
+
+#: inc/elementor/widgets/process_cycle_event.php:59
+msgid "Step 1"
+msgstr ""
+
+#: inc/elementor/widgets/process_cycle_event.php:78
+#: inc/elementor/widgets/process_cycle_event.php:81
+#: inc/elementor/widgets/process_cycle_event.php:119
+#: inc/elementor/widgets/process_cycle_event.php:122
+#: inc/elementor/widgets/process_cycle_event.php:156
+#: inc/elementor/widgets/process_cycle_event.php:159
+#: template-parts/event-search/search-filters/by-title.php:10
+msgid "Title"
+msgstr ""
+
+#: inc/elementor/widgets/process_cycle_event.php:87
+#: inc/elementor/widgets/process_cycle_event.php:128
+#: inc/elementor/widgets/process_cycle_event.php:164 inc/helper.php:1155
+msgid "Description"
+msgstr ""
+
+#: inc/elementor/widgets/process_cycle_event.php:98
+msgid "Step 2"
+msgstr ""
+
+#: inc/elementor/widgets/process_cycle_event.php:138
+msgid "Step 3"
+msgstr ""
+
+#: inc/helper.php:50
+msgid "event search"
+msgstr ""
+
+#: inc/helper.php:96
+msgid "Approved"
+msgstr ""
+
+#: inc/helper.php:126 template-parts/content-single-event.php:491
+msgid "Email"
+msgstr ""
+
+#: inc/helper.php:127
+msgid "Phone"
+msgstr ""
+
+#: inc/helper.php:128
+msgid "Booking Date"
+msgstr ""
+
+#: inc/helper.php:129
+msgid "Booking Start tiime"
+msgstr ""
+
+#: inc/helper.php:130
+msgid "Booking End Time"
+msgstr ""
+
+#: inc/helper.php:131
+msgid "Booking Status"
+msgstr ""
+
+#: inc/helper.php:161
+msgid "Appointment"
+msgstr ""
+
+#: inc/helper.php:182
+msgid "Choose Time Slot..."
+msgstr ""
+
+#: inc/helper.php:264
+msgid "Request Booking"
+msgstr ""
+
+#: inc/helper.php:268
+msgid "Appointment confirmation email will be sent upon approval."
+msgstr ""
+
+#: inc/helper.php:292
+msgid "Awesome Job!"
+msgstr ""
+
+#: inc/helper.php:293
+msgid ""
+"We have received your appointment and will notify you on your provided email."
+msgstr ""
+
+#: inc/helper.php:325 inc/helper.php:429
+msgid "Appointments"
+msgstr ""
+
+#: inc/helper.php:338
+msgid "Event Categories"
+msgstr ""
+
+#: inc/helper.php:346
+msgid "Event Locations"
+msgstr ""
+
+#: inc/helper.php:361
+msgid "Event sidebar"
+msgstr ""
+
+#: inc/helper.php:434
+msgid "Allow Appointment"
+msgstr ""
+
+#: inc/helper.php:439
+msgid "Appointment Ads"
+msgstr ""
+
+#: inc/helper.php:444
+msgid "Appointments Received"
+msgstr ""
+
+#: inc/helper.php:449
+msgid "Appointments Sent"
+msgstr ""
+
+#: inc/helper.php:515
+msgid "All Events"
+msgstr ""
+
+#: inc/helper.php:521
+msgid "Create Event"
+msgstr ""
+
+#: inc/helper.php:526 inc/helper.php:1794
+msgid "Published Events"
+msgstr ""
+
+#: inc/helper.php:531 inc/helper.php:1783
+msgid "Pending Events"
+msgstr ""
+
+#: inc/helper.php:536
+msgid "Expired Events"
+msgstr ""
+
+#: inc/helper.php:587
+msgid "You Current Location"
+msgstr ""
+
+#: inc/helper.php:593
+msgid "Drag pin for your pin-point location."
+msgstr ""
+
+#: inc/helper.php:664
+msgid "Latitude"
+msgstr ""
+
+#: inc/helper.php:670
+msgid "Longitude"
+msgstr ""
+
+#: inc/helper.php:759 inc/helper.php:1002 inc/helper.php:1205
+#: template-parts/content-single-event.php:485
+#: template-parts/content-single-event.php:493
+#: template-parts/content-single-event.php:509
+#: template-parts/content-single-event.php:569
+#: template-parts/single-event/event-review.php:218
+msgid "This field is required."
+msgstr ""
+
+#: inc/helper.php:759
+#: template-parts/event-search/search-filters/by-category.php:25
+msgid "Select Event Category"
+msgstr ""
+
+#: inc/helper.php:768
+msgid "You are not allowed to edit this ad !"
+msgstr ""
+
+#: inc/helper.php:813 inc/helper.php:814 inc/helper.php:828 inc/helper.php:829
+msgid "Event Question"
+msgstr ""
+
+#: inc/helper.php:817 inc/helper.php:832
+msgid "Answer"
+msgstr ""
+
+#: inc/helper.php:820 inc/helper.php:865 inc/helper.php:2304
+msgid "Remove"
+msgstr ""
+
+#: inc/helper.php:833
+msgid "Event answer"
+msgstr ""
+
+#: inc/helper.php:845
+msgid "Add more"
+msgstr ""
+
+#: inc/helper.php:858 inc/helper.php:859 inc/helper.php:874 inc/helper.php:875
+msgid "Day"
+msgstr ""
+
+#: inc/helper.php:862 inc/helper.php:880
+#: template-parts/content-single-event.php:187
+msgid "Schedule"
+msgstr ""
+
+#: inc/helper.php:894
+msgid "Add More"
+msgstr ""
+
+#: inc/helper.php:902
+msgid "Comma(,) separated"
+msgstr ""
+
+#: inc/helper.php:979
+msgid "Select Your Country"
+msgstr ""
+
+#: inc/helper.php:980
+msgid "Select Your State"
+msgstr ""
+
+#: inc/helper.php:981
+msgid "Select Your City"
+msgstr ""
+
+#: inc/helper.php:982
+msgid "Select Your Town"
+msgstr ""
+
+#: inc/helper.php:1098 inc/helper.php:1111
+msgid "Create Events"
+msgstr ""
+
+#: inc/helper.php:1107
+msgid "Dashboard"
+msgstr ""
+
+#: inc/helper.php:1126 inc/helper.php:1128
+msgid "Event Title"
+msgstr ""
+
+#: inc/helper.php:1137 template-parts/content-single-event.php:499
+msgid "Phone Number"
+msgstr ""
+
+#: inc/helper.php:1139
+msgid "+99 3331 234567"
+msgstr ""
+
+#: inc/helper.php:1146
+msgid "Contact Email"
+msgstr ""
+
+#: inc/helper.php:1148
+msgid "abc@xyz.com"
+msgstr ""
+
+#: inc/helper.php:1163
+msgid "Event Start Date"
+msgstr ""
+
+#: inc/helper.php:1172
+msgid "Event End Date"
+msgstr ""
+
+#: inc/helper.php:1181
+msgid ""
+"Event gallery , please upload first image vertical , so it may look good on "
+"grids"
+msgstr ""
+
+#: inc/helper.php:1183
+msgid "Event Gallery Images"
+msgstr ""
+
+#: inc/helper.php:1185
+msgid "Drop files here or click to upload"
+msgstr ""
+
+#: inc/helper.php:1193 template-parts/event-search/search-form.php:159
+msgid "Additional fields"
+msgstr ""
+
+#: inc/helper.php:1203
+msgid "Address"
+msgstr ""
+
+#: inc/helper.php:1205
+msgid "Enter a location"
+msgstr ""
+
+#: inc/helper.php:1225
+msgid "Drop files here or click to upload."
+msgstr ""
+
+#: inc/helper.php:1226
+msgid "Your browser does not support drag'n'drop file uploads."
+msgstr ""
+
+#: inc/helper.php:1227
+msgid ""
+"Please use the fallback form below to upload your files like in the olden "
+"days."
+msgstr ""
+
+#: inc/helper.php:1228
+msgid "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB."
+msgstr ""
+
+#: inc/helper.php:1229
+msgid "You can't upload files of this type."
+msgstr ""
+
+#: inc/helper.php:1230
+msgid "Server responded with {{statusCode}} code."
+msgstr ""
+
+#: inc/helper.php:1231
+msgid "Cancel upload"
+msgstr ""
+
+#: inc/helper.php:1232
+msgid "Are you sure you want to cancel this upload?"
+msgstr ""
+
+#: inc/helper.php:1233
+msgid "Remove file"
+msgstr ""
+
+#: inc/helper.php:1234
+msgid "You can not upload any more files."
+msgstr ""
+
+#: inc/helper.php:1237
+msgid "Want to visit detail page"
+msgstr ""
+
+#: inc/helper.php:1271
+msgid "How to creat timekit widget"
+msgstr ""
+
+#: inc/helper.php:1281
+msgid "    Create Booking"
+msgstr ""
+
+#: inc/helper.php:1285
+msgid "Select Ad"
+msgstr ""
+
+#: inc/helper.php:1287
+msgid "Please select ad first"
+msgstr ""
+
+#: inc/helper.php:1288
+msgid "Select option"
+msgstr ""
+
+#: inc/helper.php:1318
+msgid "Listing Settings"
+msgstr ""
+
+#: inc/helper.php:1326
+msgid "Allow business hours on listings"
+msgstr ""
+
+#: inc/helper.php:1332
+msgid "Allow booking on listings"
+msgstr ""
+
+#: inc/helper.php:1338
+msgid "Allow Timekit booking"
+msgstr ""
+
+#: inc/helper.php:1339
+msgid "How to get timekit widget"
+msgstr ""
+
+#: inc/helper.php:1345
+msgid "Send email to customer"
+msgstr ""
+
+#: inc/helper.php:1346
+msgid "Send email to customer when status of booking is changed"
+msgstr ""
+
+#: inc/helper.php:1352
+msgid "Booking Status change Email FROM"
+msgstr ""
+
+#: inc/helper.php:1353 inc/helper.php:1683
+msgid "FROM: NAME valid@email.com is compulsory as we gave in default."
+msgstr ""
+
+#: inc/helper.php:1360
+msgid "Booking Status subject"
+msgstr ""
+
+#: inc/helper.php:1368
+msgid "Booking approved email template"
+msgstr ""
+
+#: inc/helper.php:1374 inc/helper.php:1434
+msgid ""
+"%customer% , %booking_date% , %booking_time% , %extra_details%  , %ad_title"
+"%  ,   %ad_link%  will be translated accordingly."
+msgstr ""
+
+#: inc/helper.php:1427
+msgid "Booking rejected template"
+msgstr ""
+
+#: inc/helper.php:1502
+msgid "Allow user to create events"
+msgstr ""
+
+#: inc/helper.php:1509
+msgid "Events Search Page"
+msgstr ""
+
+#: inc/helper.php:1518
+msgid "Search page grid style"
+msgstr ""
+
+#: inc/helper.php:1526
+msgid "3 Events"
+msgstr ""
+
+#: inc/helper.php:1527
+msgid "4  Events"
+msgstr ""
+
+#: inc/helper.php:1529
+msgid "Number of event in row on search page"
+msgstr ""
+
+#: inc/helper.php:1537
+msgid "Events Stats"
+msgstr ""
+
+#: inc/helper.php:1544
+msgid "Strict image mode"
+msgstr ""
+
+#: inc/helper.php:1545
+msgid "Not allowed less than 760x410"
+msgstr ""
+
+#: inc/helper.php:1551
+msgid "Show share button on event detail page"
+msgstr ""
+
+#: inc/helper.php:1557
+msgid "Review on Event detail page"
+msgstr ""
+
+#: inc/helper.php:1563
+msgid "Event Detail page breadcrumb image"
+msgstr ""
+
+#: inc/helper.php:1569
+msgid "User contact form"
+msgstr ""
+
+#: inc/helper.php:1570
+msgid "on event detail  page"
+msgstr ""
+
+#: inc/helper.php:1576
+msgid "Contact Form Google reCAPTCHA"
+msgstr ""
+
+#: inc/helper.php:1577
+msgid "Hide/Show google recaptcha on user contact form."
+msgstr ""
+
+#: inc/helper.php:1580
+msgid "After enabling please verify the <b>Google reCAPTCHA</b> API keys."
+msgstr ""
+
+#: inc/helper.php:1587
+msgid "Show map in events"
+msgstr ""
+
+#: inc/helper.php:1593
+msgid "Show related events on event detail page"
+msgstr ""
+
+#: inc/helper.php:1599
+msgid "Max Num of related events on event details page"
+msgstr ""
+
+#: inc/helper.php:1609
+msgid "Event Approval"
+msgstr ""
+
+#: inc/helper.php:1611
+msgid "Auto Approval"
+msgstr ""
+
+#: inc/helper.php:1612
+msgid "Admin Approval"
+msgstr ""
+
+#: inc/helper.php:1620
+msgid "Event Update Approval"
+msgstr ""
+
+#: inc/helper.php:1626
+msgid "Events Gallery Limit"
+msgstr ""
+
+#: inc/helper.php:1633
+msgid "Events Image Upload Size"
+msgstr ""
+
+#: inc/helper.php:1649
+msgid "Event Expiry Email"
+msgstr ""
+
+#: inc/helper.php:1651
+msgid "Turn On if you send email on Event Expire"
+msgstr ""
+
+#: inc/helper.php:1656
+msgid "After Removal events Should be"
+msgstr ""
+
+#: inc/helper.php:1658
+msgid "Published"
+msgstr ""
+
+#: inc/helper.php:1659
+msgid "Trashed"
+msgstr ""
+
+#: inc/helper.php:1660
+msgid "Draft"
+msgstr ""
+
+#: inc/helper.php:1668
+msgid "Send Event Email To Admin"
+msgstr ""
+
+#: inc/helper.php:1675
+msgid "New Event Email For Admin"
+msgstr ""
+
+#: inc/helper.php:1682
+msgid "Admin New Event FROM"
+msgstr ""
+
+#: inc/helper.php:1689
+msgid "Email for notification."
+msgstr ""
+
+#: inc/helper.php:1696
+msgid "New Event Details"
+msgstr ""
+
+#: inc/helper.php:1716
+msgid "not found"
+msgstr ""
+
+#: inc/helper.php:1772
+msgid "Total Events"
+msgstr ""
+
+#: inc/helper.php:1805
+msgid "Expired Events "
+msgstr ""
+
+#: inc/helper.php:1871 inc/helper.php:2205 inc/helper.php:2358
+msgid "From"
+msgstr ""
+
+#: inc/helper.php:1874 inc/helper.php:2206 inc/helper.php:2373
+msgid "To"
+msgstr ""
+
+#: inc/helper.php:1986 inc/helper.php:2113
+msgid "View Detail"
+msgstr ""
+
+#: inc/helper.php:2010 inc/helper.php:2138
+msgid "Enter extra details here"
+msgstr ""
+
+#: inc/helper.php:2011 inc/helper.php:2139
+msgid "Enter details first"
+msgstr ""
+
+#: inc/helper.php:2208
+msgid "Action"
+msgstr ""
+
+#: inc/helper.php:2270
+msgid "Active"
+msgstr ""
+
+#: inc/helper.php:2274
+msgid "Inactive"
+msgstr ""
+
+#: inc/helper.php:2281
+msgid "View Attendees"
+msgstr ""
+
+#: inc/helper.php:2301 template-parts/content-single-event.php:84
+msgid "Edit"
+msgstr ""
+
+#: inc/helper.php:2361 inc/helper.php:2378
+msgid "Select your business hours"
+msgstr ""
+
+#: inc/helper.php:2364
+msgid "Break From"
+msgstr ""
+
+#: inc/helper.php:2367
+msgid "Start Break"
+msgstr ""
+
+#: inc/helper.php:2382
+msgid "Break to"
+msgstr ""
+
+#: inc/helper.php:2387
+msgid "End Break"
+msgstr ""
+
+#: inc/helper.php:2399 inc/helper.php:2554
+msgid "Break"
+msgstr ""
+
+#: inc/helper.php:2416 inc/helper.php:2485 inc/helper.php:2572
+msgid "Business Hours"
+msgstr ""
+
+#: inc/helper.php:2421
+msgid "N/A"
+msgstr ""
+
+#: inc/helper.php:2425
+msgid "Open 24/7"
+msgstr ""
+
+#: inc/helper.php:2429
+msgid "Selective Hours"
+msgstr ""
+
+#: inc/helper.php:2438
+msgid "Select time zone"
+msgstr ""
+
+#: inc/helper.php:2487
+msgid "Always Open"
+msgstr ""
+
+#: inc/helper.php:2515
+msgid "Opening Soon"
+msgstr ""
+
+#: inc/helper.php:2556
+msgid "Closing Soon"
+msgstr ""
+
+#: inc/helper.php:2558
+msgid "Open Now"
+msgstr ""
+
+#: inc/helper.php:2584
+msgid "Business hours"
+msgstr ""
+
+#: inc/helper.php:2603
+msgid "break"
+msgstr ""
+
+#: inc/helper.php:2705
+msgid "This will hide booking from ad"
+msgstr ""
+
+#: inc/helper.php:2705
+msgid "Remove Booking"
+msgstr ""
+
+#: inc/helper.php:2708 inc/helper.php:2710
+msgid "Edit options"
+msgstr ""
+
+#: inc/helper.php:2755
+msgid "image"
+msgstr ""
+
+#: inc/helper.php:2898
+msgid "Monday"
+msgstr ""
+
+#: inc/helper.php:2898
+msgid "Tuesday"
+msgstr ""
+
+#: inc/helper.php:2898
+msgid "Wednesday"
+msgstr ""
+
+#: inc/helper.php:2898
+msgid "Thursday"
+msgstr ""
+
+#: inc/helper.php:2898
+msgid "Friday"
+msgstr ""
+
+#: inc/helper.php:2898
+msgid "Saturday"
+msgstr ""
+
+#: inc/helper.php:2898
+msgid "Sunday"
+msgstr ""
+
+#: inc/sb_actions.php:74
+msgid "To : "
+msgstr ""
+
+#: inc/sb_actions.php:75
+msgid "From : "
+msgstr ""
+
+#: inc/sb_actions.php:81
+msgid "New Event"
+msgstr ""
+
+#: inc/sb_actions.php:82
+msgid "Got new event"
+msgstr ""
+
+#: template-parts/content-single-event.php:33
+#: template-parts/content-single-event.php:298
+msgid "Going"
+msgstr ""
+
+#: template-parts/content-single-event.php:36
+#: template-parts/content-single-event.php:299
+msgid "Not Going"
+msgstr ""
+
+#: template-parts/content-single-event.php:45
+#: template-parts/content-single-event.php:49
+#: template-parts/single-event/event-author.php:78
+msgid "Dealer"
+msgstr ""
+
+#: template-parts/content-single-event.php:47
+#: template-parts/single-event/event-author.php:76
+msgid "Individual"
+msgstr ""
+
+#: template-parts/content-single-event.php:136
+msgid "Rearrange the event photos."
+msgstr ""
+
+#: template-parts/content-single-event.php:149
+msgid "Waiting for admin approval"
+msgstr ""
+
+#: template-parts/content-single-event.php:162
+msgid "Description:"
+msgstr ""
+
+#: template-parts/content-single-event.php:176
+msgid "FAQ"
+msgstr ""
+
+#: template-parts/content-single-event.php:279
+msgid "days"
+msgstr ""
+
+#: template-parts/content-single-event.php:283
+msgid "hours"
+msgstr ""
+
+#: template-parts/content-single-event.php:322
+msgid "Member Since "
+msgstr ""
+
+#: template-parts/content-single-event.php:324
+msgid "View All Events"
+msgstr ""
+
+#: template-parts/content-single-event.php:330
+msgid "see map"
+msgstr ""
+
+#: template-parts/content-single-event.php:332
+msgid " "
+msgstr ""
+
+#: template-parts/content-single-event.php:346
+msgid "Verified"
+msgstr ""
+
+#: template-parts/content-single-event.php:348
+#: template-parts/content-single-event.php:352
+msgid "Not verified"
+msgstr ""
+
+#: template-parts/content-single-event.php:370
+msgid "Phone :"
+msgstr ""
+
+#: template-parts/content-single-event.php:371
+msgid "Login to view"
+msgstr ""
+
+#: template-parts/content-single-event.php:386
+#: template-parts/content-single-event.php:402
+msgid "Click To Show"
+msgstr ""
+
+#: template-parts/content-single-event.php:429
+msgid "Attendees ("
+msgstr ""
+
+#: template-parts/content-single-event.php:478
+msgid "Contact Us"
+msgstr ""
+
+#: template-parts/content-single-event.php:483
+msgid "Name"
+msgstr ""
+
+#: template-parts/content-single-event.php:501
+msgid "Format should be +CountrycodePhonenumber."
+msgstr ""
+
+#: template-parts/content-single-event.php:507
+msgid "Message"
+msgstr ""
+
+#: template-parts/content-single-event.php:527
+msgid "Send Message"
+msgstr ""
+
+#: template-parts/content-single-event.php:560
+msgid "Reply to"
+msgstr ""
+
+#: template-parts/content-single-event.php:567
+msgid "Write your reply..."
+msgstr ""
+
+#: template-parts/event-search/search-filters/by-category.php:27
+#: template-parts/event-search/search-filters/by-locationcustom.php:29
+msgid "Select an option"
+msgstr ""
+
+#: template-parts/event-search/search-filters/by-date.php:3
+msgid "Date"
+msgstr ""
+
+#: template-parts/event-search/search-filters/by-date.php:6
+msgid "Start Date"
+msgstr ""
+
+#: template-parts/event-search/search-filters/by-date.php:9
+msgid "End Date"
+msgstr ""
+
+#: template-parts/event-search/search-filters/by-location.php:14
+msgid "Type Location..."
+msgstr ""
+
+#: template-parts/event-search/search-filters/by-locationcustom.php:27
+msgid "Select Event Location"
+msgstr ""
+
+#: template-parts/event-search/search-filters/by-title.php:12
+msgid "Seach by title"
+msgstr ""
+
+#: template-parts/event-search/search-form.php:120
+msgid "Advance Search"
+msgstr ""
+
+#: template-parts/event-search/search-form.php:201
+msgid "Found Events"
+msgstr ""
+
+#: template-parts/event-search/search-form.php:203
+msgid "Reset Search"
+msgstr ""
+
+#: template-parts/event-search/search-form.php:222
+msgid "Newest To Oldest"
+msgstr ""
+
+#: template-parts/event-search/search-form.php:224
+msgid "Oldest To Newest"
+msgstr ""
+
+#: template-parts/single-event/custom-fields.php:83
+#: template-parts/single-event/share-event.php:49
+msgid "Link"
+msgstr ""
+
+#: template-parts/single-event/event-author.php:20
+msgid "Profile Picture"
+msgstr ""
+
+#: template-parts/single-event/event-author.php:85
+msgid "View Profile"
+msgstr ""
+
+#: template-parts/single-event/event-map.php:11
+msgid "Location:"
+msgstr ""
+
+#: template-parts/single-event/event-related.php:31
+msgid "Related events"
+msgstr ""
+
+#: template-parts/single-event/event-review.php:5
+#: template-parts/single-event/event-review.php:201
+msgid "Write a Review"
+msgstr ""
+
+#: template-parts/single-event/event-review.php:92
+#: template-parts/single-event/event-review.php:156
+msgid "Dislike"
+msgstr ""
+
+#: template-parts/single-event/event-review.php:99
+#: template-parts/single-event/event-review.php:163
+msgid "Like"
+msgstr ""
+
+#: template-parts/single-event/event-review.php:112
+msgid "Reply"
+msgstr ""
+
+#: template-parts/single-event/event-review.php:214
+msgid "Comments"
+msgstr ""
+
+#: template-parts/single-event/event-review.php:216
+msgid "Your comments..."
+msgstr ""
+
+#: template-parts/single-event/event-review.php:222
+msgid "Submit Review"
+msgstr ""
+
+#: template-parts/single-event/rearrange-notification.php:17
+msgid "Re-arrange your ad photos."
+msgstr ""
+
+#: template-parts/single-event/rearrange-notification.php:22
+msgid "*First image will be main display image of this ad."
+msgstr ""
+
+#: template-parts/single-event/rearrange-notification.php:54
+msgid "Events photos has been re-arranged."
+msgstr ""
+
+#: template-parts/single-event/rearrange-notification.php:59
+msgid "Re-arrange"
+msgstr ""
+
+#: template-parts/single-event/share-event.php:16
+#: template-parts/single-event/share-map.php:61
+msgid "Share"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Sb Directory Plugin"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"this Adforest plugin , allow you to create events and directory options."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Scripts Bundle"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://themeforest.net/user/scriptsbundle/"
+msgstr ""

@@ -1,0 +1,100 @@
+#attachment-wrapper .dz-preview {
+    background: #2E9AE9;
+    position: relative;
+    display: inline-block;
+    color: #ffff;
+    font-size: 13px;
+    -moz-border-radius: 1px;
+    -webkit-border-radius: 1px;
+    border-radius: 1px;
+    padding: 10px;
+}
+#attachment-wrapper .dz-preview .dz-progress {
+    display: block;
+    background: rgba(0,0,0,0.10);
+    margin-top: 6px;
+    margin-bottom: 4px;
+}
+#attachment-wrapper .dz-preview .dz-progress .dz-upload {
+    display: block;
+    background: rgba(255,255,255,0.65);
+    padding: 2px;
+}
+.data-dz-thumbnail{
+    width: 15% !important;
+}
+.attachment-wrapper_main{
+    padding-top: 10px;
+ 
+}
+#attachment-wrapper .dz-preview .dz-progress{
+    margin-bottom: 0px !important;
+    width: 100%;
+    /*animation: 5s ease-out 0s 1 uploadProgressBar;
+    -webkit-animation: 5s ease-out 0s 1 uploadProgressBar;
+    animation-fill-mode: forwards;
+    -webkit-animation-fill-mode: forwards;*/
+}
+@keyframes uploadProgressBar {
+    0% {
+      width: 0;
+    }
+    10% {
+        width: 10%;
+      }
+    25% {
+    width: 25%;
+    }
+    35% {
+    width: 35%;
+    }
+    45% {
+    width: 45%;
+    }
+    75% {
+    width: 75%;
+    }
+    100% {
+      width: 100%;
+    }
+}
+@-webkit-keyframes uploadProgressBar {
+    0% {
+        width: 0;
+      }
+    10% {
+        width: 10%;
+    }
+    25% {
+    width: 25%;
+    }
+    35% {
+    width: 35%;
+    }
+    45% {
+    width: 45%;
+    }
+    75% {
+    width: 75%;
+    }
+    100% {
+    width: 100%;
+    }
+}
+.data-dz-thumbnail {
+    margin: 3px 3px 3px 3px;
+}
+.dz-image-preview{
+    width: 30%;
+    float: left;
+    margin-right: 10px;
+}
+.sbchat_upload_items{
+    text-align: center;
+}
+.sbchat_upload_items{
+    padding: 15px; 
+    background-color: #eeeeee; 
+    margin-top: 10px;
+    cursor: pointer;
+}

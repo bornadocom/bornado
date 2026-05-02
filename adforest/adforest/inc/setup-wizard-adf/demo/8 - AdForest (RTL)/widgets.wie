@@ -1,0 +1,205 @@
+[
+    {
+        "sidebar": "adforest_theme_sidebar",
+        "widget_id": "custom_search_widget-1",
+        "widget_type": "custom_search_widget",
+        "widget_num": "1",
+        "settings": {
+            "title": "\u0641\u0644\u062a\u0631 \u0627\u0644\u0628\u062d\u062b"
+        }
+    },
+    {
+        "sidebar": "adforest_theme_sidebar",
+        "widget_id": "adforest_recent_posts_widget-1",
+        "widget_type": "adforest_recent_posts_widget",
+        "widget_num": "1",
+        "settings": {
+            "title": "\u0627\u0644\u0645\u0634\u0627\u0631\u0643\u0627\u062a \u0627\u0644\u0623\u062e\u064a\u0631\u0629",
+            "number_of_posts": 5,
+            "title_limit": 25
+        }
+    },
+    {
+        "sidebar": "adforest_vertical_advert",
+        "widget_id": "adforest_search_advertisement-1",
+        "widget_type": "adforest_search_advertisement",
+        "widget_num": "1",
+        "settings": {
+            "title": "Advertisement",
+            "ad_code": "<img class=\"img-fluid\" src=\"https:\/\/listing.adforestwp.com\/wp-content\/uploads\/2025\/03\/3020-1.png\" alt=\"image\">",
+            "open_widget": "1"
+        }
+    },
+    {
+        "sidebar": "sb_themes_grid_sidebar",
+        "widget_id": "block-5",
+        "widget_type": "block",
+        "widget_num": "5",
+        "settings": {
+            "content": "<!-- wp:group --><div class=\"wp-block-group\"><!-- wp:heading --><h2>Archives<\/h2><!-- \/wp:heading --><!-- wp:archives \/--><\/div><!-- \/wp:group -->"
+        }
+    },
+    {
+        "sidebar": "sb_themes_grid_sidebar",
+        "widget_id": "block-6",
+        "widget_type": "block",
+        "widget_num": "6",
+        "settings": {
+            "content": "<!-- wp:group --><div class=\"wp-block-group\"><!-- wp:heading --><h2>Categories<\/h2><!-- \/wp:heading --><!-- wp:categories \/--><\/div><!-- \/wp:group -->"
+        }
+    },
+    {
+        "sidebar": "adforest_ad_sidebar_bottom",
+        "widget_id": "adforest_recent_ads_widget-1",
+        "widget_type": "adforest_recent_ads_widget",
+        "widget_num": "1",
+        "settings": {
+            "title": "\u0627\u0644\u0625\u0639\u0644\u0627\u0646\u0627\u062a \u0627\u0644\u0623\u062e\u064a\u0631\u0629",
+            "number_of_posts": 5
+        }
+    },
+    {
+        "sidebar": "adforest_ad_sidebar_bottom",
+        "widget_id": "adforest_search_advertisement-2",
+        "widget_type": "adforest_search_advertisement",
+        "widget_num": "2",
+        "settings": {
+            "title": "\u0625\u0639\u0644\u0627\u0646",
+            "ad_code": "<img class=\"img-fluid\" src=\"https:\/\/listing.adforestwp.com\/wp-content\/uploads\/2025\/03\/Untitled-1-2-1.png\" alt=\"image\">",
+            "open_widget": "1"
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_title_search_filter_widget-1",
+        "widget_type": "adforest_title_search_filter_widget",
+        "widget_num": "1",
+        "settings": {
+            "title": "\u0627\u0644\u0628\u062d\u062b \u0639\u0646 \u0627\u0644\u0639\u0646\u0648\u0627\u0646",
+            "open_widget": ""
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_search_filter_widget-1",
+        "widget_type": "adforest_search_filter_widget",
+        "widget_num": "1",
+        "settings": {
+            "title": "\u0627\u0644\u0628\u062d\u062b \u0639\u0646 \u062f\u0627\u0626\u0631\u0629 \u0646\u0635\u0641 \u0642\u0637\u0631\u0647\u0627",
+            "default_value": "",
+            "edit_able": "yes",
+            "show_hide": "show",
+            "open_widget": "1"
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_category_search_widget-1",
+        "widget_type": "adforest_category_search_widget",
+        "widget_num": "1",
+        "settings": {
+            "title": "\u0627\u0644\u0628\u062d\u062b \u062d\u0633\u0628 \u0627\u0644\u0641\u0626\u0627\u062a",
+            "open_widget": "1",
+            "show_more_cate": "1",
+            "no_of_cats": "5"
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_price_search_widget-1",
+        "widget_type": "adforest_price_search_widget",
+        "widget_num": "1",
+        "settings": {
+            "title": "\u0633\u0639\u0631 \u0627\u0644\u0625\u0639\u0644\u0627\u0646",
+            "min_price": 0,
+            "max_price": "10000000",
+            "open_widget": ""
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_ad_type_search_widget-1",
+        "widget_type": "adforest_ad_type_search_widget",
+        "widget_num": "1",
+        "settings": {
+            "title": "\u0646\u0648\u0639 \u0627\u0644\u0625\u0639\u0644\u0627\u0646",
+            "open_widget": ""
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_ad_location_search_widget-1",
+        "widget_type": "adforest_ad_location_search_widget",
+        "widget_num": "1",
+        "settings": {
+            "title": "\u0645\u0648\u0642\u0639 \u0627\u0644\u0625\u0639\u0644\u0627\u0646",
+            "open_widget": ""
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_condition_search_widget-1",
+        "widget_type": "adforest_condition_search_widget",
+        "widget_num": "1",
+        "settings": {
+            "title": "\u062d\u0627\u0644\u0629 \u0627\u0644\u0625\u0639\u0644\u0627\u0646",
+            "open_widget": ""
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_search_custom_fields-1",
+        "widget_type": "adforest_search_custom_fields",
+        "widget_num": "1",
+        "settings": {
+            "title": "\u0627\u0644\u0628\u062d\u062b \u0639\u0646 \u0637\u0631\u064a\u0642:",
+            "open_widget": "1"
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_ad_countries-1",
+        "widget_type": "adforest_ad_countries",
+        "widget_num": "1",
+        "settings": {
+            "title": "\u0627\u0644\u0645\u0648\u0642\u0639 \u0627\u0644\u0645\u062e\u0635\u0635",
+            "default_value": "",
+            "edit_able": "",
+            "open_widget": ""
+        }
+    },
+    {
+        "sidebar": "adforest_cat_search",
+        "widget_id": "adforest_title_search_filter_widget-2",
+        "widget_type": "adforest_title_search_filter_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "\u0645\u0627 \u0627\u0644\u0630\u064a \u062a\u0628\u062d\u062b \u0639\u0646\u0647",
+            "open_widget": "1"
+        }
+    },
+    {
+        "sidebar": "adforest_cat_search",
+        "widget_id": "adforest_category_search_widget-2",
+        "widget_type": "adforest_category_search_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "\u0627\u0644\u0628\u062d\u062b \u062d\u0633\u0628 \u0627\u0644\u0641\u0626\u0629",
+            "open_widget": "1",
+            "show_more_cate": "1",
+            "no_of_cats": "10"
+        }
+    },
+    {
+        "sidebar": "adforest_cat_search",
+        "widget_id": "adforest_ad_countries-2",
+        "widget_type": "adforest_ad_countries",
+        "widget_num": "2",
+        "settings": {
+            "title": "\u0645\u0648\u0642\u0639 \u0627\u0644\u062f\u0648\u0644\u0629",
+            "default_value": "",
+            "edit_able": "",
+            "open_widget": "1"
+        }
+    }
+]

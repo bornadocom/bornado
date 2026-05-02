@@ -1,0 +1,19 @@
+theme-options.json
+widgets.wie
+content.xml
+
+
+pages.xml
+media.xml
+new-theme-options.json
+new-widgets.wie
+
+screen-image.png
+
+
+settings.json example
+{
+  "front_page_slug": "europa-demo",
+  "blog_page_slug": "blog",
+  "main_menu_slug": "main-menu"
+}

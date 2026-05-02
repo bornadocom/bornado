@@ -1,0 +1,1 @@
+(function($) {"use strict";$('.get_service').on('click', function(){ $('html, body').animate({ scrollTop: $(".tab-content").offset().top }, 1000);	});})( jQuery );

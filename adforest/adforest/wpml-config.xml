@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wpml-config>
+    <custom-fields>
+        <!-- Core Ad Data - Set to COPY to ensure sync across languages -->
+        <!-- If you update the price/location in the original ad, it will update in the translation -->
+        <custom-field action="copy">_adforest_ad_price</custom-field>
+        <custom-field action="copy">_adforest_ad_currency</custom-field>
+        <custom-field action="copy">_adforest_ad_location</custom-field>
+        <custom-field action="copy">_adforest_ad_map_lat</custom-field>
+        <custom-field action="copy">_adforest_ad_map_long</custom-field>
+        <custom-field action="copy">_adforest_poster_contact</custom-field>
+        <custom-field action="copy">_adforest_poster_name</custom-field>
+        <custom-field action="copy">_adforest_is_feature</custom-field>
+        <custom-field action="copy">_adforest_is_feature_date</custom-field>
+        <custom-field action="copy">_adforest_ad_status_</custom-field>
+        <custom-field action="copy">_adforest_ad_views</custom-field>
+        <custom-field action="copy">_adforest_ad_type</custom-field>
+        <custom-field action="copy">_adforest_ad_condition</custom-field>
+        <custom-field action="copy">_adforest_ad_warranty</custom-field>
+        <custom-field action="copy">_adforest_ad_bidding</custom-field>
+        <custom-field action="copy">_adforest_ad_price_type</custom-field>
+        <custom-field action="copy">_adforest_ad_yvideo</custom-field>
+        <custom-field action="copy">_sb_photo_arrangement_</custom-field>
+        <custom-field action="copy">_sb_country</custom-field>
+        
+        <!-- Taxonomy Meta & Other Fields -->
+        <custom-field action="copy">adforest_make_bid_cat_base</custom-field>
+        <custom-field action="copy">adforest_make_cat_paid</custom-field>
+        <custom-field action="copy">display_type</custom-field>
+        <custom-field action="copy">order</custom-field>
+        <custom-field action="copy">product_count_product_cat</custom-field>
+        <custom-field action="copy">thumbnail_id</custom-field>
+        <custom-field action="copy">vendor_id</custom-field>
+        <custom-field action="copy">vendor_shipping_origin</custom-field>
+    </custom-fields>
+    
+    <admin-texts>
+        <key name="adforest_theme">
+            <key name="sb_site_logo"/>
+            <key name="sticky_title"/>
+            <key name="sb_android_app_text"/>
+            <key name="ad_in_menu_text"/>
+            <key name="top_bar_contact"/>
+            <key name="sb_ad_update_notice"/>
+            <key name="sb_link_text"/>
+            <key name="owner_deal_text"/>
+            <key name="sb_comments_section_title"/>
+            <key name="sb_enable_comments_offer_user_title"/>
+            <key name="shop-number-page-title"/>
+            <key name="shop-single-page-title"/>
+            <key name="shop-related-single-title"/>
+            <key name="sb_blog_page_title"/>
+            <key name="sb_android_app_link"/>
+            <key name="sb_location_titles"/>
+            <key name="msg_notification_text"/>
+            <key name="report_options"/>
+            <key name="report_email"/>
+            <key name="sb_feature_desc"/>
+            <key name="sb_single_ad_text"/>
+            <key name="sb_related_ads_title"/>
+            <key name="tips_title"/>
+            <key name="tips_for_ad"/>
+            <key name="feature_ads_title"/>
+            <key name="sb_ad_rating_title"/>
+            <key name="sb_msg_subject_on_new_ad"/>
+            <key name="sb_msg_from_on_new_ad"/>
+            <key name="sb_msg_on_new_ad"/>
+            <key name="sb_message_subject_on_new_ad"/>
+            <key name="sb_message_from_on_new_ad"/>
+            <key name="sb_message_on_new_ad"/>
+            <key name="sb_report_ad_subject"/>
+            <key name="sb_report_ad_from"/>
+            <key name="sb_report_ad_message"/>
+            <key name="sb_forgot_password_subject"/>
+            <key name="sb_forgot_password_from"/>
+            <key name="sb_forgot_password_message"/>
+            <key name="sb_new_rating_subject"/>
+            <key name="sb_new_rating_from"/>
+            <key name="sb_new_rating_message"/>
+            <key name="sb_new_bid_subject"/>
+            <key name="adforest_top_bar_text"/>
+            <key name="sb_new_bid_from"/>
+            <key name="sb_new_bid_message"/>
+            <key name="sb_new_user_admin_message_subject"/>
+            <key name="sb_new_user_admin_message_from"/>
+            <key name="sb_new_user_admin_message"/>
+            <key name="sb_new_user_message_subject"/>
+            <key name="sb_new_user_message_from"/>
+            <key name="sb_new_user_message"/>
+            <key name="sb_active_ad_email_subject"/>
+            <key name="sb_active_ad_email_from"/>
+            <key name="sb_active_ad_email_message"/>
+            <key name="ad_rating_email_subject"/>
+            <key name="ad_rating_email_from"/>
+            <key name="ad_rating_email_message"/>
+            <key name="ad_rating_reply_email_subject"/>
+            <key name="ad_rating_reply_email_from"/>
+            <key name="ad_rating_reply_email_message"/>
+            <key name="sb_comments_section_note"/>
+            <key name="sb_blog_single_title"/>
+            <key name="sb_comming_soon_title"/>
+            <key name="footer_text_under_logo"/>
+            <key name="footer-contact-details">
+             <key name="Address"/>
+                <key name="Phone"/>
+                <key name="Fax"/>
+                <key name="Email"/>
+                <key name="Timing"/>
+            </key>
+            <key name="section_2_title"/>
+            <key name="section_3_title"/>
+            <key name="section_3_text"/>
+            <key name="section_4_title"/>
+            <key name="sb_footer"/>
+            
+            <!-- Footer specific fields -->
+            <key name="footer_description"/>
+            <key name="footer_social_heading"/>
+            <key name="adforest_footer_contact_title"/>
+            <key name="section_1_title"/>
+            <key name="mc_title"/>
+            <key name="mc_description"/>
+            
+            <!-- Footer 3 specific fields -->
+            <key name="footer3_menu_title_1"/>
+            <key name="footer3_menu_title_2"/>
+            <key name="footer3_menu_title_3"/>
+            <key name="footer3_menu_title_4"/>
+            <key name="footer3_title_1"/>
+            <key name="footer3_title_2"/>
+            <key name="footer3_title_3"/>
+            <key name="footer3_title_4"/>
+            <key name="footer3_desc_1"/>
+            <key name="footer3_desc_2"/>
+            <key name="footer_contact_details">
+            <key name="*">
+                <key name="title"/>
+                <key name="content"/>
+                <key name="icon"/>
+            </key>
+        </key>
+        </key>
+    </admin-texts>
+</wpml-config>

@@ -1,0 +1,143 @@
+.showDefaults {
+    display: none !important;
+}
+.project_meta {
+    padding: 3px 8px;
+    font-size: 1.7em;
+    line-height: 100%;
+    height: 1.7em;
+    width: 100%;
+    outline: 0;
+    margin: 0 0 3px;
+    background-color: #fff;
+}
+.margin_top {
+    margin-top: 12px;
+}
+#vc_license-activation-notice {
+    display: none;
+}
+.rAds {
+    display: none;
+}
+.redux-notice {
+    display: none;
+}
+.adforest-spinner {
+    background: url('wpspin_light.gif') no-repeat;
+    background-size: 16px 16px;
+    display: none;
+    opacity: .7;
+    filter: alpha(opacity=70);
+    width: 16px;
+    height: 16px;
+    margin: 5px 5px 0;
+    position: relative;
+}
+#TB_window{
+    width: 550px !important;
+    height: 350px !important;   
+}
+
+
+
+
+
+
+
+.rtl .redux-sidebar .redux-group-menu li a .el-pencil{
+    display: none;
+}
+
+.rtl .redux-sidebar .redux-group-menu li a .el-adjust-alt{
+    display: none;
+}
+
+.rtl .redux-sidebar .redux-group-menu li a .el-cog-alt{
+    display: none;
+}
+
+
+.rtl .redux-sidebar .redux-group-menu .active a .el-cog-alt{
+    display: block;
+}
+
+.rtl .redux-sidebar .redux-group-menu .active a .el-pencil{
+    display: block;
+}
+
+.rtl .redux-sidebar .redux-group-menu .active a .el-adjust-alt{
+    display: block;
+}
+
+
+
+.rtl .redux-sidebar .redux-group-menu li span i{
+    margin: 0px;
+    padding: 0px;
+}
+
+
+.rtl .redux-sidebar .redux-group-menu li span i{
+    display: block;
+}
+
+.sb-admin-dropdown {
+    max-height: 184px;
+    position: relative;
+    overflow-y: auto;
+    /*    border: 1px solid #a0a0a0;*/
+
+    border: 1px solid #ddd;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.07);
+
+    border-top: 0;
+    background-color: #fff;
+}
+.sb-admin-dropdown li.sb-select-term {
+    padding: 6px 10px;
+    border-bottom: 1px solid #eee;
+    margin-bottom:0px;
+}
+
+.sb-admin-dropdown li.sb-select-term:hover {
+    background-color:#0473aa; 
+    color: #ffffff;
+}
+.sb-input-loading {
+    background-image: url('loading.gif');
+    background-repeat: no-repeat;
+    background-position: right center;
+    visibility: visible;
+}
+
+.sb-update-counter p{
+    position: relative;
+    overflow: hidden;
+}
+.sb-update-counter b{
+    vertical-align: middle;
+    line-height: 50px;
+}
+.sb-update-counter a{
+    float: right;
+}
+.sb-admin-note{
+    color:#dd0b0b;
+}
+
+.adforest-spinner {
+    background: url('wpspin_light.gif') no-repeat;
+    background-size: 16px 16px;
+    display: none;
+    opacity: .7;
+    filter: alpha(opacity=70);
+    width: 16px;
+    height: 16px;
+    margin: 5px 5px 0;
+    position: relative;
+}
+#TB_window{
+    width: 550px !important;
+    height: 350px !important;   
+}

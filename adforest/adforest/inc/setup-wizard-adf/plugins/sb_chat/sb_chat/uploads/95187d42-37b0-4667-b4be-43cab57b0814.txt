@@ -1,0 +1,39 @@
+1. Add listing button styling issue. (It shows correct after the login)
+
+https://prnt.sc/OplVQzthjGh8
+
+2. Translation string not available.
+https://prnt.sc/2gWbfFU6Xkfm
+
+3. Change Twitter logo to "X."
+https://prnt.sc/81NGZ2IQpaVL
+https://prnt.sc/_b_5aNIR5YTR
+
+4. In the edit profile section there is no option available to add Tiktok link but it shows in the profile sidebar.
+https://prnt.sc/wUVHPkjaWwUA
+
+5. When access the Alert section the "Reviews" section also shows active.
+https://prnt.sc/r3T65FFuTD3a
+
+6. Image upload styling issue.
+https://prnt.sc/oC7t6ZWzpnAc
+
+While posting event also.
+https://prnt.sc/jM3DS7H0fI_P
+
+7. While posting a listing, in the add question section, when we add more than two questions, the add question and remove question show incorrectly. Also, it displays only two questions. It's confusing.
+https://prnt.sc/ViBwUWT_vteq
+
+8. Speakers counting is not working.
+https://prnt.sc/_-lnZvdvNY_t
+
+9. Please add a loader and sucess message for contact forum.
+https://prnt.sc/RFvXnU1bCmZF
+
+10.Listing save button is not working.
+https://prnt.sc/vkqNgeUwTO6e
+
+11.Create menu button text color issue.
+https://prnt.sc/v5cWG9Gs-NC5
+
+12. TGM notice error.

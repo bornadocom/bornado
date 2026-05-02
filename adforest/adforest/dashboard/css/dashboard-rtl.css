@@ -1,0 +1,94 @@
+.rtl .sidebar-nav-wrapper {
+	left: unset;
+	right: 0;
+}
+.rtl .main-wrapper {
+	margin-left: 0;
+	margin-right: 300px;
+}
+.rtl .sidebar-nav-wrapper .sidebar-nav ul .nav-item a .icon {
+	margin-right: 0;
+	margin-left: 12px;
+}
+.rtl .sidebar-nav-wrapper .sidebar-nav ul .nav-item a::before {
+	left: unset;
+	right: 0;
+}
+.rtl .menu-toggler .menu-toggle-btn i {
+	transform: rotate(180deg);
+}
+.rtl .header .header-right .profile-box .profile-info .info .image {
+	margin-left: 0;
+	margin-right: 16px;
+}
+.rtl .header .header-right .profile-box .dropdown-menu li a i {
+	margin-right: 0;
+	margin-left: 15px;
+}
+.rtl .icon-card .icon {
+	margin-right: 0;
+	margin-left: 20px;
+}
+.rtl .top-selling-table .product .image {
+	margin-right: 0;
+	margin-left: 15px;
+}
+.rtl .sidebar-nav-wrapper .sidebar-nav ul .nav-item.nav-item-has-children > a::after {
+	right: unset;
+	left: 10px;
+}
+.rtl .sidebar-nav-wrapper .sidebar-nav ul .nav-item.nav-item-has-children ul {
+	padding-left: 15px;
+	padding-right: 30px;
+}
+.rtl .contact-info i {
+  	margin-right: 0px;
+  	margin-left: 5px;
+}
+.rtl .select-style-1 .select-position select {
+	padding-right: 15px;
+	padding-left: 38px;
+}
+.rtl .select-style-1 .select-position::after {
+	right: unset;
+	left: 16px;
+}
+.rtl .breadcrumb-item + .breadcrumb-item {
+  padding-left: 0;
+  padding-right: 8px;
+}
+.rtl .breadcrumb-item + .breadcrumb-item::before {
+  padding-right: 0;
+  padding-left: 8px;
+  float: right;
+}
+.rtl .sidebar-nav-wrapper.active {
+  -webkit-transform: translateX(300px);
+  -moz-transform: translateX(300px);
+  -ms-transform: translateX(300px);
+  -o-transform: translateX(300px);
+  transform: translateX(300px);
+}
+.rtl .main-wrapper.active {
+	margin-right: 0;
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px), only screen and (min-width: 768px) and (max-width: 991px), (max-width: 767px) {
+  .rtl .sidebar-nav-wrapper {
+    -webkit-transform: translateX(300px);
+    -moz-transform: translateX(300px);
+    -ms-transform: translateX(300px);
+    -o-transform: translateX(300px);
+    transform: translateX(300px);
+  }
+  .rtl .sidebar-nav-wrapper.active {
+    -webkit-transform: translateX(0px);
+    -moz-transform: translateX(0px);
+    -ms-transform: translateX(0px);
+    -o-transform: translateX(0px);
+    transform: translateX(0px);
+  }
+  .rtl .main-wrapper {
+    margin-right: 0;
+  } 
+}

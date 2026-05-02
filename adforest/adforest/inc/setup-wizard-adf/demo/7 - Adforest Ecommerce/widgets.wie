@@ -1,0 +1,111 @@
+[
+    {
+        "sidebar": "adforest_theme_sidebar",
+        "widget_id": "block-2",
+        "widget_type": "block",
+        "widget_num": "2",
+        "settings": {
+            "content": "<!-- wp:search \/-->"
+        }
+    },
+    {
+        "sidebar": "adforest_theme_sidebar",
+        "widget_id": "block-3",
+        "widget_type": "block",
+        "widget_num": "3",
+        "settings": {
+            "content": "<!-- wp:group --><div class=\"wp-block-group\"><!-- wp:heading --><h2>Recent Posts<\/h2><!-- \/wp:heading --><!-- wp:latest-posts \/--><\/div><!-- \/wp:group -->"
+        }
+    },
+    {
+        "sidebar": "adforest_theme_sidebar",
+        "widget_id": "block-4",
+        "widget_type": "block",
+        "widget_num": "4",
+        "settings": {
+            "content": "<!-- wp:group --><div class=\"wp-block-group\"><!-- wp:heading --><h2>Recent Comments<\/h2><!-- \/wp:heading --><!-- wp:latest-comments {\"displayAvatar\":false,\"displayDate\":false,\"displayExcerpt\":false} \/--><\/div><!-- \/wp:group -->"
+        }
+    },
+    {
+        "sidebar": "adforest_woocommerce_widget",
+        "widget_id": "adforest_woocommerce_title_search_widget-2",
+        "widget_type": "adforest_woocommerce_title_search_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Title Search",
+            "open_widget": ""
+        }
+    },
+    {
+        "sidebar": "adforest_woocommerce_widget",
+        "widget_id": "adforest_woocommerce_category_search_widget-2",
+        "widget_type": "adforest_woocommerce_category_search_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Category Search",
+            "open_widget": "",
+            "show_more_cate": "1",
+            "no_of_cats": "8"
+        }
+    },
+    {
+        "sidebar": "adforest_woocommerce_widget",
+        "widget_id": "adforest_woocommerce_price_search_widget-2",
+        "widget_type": "adforest_woocommerce_price_search_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Price",
+            "min_price": "1",
+            "max_price": "10000000"
+        }
+    },
+    {
+        "sidebar": "adforest_woocommerce_widget",
+        "widget_id": "adforest_wc_rating_search_widget-2",
+        "widget_type": "adforest_wc_rating_search_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Search Rating",
+            "open_widget": ""
+        }
+    },
+    {
+        "sidebar": "sb_themes_grid_sidebar",
+        "widget_id": "block-5",
+        "widget_type": "block",
+        "widget_num": "5",
+        "settings": {
+            "content": "<!-- wp:group --><div class=\"wp-block-group\"><!-- wp:heading --><h2>Archives<\/h2><!-- \/wp:heading --><!-- wp:archives \/--><\/div><!-- \/wp:group -->"
+        }
+    },
+    {
+        "sidebar": "sb_themes_grid_sidebar",
+        "widget_id": "block-6",
+        "widget_type": "block",
+        "widget_num": "6",
+        "settings": {
+            "content": "<!-- wp:group --><div class=\"wp-block-group\"><!-- wp:heading --><h2>Categories<\/h2><!-- \/wp:heading --><!-- wp:categories \/--><\/div><!-- \/wp:group -->"
+        }
+    },
+    {
+        "sidebar": "adforest_ad_sidebar_bottom",
+        "widget_id": "adforest_recent_ads_widget-2",
+        "widget_type": "adforest_recent_ads_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Recent Ads",
+            "number_of_posts": 5
+        }
+    },
+    {
+        "sidebar": "adforest_ad_sidebar_bottom",
+        "widget_id": "adforest_search_advertisement-2",
+        "widget_type": "adforest_search_advertisement",
+        "widget_num": "2",
+        "settings": {
+            "title": "Advertisement",
+            "ad_code": "<img class=\"img-fluid\" src=\"https:\/\/listing.adforestwp.com\/wp-content\/uploads\/2025\/03\/Untitled-1-2-1.png\" alt=\"image\">",
+            "open_widget": ""
+        }
+    }
+]

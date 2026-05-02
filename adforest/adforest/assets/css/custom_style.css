@@ -1,0 +1,75 @@
+.profile-page .profile-header .profile-main-img #profile-badge {
+  position: absolute;
+  top: 68px;
+  left: 136px;
+}
+
+/* Packages Stying Start */
+.featured-duration {
+  padding: 20px;
+  background: #F7F7F7;
+  border: 1px solid #e9f1fc;
+  margin: 0 !important;
+  justify-content: normal;
+}
+.featured-duration .featured-duration-list li {
+  font-size: 14px;
+}
+.featured-duration .featured-duration-list li .r-meta input {
+  margin-top: 7px;
+}
+.featured-duration .featured-duration-list li .r-meta span {
+  font-weight: 500;
+}
+.package-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 0rem 3rem 3rem 3rem;
+}
+#make_listing_bump_up_dashboard {
+  background-color: #F7F7F7;
+}
+
+.adt_user_packages {
+  flex: 0 0 calc(33.33% - 20px);
+  background-color: #ffffff;
+  border: 1px solid #e5e9f2;
+  border-radius: 10px;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.adt_user_packages .package-header {
+  padding: 10px;
+  text-align: center;
+}
+
+.adt_user_packages .package-header h3 {
+  margin: 0;
+}
+
+.adt_user_packages .package-body {
+  background-color: #fff;
+}
+.adt_user_packages .package-header .product-title {
+  text-transform: capitalize;
+}
+
+.adt_user_packages .package-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.adt_user_packages .package-body ul li {
+  padding: 10px;
+  border-bottom: 1px solid #e5e9f2;
+  display: flex;
+  justify-content: space-between;
+}
+
+.adt_user_packages .package-body ul li:last-child {
+  border-bottom: none;
+}
+/* Packages Stying End */

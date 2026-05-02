@@ -1,0 +1,164 @@
+/* File: inc/setup-wizard-adf/assets/css/done.css */
+
+/* — Lighten your page background a touch — */
+.done-step {
+  background: #f0f4f8; /* softer than stark white */
+  padding: 3rem 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* — Turn the inner container into a centered card — */
+.done-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.08);
+  max-width: 640px;
+  width: 100%;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  position: relative;
+}
+
+/* — Enlarge and style the header icon — */
+.done-icon {
+  font-size: 4rem;
+  color: var(--primary);
+  position: absolute;
+  top: -2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border-radius: 50%;
+  padding: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* — Header text — */
+.done-header {
+  text-align: center;
+  margin-top: 2.5rem; /* push below icon */
+}
+.done-header h3 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0.5rem 0;
+  color: var(--primary);
+}
+.done-subtitle {
+  font-size: 1.125rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* — Summary grid — */
+.af-setup-summary {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+.af-setup-summary li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text);
+  font-size: 1.05rem;
+}
+.af-setup-summary .dashicons {
+  font-size: 1.35rem;
+  color: var(--primary);
+}
+
+/* — Resources section — */
+.af-resources h4 {
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+.af-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+.af-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 1.25rem;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 0.975rem;
+  transition: background var(--transition), transform var(--transition);
+}
+.af-link:hover {
+  background: var(--bg-muted);
+  transform: translateY(-2px);
+}
+.af-link .dashicons {
+  font-size: 1.25rem;
+  color: var(--primary);
+}
+
+/* — Final nav buttons — */
+.af-final-nav {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.af-button {
+  padding: 0.85rem 1.75rem;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background var(--transition), transform var(--transition);
+  min-width: 160px;
+  text-align: center;
+}
+.af-button-primary {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+}
+.af-button-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+.af-button-secondary {
+  background: var(--bg-panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.af-button-secondary:hover {
+  background: #f1f1f1;
+  transform: translateY(-2px);
+}
+
+/* — Responsive adjustments — */
+@media (max-width: 600px) {
+  .done-card {
+    padding: 2rem 1rem;
+  }
+  .af-setup-summary {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .af-final-nav {
+    flex-direction: column;
+  }
+  .af-button {
+    width: 100%;
+  }
+}

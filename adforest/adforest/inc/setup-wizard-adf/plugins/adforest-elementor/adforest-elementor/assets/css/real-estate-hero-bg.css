@@ -1,0 +1,63 @@
+/* Real Estate Hero Background Image Styles */
+.adt-estate-hero-section.has-bg-image {
+    position: relative;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+}
+
+.adt-estate-hero-section.has-bg-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4); /* Dark overlay for better text readability */
+    z-index: 1;
+}
+
+.adt-estate-hero-section.has-bg-image .container {
+    position: relative;
+    z-index: 2;
+}
+
+.adt-estate-hero-section.has-bg-image .content-box {
+    color: #fff; /* White text for better contrast */
+}
+
+.adt-estate-hero-section.has-bg-image .content-box h1,
+.adt-estate-hero-section.has-bg-image .content-box .sub-title,
+.adt-estate-hero-section.has-bg-image .content-box p {
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.adt-estate-hero-section.has-bg-image .search-filters-bar {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.adt-estate-hero-section.has-bg-image .popular-keywords {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 6px;
+    padding: 15px;
+    backdrop-filter: blur(5px);
+}
+
+.adt-estate-hero-section.has-bg-image .popular-keywords li a {
+    color: #333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .adt-estate-hero-section.has-bg-image {
+        min-height: 500px;
+    }
+    
+    .adt-estate-hero-section.has-bg-image .search-filters-bar {
+        padding: 15px;
+    }
+}

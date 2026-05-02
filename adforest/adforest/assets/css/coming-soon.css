@@ -1,0 +1,63 @@
+/* Comming Soon */
+.comming-soon-grid {
+    text-align: center;
+    background-color: #f6f6f6;
+   
+    z-index: 1;
+    margin-top: 120px;
+}
+.comming-soon {
+    position: absolute;
+    top: 20%;
+    left: 0;
+    right: 0;
+}
+.theme-logo {
+    margin-bottom: 50px;
+}
+.comming-soon-grid .count-down #clock {
+    font-size: 18px;
+    color: #2c3e50;
+    margin-bottom: 50px;
+}
+.comming-soon-grid .count-down #clock > span {
+    font-size: 50px;
+    font-weight: 700;
+}
+.subscribe {
+    margin-bottom: 50px;
+}
+.subscribe > p {
+    font-size: 18px;
+    color: #2c3e50;
+    letter-spacing: 1px;
+    line-height: 27px;
+    margin-bottom: 30px;
+}
+.subscribe input, .subscribe button {
+    border: 1px solid #ddd;
+    height: 50px;
+    width: 30%;
+    padding: 5px 15px;
+}
+.subscribe button {width: 15%;color: #fff;border: 1px solid transparent;-webkit-transition: 500ms;-moz-transition: 500ms;-ms-transition: 500ms;-o-transition: 500ms;-webkit-transition-duration: 500ms;transition-duration: 500ms;}
+.subscribe button > i {
+    padding-right: 5px;
+}
+.social-area-share > a {
+    background-color: #2c3e50;
+    border-radius: 50%;
+    color: #fff;
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    width: 40px;
+}
+.social-area-share > a:hover {
+    color: #fff !important;
+}
+.btn-theme.btn-outline {
+    background: transparent none repeat scroll 0 0;
+    border-color: #2854a1;
+    color: #2854a1;
+}

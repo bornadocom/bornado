@@ -1,0 +1,335 @@
+/* File: inc/setup-wizard-adf/assets/css/license.css — Modern Design */
+:root {
+  --primary: #000;
+  --primary-hover: #e6002a;
+  --primary-light: #ffe6ea;
+  --bg-panel: #ffffff;
+  --bg-muted: #f8fafc;
+  --bg-gradient: linear-gradient(135deg, #000 0%, #000 100%);
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --danger: #ef4444;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* License Step Container */
+.sb-wizard-panel.license-step {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-muted);
+  min-height: 60vh;
+}
+
+/* Modern Card Wrapper */
+.license-card {
+  position: relative;
+  max-width: 500px;
+  width: 100%;
+  background: var(--bg-panel);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  transition: all var(--transition);
+  border: 1px solid var(--border-light);
+  backdrop-filter: blur(10px);
+}
+
+.license-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Modern Header Section */
+.license-header {
+  background: var(--bg-gradient);
+  color: #fff;
+  text-align: center;
+  padding: 3rem 2rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.license-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* background: linear-gradient(135deg, rgba(255, 0, 46, 0.9) 0%, rgba(204, 0, 36, 0.9) 100%); */
+  background: linear-gradient(135deg,
+      rgba(0, 0, 0, 0.9) 0%,
+      rgba(255, 255, 255, 0.1) 25%,
+      rgba(0, 0, 0, 0.8) 50%,
+      rgba(255, 255, 255, 0.2) 75%,
+      rgba(0, 0, 0, 0.9) 100%);
+  z-index: 1;
+}
+
+.license-header>* {
+  position: relative;
+  z-index: 2;
+}
+
+.license-header h3 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.license-subtitle {
+  margin-top: 0.75rem;
+  font-size: 1.1rem;
+  opacity: 0.95;
+  font-weight: 400;
+}
+
+.license-header::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.8);
+  margin: 1.5rem auto 0;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Floating Success Icon */
+.license-icon {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-panel);
+  border-radius: 50%;
+  padding: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.license-icon .dashicons-yes {
+  font-size: 2rem;
+  color: var(--success);
+}
+
+/* Body Content */
+.license-body {
+  padding: 2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.license-intro {
+  font-size: 1.1rem;
+  color: var(--text);
+  text-align: center;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field-group label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.field-input {
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  color: var(--text);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  transition: all var(--transition);
+  background: var(--bg-panel);
+  font-weight: 500;
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-light);
+  transform: translateY(-1px);
+}
+
+.field-input::placeholder {
+  color: var(--text-light);
+  font-weight: 400;
+}
+
+.field-error,
+.field-success {
+  font-size: 0.875rem;
+  min-height: 1.2em;
+  display: none;
+  transition: color var(--transition);
+  text-align: center;
+  margin-top: -0.5rem;
+}
+
+.field-error.visible {
+  display: block;
+  color: var(--danger);
+}
+
+.field-success.visible {
+  display: block;
+  color: var(--success);
+}
+
+/* Footer Section */
+.license-footer {
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.actions {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Modern Button Styles */
+.sb-btn {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--radius);
+  transition: all var(--transition);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  cursor: pointer;
+}
+
+.sb-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.sb-btn:hover::before {
+  left: 100%;
+}
+
+.sb-btn-primary {
+  background: var(--bg-gradient);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+.sb-btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.license-heading h3 {
+  color: #fff !important;
+}
+
+.sb-btn-danger {
+  background: var(--danger);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+.sb-btn-danger:hover:not(:disabled) {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.sb-btn-back {
+  background: none;
+  color: var(--text-muted);
+  border: none;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  transition: all var(--transition);
+}
+
+.sb-btn-back:hover {
+  color: var(--primary);
+  background: var(--primary-light);
+  border-radius: var(--radius);
+}
+
+/* Spinner */
+.spinner-wrapper {
+  text-align: center;
+}
+
+.sb-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: none;
+}
+
+.sb-spinner.active {
+  display: inline-block;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 520px) {
+  .license-card {
+    margin: 0 1rem;
+  }
+
+  .license-body {
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+
+  .license-header {
+    padding: 3rem 1rem 1rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .sb-btn {
+    width: 100%;
+  }
+}

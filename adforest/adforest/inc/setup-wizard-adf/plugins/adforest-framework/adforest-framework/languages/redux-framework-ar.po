@@ -1,0 +1,1499 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Adforest Framework\n"
+"POT-Creation-Date: 2025-09-25 16:24+0500\n"
+"PO-Revision-Date: 2025-09-25 16:24+0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+"X-Generator: Poedit 2.4.3\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: index.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+
+#: ad-post/custom_category_templates.php:83
+#: ad-post/custom_category_templates.php:677
+msgid "Field Name"
+msgstr "اسم الحقل"
+
+#: ad-post/custom_category_templates.php:86
+#: ad-post/custom_category_templates.php:684
+msgid "Status"
+msgstr "الحالة"
+
+#: ad-post/custom_category_templates.php:89
+msgid "Is Required?"
+msgstr "هل مطلوب ؟"
+
+#: ad-post/custom_category_templates.php:94
+msgid "Price"
+msgstr "السعر"
+
+#: ad-post/custom_category_templates.php:99
+#: ad-post/custom_category_templates.php:126
+#: ad-post/custom_category_templates.php:154
+#: ad-post/custom_category_templates.php:182
+#: ad-post/custom_category_templates.php:210
+#: ad-post/custom_category_templates.php:240
+#: ad-post/custom_category_templates.php:270
+#: ad-post/custom_category_templates.php:300
+msgid "Show"
+msgstr "عرض"
+
+#: ad-post/custom_category_templates.php:102
+#: ad-post/custom_category_templates.php:129
+#: ad-post/custom_category_templates.php:157
+#: ad-post/custom_category_templates.php:185
+#: ad-post/custom_category_templates.php:213
+#: ad-post/custom_category_templates.php:243
+#: ad-post/custom_category_templates.php:273
+#: ad-post/custom_category_templates.php:303
+msgid "Hide"
+msgstr "إخفاء"
+
+#: ad-post/custom_category_templates.php:111
+#: ad-post/custom_category_templates.php:139
+#: ad-post/custom_category_templates.php:166
+#: ad-post/custom_category_templates.php:194
+#: ad-post/custom_category_templates.php:222
+#: ad-post/custom_category_templates.php:253
+#: ad-post/custom_category_templates.php:283
+#: ad-post/custom_category_templates.php:313
+#: ad-post/custom_category_templates.php:719
+#: ad-post/custom_category_templates.php:726
+#: ad-post/custom_category_templates.php:743 cpt/index.php:428
+#: cpt/index.php:450
+msgid "Yes"
+msgstr "نعم"
+
+#: ad-post/custom_category_templates.php:114
+#: ad-post/custom_category_templates.php:142
+#: ad-post/custom_category_templates.php:169
+#: ad-post/custom_category_templates.php:197
+#: ad-post/custom_category_templates.php:225
+#: ad-post/custom_category_templates.php:256
+#: ad-post/custom_category_templates.php:286
+#: ad-post/custom_category_templates.php:316
+#: ad-post/custom_category_templates.php:720
+#: ad-post/custom_category_templates.php:727
+#: ad-post/custom_category_templates.php:744 cpt/index.php:432
+#: cpt/index.php:454
+msgid "No"
+msgstr "لا"
+
+#: ad-post/custom_category_templates.php:121
+msgid "Price Type"
+msgstr "نوع السعر"
+
+#: ad-post/custom_category_templates.php:149
+msgid "Video URL"
+msgstr "رابط الفيديو"
+
+#: ad-post/custom_category_templates.php:177
+msgid "Ad Tags"
+msgstr "وسوم الإعلان"
+
+#: ad-post/custom_category_templates.php:205
+msgid "Ad Images"
+msgstr "صور الإعلان"
+
+#: ad-post/custom_category_templates.php:233
+msgid "Item Condition"
+msgstr "حالة المنتج"
+
+#: ad-post/custom_category_templates.php:264 cpt/index.php:109
+msgid "Warranty"
+msgstr "الضمان"
+
+#: ad-post/custom_category_templates.php:294 ad-post/index.php:40
+msgid "Ad Type"
+msgstr "نوع الإعلان"
+
+#: ad-post/custom_category_templates.php:347
+msgid "Add More Fields"
+msgstr "اضافة حقل جديد"
+
+#: ad-post/custom_category_templates.php:577
+msgid "View website"
+msgstr "مشاهدة الموقع"
+
+#: ad-post/custom_category_templates.php:630
+msgid "Input - Textfield"
+msgstr "إدخال-Textfield"
+
+#: ad-post/custom_category_templates.php:631
+msgid "Options - Select Box"
+msgstr "خيارات--حدد مربع"
+
+#: ad-post/custom_category_templates.php:632
+msgid "Options - Check Box"
+msgstr "خيارات-خانه الاختيار"
+
+#: ad-post/custom_category_templates.php:633
+msgid "Options - Advance Check Box"
+msgstr "الخيارات - خانة الاختيار المتقدمة"
+
+#: ad-post/custom_category_templates.php:634
+msgid "Date - Input"
+msgstr "التاريخ-الإدخال"
+
+#: ad-post/custom_category_templates.php:635
+msgid "Website URL"
+msgstr "رابط الموقع"
+
+#: ad-post/custom_category_templates.php:636
+msgid "Input - Number Range"
+msgstr "المدخلات - نطاق الأرقام"
+
+#: ad-post/custom_category_templates.php:637
+msgid "Select Colors"
+msgstr "حدد الألوان"
+
+#: ad-post/custom_category_templates.php:638
+msgid "Options - Radio Buttons"
+msgstr "الخيارات - أزرار الاختيار"
+
+#: ad-post/custom_category_templates.php:641
+#: ad-post/custom_category_templates.php:680
+#: ad-post/custom_category_templates.php:742
+#: ad-post/custom_category_templates.php:750
+#: ad-post/custom_category_templates.php:1055
+#: ad-post/custom_category_templates.php:1315
+#: ad-post/custom_category_templates.php:1600
+#: ad-post/custom_category_templates.php:1616
+msgid "Select Option"
+msgstr "حدد الخيار"
+
+#: ad-post/custom_category_templates.php:678
+msgid "Slug Name"
+msgstr "اسم سبيكة"
+
+#: ad-post/custom_category_templates.php:679
+msgid "Columns"
+msgstr "اعمدة"
+
+#: ad-post/custom_category_templates.php:681
+msgid "Enter Values"
+msgstr "قم بإدخال قيم"
+
+#: ad-post/custom_category_templates.php:682
+msgid "Required?"
+msgstr "مطلوب؟"
+
+#: ad-post/custom_category_templates.php:683
+msgid "Remove Field"
+msgstr "حذف الحقل"
+
+#: ad-post/custom_category_templates.php:685
+msgid "In Search"
+msgstr "البحث عن:"
+
+#: ad-post/custom_category_templates.php:686
+msgid "In Ad Grid"
+msgstr "في عرض إعلان الشبكة"
+
+#: ad-post/custom_category_templates.php:690
+msgid "New Field"
+msgstr "حقل جديد"
+
+#: ad-post/custom_category_templates.php:695
+msgid ""
+"If you have option (Input - Number Range). Then the first value will be "
+"slider minimum value 2nd will be max value and 3rd will be intervals i.e   0|"
+"100000|1 "
+msgstr ""
+"إذا كان لديك خيار (الإدخال - نطاق الأرقام). ثم ستكون القيمة الأولى هي الحد "
+"الأدنى لقيمة شريط التمرير ، وستكون القيمة الثانية هي القيمة القصوى ، وستكون "
+"القيمة الثالثة هي فترات زمنية ، أي 0 | 100000 | 1 "
+
+#: ad-post/custom_category_templates.php:697
+msgid ""
+"If you have option (Select Colors). Then add them in following way. code:"
+"name|code:name|code:name  e.g.  #fff:white|#000:black "
+msgstr ""
+"إذا كان لديك خيار (حدد الألوان). ثم أضفها بالطريقة التالية. الرمز: الاسم | "
+"الرمز: الاسم | الرمز: الاسم ، على سبيل المثال  #fff: أبيض | # 000: أسود "
+
+#: ad-post/custom_category_templates.php:701
+msgid "Click to toggle"
+msgstr "انقر للتبديل"
+
+#: ad-post/custom_category_templates.php:733
+msgid "1 Column"
+msgstr "عمود واحد"
+
+#: ad-post/custom_category_templates.php:734
+msgid "2 Columns"
+msgstr "الأعمدة"
+
+#: ad-post/custom_category_templates.php:735
+msgid "3 Columns"
+msgstr "3 اعمدة"
+
+#: ad-post/custom_category_templates.php:736
+msgid "4 Columns"
+msgstr "4 اعمدة"
+
+#: ad-post/custom_category_templates.php:751
+msgid "Active"
+msgstr "نشط"
+
+#: ad-post/custom_category_templates.php:752
+msgid "Inactive"
+msgstr "غير نشط"
+
+#: ad-post/custom_category_templates.php:759
+msgid "Enter Field title here."
+msgstr "ادخل عنوان اسئله وأجوبه التطبيق."
+
+#: ad-post/custom_category_templates.php:763
+msgid "Edit"
+msgstr "تعديل"
+
+#: ad-post/custom_category_templates.php:763
+msgid ""
+"Enter the slug name. It must be unique. Change it with caution. only alpha "
+"numeric and _, Do not use space between two words"
+msgstr ""
+"أدخل اسم السبيكة. يجب أن تكون فريدة من نوعها. قم بتغييره بحذر. فقط الأبجدية "
+"الرقمية و _ ، لا تستخدم المسافة بين كلمتين"
+
+#: ad-post/custom_category_templates.php:767
+msgid "Enter Values seprated by "
+msgstr "أدخل قيم سيبراتيد قبل"
+
+#: ad-post/custom_category_templates.php:806
+msgctxt "Taxonomy General Name"
+msgid "Form Templates"
+msgstr "صيغ النماذج"
+
+#: ad-post/custom_category_templates.php:807
+msgctxt "Taxonomy Singular Name"
+msgid "Form Template"
+msgstr "قالب النموذج"
+
+#: ad-post/custom_category_templates.php:808
+msgid "Category Templates"
+msgstr "قوالب الفئة"
+
+#: ad-post/custom_category_templates.php:809
+msgid "All Items"
+msgstr "جميع العناصر"
+
+#: ad-post/custom_category_templates.php:810
+msgid "Parent Item"
+msgstr "الفريق الاب"
+
+#: ad-post/custom_category_templates.php:811
+msgid "Parent Item:"
+msgstr "العنصر الأصل:"
+
+#: ad-post/custom_category_templates.php:812
+msgid "New Item Name"
+msgstr "بطولة جديدة"
+
+#: ad-post/custom_category_templates.php:813
+msgid "Add New Item"
+msgstr "اضافة جديد"
+
+#: ad-post/custom_category_templates.php:814
+msgid "Edit Item"
+msgstr "تحرير العنصر"
+
+#: ad-post/custom_category_templates.php:815
+msgid "Update Item"
+msgstr "به روز رسانی مورد"
+
+#: ad-post/custom_category_templates.php:816
+msgid "View Item"
+msgstr "مشاهدة العناصر"
+
+#: ad-post/custom_category_templates.php:817
+msgid "Separate items with commas"
+msgstr "افصل بين العناصر بفاصلة"
+
+#: ad-post/custom_category_templates.php:818
+msgid "Add or remove items"
+msgstr "إضافة عناصر أو إزالتها"
+
+#: ad-post/custom_category_templates.php:819
+msgid "Choose from the most used"
+msgstr "اختر من بين الأكثر استخداما"
+
+#: ad-post/custom_category_templates.php:820
+msgid "Popular Items"
+msgstr "العناصر الأكثر شيوعا"
+
+#: ad-post/custom_category_templates.php:821
+msgid "Search Items"
+msgstr "البحث عن عنصر"
+
+#: ad-post/custom_category_templates.php:822
+msgid "Not Found"
+msgstr "غير موجود"
+
+#: ad-post/custom_category_templates.php:823
+msgid "No items"
+msgstr "تم تأكيد الحساب"
+
+#: ad-post/custom_category_templates.php:824
+msgid "Items list"
+msgstr "قائمة العناصر"
+
+#: ad-post/custom_category_templates.php:825
+msgid "Items list navigation"
+msgstr "قائمة عناصر التنقل"
+
+#: ad-post/custom_category_templates.php:866
+msgid "Are You sure you want to remove this field."
+msgstr "هل انت متأكد من إزالة هذا ؟"
+
+#: ad-post/custom_category_templates.php:957
+msgid "Duplicate Slug Name"
+msgstr "تكرار اسم سبيكة"
+
+#: ad-post/custom_category_templates.php:1052
+#: custom-fields/ad_custom_fields.php:575
+msgid "Select Template"
+msgstr "أختار القالب"
+
+#: ad-post/custom_category_templates.php:1056
+msgid "Default Template"
+msgstr "الإعدادات الإفتراضية"
+
+#: ad-post/custom_category_templates.php:1060
+#: custom-fields/ad_custom_fields.php:582
+msgid "You can assign this template each level category."
+msgstr "يمكنك تعيين هذا القالب لكل فئة مستوى."
+
+#: ad-post/custom_category_templates.php:1068
+#: ad-post/custom_category_templates.php:1073
+msgid "Make Bidding"
+msgstr "اجعل المزايدة مدفوعة على الواجهة الأمامية"
+
+#: ad-post/custom_category_templates.php:1075
+msgid ""
+"<b>Note : </b>Enable this option and please make sure you are using <b>"
+"\"selective\"</b> Bidding category type. <b>( Dashboard >> Appearance >> "
+"Theme options >> Bidding Settings\n"
+"                    >> Bidding Category Type)</b>"
+msgstr ""
+"<b>ملاحظه: </b>قم بتمكين هذا الخيار ويرجى التأكد من أنك تستخدم نوع فئة عروض "
+"الأسعار <b>\"الانتقائي</b> \". <b>(لوحة المعلومات >> خيارات المظهر >> المظهر "
+">> إعدادات عروض الأسعار\n"
+"                    >> نوع فئة عروض الأسعار)</b>"
+
+#: ad-post/custom_category_templates.php:1083
+#: ad-post/custom_category_templates.php:1087
+msgid "Is Paid"
+msgstr "هو مدفوع"
+
+#: ad-post/custom_category_templates.php:1090
+msgid ""
+"Enable this option to enforce users to buy category base package to post in "
+"this category."
+msgstr ""
+"قم بتمكين هذا الخيار لفرض المستخدمين على شراء حزمة أساسية للفئة لنشرها في "
+"هذه الفئة."
+
+#: ad-post/custom_category_templates.php:1262
+msgid "This field is required."
+msgstr "هذا الحقل مطلوب."
+
+#: ad-post/custom_category_templates.php:1270
+msgid "This field is required. only enteger are allowed between range "
+msgstr "هذا الحقل مطلوب. يسمح فقط ب Enteger بين المدى "
+
+#: ad-post/custom_category_templates.php:1284
+#, php-format
+msgid "Please enter the number between %d and %d"
+msgstr "الرجاء إدخال الرقم بين %d و %d"
+
+#: ad-post/custom_category_templates.php:1347
+msgid "Please select a checkbox"
+msgstr "الرجاء تحديد مربع اختيار"
+
+#: ad-post/custom_category_templates.php:1349
+msgid "Please select a checkbox."
+msgstr "الرجاء تحديد خانة اختيار."
+
+#: ad-post/custom_category_templates.php:1383
+#: ad-post/custom_category_templates.php:1387
+msgid "Please enter a valid URL."
+msgstr "يرجى إدخال رابط صحيح."
+
+#: ad-post/custom_category_templates.php:1457
+msgid "Please select a radio button"
+msgstr "الرجاء تحديد زر اختيار"
+
+#: ad-post/custom_category_templates.php:1458
+msgid "Please select a radio button."
+msgstr "الرجاء تحديد زر الاختيار."
+
+#: ad-post/custom_category_templates.php:1541
+msgid "only numbers allowed."
+msgstr "يسمح فقط بالأرقام."
+
+#: ad-post/custom_category_templates.php:1628
+msgid "Package Essentials/Addons"
+msgstr "أساسيات الحزمة / الإضافات"
+
+#: ad-post/custom_category_templates.php:1637 cpt/index.php:354
+msgid "Simple Ad Expiry (in days)"
+msgstr "انتهاء صلاحية الإعلان البسيط (بالأيام)"
+
+#: ad-post/custom_category_templates.php:1639 cpt/index.php:281
+#: cpt/index.php:338 cpt/index.php:356 cpt/index.php:378
+msgid "Like 30, 40 or 50 but must be an inter value."
+msgstr "مثل 30 أو 40 أو 50 ولكن يجب أن تكون قيمة إنتر."
+
+#: ad-post/custom_category_templates.php:1643 cpt/index.php:360
+msgid ""
+"Simple ads expiry in days, -1 means never experies. If simple expiry field "
+"is empty then it will use the expiry days from Theme Options."
+msgstr ""
+"تنتهي صلاحية الإعلانات البسيطة في أيام ، -1 تعني عدم تجربتها أبدا. إذا كان "
+"حقل انتهاء الصلاحية البسيط فارغا ، فسيستخدم أيام انتهاء الصلاحية من خيارات "
+"السمة."
+
+#: ad-post/custom_category_templates.php:1647 cpt/index.php:34
+msgid "Categories"
+msgstr "التصنيفات"
+
+#: ad-post/custom_category_templates.php:1726
+msgid "Duplicate"
+msgstr "تكرار"
+
+#: ad-post/custom_category_templates.php:1740
+msgid "Duplicated"
+msgstr "إعلان مكرر"
+
+#: ad-post/custom_category_templates.php:1756
+msgid ""
+"A category template with the duplicated name already exists in this taxonomy."
+msgstr "يوجد قالب فئة بالاسم المكرر بالفعل في هذا التصنيف."
+
+#: ad-post/index.php:6
+msgid "Update AD"
+msgstr "تحديث إشعار الإعلان"
+
+#: ad-post/index.php:19
+msgid "Ad update with front only available when you are using Adforest theme."
+msgstr "يتوفر تحديث الإعلان مع المقدمة فقط عند استخدام سمة."
+
+#: ad-post/index.php:25
+msgid "Update this AD"
+msgstr "تحديث إشعار الإعلان"
+
+#: ad-post/index.php:53
+msgid "Simple"
+msgstr "بسيط"
+
+#: ad-post/index.php:57
+msgid "Featured"
+msgstr "مميز"
+
+#: adforest_timezones.php:389 inc/adforest-common-functions.php:854
+msgid "Select Timezone"
+msgstr "اختر المجال الزمني"
+
+#: cpt/index.php:13
+msgid "Countries"
+msgstr "الدول"
+
+#: cpt/index.php:20
+msgid "Classified Ads"
+msgstr "أعلانات مبوبة"
+
+#: cpt/index.php:42
+msgctxt "taxonomy general name"
+msgid "Ad Locations"
+msgstr "مواقع الإعلان"
+
+#: cpt/index.php:43
+msgctxt "taxonomy singular name"
+msgid "Location"
+msgstr "الموقع"
+
+#: cpt/index.php:44
+msgid "Search Ad Locations"
+msgstr "مواقع الإعلانات في البحث"
+
+#: cpt/index.php:45
+msgid "All Ad Locations"
+msgstr "جميع مواقع الإعلانات"
+
+#: cpt/index.php:46
+msgid "Parent Location"
+msgstr "الموقع الأصلي"
+
+#: cpt/index.php:47
+msgid "Parent Location:"
+msgstr "الموقع الأصلي :"
+
+#: cpt/index.php:48
+msgid "Edit Location"
+msgstr "تعديل العنوان"
+
+#: cpt/index.php:49
+msgid "Update Location"
+msgstr "تحديث الموقع"
+
+#: cpt/index.php:50
+msgid "Add New Location"
+msgstr "إضافة مكان جديد"
+
+#: cpt/index.php:51
+msgid "New Location Name"
+msgstr "اسم الموقع الجديد"
+
+#: cpt/index.php:52
+msgid "Ad Locations"
+msgstr "مواقع الإعلان"
+
+#: cpt/index.php:68
+msgid "Tags"
+msgstr "الوسوم"
+
+#: cpt/index.php:79
+msgid "Currency"
+msgstr "العملة"
+
+#: cpt/index.php:89
+msgid "Condition"
+msgstr "الحالة"
+
+#: cpt/index.php:99
+msgid "Type"
+msgstr "النوع"
+
+#: cpt/index.php:128
+msgid "Claims"
+msgstr "المطالبات"
+
+#: cpt/index.php:145
+msgid "Reported"
+msgstr "تم الإبلاغ عن الإعلان"
+
+#: cpt/index.php:146
+msgid "Bids"
+msgstr "مزادات"
+
+#: cpt/index.php:160
+msgid "Users report to this AD."
+msgstr "العمل علي حد تقرير الإعلان"
+
+#: cpt/index.php:171
+msgid "mark as"
+msgstr "كتاب علامة"
+
+#: cpt/index.php:196
+msgid "Bidder"
+msgstr "عارض"
+
+#: cpt/index.php:197
+msgid "Bid"
+msgstr "مزايدة"
+
+#: cpt/index.php:198
+msgid "Time"
+msgstr "الوقت"
+
+#: cpt/index.php:199
+msgid "Comment"
+msgstr "تعليق"
+
+#: cpt/index.php:200 user_profile/index.php:302
+msgid "Action"
+msgstr "الإجراء"
+
+#: cpt/index.php:243 user_profile/index.php:330
+msgid "Delete"
+msgstr "حذف"
+
+#: cpt/index.php:252
+msgid "There is no bid on this ad yet."
+msgstr "لا يوجد عرض سعر على هذا الإعلان حتى الآن."
+
+#: cpt/index.php:267 cpt/index.php:268
+msgid "Package Essentials"
+msgstr "أساسيات حزمة"
+
+#: cpt/index.php:279 cpt/index.php:376
+msgid "Featured Ad Expiry (in days)"
+msgstr "انتهاء صلاحية الإعلانات المميزة (بالأيام)"
+
+#: cpt/index.php:286 cpt/index.php:383
+msgid ""
+"Featured ads expiry in days, -1 means never experies. If featured expiry "
+"field is empty then it will use the expiry days from Theme Options."
+msgstr ""
+"تنتهي صلاحية الإعلانات المميزة في أيام ، -1 تعني عدم تجربتها أبدا. إذا كان "
+"حقل انتهاء الصلاحية المميز فارغا ، فسيستخدم أيام انتهاء الصلاحية من خيارات "
+"السمة."
+
+#: cpt/index.php:324
+msgid "Package BG Color"
+msgstr "مجموعة BG اللون"
+
+#: cpt/index.php:328
+msgid "White"
+msgstr ""
+"ادخل الرمز السري الذي حصلت عليه من المتجر. في حين لصق نسخ الرجاء التاكد من "
+"عدم وجود مساحة بيضاء"
+
+#: cpt/index.php:331
+msgid "Dark"
+msgstr "داكن"
+
+#: cpt/index.php:336
+msgid "Package Expiry"
+msgstr "انتهاء صلاحية الباقة"
+
+#: cpt/index.php:341
+msgid "Expiry in days, -1 means never experied unless used it."
+msgstr "انقضاء الأيام،-1 يعني ابدأ اكسبيريد ما استخدمه."
+
+#: cpt/index.php:344
+msgid "Simple Ads"
+msgstr "إعلانات عادية"
+
+#: cpt/index.php:346 cpt/index.php:368 cpt/index.php:391 cpt/index.php:464
+#: cpt/index.php:505
+msgid "Must be an inter value."
+msgstr "يجب أن تكون قيمة إنتر."
+
+#: cpt/index.php:350 cpt/index.php:372 cpt/index.php:396 cpt/index.php:404
+#: cpt/index.php:442 cpt/index.php:509
+msgid "-1 means unlimited."
+msgstr "يجب ان تكون قيمه مشتركه ،-1 يعني غير محدود."
+
+#: cpt/index.php:366
+msgid "Featured Ads"
+msgstr "إعلانات مميزة"
+
+#: cpt/index.php:389
+msgid "Bump Ads"
+msgstr "نتوء الإعلانات"
+
+#: cpt/index.php:399
+msgid "Allow Bidding"
+msgstr "السماح بعلامات:"
+
+#: cpt/index.php:401 cpt/index.php:412 cpt/index.php:439
+msgid "Must be an integer value."
+msgstr "يجب أن تكون قيمة عدد صحيح."
+
+#: cpt/index.php:410
+msgid "Make Bidding paid  on Ad detail page"
+msgstr "جعل عروض الأسعار مدفوعة في صفحة تفاصيل الإعلان"
+
+#: cpt/index.php:416
+msgid ""
+"-1 means unlimited.You would not  be able to post bidding on the ad detail "
+"page unless you enable bidding, which you may do via the settings menu."
+msgstr ""
+"-1 يعني غير محدود. لن تتمكن من نشر عروض الأسعار على صفحة تفاصيل الإعلان ما "
+"لم تقم بتمكين عروض الأسعار، وهو ما يمكنك القيام به عبر قائمة الإعدادات."
+
+#: cpt/index.php:423
+msgid "Allow Tags"
+msgstr "السماح بالعلامات"
+
+#: cpt/index.php:425 cpt/index.php:447
+msgid "Select an option"
+msgstr "حدد اختيارا"
+
+#: cpt/index.php:437
+msgid "Number of Images ( while ad posting )"
+msgstr "عدد الصور (أثناء نشر الإعلان)"
+
+#: cpt/index.php:445
+msgid "Allow Video Link ( while ad posting)"
+msgstr "السماح برابط الفيديو (أثناء نشر الإعلان)"
+
+#: cpt/index.php:462
+msgid "Claim ad"
+msgstr "إعلان المطالبة"
+
+#: cpt/index.php:472
+msgid "Allow Categories ( while ad posting )"
+msgstr "السماح بالفئات ( أثناء نشر الإعلان )"
+
+#: cpt/index.php:474
+msgid "Select categories"
+msgstr "اختار التصنيفات"
+
+#: cpt/index.php:476
+msgid "All"
+msgstr "الكل"
+
+#: cpt/index.php:496
+msgid ""
+"Load only those categories which are \"Is paid\" enabled in category meta. "
+"( dashboard >> Classified Ads >> Categories >> Is paid checkbox field. )"
+msgstr ""
+"قم بتحميل الفئات التي تم تمكين \"مدفوعة\" فقط في تعريف الفئة. (لوحة "
+"المعلومات >> الإعلانات المبوبة >> الفئات >> حقل مربع الاختيار مدفوع.)"
+
+#: cpt/index.php:503
+msgid "Number of events"
+msgstr "عدد الفعاليات"
+
+#: cpt/index.php:621
+msgid "Country"
+msgstr "الدولة"
+
+#: cpt/index.php:624
+msgid "This should be follow ISO2 like"
+msgstr "وهذا ينبغي أن يكون اتباع مثل ISO2"
+
+#: cpt/index.php:625
+msgid "US"
+msgstr "عن الشركة (جديد)"
+
+#: cpt/index.php:626
+msgid "for USA and"
+msgstr "للولايات المتحدة الأمريكية و"
+
+#: cpt/index.php:627
+msgid "CA"
+msgstr "CA"
+
+#: cpt/index.php:628
+msgid "for Canada"
+msgstr "Canada"
+
+#: cpt/index.php:630
+msgid "Read More."
+msgstr "المزيد"
+
+#: cpt/index.php:712
+msgid "Icon Name"
+msgstr "الاسم"
+
+#: cpt/index.php:720
+msgid "Check icons list."
+msgstr "تحقق من قائمه أيقونات السمات."
+
+#: cpt/index.php:760 cpt/index.php:774
+msgid "Bump This Ad At Top"
+msgstr "عثرة هذا الإعلان في الأعلى"
+
+#: cpt/index.php:770
+msgid "Current Date: "
+msgstr "كلمة السر الحالية"
+
+#: cpt/index.php:770
+msgid " And Time: "
+msgstr "وقت المزايدة"
+
+#: cpt/index.php:779
+msgid "Are Your Sure You Want To Bumb The Ad"
+msgstr "هل أنت متاكد من انك تريد ان تلعثم هذا الإعلان."
+
+#: cpt/index.php:834
+msgid "Assign AD"
+msgstr "تعيين AD"
+
+#: cpt/index.php:845
+msgid "Select Author"
+msgstr "ببژێردنی نووسەر"
+
+#: cpt/index.php:912 cpt/index.php:1047
+msgid "Claim Status"
+msgstr "الأحجاز"
+
+#: cpt/index.php:913
+msgid "Claimer"
+msgstr "المطالب"
+
+#: cpt/index.php:914
+msgid "Contact No"
+msgstr "اتصال"
+
+#: cpt/index.php:997
+msgid "Detial About Claim"
+msgstr "ديتال حول المطالبة"
+
+#: cpt/index.php:1032
+msgid "Claimed By"
+msgstr "مطالبة الملكية بواسطة"
+
+#: cpt/index.php:1037
+msgid "Claimed Author Name."
+msgstr "اسم المؤلف المزعوم."
+
+#: cpt/index.php:1041
+msgid "Claim Detials"
+msgstr "مطالبات الدعاوى"
+
+#: cpt/index.php:1043
+msgid "Additional proof to expedite your claim approval..."
+msgstr "دليل إضافي للإسراع بالموافقة علي مطالبتك..."
+
+#: cpt/index.php:1050
+msgid "Pending"
+msgstr "قيد الانتظار"
+
+#: cpt/index.php:1051
+msgid "Approved"
+msgstr "حزمه موافقه السيارات من أجل"
+
+#: cpt/index.php:1052
+msgid "Decline"
+msgstr "الغاء"
+
+#: cpt/index.php:1054
+msgid "Status for current claim"
+msgstr "حالة المطالبة الحالية"
+
+#: cpt/index.php:1058
+msgid "Claimer Contact"
+msgstr "جهة الاتصال بمقدم المطالبة"
+
+#: cpt/index.php:1061
+msgid "Claimer contact number"
+msgstr "رقم الاتصال بمقدم المطالبة"
+
+#: cpt/index.php:1111
+msgid "Listing Ownership Changed"
+msgstr "تم تغيير ملكية القائمة"
+
+#: cpt/index.php:1112 cpt/index.php:1146
+msgid "The ownership of your listing has been changed, please check it. "
+msgstr "تم تغيير ملكية بطاقة البيانات الخاصة بك، يرجى التحقق من ذلك. "
+
+#: cpt/index.php:1145
+msgid "Claim Listing Approval"
+msgstr "الموافقة على إدراج المطالبات"
+
+#: cpt/index.php:1180
+msgid "Listing Claim Declined"
+msgstr "تم رفض المطالبة المدرجة من"
+
+#: cpt/index.php:1181
+msgid "Unfortunately! your claim has been declined, please check it. "
+msgstr "ول الاسف! تم رفض مطالبتك، يرجى التحقق من ذلك. "
+
+#: custom-fields/ad_custom_fields.php:578
+msgid "Select An Option"
+msgstr "حدد خيارا"
+
+#: custom-fields/ad_custom_fields.php:579
+msgid "No Template"
+msgstr "حدد قالبا افتراضيا إذا لم يتوفر قالب في الفئة المحددة"
+
+#: custom-fields/ad_custom_fields.php:618
+#: custom-fields/ad_custom_fields.php:624
+msgid "Adforest Category Template"
+msgstr "قالب فئة Adforest"
+
+#: custom-fields/ad_custom_fields.php:633
+#: custom-fields/ad_custom_fields.php:639
+msgid "Adforest Category Template WPML"
+msgstr "قالب فئة Adforest WPML"
+
+#: custom-fields/ad_custom_fields.php:656
+msgid "Display in search"
+msgstr "العرض في البحث"
+
+#: custom-fields/ad_custom_fields.php:657
+msgid "Enable/Disable this field to show in search page."
+msgstr "تمكين/تعطيل هذا الحقل لعرضه في صفحة البحث."
+
+#: functions.php:99
+msgid "Please select one of the ad report options."
+msgstr "يرجى تحديد أحد خيارات تقرير الإعلانات."
+
+#: functions.php:104
+msgid "Comment cannot be empty"
+msgstr "لا يمكن أن تكون الرسالة فارغة!"
+
+#: functions.php:109
+msgid "You have reported already."
+msgstr "لقد قمت بإضافته مسبقاً."
+
+#: functions.php:130
+msgid "Ad Reported"
+msgstr "تم الإبلاغ عن الإعلان"
+
+#: functions.php:131
+msgid "Users reported this ad, please check it. "
+msgstr "وذكر المستخدمون هذا الإعلان ، يرجى التحقق من ذلك."
+
+#: functions.php:164
+msgid "Reported successfully."
+msgstr "تم الإبلاغ عنها بنجاح."
+
+#: functions.php:183 functions.php:238 functions.php:267
+msgid "New Messages"
+msgstr "رسائل جديدة"
+
+#: functions.php:184 functions.php:239
+msgid "Got new message on ads"
+msgstr "تلقيت رسالة جديدة على الإعلانات"
+
+#: functions.php:206
+msgid "Email sent to the ad author successfully"
+msgstr "تم إرسال البريد الإلكتروني إلى مؤلف الإعلان بنجاح"
+
+#: functions.php:218
+msgid "Oops! Something went wrong.Please Check your Mailing details."
+msgstr "عفوا! حدث خطأ ما. يرجى التحقق من تفاصيل البريد الخاصة بك."
+
+#: functions.php:305
+msgid "Not allowed in demo mode"
+msgstr "غير مسموح به في الوضع التجريبي"
+
+#: functions.php:311
+msgid "Please go to profile and verify your phone number to send message."
+msgstr "يرجى الانتقال إلى الملف الشخصي والتحقق من رقم هاتفك لإرسال رسالة."
+
+#: functions.php:322
+msgid "Scripts and tags are not allowed"
+msgstr "لا يسمح بالنصوص والعلامات"
+
+#: functions.php:337
+msgid "Can not send message for next"
+msgstr "لا يمكن إرسال رسالة لليوم التالي"
+
+#: functions.php:344
+msgid "Duplicate messaging not allowed"
+msgstr "المراسلة المكررة غير مسموح بها"
+
+#: functions.php:350
+msgid "Website admin block you to send message."
+msgstr "يقوم مسؤول الموقع بمنعك من إرسال رسالة."
+
+#: functions.php:360
+msgid "You can't send message to this user."
+msgstr "لا يمكنك إرسال رسالة إلى هذا المستخدم."
+
+#: functions.php:365
+msgid "Unblock this user to send message."
+msgstr "إلغاء حظر هذا المستخدم لإرسال رسالة."
+
+#: functions.php:369
+msgid "Ad Author cannot message himself."
+msgstr "لا يمكن لمؤلف الإعلان مراسلة نفسه."
+
+#: functions.php:466
+msgid "New Message"
+msgstr "رسالة جديدة"
+
+#: functions.php:467
+msgid "Got new message on ad"
+msgstr "حصلت علي رسالة جديده علي الإعلان"
+
+#: functions.php:512
+msgid "Message sent successfully."
+msgstr "تم إرسال الرسالة بنجاح."
+
+#: functions.php:514
+msgid "Message not sent, please try again later."
+msgstr "لم يتم إرسال الرسالة ، الرجاء المحاولة مره أخرى لاحقا."
+
+#: functions.php:568
+msgid "Email server not responding"
+msgstr "ملقم البريد الكتروني لا يستجيب"
+
+#: functions.php:572
+msgid "Email is not registered with us."
+msgstr "البريد الإلكتروني غير مسجل لدينا."
+
+#: functions.php:584
+msgid "New Ad"
+msgstr "إعلان جديد"
+
+#: functions.php:585
+msgid "Got new ad"
+msgstr "حصلت إعلان جديد"
+
+#: functions.php:617
+msgid "New Rating"
+msgstr "تصنيف جديد البريد الكتروني"
+
+#: functions.php:619
+msgid "Got new Rating"
+msgstr "حصلت إعلان جديد"
+
+#: functions.php:790
+msgid "Email has been sent ssuccesfully"
+msgstr "تم إرسال البريد الإلكتروني بنجاح"
+
+#: functions.php:1142
+msgid "Ad Rating"
+msgstr "تصنيف الإعلان"
+
+#: functions.php:1226 functions.php:1312
+msgid "Message has been sent."
+msgstr "تم ارسال الرسالة."
+
+#: functions.php:1228 functions.php:1314
+msgid "Message not sent, please try later."
+msgstr "لم يتم إرسال الرسالة، يرجى المحاولة لاحقا."
+
+#: functions.php:1235 functions.php:1323
+msgid "You are spammer ! Get out.."
+msgstr "أنت مرسل بريد المزعج! اخرج."
+
+#: functions.php:1237 functions.php:1325
+msgid "please verify captcha code."
+msgstr "يرجى التحقق من الرمز السري."
+
+#: functions.php:1260
+msgid "You can use this widget on ad details page only"
+msgstr "يمكنك استخدام هذه الأداة في صفحة تفاصيل الإعلان فقط"
+
+#: functions.php:1413
+msgid "Every 7 Hours"
+msgstr "كل 7 ساعات"
+
+#: functions.php:1710
+msgid "you have no inactive ad"
+msgstr "ليس لديك إعلان غير نشط"
+
+#: inc/adforest-common-functions.php:32
+msgctxt "ad_post"
+msgid "Rejected"
+msgstr "مرفوض"
+
+#: inc/adforest-common-functions.php:37
+#, php-format
+msgid "Rejected <span class=\"count\">(%s)</span>"
+msgid_plural "Rejected <span class=\"count\">(%s)</span>"
+msgstr[0] "تم رفضه<span class=\"count\">(%s)</span>"
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: inc/adforest-common-functions.php:237
+msgid "User blocked successfully"
+msgstr "تم حظر المستخدم بنجاح"
+
+#: inc/adforest-common-functions.php:239 inc/adforest-common-functions.php:263
+msgid "Oopss ! something wrong between sender and receiver"
+msgstr "عفوا ! خطأ ما بين المرسل والمستلم"
+
+#: inc/adforest-common-functions.php:241
+msgid "Sorry ! You cannot block yourself."
+msgstr "عذرا ! لا يمكنك ‫إلغاء حظر نفسك."
+
+#: inc/adforest-common-functions.php:243 inc/adforest-common-functions.php:267
+msgid "Oopss ! something went wrong."
+msgstr "عفوًا ! هناك خطأ ما."
+
+#: inc/adforest-common-functions.php:261
+msgid "User unblocked successfully"
+msgstr "تم إلغاء حظر العضو بنجاح"
+
+#: inc/adforest-common-functions.php:265
+msgid "Sorry ! You cannot unblock yourself."
+msgstr "‫عذرا ! لا يمكنك ‫إلغاء حظ نفسك."
+
+#: inc/adforest-common-functions.php:294 inc/adforest-common-functions.php:302
+msgid " Unblock User"
+msgstr " إلغاء حظر المستخدم"
+
+#: inc/adforest-common-functions.php:296 inc/adforest-common-functions.php:300
+msgid " Block User"
+msgstr " حظر المستخدم"
+
+#: inc/adforest-common-functions.php:386
+msgid "Note : Please take your database backup before updation."
+msgstr "ملاحظة: يرجى أخذ نسخة احتياطية من قاعدة البيانات قبل التحديث."
+
+#: inc/adforest-common-functions.php:449
+msgid "Database Updated successfully."
+msgstr "تم تحديث قاعدة البيانات بنجاح."
+
+#: inc/adforest-common-functions.php:462
+msgid "Are you sure to update this ?"
+msgstr "هل أنت متأكد من تحديث هذا؟"
+
+#: inc/class-commom-email-templates.php:11
+msgid "Package Expiry Notification"
+msgstr "إشعار انتهاء الصلاحية الباقة"
+
+#: inc/class-commom-email-templates.php:19
+msgid "Package Expiry SUBJECT"
+msgstr "موضوع انتهاء صلاحية الحزمة"
+
+#: inc/class-commom-email-templates.php:25
+msgid "Package Expiry FROM"
+msgstr "انتهاء صلاحية الباقة من"
+
+#: inc/class-commom-email-templates.php:26
+#: inc/class-commom-email-templates.php:132
+msgid "NAME valid@email.com is compulsory as we gave in default."
+msgstr "اسم valid@email.com إلزامي كما أعطينا في الشكل الافتراضي ."
+
+#: inc/class-commom-email-templates.php:32
+msgid "Package Expiry MESSAGE"
+msgstr "رسالة انتهاء صلاحية الحزمة"
+
+#: inc/class-commom-email-templates.php:38
+msgid ""
+"%site_name% , %package_subcriber% , %package_name% , %no_of_days% will be "
+"translated accordingly."
+msgstr ""
+"%site_name٪ ، %package_subcriber٪ ، %package_name٪ ، %no_of_days٪ ستترجم "
+"وفقا لذلك."
+
+#: inc/class-commom-email-templates.php:97
+#: inc/class-commom-email-templates.php:107
+msgid "Ad Expiry Notification"
+msgstr "إشعار انتهاء صلاحية الإعلان"
+
+#: inc/class-commom-email-templates.php:108
+msgid ""
+"<b class=\"sb-admin-note\"> Note : </b> This functionality works hiddenly "
+"notify the users before and after ad expiry .This option takes a lot of load "
+"so any one who wishes to choose this option must have a good server that can "
+"support heavy load."
+msgstr ""
+"<b class=\"sb-admin-note\"> ملاحظه: </b> تعمل هذه الوظيفة بشكل مخفي لإخطار "
+"المستخدمين قبل وبعد انتهاء صلاحية الإعلان. يأخذ هذا الخيار الكثير من الحمل ، "
+"لذا يجب أن يكون لدى أي شخص يرغب في اختيار هذا الخيار خادم جيد يمكنه دعم "
+"الحمل الثقيل."
+
+#: inc/class-commom-email-templates.php:114
+msgid "Ad Expiry Notification before"
+msgstr "إشعار انتهاء صلاحية الإعلان قبل"
+
+#: inc/class-commom-email-templates.php:115
+msgid "add the number of days before package expiry notification"
+msgstr "أضف عدد الأيام قبل إشعار انتهاء صلاحية الباقة"
+
+#: inc/class-commom-email-templates.php:117
+msgid "should be integer value. <b>( Days )</b>"
+msgstr "يجب أن تكون قيمة عدد صحيح. <b>( أيام )</b>"
+
+#: inc/class-commom-email-templates.php:124
+msgid "Ads Expiry subject"
+msgstr "موضوع انتهاء صلاحية الإعلانات"
+
+#: inc/class-commom-email-templates.php:131
+msgid "Ad Expiry From"
+msgstr "انتهاء الإعلان من"
+
+#: inc/class-commom-email-templates.php:139
+msgid "Ad Expiry Message"
+msgstr "رسالة انتهاء صلاحية الإعلان"
+
+#: inc/class-commom-email-templates.php:146
+#: inc/class-commom-email-templates.php:213
+msgid ""
+"%site_name% , %ad_author% , %ad_title% , %no_of_days% will be translated "
+"accordingly."
+msgstr ""
+"سيتم ترجمة %site_name٪ و %ad_author٪ و %ad_title٪ و %no_of_days٪ وفقا لذلك."
+
+#: inc/class-commom-email-templates.php:206
+msgid "After Ad Expiry Message"
+msgstr "رسالة بعد انتهاء صلاحية الإعلان"
+
+#: inc/class-commom-email-templates.php:271
+msgid "Bid Winner Email"
+msgstr "البريد الإلكتروني للفائز بالمزايدة"
+
+#: inc/class-commom-email-templates.php:279
+msgid "Bid email subject"
+msgstr "موضوع البريد الكتروني للمزاد"
+
+#: inc/class-commom-email-templates.php:280
+msgid "%site_name% will be translated accordingly."
+msgstr "وستترجم %site_name % تبعاً لذلك."
+
+#: inc/class-commom-email-templates.php:286
+msgid "Bid email FROM"
+msgstr "بريد الكتروني للمزاد من"
+
+#: inc/class-commom-email-templates.php:292
+msgid "FROM: NAME valid@email.com is compulsory as we gave in default."
+msgstr "FROM: NAME valid@email.com is compulsory as we gave in default."
+
+#: inc/class-commom-email-templates.php:298
+msgid "Bid email template"
+msgstr "قالب البريد الإلكتروني للمزايدة"
+
+#: inc/class-commom-email-templates.php:299
+msgid ""
+"%site_name% , %bid_winner_name% , %bid_link%  will be translated accordingly."
+msgstr "سيتم ترجمة %site_name٪ و ٪ bid_winner_name٪ و ٪ bid_link٪ وفقا لذلك."
+
+#: user_profile/index.php:24
+msgid "Adforest User Profile"
+msgstr "الملف الشخصي لمستخدم Adforest"
+
+#: user_profile/index.php:27
+msgid "Badge Color"
+msgstr "لون خط الشارة"
+
+#: user_profile/index.php:30
+msgid "Select Type"
+msgstr "حدد النوع"
+
+#: user_profile/index.php:32
+msgid "Green"
+msgstr "أخضر"
+
+#: user_profile/index.php:35
+msgid "Orange"
+msgstr "أحمر"
+
+#: user_profile/index.php:38
+msgid "Blue"
+msgstr "أزرق"
+
+#: user_profile/index.php:40
+msgid "Red"
+msgstr "أحمر"
+
+#: user_profile/index.php:45
+msgid "Badge Text"
+msgstr "نص الشارة"
+
+#: user_profile/index.php:53
+msgid "Phone Number"
+msgstr "رقم الهاتف"
+
+#: user_profile/index.php:58
+msgid "+CountrycodeMobilenumber"
+msgstr "+رمز البلدرقم الهاتف المحمول"
+
+#: user_profile/index.php:62
+msgid "Phone no. verified"
+msgstr "المستخدمين المتحقق من الهاتف"
+
+#: user_profile/index.php:72 user_profile/index.php:90
+msgid "Select option"
+msgstr "حدد الخيار"
+
+#: user_profile/index.php:75
+msgid "Not verified"
+msgstr "غير موثق"
+
+#: user_profile/index.php:78
+msgid "Verified"
+msgstr "موثق"
+
+#: user_profile/index.php:84 user_profile/index.php:424
+msgid "User Type"
+msgstr "نوع المستخدم"
+
+#: user_profile/index.php:93 user_profile/index.php:470
+msgid "Individual"
+msgstr "فرد"
+
+#: user_profile/index.php:96 user_profile/index.php:472
+msgid "Dealer"
+msgstr "تاجر"
+
+#: user_profile/index.php:101
+msgid "User Location"
+msgstr "موقع المستخدم"
+
+#: user_profile/index.php:111
+msgid "User Introduction"
+msgstr "تعريف المستخدم"
+
+#: user_profile/index.php:140
+msgid "Trusted User"
+msgstr "مستخدم موثوق به"
+
+#: user_profile/index.php:149
+msgid ""
+"By making the user trusted. User's ads will be approved even (Admin "
+"Approval) is turn on in Theme Options. "
+msgstr ""
+"من خلال جعل المستخدم موثوقا. ستتم الموافقة على إعلانات المستخدم حتى (موافقة "
+"المسؤول) قيد التشغيل في خيارات المظهر. "
+
+#: user_profile/index.php:155
+msgid "Block Messaging?"
+msgstr "حظر المراسلة؟"
+
+#: user_profile/index.php:166
+msgid "Block this user to send messging against ads"
+msgstr "حظر هذا المستخدم لإرسال رسائل مقابل الإعلانات"
+
+#: user_profile/index.php:171
+msgid "Send User email?"
+msgstr "إرسال بريد إلكتروني للمستخدم؟"
+
+#: user_profile/index.php:177
+msgid "Send mail"
+msgstr "إرسال بريد"
+
+#: user_profile/index.php:179
+msgid ""
+"Click on button to send email to user to let him know about his account "
+"verification"
+msgstr ""
+"انقر فوق الزر لإرسال بريد إلكتروني إلى المستخدم لإعلامه بالتحقق من حسابه"
+
+#: user_profile/index.php:186
+msgid "Give User Packages"
+msgstr "إعطاء خيار السوم للمستخدم"
+
+#: user_profile/index.php:192
+msgid "Select a Package"
+msgstr "اختيار الحزمة"
+
+#: user_profile/index.php:198
+msgid "No packages found"
+msgstr "لا توجد باقات"
+
+#: user_profile/index.php:208
+msgid "User Packages/Subscriptions"
+msgstr "الباقات."
+
+#: user_profile/index.php:283 user_profile/index.php:811
+#: user_profile/index.php:835 user_profile/index.php:887
+#: user_profile/index.php:948
+msgid "Revoke Package"
+msgstr "إبطال الحزمة"
+
+#: user_profile/index.php:295
+msgid "User Rating"
+msgstr "تقييم الاعضاء"
+
+#: user_profile/index.php:299
+msgid "Username who rated"
+msgstr "اسم المستخدم الذي قيم"
+
+#: user_profile/index.php:300
+msgid "Rating"
+msgstr "تقييم"
+
+#: user_profile/index.php:301
+msgid "Comments"
+msgstr "التعليقات"
+
+#: user_profile/index.php:327
+msgid "Star"
+msgstr "نجمة"
+
+#: user_profile/index.php:338
+msgid "There is no rating of this user yet."
+msgstr "لا يوجد تصنيف لهذا المستخدم حتى الآن."
+
+#: user_profile/index.php:423
+msgid "Display Name"
+msgstr "اسم العرض"
+
+#: user_profile/index.php:425
+msgid "Package"
+msgstr "الباقة"
+
+#: user_profile/index.php:429
+msgid "Classified ads"
+msgstr "أعلانات مبوبة"
+
+#: user_profile/index.php:443
+msgid "Expired"
+msgstr "منتهي"
+
+#: user_profile/index.php:512
+msgid "Trusted?"
+msgstr "موثوق؟"
+
+#: user_profile/index.php:533 user_profile/index.php:778
+msgid "Are you sure you want to do this?"
+msgstr "هل أنت متأكد أنك تريد القيام بهذا؟"
+
+#: user_profile/index.php:676
+msgid "Your Package Has Been Revoked - %site_name%"
+msgstr "تم إلغاء الباقة الخاصة بك - %site_name٪"
+
+#: user_profile/index.php:815
+msgid "Package:"
+msgstr "الباقة:"
+
+#: user_profile/index.php:816
+msgid "User:"
+msgstr "اسم المستخدم"
+
+#: user_profile/index.php:817
+msgid "User Email:"
+msgstr "البريد الإلكتروني للمستخدم:"
+
+#: user_profile/index.php:821
+msgid "Reason for revocation (required):"
+msgstr "سبب الإلغاء (مطلوب):"
+
+#: user_profile/index.php:823
+msgid "Please provide a reason for revoking this package..."
+msgstr "يرجى تقديم سبب لإلغاء هذه الحزمة ..."
+
+#: user_profile/index.php:829
+msgid "Send email notification to user"
+msgstr "إرسال إشعار بالبريد الإلكتروني إلى المستخدم"
+
+#: user_profile/index.php:834
+msgid "Cancel"
+msgstr "إلغاء"
+
+#: user_profile/index.php:858
+msgid "Loading..."
+msgstr "جار التحميل..."
+
+#: user_profile/index.php:878 user_profile/index.php:882
+msgid "Error loading user information"
+msgstr "خطأ في تحميل معلومات المستخدم"
+
+#: user_profile/index.php:914
+msgid "Please provide a reason for revocation"
+msgstr "يرجى تقديم سبب الإلغاء"
+
+#: user_profile/index.php:918
+msgid ""
+"Are you sure you want to revoke this package? This action cannot be undone."
+msgstr "هل تريد بالتاكيد حذف هذا الحساب؟"
+
+#: user_profile/index.php:923
+msgid "Processing..."
+msgstr "معالجة..."
+
+#: user_profile/index.php:938
+msgid "Package revoked successfully!"
+msgstr "تم إلغاء التحقق"
+
+#: user_profile/index.php:941 user_profile/index.php:945
+msgid "Error revoking package"
+msgstr "خطأ في إبطال الحزمة"
+
+#. Plugin Name of the plugin/theme
+msgid "Adforest Framework"
+msgstr "إطار عمل Adforest"
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "https://themeforest.net/user/scriptsbundle/"
+msgstr "https://themeforest.net/user/scriptsbundle/"
+
+#. Description of the plugin/theme
+msgid "This plugin is essential for the proper theme funcationality."
+msgstr "هذا البرنامج المساعد ضروري لموضوع المناسبة funcationality."
+
+#. Author of the plugin/theme
+msgid "Scripts Bundle"
+msgstr "حزمة البرامج النصية"
+
+#~ msgid "Featured Ad Expiry (in daysss)"
+#~ msgstr "انتهاء صلاحية الإعلان المميز (بالأيام)"

@@ -1,0 +1,269 @@
+[
+    {
+        "sidebar": "adforest_theme_sidebar",
+        "widget_id": "custom_search_widget-2",
+        "widget_type": "custom_search_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Search Filter"
+        }
+    },
+    {
+        "sidebar": "adforest_theme_sidebar",
+        "widget_id": "adforest_recent_posts_widget-2",
+        "widget_type": "adforest_recent_posts_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Recent Posts",
+            "number_of_posts": 5,
+            "title_limit": 25
+        }
+    },
+    {
+        "sidebar": "adforest_vertical_advert",
+        "widget_id": "adforest_search_advertisement-3",
+        "widget_type": "adforest_search_advertisement",
+        "widget_num": "3",
+        "settings": {
+            "title": "Advertisement",
+            "ad_code": "<a href= \"https:\/\/listing.adforestwp.com\/listdirectory\/\" target=\"_blank\"><img class=\"img-fluid\" src=\"https:\/\/listing.adforestwp.com\/wp-content\/uploads\/2025\/03\/3020-1.png\" alt=\"image\"> <\/a>",
+            "open_widget": "1"
+        }
+    },
+    {
+        "sidebar": "adforest_woocommerce_widget",
+        "widget_id": "adforest_woocommerce_title_search_widget-2",
+        "widget_type": "adforest_woocommerce_title_search_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Title Search",
+            "open_widget": ""
+        }
+    },
+    {
+        "sidebar": "adforest_woocommerce_widget",
+        "widget_id": "adforest_woocommerce_category_search_widget-2",
+        "widget_type": "adforest_woocommerce_category_search_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Category Search",
+            "open_widget": "",
+            "show_more_cate": "1",
+            "no_of_cats": "8"
+        }
+    },
+    {
+        "sidebar": "adforest_woocommerce_widget",
+        "widget_id": "adforest_woocommerce_price_search_widget-2",
+        "widget_type": "adforest_woocommerce_price_search_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Searh By Price",
+            "min_price": 0,
+            "max_price": "10000000"
+        }
+    },
+    {
+        "sidebar": "adforest_woocommerce_widget",
+        "widget_id": "adforest_wc_rating_search_widget-2",
+        "widget_type": "adforest_wc_rating_search_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Search Rating",
+            "open_widget": ""
+        }
+    },
+    {
+        "sidebar": "sb_themes_grid_sidebar",
+        "widget_id": "block-5",
+        "widget_type": "block",
+        "widget_num": "5",
+        "settings": {
+            "content": "<!-- wp:group --><div class=\"wp-block-group\"><!-- wp:heading --><h2>Archives<\/h2><!-- \/wp:heading --><!-- wp:archives \/--><\/div><!-- \/wp:group -->"
+        }
+    },
+    {
+        "sidebar": "sb_themes_grid_sidebar",
+        "widget_id": "block-6",
+        "widget_type": "block",
+        "widget_num": "6",
+        "settings": {
+            "content": "<!-- wp:group --><div class=\"wp-block-group\"><!-- wp:heading --><h2>Categories<\/h2><!-- \/wp:heading --><!-- wp:categories \/--><\/div><!-- \/wp:group -->"
+        }
+    },
+    {
+        "sidebar": "adforest_ad_sidebar_bottom",
+        "widget_id": "adforest_recent_ads_widget-2",
+        "widget_type": "adforest_recent_ads_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Recent Ads",
+            "number_of_posts": 5
+        }
+    },
+    {
+        "sidebar": "adforest_ad_sidebar_bottom",
+        "widget_id": "adforest_search_advertisement-2",
+        "widget_type": "adforest_search_advertisement",
+        "widget_num": "2",
+        "settings": {
+            "title": "Advertisement",
+            "ad_code": "<a href= \"https:\/\/listing.adforestwp.com\/listdirectory\/\" target=\"_blank\"><img class=\"img-fluid\" src=\"https:\/\/listing.adforestwp.com\/wp-content\/uploads\/2025\/03\/Untitled-1-2-1.png\" alt=\"image\"> <\/a>",
+            "open_widget": "1"
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_title_search_filter_widget-2",
+        "widget_type": "adforest_title_search_filter_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Title Search",
+            "open_widget": ""
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_search_filter_widget-2",
+        "widget_type": "adforest_search_filter_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Radius Search",
+            "default_value": "",
+            "edit_able": "yes",
+            "show_hide": "show",
+            "open_widget": ""
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_category_search_widget-2",
+        "widget_type": "adforest_category_search_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Search By Categories",
+            "open_widget": "1",
+            "show_more_cate": "1",
+            "no_of_cats": "5"
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_price_search_widget-2",
+        "widget_type": "adforest_price_search_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Ad Price",
+            "min_price": 0,
+            "max_price": "10000000"
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_ad_type_search_widget-2",
+        "widget_type": "adforest_ad_type_search_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Ad Type"
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_condition_search_widget-2",
+        "widget_type": "adforest_condition_search_widget",
+        "widget_num": "2",
+        "settings": {
+            "title": "Ad Condition"
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_search_custom_fields-2",
+        "widget_type": "adforest_search_custom_fields",
+        "widget_num": "2",
+        "settings": {
+            "title": "Search By:",
+            "open_widget": "1"
+        }
+    },
+    {
+        "sidebar": "adforest_search_sidebar",
+        "widget_id": "adforest_ad_countries-2",
+        "widget_type": "adforest_ad_countries",
+        "widget_num": "2",
+        "settings": {
+            "title": "Custom Location",
+            "default_value": "",
+            "edit_able": "",
+            "open_widget": ""
+        }
+    },
+    {
+        "sidebar": "adforest_cat_search",
+        "widget_id": "adforest_title_search_filter_widget-3",
+        "widget_type": "adforest_title_search_filter_widget",
+        "widget_num": "3",
+        "settings": {
+            "title": "What are you looking for",
+            "open_widget": "1"
+        }
+    },
+    {
+        "sidebar": "adforest_cat_search",
+        "widget_id": "adforest_category_search_widget-3",
+        "widget_type": "adforest_category_search_widget",
+        "widget_num": "3",
+        "settings": {
+            "title": "Search by Category",
+            "open_widget": "1",
+            "show_more_cate": "1",
+            "no_of_cats": "10"
+        }
+    },
+    {
+        "sidebar": "adforest_cat_search",
+        "widget_id": "adforest_ad_countries-3",
+        "widget_type": "adforest_ad_countries",
+        "widget_num": "3",
+        "settings": {
+            "title": "Country Location",
+            "default_value": "",
+            "edit_able": "",
+            "open_widget": "1"
+        }
+    },
+    {
+        "sidebar": "adforest_location_search",
+        "widget_id": "adforest_title_search_filter_widget-4",
+        "widget_type": "adforest_title_search_filter_widget",
+        "widget_num": "4",
+        "settings": {
+            "title": "What are you looking for",
+            "open_widget": "1"
+        }
+    },
+    {
+        "sidebar": "adforest_location_search",
+        "widget_id": "adforest_category_search_widget-4",
+        "widget_type": "adforest_category_search_widget",
+        "widget_num": "4",
+        "settings": {
+            "title": "Categories",
+            "open_widget": "1",
+            "show_more_cate": "1",
+            "no_of_cats": "5"
+        }
+    },
+    {
+        "sidebar": "adforest_location_search",
+        "widget_id": "adforest_ad_countries-4",
+        "widget_type": "adforest_ad_countries",
+        "widget_num": "4",
+        "settings": {
+            "title": "Search by Locations",
+            "default_value": "",
+            "edit_able": "",
+            "open_widget": "1"
+        }
+    }
+]

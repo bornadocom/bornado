@@ -1,0 +1,815 @@
+/* ==========================================================================
+   Modern Design Variables
+   ========================================================================== */
+:root {
+  --primary: #000;
+  --primary-hover: #e6002a;
+  --primary-light: #ffe6ea;
+  --secondary: #f59e0b;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --bg-light: #f8fafc;
+  --bg-panel: #ffffff;
+  --bg-muted: #f1f5f9;
+  --bg-gradient: linear-gradient(135deg, #000 0%, #000 100%);
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   Root Wizard Container
+   ========================================================================== */
+#sb-setup-wizard {
+  display: flex;
+  min-height: 85vh;
+  background: var(--bg-light);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  margin: 20px 20px 20px 0;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sb-btn-select-demo {
+  background: #2D3E50 !important;
+  border-color: #2D3E50 !important;
+}
+
+/* ==========================================================================
+   Modern Sidebar
+   ========================================================================== */
+.sb-wizard-sidebar {
+  width: 280px;
+  background: var(--bg-gradient);
+  color: #fff;
+  padding: 2rem 0;
+  counter-reset: step;
+  position: relative;
+  overflow: hidden;
+}
+
+.sb-wizard-sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg,
+      rgba(0, 0, 0, 0.9) 0%,
+      rgba(255, 255, 255, 0.1) 25%,
+      rgba(0, 0, 0, 0.8) 50%,
+      rgba(255, 255, 255, 0.2) 75%,
+      rgba(0, 0, 0, 0.9) 100%);
+  z-index: 1;
+}
+
+.sb-wizard-sidebar>* {
+  position: relative;
+  z-index: 2;
+}
+
+.sb-wizard-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.license-heading h3 {
+  color: #fff !important;
+}
+
+.sb-step-item {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  transition: background var(--transition);
+}
+
+.sb-step-item:hover,
+.sb-step-item:focus {
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+
+.sb-step-item::before {
+  counter-increment: step;
+  content: counter(step);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-right: 0.75rem;
+  border-radius: 50%;
+  background: #4a5a6a;
+  font-weight: bold;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.sb-step-item.current,
+.sb-step-item.active {
+  background: #1a252f;
+}
+
+.sb-step-item.current::before,
+.sb-step-item.active::before {
+  background: var(--primary);
+}
+
+.sb-step-label {
+  font-size: 0.95rem;
+  flex: 1;
+}
+
+
+/* ==========================================================================
+   Modern Step Items
+   ========================================================================== */
+.sb-wizard-steps>li {
+  counter-increment: step;
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  margin: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+}
+
+.sb-wizard-steps>li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transition: opacity var(--transition);
+  border-radius: var(--radius);
+}
+
+/* hover/focus state */
+.sb-wizard-steps>li:hover,
+.sb-wizard-steps>li:focus {
+  transform: translateX(8px);
+  outline: none;
+}
+
+.sb-wizard-steps>li:hover::after,
+.sb-wizard-steps>li:focus::after {
+  opacity: 1;
+}
+
+/* modern badge */
+.sb-wizard-steps>li::before {
+  content: counter(step);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-right: 1rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all var(--transition);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.sb-wizard-steps>li:hover::before {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* active/current step */
+.sb-wizard-steps>li[aria-selected="true"],
+.sb-wizard-steps>li.active {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sb-wizard-steps>li[aria-selected="true"]::before,
+.sb-wizard-steps>li.active::before {
+  background: #fff;
+  color: var(--primary);
+  border-color: #fff;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.3);
+}
+
+/* completed step */
+.sb-wizard-steps>li.completed {
+  opacity: 0.8;
+}
+
+.sb-wizard-steps>li.completed::before {
+  background: var(--success);
+  color: #fff;
+  content: "✓";
+  border-color: var(--success);
+}
+
+/* ==========================================================================
+   Modern Content Area & Panels
+   ========================================================================== */
+.sb-wizard-content {
+  flex: 1;
+  background: var(--bg-panel);
+  padding: 3rem;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Modern scrollbar */
+.sb-wizard-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sb-wizard-content::-webkit-scrollbar-track {
+  background: var(--bg-muted);
+  border-radius: 3px;
+}
+
+.sb-wizard-content::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 3px;
+  transition: background var(--transition);
+}
+
+.sb-wizard-content::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
+}
+
+.sb-wizard-panel {
+  display: none;
+}
+
+.sb-wizard-panel.active {
+  display: block;
+}
+
+/* ===== Modern Welcome Panel ===== */
+.sb-welcome-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3rem;
+  padding: 0 0;
+}
+
+.sb-welcome-graphic {
+  flex: 1 1 320px;
+  text-align: center;
+  position: relative;
+}
+
+.sb-welcome-graphic::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  background: var(--bg-gradient);
+  border-radius: var(--radius-lg);
+  opacity: 0.1;
+  z-index: -1;
+}
+
+.sb-welcome-graphic img {
+  max-width: 100%;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--transition);
+}
+
+.sb-welcome-graphic img:hover {
+  transform: scale(1.02);
+}
+
+.sb-welcome-content {
+  flex: 2 1 400px;
+}
+
+.sb-welcome-title {
+  font-size: 2.5rem;
+  margin: 0 0 1rem;
+  color: var(--text);
+  font-weight: 700;
+  background: var(--bg-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.sb-welcome-version {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  padding: 0.5rem 1rem;
+  background: var(--primary-light);
+  border-radius: var(--radius);
+  display: inline-block;
+  font-weight: 500;
+}
+
+.sb-welcome-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.sb-welcome-list li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  color: var(--text);
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.sb-welcome-list li::before {
+  content: '✓';
+  font-size: 1.2rem;
+  color: var(--success);
+  font-weight: bold;
+  background: var(--primary-light);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sb-welcome-list li:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
+}
+
+.sb-welcome-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.sb-welcome-actions .sb-btn-primary {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  background: var(--bg-gradient);
+  border: none;
+  color: #fff;
+  transition: all var(--transition);
+  box-shadow: var(--shadow-md);
+}
+
+.sb-welcome-actions .sb-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ==========================================================================
+   Responsive Adjustments
+   ========================================================================== */
+@media (max-width: 768px) {
+  #sb-setup-wizard {
+    flex-direction: column;
+  }
+
+  .sb-wizard-sidebar {
+    width: 100%;
+  }
+
+  .sb-welcome-panel {
+    flex-direction: column;
+  }
+}
+
+/* ==========================================================================
+   Modern Button Styles
+   ========================================================================== */
+.sb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.sb-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.sb-btn:hover::before {
+  left: 100%;
+}
+
+.sb-btn-primary {
+  background: var(--bg-gradient);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+.sb-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.sb-btn-secondary {
+  background: var(--bg-panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.sb-btn-secondary:hover {
+  background: var(--bg-muted);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.sb-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ==========================================================================
+   Modern Loading Indicator
+   ========================================================================== */
+.sb-loading {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  animation: sb-text-pulse 1.5s ease-in-out infinite;
+}
+
+.sb-loading::before {
+  content: "";
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1rem;
+  border: 3px solid var(--primary-light);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: sb-modern-spin 1s linear infinite;
+}
+
+.sb-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--primary-light);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: sb-modern-spin 0.8s linear infinite;
+  display: none;
+}
+
+.sb-spinner.active {
+  display: inline-block;
+}
+
+/* Modern spinning animation */
+@keyframes sb-modern-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Subtle pulsing of the text */
+@keyframes sb-text-pulse {
+
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   Modern Animations
+   ========================================================================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.sb-wizard-panel.active {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.sb-wizard-steps>li {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.sb-wizard-steps>li:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.sb-wizard-steps>li:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.sb-wizard-steps>li:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.sb-wizard-steps>li:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.sb-wizard-steps>li:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.sb-wizard-steps>li:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+/* ==========================================================================
+   Modern Progress Indicator
+   ========================================================================== */
+.sb-wizard-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+.sb-wizard-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #fff, rgba(255, 255, 255, 0.8));
+  width: 0%;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.sb-wizard-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: progress-shimmer 2s ease-in-out infinite;
+}
+
+@keyframes progress-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ==========================================================================
+   Modern Notifications
+   ========================================================================== */
+.sb-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--bg-panel);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.5rem;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border);
+  z-index: 1000;
+  transform: translateX(400px);
+  transition: transform var(--transition);
+  max-width: 400px;
+}
+
+.sb-notification.show {
+  transform: translateX(0);
+}
+
+.sb-notification.success {
+  border-left: 4px solid var(--success);
+}
+
+.sb-notification.error {
+  border-left: 4px solid var(--danger);
+}
+
+.sb-notification.warning {
+  border-left: 4px solid var(--warning);
+}
+
+.sb-notification-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sb-notification-icon {
+  font-size: 1.5rem;
+}
+
+.sb-notification.success .sb-notification-icon {
+  color: var(--success);
+}
+
+.sb-notification.error .sb-notification-icon {
+  color: var(--danger);
+}
+
+.sb-notification.warning .sb-notification-icon {
+  color: var(--warning);
+}
+
+.sb-notification-text {
+  flex: 1;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.sb-notification-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all var(--transition);
+}
+
+.sb-notification-close:hover {
+  background: var(--bg-muted);
+  color: var(--text);
+}
+
+/* ==========================================================================
+   Enhanced Responsive Design
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .sb-wizard-sidebar {
+    width: 240px;
+  }
+
+  .sb-wizard-content {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  #sb-setup-wizard {
+    flex-direction: column;
+    margin: 10px;
+    border-radius: var(--radius-lg);
+  }
+
+  .sb-wizard-sidebar {
+    width: 100%;
+    padding: 1rem 0;
+  }
+
+  .sb-wizard-steps {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 1rem;
+  }
+
+  .sb-wizard-steps>li {
+    flex-shrink: 0;
+    margin: 0 0.5rem;
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+  }
+
+  .sb-wizard-content {
+    padding: 1.5rem;
+  }
+
+  .sb-welcome-panel {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .sb-welcome-title {
+    font-size: 2rem;
+  }
+
+  .sb-welcome-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .sb-wizard-content {
+    padding: 1rem;
+  }
+
+  .sb-welcome-title {
+    font-size: 1.75rem;
+  }
+
+  .sb-welcome-actions {
+    flex-direction: column;
+  }
+
+  .sb-welcome-actions .sb-btn-primary {
+    width: 100%;
+  }
+}
