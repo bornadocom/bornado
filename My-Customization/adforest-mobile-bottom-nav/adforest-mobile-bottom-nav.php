@@ -2,7 +2,7 @@
 /**
  * Plugin Name: AdForest Mobile Bottom Navigation
  * Description: Dynamic mobile bottom navigation for AdForest + Elementor without Elementor Pro.
- * Version: 1.2.0
+ * Version: 1.3.0
  * Author: Bornado
  * Text Domain: adf-mobile-bottom-nav
  */
@@ -14,6 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 $adf_mobile_search_core = dirname( __DIR__ ) . '/bornado-search-core/bornado-search-core.php';
 if ( ! class_exists( 'Bornado_Search_Core' ) && file_exists( $adf_mobile_search_core ) ) {
 	require_once $adf_mobile_search_core;
+}
+
+$adf_mobile_location_picker = dirname( __DIR__ ) . '/bornado-location-picker/bornado-location-picker.php';
+if ( ! class_exists( 'Bornado_Location_Picker_Plugin' ) && file_exists( $adf_mobile_location_picker ) ) {
+	require_once $adf_mobile_location_picker;
 }
 
 final class ADF_Mobile_Bottom_Nav {
@@ -54,14 +59,14 @@ final class ADF_Mobile_Bottom_Nav {
 			'adf-mobile-bottom-nav',
 			$plugin_url . 'assets/css/adf-mobile-bottom-nav.css',
 			array(),
-			'1.2.0'
+			'1.3.0'
 		);
 
 		wp_enqueue_script(
 			'adf-mobile-bottom-nav',
 			$plugin_url . 'assets/js/adf-mobile-bottom-nav.js',
 			array( 'bornado-search-core' ),
-			'1.2.0',
+			'1.3.0',
 			true
 		);
 
@@ -200,6 +205,8 @@ final class ADF_Mobile_Bottom_Nav {
 	}
 
 	private function get_top_search_markup( $settings ) {
+		global $adforest_theme;
+
 		$search_actions  = function_exists( 'bornado_search_get_actions' ) ? bornado_search_get_actions() : array(
 			'default_action'    => home_url( '/' ),
 			'all_cities_action' => home_url( '/' ),
@@ -215,42 +222,75 @@ final class ADF_Mobile_Bottom_Nav {
 		$selected_city   = $this->get_selected_city( $settings );
 		$selected_category = $this->get_selected_category();
 
+		$logo_url = '';
+		if ( isset( $adforest_theme['sb_site_logo_mobile']['url'] ) && ! empty( $adforest_theme['sb_site_logo_mobile']['url'] ) ) {
+			$logo_url = $adforest_theme['sb_site_logo_mobile']['url'];
+		} elseif ( isset( $adforest_theme['sb_site_logo']['url'] ) && ! empty( $adforest_theme['sb_site_logo']['url'] ) ) {
+			$logo_url = $adforest_theme['sb_site_logo']['url'];
+		} elseif ( defined( 'ADFOREST_IMAGE_PATH' ) ) {
+			$logo_url = ADFOREST_IMAGE_PATH . '/adt-logo.png';
+		}
+		$logo_alt = get_bloginfo( 'name' );
+
 		ob_start();
 		?>
 		<div class="adf-mobile-top-search" role="search" aria-label="<?php esc_attr_e( 'Mobile ad title search', 'adf-mobile-bottom-nav' ); ?>">
-			<form
-				method="get"
-				action="<?php echo esc_url( $search_page_url ); ?>"
-				class="adf-mobile-top-search__form"
-				data-default-action="<?php echo esc_url( $search_page_url ); ?>"
-				data-all-cities-action="<?php echo esc_url( $all_cities_url ); ?>"
-				data-all-categories-action="<?php echo esc_url( $all_categories_url ); ?>"
-				data-all-filters-action="<?php echo esc_url( $all_filters_url ); ?>"
-			>
-				<label for="adf-mobile-top-search-title" class="screen-reader-text"><?php esc_html_e( 'Search ads with title', 'adf-mobile-bottom-nav' ); ?></label>
-				<span class="adf-mobile-top-search__icon" aria-hidden="true">
-					<svg viewBox="0 0 24 24"><path d="M10.5 3a7.5 7.5 0 015.96 12.05l4.24 4.24-1.41 1.41-4.24-4.24A7.5 7.5 0 1110.5 3zm0 2a5.5 5.5 0 100 11 5.5 5.5 0 000-11z"/></svg>
-				</span>
-				<input
-					type="text"
-					class="adf-mobile-top-search__input"
-					id="adf-mobile-top-search-title"
-					name="ad_title"
-					placeholder="<?php echo esc_attr( $placeholder ); ?>"
-					value="<?php echo esc_attr( $ad_title ); ?>"
-				/>
-				<input type="hidden" name="country_id" class="adf-mobile-top-search__city-input" value="<?php echo esc_attr( $selected_city['value'] ); ?>">
-				<input type="hidden" name="cat_id" class="adf-mobile-top-search__category-input" value="<?php echo esc_attr( $selected_category['value'] ); ?>">
-				<?php echo $this->render_hidden_search_inputs( array( 'ad_title', 'country_id', 'ad_country', 'cat_id', 'ad_cats' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-			</form>
-			<div class="adf-mobile-top-search__filters">
-				<button type="button" class="adf-mobile-top-search__filter-strip adf-mobile-top-search__city-strip" aria-haspopup="dialog" aria-expanded="false">
-					<span class="adf-mobile-top-search__filter-left">
-						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 00-7 7c0 5.14 7 13 7 13s7-7.86 7-13a7 7 0 00-7-7zm0 9.5A2.5 2.5 0 1112 6a2.5 2.5 0 010 5.5z"/></svg>
-						<span class="adf-mobile-top-search__filter-text"><strong class="adf-mobile-top-search__city-label"><?php echo esc_html( $selected_city['label'] ); ?></strong></span>
+			<div class="adf-mobile-top-search__row">
+				<form
+					method="get"
+					action="<?php echo esc_url( $search_page_url ); ?>"
+					class="adf-mobile-top-search__form"
+					data-default-action="<?php echo esc_url( $search_page_url ); ?>"
+					data-all-cities-action="<?php echo esc_url( $all_cities_url ); ?>"
+					data-all-categories-action="<?php echo esc_url( $all_categories_url ); ?>"
+					data-all-filters-action="<?php echo esc_url( $all_filters_url ); ?>"
+				>
+					<label for="adf-mobile-top-search-title" class="screen-reader-text"><?php esc_html_e( 'Search ads with title', 'adf-mobile-bottom-nav' ); ?></label>
+					<span class="adf-mobile-top-search__icon" aria-hidden="true">
+						<svg viewBox="0 0 24 24"><path d="M10.5 3a7.5 7.5 0 015.96 12.05l4.24 4.24-1.41 1.41-4.24-4.24A7.5 7.5 0 1110.5 3zm0 2a5.5 5.5 0 100 11 5.5 5.5 0 000-11z"/></svg>
 					</span>
-					<svg class="adf-mobile-top-search__filter-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
-				</button>
+					<input
+						type="text"
+						class="adf-mobile-top-search__input"
+						id="adf-mobile-top-search-title"
+						name="ad_title"
+						placeholder="<?php echo esc_attr( $placeholder ); ?>"
+						value="<?php echo esc_attr( $ad_title ); ?>"
+					/>
+					<input type="hidden" name="country_id" class="adf-mobile-top-search__city-input" value="<?php echo esc_attr( $selected_city['value'] ); ?>">
+					<input type="hidden" name="cat_id" class="adf-mobile-top-search__category-input" value="<?php echo esc_attr( $selected_category['value'] ); ?>">
+					<?php echo $this->render_hidden_search_inputs( array( 'ad_title', 'country_id', 'ad_country', 'cat_id', 'ad_cats' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				</form>
+				<?php if ( ! empty( $logo_url ) ) : ?>
+				<a class="adf-mobile-top-search__brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" aria-label="<?php echo esc_attr( $logo_alt ); ?>">
+					<img class="adf-mobile-top-search__brand-img" src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( $logo_alt ); ?>" loading="eager" decoding="async" />
+				</a>
+				<?php endif; ?>
+			</div>
+			<div class="adf-mobile-top-search__filters">
+				<?php
+				if ( function_exists( 'bornado_render_location_picker' ) ) {
+					echo bornado_render_location_picker(
+						array(
+							'mode'                   => 'compact',
+							'class_name'             => 'adf-mobile-top-search__location-picker',
+							'button_label'           => __( 'کشور و شهر', 'adf-mobile-bottom-nav' ),
+							'submit_label'           => __( 'اعمال', 'adf-mobile-bottom-nav' ),
+							'reset_label'            => __( 'همه کشورها', 'adf-mobile-bottom-nav' ),
+							'panel_heading'          => __( 'انتخاب کشور و شهر', 'adf-mobile-bottom-nav' ),
+							'country_heading'        => __( 'کشورها', 'adf-mobile-bottom-nav' ),
+							'city_heading'           => __( 'شهرها', 'adf-mobile-bottom-nav' ),
+							'search_label'           => __( 'جستجو در کشورها', 'adf-mobile-bottom-nav' ),
+							'city_label'             => __( 'جستجو در شهرها', 'adf-mobile-bottom-nav' ),
+							'auto_submit'            => true,
+							'external_form_selector' => '.adf-mobile-top-search__form',
+							'external_input_selector'=> '.adf-mobile-top-search__city-input',
+							'render_hidden_input'    => false,
+							'submit_on_apply'        => true,
+						)
+					); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				}
+				?>
 				<button type="button" class="adf-mobile-top-search__filter-strip adf-mobile-top-search__category-strip" aria-haspopup="dialog" aria-expanded="false">
 					<span class="adf-mobile-top-search__filter-left">
 						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8v8H3V3zm10 0h8v5h-8V3zM3 13h5v8H3v-8zm7 0h11v8H10v-8z"/></svg>
@@ -258,15 +298,6 @@ final class ADF_Mobile_Bottom_Nav {
 					</span>
 					<svg class="adf-mobile-top-search__filter-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
 				</button>
-			</div>
-		</div>
-		<div class="adf-mobile-city-sheet" aria-hidden="true">
-			<div class="adf-mobile-city-sheet__backdrop" data-filter-close></div>
-			<div class="adf-mobile-city-sheet__panel" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Select city', 'adf-mobile-bottom-nav' ); ?>">
-				<div class="adf-mobile-city-sheet__handle"></div>
-				<h4 class="adf-mobile-city-sheet__title"><?php esc_html_e( 'انتخاب شهر', 'adf-mobile-bottom-nav' ); ?></h4>
-				<input type="text" class="adf-mobile-city-sheet__search" placeholder="<?php esc_attr_e( 'جستجوی شهر...', 'adf-mobile-bottom-nav' ); ?>">
-				<ul class="adf-mobile-city-sheet__list"></ul>
 			</div>
 		</div>
 		<div class="adf-mobile-category-sheet" aria-hidden="true">

@@ -9,9 +9,30 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$bornado_header_search_core = dirname(__DIR__) . '/bornado-search-core/bornado-search-core.php';
-if (!class_exists('Bornado_Search_Core') && file_exists($bornado_header_search_core)) {
-    require_once $bornado_header_search_core;
+$bornado_header_search_core_paths = array(
+    dirname(__DIR__) . '/bornado-search-core/bornado-search-core.php',
+    dirname(dirname(__DIR__)) . '/My-Customization/bornado-search-core/bornado-search-core.php',
+);
+if (!class_exists('Bornado_Search_Core')) {
+    foreach ($bornado_header_search_core_paths as $bornado_header_search_core) {
+        if (file_exists($bornado_header_search_core)) {
+            require_once $bornado_header_search_core;
+            break;
+        }
+    }
+}
+
+$bornado_header_location_picker_paths = array(
+    dirname(__DIR__) . '/bornado-location-picker/bornado-location-picker.php',
+    dirname(dirname(__DIR__)) . '/My-Customization/bornado-location-picker/bornado-location-picker.php',
+);
+if (!class_exists('Bornado_Location_Picker_Plugin')) {
+    foreach ($bornado_header_location_picker_paths as $bornado_header_location_picker) {
+        if (file_exists($bornado_header_location_picker)) {
+            require_once $bornado_header_location_picker;
+            break;
+        }
+    }
 }
 
 if (!defined('BORNADO_HEADER_SEARCH_4_CLONE_KEY')) {
@@ -64,9 +85,7 @@ if (!function_exists('adforest_header_content_html')) {
         } elseif ($page_header_style === 'search') {
             get_template_part('template-parts/headers/header', '4');
         } elseif ($page_header_style === BORNADO_HEADER_SEARCH_4_CLONE_KEY) {
-            if (wp_is_mobile()) {
-                return;
-            } elseif (file_exists(BORNADO_HEADER_SEARCH_4_CLONE_TEMPLATE)) {
+            if (file_exists(BORNADO_HEADER_SEARCH_4_CLONE_TEMPLATE)) {
                 include BORNADO_HEADER_SEARCH_4_CLONE_TEMPLATE;
             } else {
                 get_template_part('template-parts/headers/header', '4');

@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/includes/class-seo-landing-manager.php';
 require_once __DIR__ . '/includes/class-country-model.php';
+require_once __DIR__ . '/includes/class-country-currency-service.php';
 
 final class Bornado_SEO_Routing {
 

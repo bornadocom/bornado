@@ -607,7 +607,7 @@ if (!function_exists('ad_post_short_base_func')) {
             <div class="loading" id="sb_loading"><?php __('Loading', 'adforest-elementor'); ?>&#8230;</div>
             <div class="container">
                 <div class="row">
-                    <form id="adforest-ad-post-form">
+                    <form id="adforest-ad-post-form" method="post" novalidate>
                         <div class="col-lg-12">
                             <div class="ad-post-selected-categories"></div>
                             <div class="ad-post-tabs-wrapper">

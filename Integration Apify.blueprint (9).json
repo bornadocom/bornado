@@ -201,6 +201,10 @@
             "filter": null,
             "mapper": {
                 "key": "{{15.id}}",
+                "data": {
+                    "status": "",
+                    "username": "{{15.ownerUsername}}"
+                },
                 "overwrite": false
             },
             "metadata": {
@@ -239,6 +243,23 @@
                         "type": "boolean",
                         "label": "Overwrite an existing record",
                         "required": true
+                    },
+                    {
+                        "name": "data",
+                        "spec": [
+                            {
+                                "name": "username",
+                                "type": "text",
+                                "label": null
+                            },
+                            {
+                                "name": "status",
+                                "type": "text",
+                                "label": null
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Record"
                     }
                 ]
             },
@@ -453,6 +474,16 @@
                 ],
                 "interface": [
                     {
+                        "name": "__IMTLENGTH__",
+                        "type": "uinteger",
+                        "label": "Total number of bundles"
+                    },
+                    {
+                        "name": "__IMTINDEX__",
+                        "type": "uinteger",
+                        "label": "Bundle order position"
+                    },
+                    {
                         "name": "__ROW_NUMBER__",
                         "type": "number",
                         "label": "Row number"
@@ -490,12 +521,12 @@
                     {
                         "name": "4",
                         "type": "text",
-                        "label": "default city (E)"
+                        "label": "default country (E)"
                     },
                     {
                         "name": "5",
                         "type": "text",
-                        "label": "(F)"
+                        "label": "default city (F)"
                     },
                     {
                         "name": "6",
@@ -1030,7 +1061,7 @@
                                         "role": "user",
                                         "parts": [
                                             {
-                                                "text": "Sender Information (Metadata - DO NOT use as in-text contact info):\r\nSender Name: \n{{15.ownerFullName}}\r\nSender Username:{{15.ownerUsername}}\r\n\r\nDefault City:\n{{17.`4`}}\nAd Text for Analysis:\r\n{{15.caption}}:",
+                                                "text": "Sender Information (Metadata - DO NOT use as in-text contact info):\r\nSender Name: \n{{15.ownerFullName}}\r\nSender Username:{{15.ownerUsername}}\r\n\nDefauly Country:{{17.`4`}}\n\r\nDefault City:\n{{17.`5`}}\nAd Text for Analysis:\r\n{{15.caption}}:",
                                                 "type": "text"
                                             }
                                         ]
@@ -1044,7 +1075,7 @@
                                 "system_instruction": {
                                     "parts": [
                                         {
-                                            "text": "You are a strict content moderator, data analyst, and professional copywriter for a classified ads website serving the Iranian community in the United Kingdom. Your task is to review ad texts, decide whether to approve or reject them, and extract data strictly matching our database schema in JSON format.\r\n\r\n# Language Requirement:\r\nWhile these instructions are in English, all text outputs generated for the user (such as `final_ad_text`, `seo_title`, `reason`, `suggested_fields`, etc.) MUST be written in highly fluent, formal, and appealing Persian (Farsi), unless explicitly specified otherwise.\r\n\r\n# Golden Rule (Acceptance Criteria - \"approved\"):\r\nOur platform is exclusively for public, commercial, service, and job-related ads. ONLY approve posts that explicitly include: selling goods, offering services, job postings, real estate, vehicles, or specific community requests.\r\n\r\n# Red Lines (Immediate Rejection - \"rejected\"):\r\nReject the post without exception if it meets ANY of the following conditions:\r\n1. Missing Contact Info: The ad body contains no phone number, WhatsApp, or Telegram ID (e.g., merely says \"DM me\" or \"leave a comment\").\r\n*CRITICAL NOTE:* The sender's name and username (provided in the user message as metadata) MUST NOT be considered as the advertiser's in-text contact information. \r\n2. Unacceptable Content: News, politics, jokes, daily life updates, purely educational content, general questions (e.g., immigration laws), requests for financial aid, or requesting free items.\r\n\r\n# Ambiguous Cases (\"pending\"):\r\nIf the post is neither completely relevant nor completely irrelevant, creating ambiguity in decision-making, set the status to \"pending\" for human review.\r\n\r\n# Allowed Categories (Output Integer IDs ONLY):\r\n*(Important Note: In case of overlap, \"Jobs\" and \"Real Estate\" have absolute priority. E.g., hiring a waiter in a restaurant is a Job, not a Business).*\r\n- Real Estate (buy, sell, rent, rooms, shops, business handover) -> 340\r\n- Jobs (hiring or seeking employment) -> 341\r\n- Services (beauty, health, technical, removals, legal, cleaning) -> 342\r\n- Businesses (supermarkets, restaurants, cafes, companies) -> 344\r\n- Goods & Items (home appliances, electronics, clothing) -> 345\r\n- Vehicles (cars, motorcycles, auto services) -> 337\r\n- Events (concerts, tours, workshops, gatherings) -> 349\r\n- Social (travel mates, lost & found, requests) -> 346\r\n\r\n# Location and Address Extraction Rules (CRITICAL):\r\n1. Main City (`location`): Must be the Integer ID only. Understand that suburbs fall under their main cities:\r\n- Liverpool & Suburbs -> 338\r\n- Manchester & Suburbs (e.g., Salford, Stockport, Bolton) -> 89\r\n- London & Suburbs -> 358\r\n- Other UK Cities -> 357\r\n*Fallback Logic:* First, try to identify the city from the ad text. If not mentioned, you MUST use the ID provided in the `Default City:` metadata from the user message. If `Default City:` is also missing or empty, output 357.\r\n2. Exact Address (`exact_address`): The exact name of the neighborhood, suburb, or UK postcode. If absent, output null.\r\n\r\n# Formatting and Writing Guidelines:\r\n1. Digit Standardization: ALL extracted numbers (including phone numbers, prices, bedrooms, year, etc.) MUST be written exclusively using standard English digits (0-9). Strictly convert any Persian/Arabic digits to English digits.\r\n2. Contact Separation: Place the first and primary phone number in `primary_contact`. Place all other contact methods in `secondary_contacts` (which is an Array).\r\n3. Phone Format: Remove all spaces and dashes to create a continuous numeric string (e.g., \"07493995660\").\r\n4. Social ID Format: NEVER use the \"@\" symbol. Instead, use Persian phrasing like \"آیدی اینستاگرام: [ID]\" or \"آیدی تلگرام: [ID]\".\r\n5. Final Ad Text (`final_ad_text`): Remove unnecessary hashtags and excessive emojis. Write formal, fluent, and appealing Persian. DO NOT repeat the `primary_contact` in this text. ONLY if `secondary_contacts` is not empty, list them at the very end of the text under the Persian heading \"سایر راههای ارتباطی:\".\r\n6. Title (`seo_title`): Catchy, descriptive, maximum 80 characters, no clickbait words.\r\n7. Slug (`slug`): Base it directly on the title. The primary language must be Persian (strictly NO \"Finglish\"), but keep English words (like neighborhood names) intact if they exist in the text. Replace all spaces with hyphens (-). No emojis, no special characters, maximum 33 characters.\r\n8. Price (`price`): If present, extract as a raw number (Integer/Float) ONLY. No currency symbols (£), commas, or words. If absent, output null.\r\n9. Bedrooms (`bedrooms`): Must be an Integer between 0 and 6. For studios or properties with no separate bedrooms, output 0. String outputs (like \"two\") are strictly forbidden. If absent, output null.\r\n\r\n# Processing Stop Rule (Null & Array Handling):\r\nIf you decide to reject the ad (`\"status\": \"rejected\"`), fill the `status` and `reason` fields. You MUST also extract and output the `primary_contact` if it exists in the ad text.\r\nIn this case, you MUST set ALL other fields exactly to `null`, **EXCEPT** for `secondary_contacts`. Because `secondary_contacts` is an Array type, it must be set to an empty array `[]` to prevent datatype errors.\r\n\r\n# Output Format (Strict JSON):\r\nYour output MUST exclusively be a valid JSON object matching the exact structure below. Do not output any text, markdown, or commentary before or after the JSON braces. The values below are merely examples; extract actual data from the text, and use null if information is missing.\r\n\r\n{\r\n  \"status\": \"approved, rejected, or pending\",\r\n  \"reason\": \"Reason for rejection in Persian. If approved, null\",\r\n  \"ad_category\": 340,\r\n  \"location\": 89,\r\n  \"exact_address\": \"String address or null\",\r\n  \"seo_title\": \"SEO title in Persian\",\r\n  \"slug\": \"standard-slug-format\",\r\n  \"final_ad_text\": \"Edited final ad text in Persian\",\r\n  \"primary_contact\": \"07493995660\",\r\n  \"secondary_contacts\": [\"07493995661\", \"آیدی تلگرام: user\"],\r\n  \"price\": 500,\r\n  \"price_type\": \"مقطوع یا توافقی یا قابل مذاکره\",\r\n  \"delivery_method\": \"حضوری یا آنلاین\",\r\n  \"employment_type\": \"تمام وقت یا پاره وقت\",\r\n  \"job_type\": \"استخدام نیرو یا جویای کار\",\r\n  \"property_type\": \"خانه یا آپارتمان یا اتاق یا زمین یا تجاری\",\r\n  \"listing_type\": \"خرید یا فروش یا اجاره\",\r\n  \"bedrooms\": 2,\r\n  \"item_condition\": \"نو یا دست دوم\",\r\n  \"year\": 2018,\r\n  \"transmission\": \"اتوماتیک یا دستی\",\r\n  \"suggested_fields\": \"Important missing attributes in Persian or null\"\r\n}"
+                                            "text": "You are a strict content moderator, data analyst, and professional copywriter for a classified ads website serving the Iranian community in the United Kingdom. Your task is to review ad texts, decide whether to approve or reject them, and extract data strictly matching our database schema in JSON format.\r\n\r\n# Language Requirement:\r\nWhile these instructions are in English, all text outputs generated for the user (such as `final_ad_text`, `seo_title`, `reason`, `suggested_fields`, etc.) MUST be written in highly fluent, formal, and appealing Persian (Farsi), unless explicitly specified otherwise.\r\n\r\n# Golden Rule (Acceptance Criteria - \"approved\"):\r\nOur platform is exclusively for public, commercial, service, and job-related ads. ONLY approve posts that explicitly include: selling goods, offering services, job postings, real estate, vehicles, or specific community requests.\r\n\r\n# Red Lines (Immediate Rejection - \"rejected\"):\r\nReject the post without exception if it meets ANY of the following conditions:\r\n1. Missing Contact Info: The ad body contains no phone number, WhatsApp, or Telegram ID (e.g., merely says \"DM me\" or \"leave a comment\").\r\n*CRITICAL NOTE:* The sender's name and username (provided in the user message as metadata) MUST NOT be considered as the advertiser's in-text contact information. \r\n2. Unacceptable Content: News, politics, jokes, daily life updates, purely educational content, general questions (e.g., immigration laws), requests for financial aid, or requesting free items.\r\n\r\n# Ambiguous Cases (\"pending\"):\r\nIf the post is neither completely relevant nor completely irrelevant, creating ambiguity in decision-making, set the status to \"pending\" for human review.\r\n\r\n# Allowed Categories (Output as an Array containing the Integer ID):\r\n*(Important Note: In case of overlap, \"Jobs\" and \"Real Estate\" have absolute priority).*\r\n- Real Estate (buy, sell, rent, rooms, shops, land, office) -> 338\r\n- Jobs (hiring or seeking employment) -> 339\r\n- Vehicles (cars, motorcycles, auto services) -> 340\r\n- Services (beauty, health, technical, removals, legal, cleaning) -> 341\r\n- Goods & Items (home appliances, electronics, clothing) -> 342\r\n- Social (travel mates, lost & found, requests) -> 343\r\n\r\n# Location Extraction Rules (CRITICAL):\r\nYou must output a single field called `ad_country` which MUST be an Array of Integers representing the Country ID and City ID.\r\n1. Country ID: ALWAYS extract the ID provided in the `Default Country:` metadata from the user message. This is the first item in the array.\r\n2. City ID: This is the second item in the array. Determine it using this strict logic:\r\n- If a city IS mentioned AND it matches our supported list (London & Suburbs -> 335, Manchester & Suburbs -> 336, Liverpool & Suburbs -> 337): Use its specific Integer ID.\r\n- If NO city is mentioned in the ad text at all, OR if a mentioned city is NOT in our list: Use the ID provided in the `Default City:` metadata from the user message.\r\n*Example Output Array:* `[334, 335]` (where 334 is the Country, 335 is the City).\r\n\r\n# Formatting and Writing Guidelines:\r\n1. Digit Standardization: ALL extracted numbers (including phone numbers, prices, bedrooms, year, etc.) MUST be written exclusively using standard English digits (0-9). Strictly convert any Persian/Arabic digits to English digits.\r\n2. Contact Separation: Place the first and primary phone number in `primary_contact`. Place all other contact methods in `secondary_contacts` (Array).\r\n3. Phone Format: Remove all spaces and dashes to create a continuous numeric string (e.g., \"07493995660\").\r\n4. Social ID Format: NEVER use the \"@\" symbol. Instead, use Persian phrasing like \"آیدی اینستاگرام: [ID]\" or \"آیدی تلگرام: [ID]\".\r\n5. Final Ad Text (`final_ad_text`): Remove unnecessary hashtags and excessive emojis. Write formal, fluent, and appealing Persian. DO NOT repeat the `primary_contact` in this text. ONLY if `secondary_contacts` is not empty, list them at the very end of the text under the Persian heading \"سایر راههای ارتباطی:\".\r\n6. Title (`seo_title`): Catchy, descriptive, maximum 80 characters, no clickbait words.\r\n7. Slug (`slug`): Base it directly on the title. The primary language must be Persian (strictly NO \"Finglish\"). Replace all spaces with hyphens (-). No emojis, no special characters, maximum 33 characters.\r\n8. Exact Address (`exact_address`): The exact name of the neighborhood, suburb, or UK postcode. If absent, output null.\r\n\r\n# Filter Extraction Rules:\r\nExtract the following attributes if mentioned. If absent, output `null`.\r\n- `price`: Integer/Float ONLY (e.g., 500). No currency symbols (£) or words.\r\n- `price_type`: Must be strictly one of: \"مقطوع\", \"توافقی\", \"رایگان\", or \"قابل مذاکره\".\r\n- `ad_condition`: Must be strictly one of: \"نو\" or \"کارکرده\".\r\n- `ad_type`: Must be strictly one of: \"خرید\", \"فروش\", \"اجاره\", or \"معاوضه\".\r\n- `ad_warranty`: Must be strictly one of: \"ندارد\" or \"دارد\".\r\n- `year`: Integer between 2000 and 2026.\r\n- `transmission`: Must be strictly one of: \"اتوماتیک\" or \"دستی\".\r\n- `delivery_method`: Must be strictly one of: \"حضوری\" or \"آنلاین\".\r\n- `employment_type`: Must be strictly one of: \"تمام وقت\" or \"پاره وقت\".\r\n- `property_type`: Must be strictly one of: \"آپارتمان\", \"خانه\", \"اتاق\", \"زمین\", \"تجاری\", or \"اداری\".\r\n- `bedrooms`: Integer between 0 and 6 ONLY. For studios or properties with no separate bedrooms, output 0. String outputs (like \"two\") are strictly forbidden.\r\n\r\n# Processing Stop Rule (Null & Array Handling):\r\nIf you decide to reject the ad (`\"status\": \"rejected\"`), fill the `status` and `reason` fields. You MUST also extract and output the `primary_contact` if it exists in the ad text.\r\nIn this case, you MUST set ALL other fields exactly to `null`, **EXCEPT** for Arrays (`secondary_contacts`, `ad_country`, and `ad_cats`), which must be set to empty arrays `[]`.\r\n\r\n# Output Format (Strict JSON):\r\nYour output MUST exclusively be a valid JSON object matching the exact structure below. Do not output any text, markdown, or commentary before or after the JSON braces. Extract actual data from the text, and use null if information is missing.\r\n\r\n{\r\n  \"status\": \"approved\",\r\n  \"reason\": null,\r\n  \"ad_cats\": [338],\r\n  \"ad_country\": [334, 335],\r\n  \"exact_address\": \"Wembley\",\r\n  \"seo_title\": \"اجاره آپارتمان دو خوابه در ومبلی\",\r\n  \"slug\": \"اجاره-آپارتمان-دو-خوابه-ومبلی\",\r\n  \"final_ad_text\": \"یک واحد آپارتمان دو خوابه تمیز با دسترسی عالی به مترو اجاره داده میشود...\",\r\n  \"primary_contact\": \"07493995660\",\r\n  \"secondary_contacts\": [\"آیدی تلگرام: testuser\"],\r\n  \"price\": 1800,\r\n  \"price_type\": \"مقطوع\",\r\n  \"ad_condition\": null,\r\n  \"ad_type\": \"اجاره\",\r\n  \"ad_warranty\": null,\r\n  \"year\": null,\r\n  \"transmission\": null,\r\n  \"delivery_method\": null,\r\n  \"employment_type\": null,\r\n  \"property_type\": \"آپارتمان\",\r\n  \"bedrooms\": 2,\r\n  \"suggested_fields\": null\r\n}"
                                         }
                                     ]
                                 }
@@ -1748,13 +1779,13 @@
                                                 "__IMTCONN__": 7012047
                                             },
                                             "filter": {
-                                                "name": "Rejected and Pending",
+                                                "name": "Rejected",
                                                 "conditions": [
                                                     [
                                                         {
                                                             "a": "{{24.status}}",
-                                                            "b": "approved",
-                                                            "o": "text:notequal"
+                                                            "b": "rejected",
+                                                            "o": "text:equal"
                                                         },
                                                         {
                                                             "a": "{{length(24.primary_contact)}}",
@@ -1784,8 +1815,8 @@
                                             },
                                             "metadata": {
                                                 "designer": {
-                                                    "x": 852,
-                                                    "y": -431
+                                                    "x": 864,
+                                                    "y": -365
                                                 },
                                                 "restore": {
                                                     "expect": {
@@ -2111,11 +2142,106 @@
                                 {
                                     "flow": [
                                         {
+                                            "id": 119,
+                                            "module": "datastore:UpdateRecord",
+                                            "version": 1,
+                                            "parameters": {
+                                                "datastore": 114670
+                                            },
+                                            "filter": {
+                                                "name": "",
+                                                "conditions": [
+                                                    [
+                                                        {
+                                                            "a": "{{24.status}}",
+                                                            "b": "rejected",
+                                                            "o": "text:notequal"
+                                                        }
+                                                    ]
+                                                ]
+                                            },
+                                            "mapper": {
+                                                "key": "{{112.key}}",
+                                                "data": {
+                                                    "status": "{{24.status}}",
+                                                    "username": ""
+                                                },
+                                                "upsert": false,
+                                                "overwriteArrays": false
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 397,
+                                                    "y": -380
+                                                },
+                                                "restore": {
+                                                    "expect": {
+                                                        "upsert": {
+                                                            "mode": "chose"
+                                                        },
+                                                        "overwriteArrays": {
+                                                            "mode": "chose"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "datastore": {
+                                                            "label": "Instagram_Ads_Log"
+                                                        }
+                                                    }
+                                                },
+                                                "parameters": [
+                                                    {
+                                                        "name": "datastore",
+                                                        "type": "datastore",
+                                                        "label": "Data store",
+                                                        "required": true
+                                                    }
+                                                ],
+                                                "expect": [
+                                                    {
+                                                        "name": "key",
+                                                        "type": "text",
+                                                        "label": "Key",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "upsert",
+                                                        "type": "boolean",
+                                                        "label": "Insert missing record",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "overwriteArrays",
+                                                        "type": "boolean",
+                                                        "label": "Overwrite an existing array in the record",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "data",
+                                                        "spec": [
+                                                            {
+                                                                "name": "username",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "status",
+                                                                "type": "text",
+                                                                "label": null
+                                                            }
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Record"
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
                                             "id": 44,
                                             "module": "wordpress:createPost",
                                             "version": 3,
                                             "parameters": {
-                                                "__IMTCONN__": 6996021
+                                                "__IMTCONN__": 7107246
                                             },
                                             "filter": {
                                                 "name": "approved",
@@ -2152,16 +2278,6 @@
                                                         "disableJsonParsing": false
                                                     },
                                                     {
-                                                        "name": "_adforest_tpl_field_job_type",
-                                                        "value": "{{ifempty(24.job_type; \"\")}}",
-                                                        "disableJsonParsing": false
-                                                    },
-                                                    {
-                                                        "name": "_adforest_tpl_field_listing_type",
-                                                        "value": "{{ifempty(24.listing_type; \"\")}}",
-                                                        "disableJsonParsing": false
-                                                    },
-                                                    {
                                                         "name": "_adforest_tpl_field_bedrooms",
                                                         "value": "{{ifempty(24.bedrooms; \"\")}}",
                                                         "disableJsonParsing": false
@@ -2177,43 +2293,46 @@
                                                         "disableJsonParsing": false
                                                     },
                                                     {
-                                                        "name": "_adforest_tpl_field_item_condition",
-                                                        "value": "{{ifempty(24.item_condition; \"\")}}",
-                                                        "disableJsonParsing": false
-                                                    },
-                                                    {
                                                         "name": "_adforest_tpl_field_property_type",
-                                                        "value": "{{ifempty(24.property_type; )}}",
+                                                        "value": "{{ifempty(24.property_type; \"\")}}",
                                                         "disableJsonParsing": false
                                                     },
                                                     {
                                                         "name": "_adforest_ad_price_type",
-                                                        "value": "{{ifempty(24.price_type; )}}",
+                                                        "value": "{{ifempty(24.price_type; \"\"\"توافقی\"\"\")}}",
                                                         "disableJsonParsing": false
                                                     },
                                                     {
                                                         "name": "_adforest_ad_location",
-                                                        "value": "{{24.exact_address}}",
+                                                        "value": "{{ifempty(24.exact_address; \"\")}}",
                                                         "disableJsonParsing": false
                                                     }
                                                 ],
                                                 "slug": "{{24.slug}}",
                                                 "type": "ad_post",
                                                 "title": "{{24.seo_title}}",
-                                                "author": 1,
-                                                "status": "pending",
+                                                "author": 2,
+                                                "status": "{{if(24.status = \"approved\"; \"publish\"; \"pending\")}}",
                                                 "content": "{{24.final_ad_text}}",
                                                 "taxonomy": [
                                                     {
                                                         "name": "ad_cats",
-                                                        "values": [
-                                                            "{{ifempty(24.ad_category; 350)}}"
-                                                        ]
+                                                        "values": "{{toArray(24.ad_cats)}}"
                                                     },
                                                     {
                                                         "name": "ad_country",
+                                                        "values": "{{toArray(24.ad_country)}}"
+                                                    },
+                                                    {
+                                                        "name": "ad_type",
                                                         "values": [
-                                                            "{{ifempty(24.location; 357)}}"
+                                                            "{{ifempty(24.ad_type; \"\")}}"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "name": "ad_condition",
+                                                        "values": [
+                                                            "{{ifempty(24.ad_condition; \"\")}}"
                                                         ]
                                                     }
                                                 ]
@@ -2277,21 +2396,6 @@
                                                                     "disableJsonParsing": {
                                                                         "mode": "chose"
                                                                     }
-                                                                },
-                                                                {
-                                                                    "disableJsonParsing": {
-                                                                        "mode": "chose"
-                                                                    }
-                                                                },
-                                                                {
-                                                                    "disableJsonParsing": {
-                                                                        "mode": "chose"
-                                                                    }
-                                                                },
-                                                                {
-                                                                    "disableJsonParsing": {
-                                                                        "mode": "chose"
-                                                                    }
                                                                 }
                                                             ]
                                                         },
@@ -2304,14 +2408,13 @@
                                                         },
                                                         "author": {
                                                             "mode": "chose",
-                                                            "label": "Ahmad"
+                                                            "label": "Bornado"
                                                         },
                                                         "format": {
                                                             "mode": "chose"
                                                         },
                                                         "status": {
-                                                            "mode": "chose",
-                                                            "label": "Pending"
+                                                            "mode": "edit"
                                                         },
                                                         "sticky": {
                                                             "mode": "chose"
@@ -2319,6 +2422,19 @@
                                                         "taxonomy": {
                                                             "mode": "chose",
                                                             "items": [
+                                                                {
+                                                                    "values": {
+                                                                        "mode": "edit",
+                                                                        "items": [
+                                                                            null
+                                                                        ]
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "values": {
+                                                                        "mode": "edit"
+                                                                    }
+                                                                },
                                                                 {
                                                                     "values": {
                                                                         "mode": "chose",
@@ -2338,7 +2454,7 @@
                                                             ]
                                                         },
                                                         "categories": {
-                                                            "mode": "edit"
+                                                            "mode": "chose"
                                                         },
                                                         "pingStatus": {
                                                             "mode": "chose",
@@ -2700,7 +2816,7 @@
                                             "module": "wordpress:createMediaItem",
                                             "version": 3,
                                             "parameters": {
-                                                "__IMTCONN__": 6996028
+                                                "__IMTCONN__": 7107233
                                             },
                                             "mapper": {
                                                 "data": "{{36.data}}",
@@ -2816,7 +2932,7 @@
                                             "module": "wordpress:updateMediaItem",
                                             "version": 3,
                                             "parameters": {
-                                                "__IMTCONN__": 6996051
+                                                "__IMTCONN__": 7107211
                                             },
                                             "mapper": {
                                                 "id": "{{46.ID}}",
@@ -3055,7 +3171,20 @@
                                         "label": "Query parameters"
                                     }
                                 ]
-                            }
+                            },
+                            "onerror": [
+                                {
+                                    "id": 123,
+                                    "module": "builtin:Ignore",
+                                    "version": 1,
+                                    "metadata": {
+                                        "designer": {
+                                            "x": -301,
+                                            "y": 326
+                                        }
+                                    }
+                                }
+                            ]
                         },
                         {
                             "id": 58,
@@ -3072,8 +3201,8 @@
                             },
                             "metadata": {
                                 "designer": {
-                                    "x": 255,
-                                    "y": 293
+                                    "x": 207,
+                                    "y": 372
                                 },
                                 "restore": {
                                     "expect": {
@@ -3201,7 +3330,7 @@
                                         "role": "user",
                                         "parts": [
                                             {
-                                                "text": "Sender Information (Metadata - DO NOT use as in-text contact info):\r\nSender Name: {{15.ownerFullName}}\r\nSender Username: {{15.ownerUsername}}\r\n\r\nDefault City: {{17.`4`}}\nAd Text for Analysis:\r\n{{58.fullTextAnnotation.text}}",
+                                                "text": "Sender Information (Metadata - DO NOT use as in-text contact info):\r\nSender Name: {{15.ownerFullName}}\r\nSender Username: {{15.ownerUsername}}\r\n\r\nDefauly Country:{{17.`4`}}\nDefault City: \n{{17.`5`}}\nAd Text for Analysis:\r\n{{58.fullTextAnnotation.text}}",
                                                 "type": "text"
                                             }
                                         ]
@@ -3215,7 +3344,7 @@
                                 "system_instruction": {
                                     "parts": [
                                         {
-                                            "text": "You are a strict content moderator, data analyst, and professional copywriter for a classified ads website serving the Iranian community in the United Kingdom. Your task is to review ad texts, decide whether to approve or reject them, and extract data strictly matching our database schema in JSON format.\r\n\r\n# Language Requirement:\r\nWhile these instructions are in English, all text outputs generated for the user (such as `final_ad_text`, `seo_title`, `reason`, `suggested_fields`, etc.) MUST be written in highly fluent, formal, and appealing Persian (Farsi), unless explicitly specified otherwise.\r\n\r\n# Golden Rule (Acceptance Criteria - \"approved\"):\r\nOur platform is exclusively for public, commercial, service, and job-related ads. ONLY approve posts that explicitly include: selling goods, offering services, job postings, real estate, vehicles, or specific community requests.\r\n\r\n# Red Lines (Immediate Rejection - \"rejected\"):\r\nReject the post without exception if it meets ANY of the following conditions:\r\n1. Missing Contact Info: The ad body contains no phone number, WhatsApp, or Telegram ID (e.g., merely says \"DM me\" or \"leave a comment\").\r\n*CRITICAL NOTE:* The sender's name and username (provided in the user message as metadata) MUST NOT be considered as the advertiser's in-text contact information. \r\n2. Unacceptable Content: News, politics, jokes, daily life updates, purely educational content, general questions (e.g., immigration laws), requests for financial aid, or requesting free items.\r\n\r\n# Ambiguous Cases (\"pending\"):\r\nIf the post is neither completely relevant nor completely irrelevant, creating ambiguity in decision-making, set the status to \"pending\" for human review.\r\n\r\n# Allowed Categories (Output Integer IDs ONLY):\r\n*(Important Note: In case of overlap, \"Jobs\" and \"Real Estate\" have absolute priority. E.g., hiring a waiter in a restaurant is a Job, not a Business).*\r\n- Real Estate (buy, sell, rent, rooms, shops, business handover) -> 340\r\n- Jobs (hiring or seeking employment) -> 341\r\n- Services (beauty, health, technical, removals, legal, cleaning) -> 342\r\n- Businesses (supermarkets, restaurants, cafes, companies) -> 344\r\n- Goods & Items (home appliances, electronics, clothing) -> 345\r\n- Vehicles (cars, motorcycles, auto services) -> 337\r\n- Events (concerts, tours, workshops, gatherings) -> 349\r\n- Social (travel mates, lost & found, requests) -> 346\r\n\r\n# Location and Address Extraction Rules (CRITICAL):\r\n1. Main City (`location`): Must be the Integer ID only. Understand that suburbs fall under their main cities:\r\n- Liverpool & Suburbs -> 338\r\n- Manchester & Suburbs (e.g., Salford, Stockport, Bolton) -> 89\r\n- London & Suburbs -> 358\r\n- Other UK Cities -> 357\r\n*Fallback Logic:* First, try to identify the city from the ad text. If not mentioned, you MUST use the ID provided in the `Default City:` metadata from the user message. If `Default City:` is also missing or empty, output 357.\r\n2. Exact Address (`exact_address`): The exact name of the neighborhood, suburb, or UK postcode. If absent, output null.\r\n\r\n# Formatting and Writing Guidelines:\r\n1. Digit Standardization: ALL extracted numbers (including phone numbers, prices, bedrooms, year, etc.) MUST be written exclusively using standard English digits (0-9). Strictly convert any Persian/Arabic digits to English digits.\r\n2. Contact Separation: Place the first and primary phone number in `primary_contact`. Place all other contact methods in `secondary_contacts` (which is an Array).\r\n3. Phone Format: Remove all spaces and dashes to create a continuous numeric string (e.g., \"07493995660\").\r\n4. Social ID Format: NEVER use the \"@\" symbol. Instead, use Persian phrasing like \"آیدی اینستاگرام: [ID]\" or \"آیدی تلگرام: [ID]\".\r\n5. Final Ad Text (`final_ad_text`): Remove unnecessary hashtags and excessive emojis. Write formal, fluent, and appealing Persian. DO NOT repeat the `primary_contact` in this text. ONLY if `secondary_contacts` is not empty, list them at the very end of the text under the Persian heading \"سایر راههای ارتباطی:\".\r\n6. Title (`seo_title`): Catchy, descriptive, maximum 80 characters, no clickbait words.\r\n7. Slug (`slug`): Base it directly on the title. The primary language must be Persian (strictly NO \"Finglish\"), but keep English words (like neighborhood names) intact if they exist in the text. Replace all spaces with hyphens (-). No emojis, no special characters, maximum 33 characters.\r\n8. Price (`price`): If present, extract as a raw number (Integer/Float) ONLY. No currency symbols (£), commas, or words. If absent, output null.\r\n9. Bedrooms (`bedrooms`): Must be an Integer between 0 and 6. For studios or properties with no separate bedrooms, output 0. String outputs (like \"two\") are strictly forbidden. If absent, output null.\r\n\r\n# Processing Stop Rule (Null & Array Handling):\r\nIf you decide to reject the ad (`\"status\": \"rejected\"`), fill the `status` and `reason` fields. You MUST also extract and output the `primary_contact` if it exists in the ad text.\r\nIn this case, you MUST set ALL other fields exactly to `null`, **EXCEPT** for `secondary_contacts`. Because `secondary_contacts` is an Array type, it must be set to an empty array `[]` to prevent datatype errors.\r\n\r\n# Output Format (Strict JSON):\r\nYour output MUST exclusively be a valid JSON object matching the exact structure below. Do not output any text, markdown, or commentary before or after the JSON braces. The values below are merely examples; extract actual data from the text, and use null if information is missing.\r\n\r\n{\r\n  \"status\": \"approved, rejected, or pending\",\r\n  \"reason\": \"Reason for rejection in Persian. If approved, null\",\r\n  \"ad_category\": 340,\r\n  \"location\": 89,\r\n  \"exact_address\": \"String address or null\",\r\n  \"seo_title\": \"SEO title in Persian\",\r\n  \"slug\": \"standard-slug-format\",\r\n  \"final_ad_text\": \"Edited final ad text in Persian\",\r\n  \"primary_contact\": \"07493995660\",\r\n  \"secondary_contacts\": [\"07493995661\", \"آیدی تلگرام: user\"],\r\n  \"price\": 500,\r\n  \"price_type\": \"مقطوع یا توافقی یا قابل مذاکره\",\r\n  \"delivery_method\": \"حضوری یا آنلاین\",\r\n  \"employment_type\": \"تمام وقت یا پاره وقت\",\r\n  \"job_type\": \"استخدام نیرو یا جویای کار\",\r\n  \"property_type\": \"خانه یا آپارتمان یا اتاق یا زمین یا تجاری\",\r\n  \"listing_type\": \"خرید یا فروش یا اجاره\",\r\n  \"bedrooms\": 2,\r\n  \"item_condition\": \"نو یا دست دوم\",\r\n  \"year\": 2018,\r\n  \"transmission\": \"اتوماتیک یا دستی\",\r\n  \"suggested_fields\": \"Important missing attributes in Persian or null\"\r\n}"
+                                            "text": "You are a strict content moderator, data analyst, and professional copywriter for a classified ads website serving the Iranian community in the United Kingdom. Your task is to review ad texts, decide whether to approve or reject them, and extract data strictly matching our database schema in JSON format.\r\n\r\n# Language Requirement:\r\nWhile these instructions are in English, all text outputs generated for the user (such as `final_ad_text`, `seo_title`, `reason`, `suggested_fields`, etc.) MUST be written in highly fluent, formal, and appealing Persian (Farsi), unless explicitly specified otherwise.\r\n\r\n# Golden Rule (Acceptance Criteria - \"approved\"):\r\nOur platform is exclusively for public, commercial, service, and job-related ads. ONLY approve posts that explicitly include: selling goods, offering services, job postings, real estate, vehicles, or specific community requests.\r\n\r\n# Red Lines (Immediate Rejection - \"rejected\"):\r\nReject the post without exception if it meets ANY of the following conditions:\r\n1. Missing Contact Info: The ad body contains no phone number, WhatsApp, or Telegram ID (e.g., merely says \"DM me\" or \"leave a comment\").\r\n*CRITICAL NOTE:* The sender's name and username (provided in the user message as metadata) MUST NOT be considered as the advertiser's in-text contact information. \r\n2. Unacceptable Content: News, politics, jokes, daily life updates, purely educational content, general questions (e.g., immigration laws), requests for financial aid, or requesting free items.\r\n\r\n# Ambiguous Cases (\"pending\"):\r\nIf the post is neither completely relevant nor completely irrelevant, creating ambiguity in decision-making, set the status to \"pending\" for human review.\r\n\r\n# Allowed Categories (Output as an Array containing the Integer ID):\r\n*(Important Note: In case of overlap, \"Jobs\" and \"Real Estate\" have absolute priority).*\r\n- Real Estate (buy, sell, rent, rooms, shops, land, office) -> 338\r\n- Jobs (hiring or seeking employment) -> 339\r\n- Vehicles (cars, motorcycles, auto services) -> 340\r\n- Services (beauty, health, technical, removals, legal, cleaning) -> 341\r\n- Goods & Items (home appliances, electronics, clothing) -> 342\r\n- Social (travel mates, lost & found, requests) -> 343\r\n\r\n# Location Extraction Rules (CRITICAL):\r\nYou must output a single field called `ad_country` which MUST be an Array of Integers representing the Country ID and City ID.\r\n1. Country ID: ALWAYS extract the ID provided in the `Default Country:` metadata from the user message. This is the first item in the array.\r\n2. City ID: This is the second item in the array. Determine it using this strict logic:\r\n- If a city IS mentioned AND it matches our supported list (London & Suburbs -> 335, Manchester & Suburbs -> 336, Liverpool & Suburbs -> 337): Use its specific Integer ID.\r\n- If NO city is mentioned in the ad text at all, OR if a mentioned city is NOT in our list: Use the ID provided in the `Default City:` metadata from the user message.\r\n*Example Output Array:* `[334, 335]` (where 334 is the Country, 335 is the City).\r\n\r\n# Formatting and Writing Guidelines:\r\n1. Digit Standardization: ALL extracted numbers (including phone numbers, prices, bedrooms, year, etc.) MUST be written exclusively using standard English digits (0-9). Strictly convert any Persian/Arabic digits to English digits.\r\n2. Contact Separation: Place the first and primary phone number in `primary_contact`. Place all other contact methods in `secondary_contacts` (Array).\r\n3. Phone Format: Remove all spaces and dashes to create a continuous numeric string (e.g., \"07493995660\").\r\n4. Social ID Format: NEVER use the \"@\" symbol. Instead, use Persian phrasing like \"آیدی اینستاگرام: [ID]\" or \"آیدی تلگرام: [ID]\".\r\n5. Final Ad Text (`final_ad_text`): Remove unnecessary hashtags and excessive emojis. Write formal, fluent, and appealing Persian. DO NOT repeat the `primary_contact` in this text. ONLY if `secondary_contacts` is not empty, list them at the very end of the text under the Persian heading \"سایر راههای ارتباطی:\".\r\n6. Title (`seo_title`): Catchy, descriptive, maximum 80 characters, no clickbait words.\r\n7. Slug (`slug`): Base it directly on the title. The primary language must be Persian (strictly NO \"Finglish\"). Replace all spaces with hyphens (-). No emojis, no special characters, maximum 33 characters.\r\n8. Exact Address (`exact_address`): The exact name of the neighborhood, suburb, or UK postcode. If absent, output null.\r\n\r\n# Filter Extraction Rules:\r\nExtract the following attributes if mentioned. If absent, output `null`.\r\n- `price`: Integer/Float ONLY (e.g., 500). No currency symbols (£) or words.\r\n- `price_type`: Must be strictly one of: \"مقطوع\", \"توافقی\", \"رایگان\", or \"قابل مذاکره\".\r\n- `ad_condition`: Must be strictly one of: \"نو\" or \"کارکرده\".\r\n- `ad_type`: Must be strictly one of: \"خرید\", \"فروش\", \"اجاره\", or \"معاوضه\".\r\n- `ad_warranty`: Must be strictly one of: \"ندارد\" or \"دارد\".\r\n- `year`: Integer between 2000 and 2026.\r\n- `transmission`: Must be strictly one of: \"اتوماتیک\" or \"دستی\".\r\n- `delivery_method`: Must be strictly one of: \"حضوری\" or \"آنلاین\".\r\n- `employment_type`: Must be strictly one of: \"تمام وقت\" or \"پاره وقت\".\r\n- `property_type`: Must be strictly one of: \"آپارتمان\", \"خانه\", \"اتاق\", \"زمین\", \"تجاری\", or \"اداری\".\r\n- `bedrooms`: Integer between 0 and 6 ONLY. For studios or properties with no separate bedrooms, output 0. String outputs (like \"two\") are strictly forbidden.\r\n\r\n# Processing Stop Rule (Null & Array Handling):\r\nIf you decide to reject the ad (`\"status\": \"rejected\"`), fill the `status` and `reason` fields. You MUST also extract and output the `primary_contact` if it exists in the ad text.\r\nIn this case, you MUST set ALL other fields exactly to `null`, **EXCEPT** for Arrays (`secondary_contacts`, `ad_country`, and `ad_cats`), which must be set to empty arrays `[]`.\r\n\r\n# Output Format (Strict JSON):\r\nYour output MUST exclusively be a valid JSON object matching the exact structure below. Do not output any text, markdown, or commentary before or after the JSON braces. Extract actual data from the text, and use null if information is missing.\r\n\r\n{\r\n  \"status\": \"approved\",\r\n  \"reason\": null,\r\n  \"ad_cats\": [338],\r\n  \"ad_country\": [334, 335],\r\n  \"exact_address\": \"Wembley\",\r\n  \"seo_title\": \"اجاره آپارتمان دو خوابه در ومبلی\",\r\n  \"slug\": \"اجاره-آپارتمان-دو-خوابه-ومبلی\",\r\n  \"final_ad_text\": \"یک واحد آپارتمان دو خوابه تمیز با دسترسی عالی به مترو اجاره داده میشود...\",\r\n  \"primary_contact\": \"07493995660\",\r\n  \"secondary_contacts\": [\"آیدی تلگرام: testuser\"],\r\n  \"price\": 1800,\r\n  \"price_type\": \"مقطوع\",\r\n  \"ad_condition\": null,\r\n  \"ad_type\": \"اجاره\",\r\n  \"ad_warranty\": null,\r\n  \"year\": null,\r\n  \"transmission\": null,\r\n  \"delivery_method\": null,\r\n  \"employment_type\": null,\r\n  \"property_type\": \"آپارتمان\",\r\n  \"bedrooms\": 2,\r\n  \"suggested_fields\": null\r\n}"
                                         }
                                     ]
                                 }
@@ -3919,13 +4048,13 @@
                                                 "__IMTCONN__": 6420957
                                             },
                                             "filter": {
-                                                "name": "Rejected and Pending",
+                                                "name": "Rejected",
                                                 "conditions": [
                                                     [
                                                         {
                                                             "a": "{{61.status}}",
-                                                            "b": "approved",
-                                                            "o": "text:notequal"
+                                                            "b": "rejected",
+                                                            "o": "text:equal"
                                                         },
                                                         {
                                                             "a": "{{length(61.primary_contact)}}",
@@ -3955,8 +4084,8 @@
                                             },
                                             "metadata": {
                                                 "designer": {
-                                                    "x": 852,
-                                                    "y": 783
+                                                    "x": 871,
+                                                    "y": 714
                                                 },
                                                 "restore": {
                                                     "expect": {
@@ -4282,11 +4411,106 @@
                                 {
                                     "flow": [
                                         {
+                                            "id": 120,
+                                            "module": "datastore:UpdateRecord",
+                                            "version": 1,
+                                            "parameters": {
+                                                "datastore": 114670
+                                            },
+                                            "filter": {
+                                                "name": "",
+                                                "conditions": [
+                                                    [
+                                                        {
+                                                            "a": "{{61.status}}",
+                                                            "b": "rejected",
+                                                            "o": "text:notequal"
+                                                        }
+                                                    ]
+                                                ]
+                                            },
+                                            "mapper": {
+                                                "key": "{{112.key}}",
+                                                "data": {
+                                                    "status": "{{61.status}}",
+                                                    "username": ""
+                                                },
+                                                "upsert": false,
+                                                "overwriteArrays": false
+                                            },
+                                            "metadata": {
+                                                "designer": {
+                                                    "x": 433,
+                                                    "y": 722
+                                                },
+                                                "restore": {
+                                                    "expect": {
+                                                        "upsert": {
+                                                            "mode": "chose"
+                                                        },
+                                                        "overwriteArrays": {
+                                                            "mode": "chose"
+                                                        }
+                                                    },
+                                                    "parameters": {
+                                                        "datastore": {
+                                                            "label": "Instagram_Ads_Log"
+                                                        }
+                                                    }
+                                                },
+                                                "parameters": [
+                                                    {
+                                                        "name": "datastore",
+                                                        "type": "datastore",
+                                                        "label": "Data store",
+                                                        "required": true
+                                                    }
+                                                ],
+                                                "expect": [
+                                                    {
+                                                        "name": "key",
+                                                        "type": "text",
+                                                        "label": "Key",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "upsert",
+                                                        "type": "boolean",
+                                                        "label": "Insert missing record",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "overwriteArrays",
+                                                        "type": "boolean",
+                                                        "label": "Overwrite an existing array in the record",
+                                                        "required": true
+                                                    },
+                                                    {
+                                                        "name": "data",
+                                                        "spec": [
+                                                            {
+                                                                "name": "username",
+                                                                "type": "text",
+                                                                "label": null
+                                                            },
+                                                            {
+                                                                "name": "status",
+                                                                "type": "text",
+                                                                "label": null
+                                                            }
+                                                        ],
+                                                        "type": "collection",
+                                                        "label": "Record"
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
                                             "id": 67,
                                             "module": "wordpress:createPost",
                                             "version": 3,
                                             "parameters": {
-                                                "__IMTCONN__": 6998282
+                                                "__IMTCONN__": 7107253
                                             },
                                             "filter": {
                                                 "name": "approved",
@@ -4304,88 +4528,79 @@
                                                 "meta": [
                                                     {
                                                         "name": "_adforest_ad_price",
-                                                        "value": "{{ifempty(61.price; \"\")}}",
+                                                        "value": "{{ifempty(61.price; ignore)}}",
                                                         "disableJsonParsing": false
                                                     },
                                                     {
                                                         "name": "_adforest_poster_contact",
-                                                        "value": "{{ifempty(61.primary_contact; \"\")}}",
+                                                        "value": "{{ifempty(61.primary_contact; ignore)}}",
                                                         "disableJsonParsing": false
                                                     },
                                                     {
                                                         "name": "_adforest_tpl_field_delivery_method",
-                                                        "value": "{{ifempty(61.delivery_method; \"\")}}",
+                                                        "value": "{{ifempty(61.delivery_method; ignore)}}",
                                                         "disableJsonParsing": false
                                                     },
                                                     {
                                                         "name": "_adforest_tpl_field_employment_type",
-                                                        "value": "{{ifempty(61.employment_type; \"\")}}",
-                                                        "disableJsonParsing": false
-                                                    },
-                                                    {
-                                                        "name": "_adforest_tpl_field_job_type",
-                                                        "value": "{{ifempty(61.job_type; \"\")}}",
-                                                        "disableJsonParsing": false
-                                                    },
-                                                    {
-                                                        "name": "_adforest_tpl_field_listing_type",
-                                                        "value": "{{ifempty(61.listing_type; \"\")}}",
+                                                        "value": "{{ifempty(61.employment_type; ignore)}}",
                                                         "disableJsonParsing": false
                                                     },
                                                     {
                                                         "name": "_adforest_tpl_field_bedrooms",
-                                                        "value": "{{ifempty(61.bedrooms; \"\")}}",
+                                                        "value": "{{ifempty(61.bedrooms; ignore)}}",
                                                         "disableJsonParsing": false
                                                     },
                                                     {
                                                         "name": "_adforest_tpl_field_year",
-                                                        "value": "{{ifempty(61.year; \"\")}}",
+                                                        "value": "{{ifempty(61.year; ignore)}}",
                                                         "disableJsonParsing": false
                                                     },
                                                     {
                                                         "name": "_adforest_tpl_field_transmission",
-                                                        "value": "{{ifempty(61.transmission; \"\")}}",
-                                                        "disableJsonParsing": false
-                                                    },
-                                                    {
-                                                        "name": "_adforest_tpl_field_item_condition",
-                                                        "value": "{{ifempty(61.item_condition; \"\")}}",
+                                                        "value": "{{ifempty(61.transmission; ignore)}}",
                                                         "disableJsonParsing": false
                                                     },
                                                     {
                                                         "name": "_adforest_tpl_field_property_type",
-                                                        "value": "{{ifempty(61.property_type; )}}",
+                                                        "value": "{{ifempty(61.property_type; ignore)}}",
                                                         "disableJsonParsing": false
                                                     },
                                                     {
                                                         "name": "_adforest_ad_price_type",
-                                                        "value": "{{ifempty(61.price_type; )}}",
+                                                        "value": "{{ifempty(61.price_type; \"\"\"توافقی\"\"\")}}",
                                                         "disableJsonParsing": false
                                                     },
                                                     {
                                                         "name": "_adforest_ad_location",
-                                                        "value": "{{61.exact_address}}",
+                                                        "value": "{{ifempty(61.exact_address; ignore)}}",
+                                                        "disableJsonParsing": false
+                                                    },
+                                                    {
+                                                        "name": "ad_type",
+                                                        "value": "{{ifempty(61.ad_type; ignore)}}",
+                                                        "disableJsonParsing": false
+                                                    },
+                                                    {
+                                                        "name": "ad_condition",
+                                                        "value": "{{ifempty(61.ad_condition; ignore)}}",
                                                         "disableJsonParsing": false
                                                     }
                                                 ],
                                                 "slug": "{{61.slug}}",
                                                 "type": "ad_post",
                                                 "title": "{{61.seo_title}}",
-                                                "author": 1,
-                                                "status": "pending",
+                                                "author": 2,
+                                                "status": "{{if(61.status = \"approved\"; \"publish\"; \"pending\")}}",
                                                 "content": "{{61.final_ad_text}}",
                                                 "taxonomy": [
                                                     {
                                                         "name": "ad_cats",
-                                                        "values": [
-                                                            "{{ifempty(61.ad_category; 350)}}"
-                                                        ]
+                                                        "values": "{{map(61.ad_cats; \"value\")}}"
                                                     },
                                                     {
                                                         "name": "ad_country",
-                                                        "values": [
-                                                            "{{ifempty(61.location; 357)}}"
-                                                        ]
+                                                        "values": "{{map(61.ad_country; \"value\")}}"
                                                     }
                                                 ]
                                             },
@@ -4458,11 +4673,6 @@
                                                                     "disableJsonParsing": {
                                                                         "mode": "chose"
                                                                     }
-                                                                },
-                                                                {
-                                                                    "disableJsonParsing": {
-                                                                        "mode": "chose"
-                                                                    }
                                                                 }
                                                             ]
                                                         },
@@ -4475,14 +4685,13 @@
                                                         },
                                                         "author": {
                                                             "mode": "chose",
-                                                            "label": "Ahmad"
+                                                            "label": "Bornado"
                                                         },
                                                         "format": {
                                                             "mode": "chose"
                                                         },
                                                         "status": {
-                                                            "mode": "chose",
-                                                            "label": "Pending"
+                                                            "mode": "edit"
                                                         },
                                                         "sticky": {
                                                             "mode": "chose"
@@ -4492,24 +4701,18 @@
                                                             "items": [
                                                                 {
                                                                     "values": {
-                                                                        "mode": "chose",
-                                                                        "items": [
-                                                                            null
-                                                                        ]
+                                                                        "mode": "edit"
                                                                     }
                                                                 },
                                                                 {
                                                                     "values": {
-                                                                        "mode": "chose",
-                                                                        "items": [
-                                                                            null
-                                                                        ]
+                                                                        "mode": "edit"
                                                                     }
                                                                 }
                                                             ]
                                                         },
                                                         "categories": {
-                                                            "mode": "edit"
+                                                            "mode": "chose"
                                                         },
                                                         "pingStatus": {
                                                             "mode": "chose",
@@ -4526,7 +4729,7 @@
                                                                 "scoped": "true",
                                                                 "connection": "wordpress4"
                                                             },
-                                                            "label": "My WordPress connection"
+                                                            "label": "My WordPress connection (Ahmad)"
                                                         }
                                                     }
                                                 },
@@ -4539,156 +4742,6 @@
                                                     }
                                                 ],
                                                 "expect": [
-                                                    {
-                                                        "name": "title",
-                                                        "type": "text",
-                                                        "label": "Title",
-                                                        "required": true
-                                                    },
-                                                    {
-                                                        "name": "content",
-                                                        "type": "text",
-                                                        "label": "Content",
-                                                        "required": true
-                                                    },
-                                                    {
-                                                        "name": "type",
-                                                        "type": "select",
-                                                        "label": "Type",
-                                                        "required": true
-                                                    },
-                                                    {
-                                                        "name": "excerpt",
-                                                        "type": "text",
-                                                        "label": "Excerpt"
-                                                    },
-                                                    {
-                                                        "name": "date",
-                                                        "type": "date",
-                                                        "label": "Date"
-                                                    },
-                                                    {
-                                                        "name": "slug",
-                                                        "type": "text",
-                                                        "label": "Slug"
-                                                    },
-                                                    {
-                                                        "name": "status",
-                                                        "type": "select",
-                                                        "label": "Status"
-                                                    },
-                                                    {
-                                                        "name": "format",
-                                                        "type": "select",
-                                                        "label": "Format"
-                                                    },
-                                                    {
-                                                        "name": "parent",
-                                                        "type": "number",
-                                                        "label": "Parent object ID"
-                                                    },
-                                                    {
-                                                        "name": "categories",
-                                                        "type": "select",
-                                                        "label": "Categories",
-                                                        "multiple": true
-                                                    },
-                                                    {
-                                                        "name": "tags",
-                                                        "type": "select",
-                                                        "label": "Tags",
-                                                        "multiple": true
-                                                    },
-                                                    {
-                                                        "name": "author",
-                                                        "type": "select",
-                                                        "label": "Author"
-                                                    },
-                                                    {
-                                                        "name": "featuredMedia",
-                                                        "type": "number",
-                                                        "label": "Featured media ID"
-                                                    },
-                                                    {
-                                                        "name": "template",
-                                                        "type": "text",
-                                                        "label": "Template"
-                                                    },
-                                                    {
-                                                        "name": "password",
-                                                        "type": "text",
-                                                        "label": "Password"
-                                                    },
-                                                    {
-                                                        "name": "sticky",
-                                                        "type": "boolean",
-                                                        "label": "Sticky"
-                                                    },
-                                                    {
-                                                        "name": "commentStatus",
-                                                        "type": "select",
-                                                        "label": "Comment status",
-                                                        "validate": {
-                                                            "enum": [
-                                                                "open",
-                                                                "closed"
-                                                            ]
-                                                        }
-                                                    },
-                                                    {
-                                                        "name": "pingStatus",
-                                                        "type": "select",
-                                                        "label": "Ping status",
-                                                        "validate": {
-                                                            "enum": [
-                                                                "open",
-                                                                "closed"
-                                                            ]
-                                                        }
-                                                    },
-                                                    {
-                                                        "name": "taxonomy",
-                                                        "spec": [
-                                                            {
-                                                                "name": "name",
-                                                                "type": "text",
-                                                                "label": "Name",
-                                                                "required": true
-                                                            },
-                                                            {
-                                                                "name": "values",
-                                                                "type": "array",
-                                                                "label": "Values",
-                                                                "required": true
-                                                            }
-                                                        ],
-                                                        "type": "array",
-                                                        "label": "Additional fields"
-                                                    },
-                                                    {
-                                                        "name": "meta",
-                                                        "spec": [
-                                                            {
-                                                                "name": "name",
-                                                                "type": "text",
-                                                                "label": "Name",
-                                                                "required": true
-                                                            },
-                                                            {
-                                                                "name": "value",
-                                                                "type": "text",
-                                                                "label": "Value"
-                                                            },
-                                                            {
-                                                                "name": "disableJsonParsing",
-                                                                "type": "boolean",
-                                                                "label": "Disable JSON Parsing",
-                                                                "required": true
-                                                            }
-                                                        ],
-                                                        "type": "array",
-                                                        "label": "Metadata (custom fields)"
-                                                    },
                                                     {
                                                         "name": "title",
                                                         "type": "text",
@@ -5021,7 +5074,7 @@
                                             "module": "wordpress:createMediaItem",
                                             "version": 3,
                                             "parameters": {
-                                                "__IMTCONN__": 6995982
+                                                "__IMTCONN__": 7107268
                                             },
                                             "mapper": {
                                                 "data": "{{106.data}}",
@@ -5134,7 +5187,7 @@
                                             "module": "wordpress:updateMediaItem",
                                             "version": 3,
                                             "parameters": {
-                                                "__IMTCONN__": 6996007
+                                                "__IMTCONN__": 7107268
                                             },
                                             "mapper": {
                                                 "id": "{{73.ID}}",
@@ -5152,7 +5205,7 @@
                                                                 "scoped": "true",
                                                                 "connection": "wordpress4"
                                                             },
-                                                            "label": "My WordPress connection"
+                                                            "label": "My WordPress connection (Ahmad)"
                                                         }
                                                     }
                                                 },
@@ -5165,37 +5218,6 @@
                                                     }
                                                 ],
                                                 "expect": [
-                                                    {
-                                                        "name": "id",
-                                                        "type": "number",
-                                                        "label": "Media item ID",
-                                                        "required": true
-                                                    },
-                                                    {
-                                                        "name": "title",
-                                                        "type": "text",
-                                                        "label": "Title"
-                                                    },
-                                                    {
-                                                        "name": "altText",
-                                                        "type": "text",
-                                                        "label": "Alternative text"
-                                                    },
-                                                    {
-                                                        "name": "caption",
-                                                        "type": "text",
-                                                        "label": "Caption"
-                                                    },
-                                                    {
-                                                        "name": "description",
-                                                        "type": "text",
-                                                        "label": "Description"
-                                                    },
-                                                    {
-                                                        "name": "post",
-                                                        "type": "number",
-                                                        "label": "Related post ID"
-                                                    },
                                                     {
                                                         "name": "id",
                                                         "type": "number",

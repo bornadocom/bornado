@@ -2109,7 +2109,7 @@ jQuery(document).ready(function ($) {
         }
 
         let lastSelectedCategory = getLastSelectedCategory();
-        saveSelectedCategory(lastSelectedCategory);
+        await saveSelectedCategory(lastSelectedCategory);
         updateSelectedCategoriesDisplay();
 
         if (typeof sb_options !== 'undefined' && sb_options.ad_posting_mode === 'paid_post' &&

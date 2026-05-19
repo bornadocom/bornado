@@ -1,0 +1,35 @@
+/**
+ * Header compact padding + 1200px container (override Bootstrap 1320px at 1400px+).
+ */
+
+.adt-top-tabs-header > .container,
+.adt-header-primary .container,
+.adt-header-primary .container.adt-container,
+.adt-header-secondary .container,
+.adt-header-secondary .container.adt-container {
+	max-width: 1200px !important;
+	width: 100% !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+.adt-top-tabs-header {
+	padding-top: 10px !important;
+	padding-bottom: 10px !important;
+	height: auto !important;
+	min-height: 0 !important;
+}
+
+.adt-header-primary .sb-header-container,
+.adt-header-secondary .sb-header-container {
+	padding-top: 10px !important;
+	padding-bottom: 10px !important;
+	height: auto !important;
+	min-height: 0 !important;
+}
+
+.adt-header-primary .sb-menu > ul > li > a,
+.adt-header-secondary .sb-menu > ul > li > a {
+	height: auto !important;
+	line-height: normal !important;
+}

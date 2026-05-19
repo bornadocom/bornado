@@ -10,7 +10,7 @@ if ( class_exists( 'Bornado_Ad_Permalinks' ) ) {
 
 final class Bornado_Ad_Permalinks {
 	const VERSION                = '1.0.0';
-	const REWRITE_VERSION        = '1.0.0';
+	const REWRITE_VERSION        = '1.1.0';
 	const OPTION_REWRITE_VERSION = 'bornado_ad_permalinks_rewrite_version';
 	const POST_TYPE              = 'ad_post';
 	const PREFIX                 = 'ad';
@@ -18,7 +18,7 @@ final class Bornado_Ad_Permalinks {
 	const QUERY_HASH             = 'bornado_ad_hash';
 	const QUERY_SLUG             = 'bornado_ad_slug';
 	const HASH_MIN_LENGTH        = 5;
-	const TITLE_MIN_LENGTH       = 20;
+	const TITLE_MIN_LENGTH       = 60;
 	const TITLE_MAX_LENGTH       = 80;
 	const AJAX_TITLE_ERROR_CODE  = 'ad_title_invalid';
 
@@ -41,6 +41,9 @@ final class Bornado_Ad_Permalinks {
 		add_filter( 'get_canonical_url', array( __CLASS__, 'filter_core_canonical_url' ), 10, 2 );
 		add_filter( 'wpseo_canonical', array( __CLASS__, 'filter_external_canonical_url' ) );
 		add_filter( 'rank_math/frontend/canonical', array( __CLASS__, 'filter_external_canonical_url' ) );
+		add_filter( 'rank_math/opengraph/url', array( __CLASS__, 'filter_external_canonical_url' ) );
+		add_filter( 'rank_math/json_ld', array( __CLASS__, 'filter_rank_math_json_ld' ), 99, 2 );
+		add_filter( 'rank_math/sitemap/entry', array( __CLASS__, 'filter_rank_math_sitemap_entry' ), 10, 3 );
 		add_filter( 'aioseo_canonical_url', array( __CLASS__, 'filter_external_canonical_url' ) );
 		add_action( 'wp_head', array( __CLASS__, 'print_canonical_tag' ), 1 );
 		add_filter( 'option_adforest_theme', array( __CLASS__, 'filter_adforest_theme_options' ) );
@@ -73,6 +76,36 @@ final class Bornado_Ad_Permalinks {
 	 * @return void
 	 */
 	public static function register_rewrite_rules() {
+		add_rewrite_rule(
+			'^' . preg_quote( self::PREFIX, '/' ) . '/([A-Za-z0-9]+)/([^/]+)/feed/?$',
+			'index.php?' . self::QUERY_ROUTE . '=1&' . self::QUERY_HASH . '=$matches[1]&' . self::QUERY_SLUG . '=$matches[2]&feed=rss2',
+			'top'
+		);
+
+		add_rewrite_rule(
+			'^' . preg_quote( self::PREFIX, '/' ) . '/([A-Za-z0-9]+)/([^/]+)/(feed|rdf|rss|rss2|atom)/?$',
+			'index.php?' . self::QUERY_ROUTE . '=1&' . self::QUERY_HASH . '=$matches[1]&' . self::QUERY_SLUG . '=$matches[2]&feed=$matches[3]',
+			'top'
+		);
+
+		add_rewrite_rule(
+			'^' . preg_quote( self::PREFIX, '/' ) . '/([A-Za-z0-9]+)/([^/]+)/comment-page-([0-9]{1,})/?$',
+			'index.php?' . self::QUERY_ROUTE . '=1&' . self::QUERY_HASH . '=$matches[1]&' . self::QUERY_SLUG . '=$matches[2]&cpage=$matches[3]',
+			'top'
+		);
+
+		add_rewrite_rule(
+			'^' . preg_quote( self::PREFIX, '/' ) . '/([A-Za-z0-9]+)/([^/]+)/([0-9]{1,})/?$',
+			'index.php?' . self::QUERY_ROUTE . '=1&' . self::QUERY_HASH . '=$matches[1]&' . self::QUERY_SLUG . '=$matches[2]&page=$matches[3]',
+			'top'
+		);
+
+		add_rewrite_rule(
+			'^' . preg_quote( self::PREFIX, '/' ) . '/([A-Za-z0-9]+)/([^/]+)/embed/?$',
+			'index.php?' . self::QUERY_ROUTE . '=1&' . self::QUERY_HASH . '=$matches[1]&' . self::QUERY_SLUG . '=$matches[2]&embed=true',
+			'top'
+		);
+
 		add_rewrite_rule(
 			'^' . preg_quote( self::PREFIX, '/' ) . '/([A-Za-z0-9]+)/([^/]+)/?$',
 			'index.php?' . self::QUERY_ROUTE . '=1&' . self::QUERY_HASH . '=$matches[1]&' . self::QUERY_SLUG . '=$matches[2]',
@@ -137,18 +170,14 @@ final class Bornado_Ad_Permalinks {
 	 * @return string
 	 */
 	public static function filter_post_type_link( $post_link, $post, $leavename, $sample ) {
+		unset( $leavename );
+
 		if ( ! $post instanceof WP_Post || self::POST_TYPE !== $post->post_type ) {
 			return $post_link;
 		}
 
-		$slug = self::get_post_slug( $post, $leavename || $sample );
-		$hash = Bornado_Ad_Hash_Service::instance()->encode_id( $post->ID );
-
-		if ( '' === $hash || '' === $slug ) {
-			return $post_link;
-		}
-
-		return home_url( user_trailingslashit( self::PREFIX . '/' . $hash . '/' . $slug ) );
+		$permalink = self::build_ad_permalink( $post, (bool) $sample );
+		return '' !== $permalink ? $permalink : $post_link;
 	}
 
 	/**
@@ -159,7 +188,11 @@ final class Bornado_Ad_Permalinks {
 			return;
 		}
 
-		if ( ! is_singular( self::POST_TYPE ) || is_preview() ) {
+		if ( ! is_singular( self::POST_TYPE ) || is_preview() || is_feed() || is_embed() || is_trackback() ) {
+			return;
+		}
+
+		if ( (int) get_query_var( 'page' ) > 1 || (int) get_query_var( 'cpage' ) > 0 ) {
 			return;
 		}
 
@@ -168,7 +201,7 @@ final class Bornado_Ad_Permalinks {
 			return;
 		}
 
-		$target = self::get_canonical_permalink( $post );
+		$target = self::get_contextual_canonical_url( $post );
 		if ( '' === $target ) {
 			return;
 		}
@@ -203,7 +236,7 @@ final class Bornado_Ad_Permalinks {
 	 */
 	public static function filter_core_canonical_url( $canonical_url, $post ) {
 		if ( $post instanceof WP_Post && self::POST_TYPE === $post->post_type ) {
-			$canonical = self::get_canonical_permalink( $post );
+			$canonical = self::get_contextual_canonical_url( $post );
 			return '' !== $canonical ? $canonical : $canonical_url;
 		}
 
@@ -224,8 +257,58 @@ final class Bornado_Ad_Permalinks {
 			return $canonical_url;
 		}
 
-		$canonical = self::get_canonical_permalink( $post );
+		$canonical = self::get_contextual_canonical_url( $post );
 		return '' !== $canonical ? $canonical : $canonical_url;
+	}
+
+	/**
+	 * @param array<mixed>|mixed $data
+	 * @param mixed              $jsonld
+	 * @return array<mixed>|mixed
+	 */
+	public static function filter_rank_math_json_ld( $data, $jsonld ) {
+		unset( $jsonld );
+
+		if ( ! is_array( $data ) || ! is_singular( self::POST_TYPE ) ) {
+			return $data;
+		}
+
+		$post = get_queried_object();
+		if ( ! $post instanceof WP_Post ) {
+			return $data;
+		}
+
+		$canonical       = self::get_contextual_canonical_url( $post );
+		$placeholder_url = self::get_placeholder_permalink( $post );
+		if ( '' === $canonical || '' === $placeholder_url ) {
+			return $data;
+		}
+
+		return self::replace_schema_placeholder_urls( $data, $placeholder_url, $canonical );
+	}
+
+	/**
+	 * @param array<string,mixed>|mixed $url
+	 * @param string                    $type
+	 * @param mixed                     $object
+	 * @return array<string,mixed>|mixed
+	 */
+	public static function filter_rank_math_sitemap_entry( $url, $type, $object ) {
+		if ( 'post' !== $type || ! is_array( $url ) ) {
+			return $url;
+		}
+
+		$post = self::resolve_post_object( $object );
+		if ( ! $post instanceof WP_Post || self::POST_TYPE !== $post->post_type ) {
+			return $url;
+		}
+
+		$canonical = self::get_canonical_permalink( $post );
+		if ( '' !== $canonical ) {
+			$url['loc'] = $canonical;
+		}
+
+		return $url;
 	}
 
 	/**
@@ -241,7 +324,7 @@ final class Bornado_Ad_Permalinks {
 			return;
 		}
 
-		$canonical = self::get_canonical_permalink( $post );
+		$canonical = self::get_contextual_canonical_url( $post );
 		if ( '' === $canonical ) {
 			return;
 		}
@@ -332,11 +415,50 @@ final class Bornado_Ad_Permalinks {
 	 * @return string
 	 */
 	public static function get_canonical_permalink( $post ) {
+		return self::build_ad_permalink( $post, false );
+	}
+
+	/**
+	 * @param WP_Post $post
+	 * @return string
+	 */
+	private static function get_contextual_canonical_url( $post ) {
 		if ( ! $post instanceof WP_Post || self::POST_TYPE !== $post->post_type ) {
 			return '';
 		}
 
-		$slug = self::get_post_slug( $post, false );
+		$canonical = self::build_ad_permalink( $post, false );
+		if ( '' === $canonical ) {
+			return '';
+		}
+
+		$page_number = max( 1, (int) get_query_var( 'page' ) );
+		if ( $page_number > 1 ) {
+			return trailingslashit( $canonical ) . user_trailingslashit( (string) $page_number, 'single_paged' );
+		}
+
+		return $canonical;
+	}
+
+	/**
+	 * @param WP_Post $post
+	 * @return string
+	 */
+	private static function get_placeholder_permalink( $post ) {
+		return self::build_ad_permalink( $post, true );
+	}
+
+	/**
+	 * @param WP_Post $post
+	 * @param bool    $placeholder_slug
+	 * @return string
+	 */
+	private static function build_ad_permalink( $post, $placeholder_slug ) {
+		if ( ! $post instanceof WP_Post || self::POST_TYPE !== $post->post_type ) {
+			return '';
+		}
+
+		$slug = self::get_post_slug( $post, $placeholder_slug );
 		$hash = Bornado_Ad_Hash_Service::instance()->encode_id( $post->ID );
 
 		if ( '' === $slug || '' === $hash ) {
@@ -382,6 +504,50 @@ final class Bornado_Ad_Permalinks {
 
 		$fallback_slug = sanitize_title( $post->post_title );
 		return '' !== $fallback_slug ? $fallback_slug : 'ad';
+	}
+
+	/**
+	 * @param mixed $candidate
+	 * @return WP_Post|null
+	 */
+	private static function resolve_post_object( $candidate ) {
+		if ( $candidate instanceof WP_Post ) {
+			return $candidate;
+		}
+
+		if ( is_object( $candidate ) && isset( $candidate->ID ) ) {
+			$post = get_post( (int) $candidate->ID );
+			return $post instanceof WP_Post ? $post : null;
+		}
+
+		if ( is_numeric( $candidate ) ) {
+			$post = get_post( (int) $candidate );
+			return $post instanceof WP_Post ? $post : null;
+		}
+
+		return null;
+	}
+
+	/**
+	 * @param mixed  $value
+	 * @param string $placeholder_url
+	 * @param string $canonical_url
+	 * @return mixed
+	 */
+	private static function replace_schema_placeholder_urls( $value, $placeholder_url, $canonical_url ) {
+		if ( is_array( $value ) ) {
+			foreach ( $value as $key => $nested_value ) {
+				$value[ $key ] = self::replace_schema_placeholder_urls( $nested_value, $placeholder_url, $canonical_url );
+			}
+
+			return $value;
+		}
+
+		if ( is_string( $value ) && 0 === strpos( $value, $placeholder_url ) ) {
+			return $canonical_url . substr( $value, strlen( $placeholder_url ) );
+		}
+
+		return $value;
 	}
 
 	/**

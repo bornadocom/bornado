@@ -304,7 +304,10 @@ while ( $query->have_posts() ) {
 							}
 							?>
                             <div class="adt-sort-filters">
-                                <form id="sort-form" method="get">
+                                <button type="button" class="adt-sort-toggle" aria-expanded="false" aria-label="<?php echo esc_attr__( 'Sort ads', 'adforest' ); ?>">
+                                    <i class="fas fa-sort-amount-down-alt"></i>
+                                </button>
+                                <form id="sort-form" class="adt-sort-form" method="get">
                                     <select name="sort" class="default-select order_by" id="select-sort">
                                         <option value="id-desc" <?php echo esc_attr( $selectedLatest ); ?>>
 											<?php echo esc_html__( 'Newest To Oldest', 'adforest' ); ?>
@@ -475,3 +478,36 @@ while ( $query->have_posts() ) {
         </div>
     </div>
 </section>
+<script>
+	(function () {
+		var wrappers = document.querySelectorAll('.adt-sort-filters');
+		if (!wrappers.length) {
+			return;
+		}
+
+		wrappers.forEach(function (wrapper) {
+			var toggle = wrapper.querySelector('.adt-sort-toggle');
+			if (!toggle) {
+				return;
+			}
+
+			toggle.addEventListener('click', function (event) {
+				event.preventDefault();
+				var isOpen = wrapper.classList.toggle('is-open');
+				toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+			});
+		});
+
+		document.addEventListener('click', function (event) {
+			wrappers.forEach(function (wrapper) {
+				if (!wrapper.contains(event.target)) {
+					wrapper.classList.remove('is-open');
+					var toggle = wrapper.querySelector('.adt-sort-toggle');
+					if (toggle) {
+						toggle.setAttribute('aria-expanded', 'false');
+					}
+				}
+			});
+		});
+	})();
+</script>

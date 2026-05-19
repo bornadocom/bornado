@@ -24,6 +24,7 @@ if (isset($adforest_theme['allow_lat_lon']) && $adforest_theme['allow_lat_lon'] 
 }
 
 if (have_posts()) {
+    $ad_preview_notice = '';
     while (have_posts()) {
         the_post();
         $aid = get_the_ID();
@@ -109,9 +110,23 @@ if (have_posts()) {
         } else {
             adforest_setPostViews($aid);
         }
+
+        $current_status = get_post_status($aid);
+        if ($current_status !== 'publish' && current_user_can('read_post', $aid)) {
+            $status_labels = array(
+                'pending' => __('This ad is awaiting admin approval. You are viewing its owner preview.', 'adforest'),
+                'draft' => __('This ad is currently saved as draft. You are viewing its owner preview.', 'adforest'),
+                'private' => __('This ad is private right now. You are viewing its owner preview.', 'adforest'),
+            );
+
+            $ad_preview_notice = $status_labels[$current_status] ?? __('You are viewing a private preview of this ad.', 'adforest');
+        }
     }
 
     $style = isset($adforest_theme['ad_layout_style']) ? $adforest_theme['ad_layout_style'] : 1;
+    if (!empty($ad_preview_notice)) {
+        echo '<div class="container"><div class="alert alert-info" role="alert">' . esc_html($ad_preview_notice) . '</div></div>';
+    }
     get_template_part('template-parts/layouts/ad-style/style', $style);
 } else {
     get_template_part('template-parts/content', 'none');

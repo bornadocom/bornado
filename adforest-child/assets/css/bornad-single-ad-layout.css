@@ -1,0 +1,674 @@
+body.bornado-single-ad-style-bornad {
+    background: #fff;
+}
+
+body.bornado-single-ad-style-bornad .bornad-ad-detail-section {
+    background: #fff;
+    direction: rtl;
+    padding: 18px 0 48px;
+    text-align: right;
+}
+
+body.bornado-single-ad-style-bornad .bornad-ad-detail-container {
+    max-width: 1240px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-detail-layout {
+    direction: ltr;
+    row-gap: 24px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-detail-main,
+body.bornado-single-ad-style-bornad .bornad-detail-sidebar {
+    display: flex;
+    direction: rtl;
+    flex-direction: column;
+    gap: 20px;
+    text-align: right;
+}
+
+body.bornado-single-ad-style-bornad .bornad-detail-sidebar {
+    position: sticky;
+    top: 18px;
+    align-self: flex-start;
+}
+
+body.bornado-single-ad-style-bornad .bornad-seller-card--mobile {
+    display: none;
+    margin-top: 24px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-card {
+    background: #fff;
+    border: 1px solid #edf0f2;
+    border-radius: 12px;
+    box-shadow: none;
+    overflow: hidden;
+}
+
+body.bornado-single-ad-style-bornad .bornad-card-header,
+body.bornado-single-ad-style-bornad .bornad-card-body {
+    padding: 18px 20px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-card-header {
+    align-items: center;
+    border-bottom: 1px solid #f4f5f6;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-card-header h3 {
+    color: #1f2328;
+    font-size: 1.06rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+body.bornado-single-ad-style-bornad .bornad-card-header p {
+    color: #767c84;
+    font-size: 0.87rem;
+    margin: 4px 0 0;
+}
+
+body.bornado-single-ad-style-bornad .bornad-gallery-card .bornad-card-body,
+body.bornado-single-ad-style-bornad .bornad-map-card .bornad-card-body,
+body.bornado-single-ad-style-bornad .bornad-video-card .bornad-card-body {
+    padding: 16px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-gallery-card #sync1 {
+    margin-bottom: 10px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-gallery-card #sync1 .img-box,
+body.bornado-single-ad-style-bornad .bornad-gallery-card #sync2 .img-box {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+body.bornado-single-ad-style-bornad .bornad-gallery-card #sync1 .img-box img {
+    aspect-ratio: 1.08 / 1;
+    object-fit: cover;
+    width: 100%;
+}
+
+body.bornado-single-ad-style-bornad .bornad-gallery-card #sync2 .img-box img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    width: 100%;
+}
+
+body.bornado-single-ad-style-bornad .bornad-gallery-card .ad-expired-s2,
+body.bornado-single-ad-style-bornad .bornad-gallery-card .ad-closed-s2 {
+    inset-inline-start: 20px;
+    inset-inline-end: auto;
+}
+
+body.bornado-single-ad-style-bornad .bornad-gallery-card,
+body.bornado-single-ad-style-bornad .bornad-map-card,
+body.bornado-single-ad-style-bornad .bornad-video-card {
+    border-radius: 10px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-breadcrumbs {
+    color: #8a9098;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-breadcrumb-link,
+body.bornado-single-ad-style-bornad .bornad-country-link {
+    color: #8a9098;
+    font-size: 0.86rem;
+    text-decoration: none;
+}
+
+body.bornado-single-ad-style-bornad .bornad-breadcrumb-sep {
+    color: #c2c7cc;
+}
+
+body.bornado-single-ad-style-bornad .bornad-ad-title {
+    color: #23262b;
+    font-size: 1.7rem;
+    font-weight: 700;
+    line-height: 1.8;
+    margin: 0;
+}
+
+body.bornado-single-ad-style-bornad .bornad-ad-tagline {
+    color: #6d737a;
+    font-size: 0.95rem;
+    line-height: 1.9;
+    margin: 8px 0 0;
+}
+
+body.bornado-single-ad-style-bornad .bornad-meta-line {
+    color: #6d737a;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    margin-top: 14px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-meta-line span {
+    align-items: center;
+    display: inline-flex;
+    font-size: 0.9rem;
+    gap: 8px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-rating-box {
+    margin-top: 14px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-rating-box .ad-rating,
+body.bornado-single-ad-style-bornad .bornad-rating-box .rating-stars,
+body.bornado-single-ad-style-bornad .bornad-rating-box .rating.test {
+    margin: 0;
+}
+
+body.bornado-single-ad-style-bornad .bornad-toolbar {
+    border-top: 1px solid #f1f3f5;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 16px;
+    padding-top: 16px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-toolbar .sb_chat_shortcode_btn,
+body.bornado-single-ad-style-bornad .bornad-toolbar-button {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #e5e7ea;
+    border-radius: 12px;
+    color: #4b525a;
+    display: inline-flex;
+    height: 42px;
+    justify-content: center;
+    min-width: 42px;
+    padding: 0 14px;
+    text-decoration: none;
+}
+
+body.bornado-single-ad-style-bornad .bornad-toolbar .sb_chat_shortcode_btn:hover,
+body.bornado-single-ad-style-bornad .bornad-toolbar-button:hover {
+    border-color: #d5d9de;
+    color: #2a2f35;
+}
+
+body.bornado-single-ad-style-bornad .bornad-toolbar-button--claim {
+    gap: 8px;
+    min-width: 118px;
+    white-space: nowrap;
+}
+
+body.bornado-single-ad-style-bornad .bornad-toolbar-button--claim span {
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+body.bornado-single-ad-style-bornad .bornad-ad-id {
+    background: #f8f9fa;
+    border-radius: 999px;
+    color: #6d737a;
+    font-size: 0.83rem;
+    margin-top: 14px;
+    padding: 8px 12px;
+    width: fit-content;
+}
+
+body.bornado-single-ad-style-bornad .bornad-summary-list {
+    border-top: 1px solid #f1f3f5;
+    margin-top: 18px;
+    padding-top: 10px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-summary-item {
+    align-items: center;
+    border-bottom: 1px solid #f3f4f5;
+    display: flex;
+    justify-content: space-between;
+    min-height: 54px;
+    padding: 11px 0;
+}
+
+body.bornado-single-ad-style-bornad .bornad-summary-label {
+    color: #8a9098;
+    font-size: 0.83rem;
+}
+
+body.bornado-single-ad-style-bornad .bornad-summary-value {
+    color: #24282d;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.8;
+    text-align: left;
+}
+
+body.bornado-single-ad-style-bornad .bornad-summary-item--price .bornad-summary-value--price {
+    align-items: center;
+    display: inline-flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+body.bornado-single-ad-style-bornad .bornad-price-type {
+    color: #6d737a;
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+
+body.bornado-single-ad-style-bornad .bornad-price-type .negotiable-single,
+body.bornado-single-ad-style-bornad .bornad-price-type span,
+body.bornado-single-ad-style-bornad .bornad-price-type small {
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    margin: 0;
+}
+
+body.bornado-single-ad-style-bornad .bornad-price-amount {
+    color: #22262b;
+    font-size: 1.02rem;
+    font-weight: 700;
+}
+
+body.bornado-single-ad-style-bornad .bornad-edit-link {
+    color: #b22b2b;
+    display: inline-flex;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 18px;
+    text-decoration: none;
+}
+
+body.bornado-single-ad-style-bornad .bornad-seller-top {
+    align-items: center;
+    display: flex;
+    gap: 14px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-seller-avatar img {
+    border-radius: 14px;
+    height: 68px;
+    object-fit: cover;
+    width: 68px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-seller-type {
+    color: #8a9098;
+    display: inline-block;
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-seller-meta h4 {
+    color: #24282d;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 4px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-seller-meta h4 a,
+body.bornado-single-ad-style-bornad .bornad-seller-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+body.bornado-single-ad-style-bornad .bornad-seller-meta p {
+    color: #7a8188;
+    font-size: 0.86rem;
+    margin: 0 0 6px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-verified {
+    color: #0d9488;
+    margin-inline-start: 6px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-seller-location {
+    align-items: center;
+    color: #5f6670;
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-contact-list {
+    display: grid;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-contact-item {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #eceff1;
+    border-radius: 14px;
+    color: #24282d;
+    display: flex;
+    gap: 12px;
+    min-height: 66px;
+    padding: 12px 14px;
+    text-decoration: none;
+}
+
+body.bornado-single-ad-style-bornad .bornad-contact-icon {
+    align-items: center;
+    background: #f8f9fa;
+    border-radius: 10px;
+    display: inline-flex;
+    height: 40px;
+    justify-content: center;
+    width: 40px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-contact-icon img {
+    max-height: 20px;
+    max-width: 20px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-contact-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-contact-text small {
+    color: #8a9098;
+    font-size: 0.8rem;
+}
+
+body.bornado-single-ad-style-bornad .bornad-contact-text strong {
+    color: #24282d;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+body.bornado-single-ad-style-bornad .bornad-whatsapp-cta {
+    margin-top: 14px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-whatsapp-cta .btn-whatsap {
+    border-radius: 12px;
+    display: inline-flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+body.bornado-single-ad-style-bornad .bornad-detail-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+body.bornado-single-ad-style-bornad .bornad-detail-list > li {
+    align-items: center;
+    border: 1px solid #eef1f3;
+    border-radius: 10px;
+    color: #2a2f35;
+    display: flex;
+    gap: 18px;
+    justify-content: space-between;
+    line-height: 1.9;
+    margin-bottom: 10px;
+    padding: 12px 14px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-detail-list > li:last-child {
+    margin-bottom: 0;
+}
+
+body.bornado-single-ad-style-bornad .bornad-detail-list > li span {
+    color: #7a8188;
+    flex: 0 0 42%;
+    font-size: 0.92rem;
+}
+
+body.bornado-single-ad-style-bornad .bornad-detail-list > li strong,
+body.bornado-single-ad-style-bornad .bornad-detail-list > li small,
+body.bornado-single-ad-style-bornad .bornad-detail-list > li a {
+    color: #24282d;
+    flex: 1 1 auto;
+    font-size: 0.96rem;
+    font-weight: 600;
+    margin: 0;
+    text-align: left;
+}
+
+body.bornado-single-ad-style-bornad .bornad-detail-list > li small {
+    color: #24282d;
+}
+
+body.bornado-single-ad-style-bornad .bornad-description-content,
+body.bornado-single-ad-style-bornad .bornad-description-content p {
+    color: #373c42;
+    font-size: 0.96rem;
+    line-height: 2.15;
+    margin: 0 0 10px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-map-link {
+    color: #b22b2b;
+    font-size: 0.87rem;
+    text-decoration: none;
+}
+
+body.bornado-single-ad-style-bornad .bornad-map-card #itemMap {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+body.bornado-single-ad-style-bornad .bornad-video-card iframe {
+    border-radius: 12px;
+    display: block;
+    max-width: 100%;
+    width: 100%;
+}
+
+body.bornado-single-ad-style-bornad .bornad-reviews-card .rating {
+    border: 0;
+    padding: 0;
+}
+
+body.bornado-single-ad-style-bornad .bornad-bids-card .bid-detail-wrapper {
+    margin-bottom: 14px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-bids-card .bids-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+body.bornado-single-ad-style-bornad .bornad-bids-card .bid-box {
+    border-bottom: 1px solid #f1f3f5;
+    padding: 12px 0;
+}
+
+body.bornado-single-ad-style-bornad .bornad-bids-card .bids-list li:last-child .bid-box {
+    border-bottom: 0;
+}
+
+body.bornado-single-ad-style-bornad .bornad-bids-card .adt-ad-create-bid {
+    border-top: 1px solid #f1f3f5;
+    margin-top: 14px;
+    padding-top: 16px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-related-wrap {
+    margin-top: 26px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-sidebar-bottom > * + * {
+    margin-top: 18px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-claim-modal .modal-content {
+    border: 0;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+body.bornado-single-ad-style-bornad .bornad-claim-modal .modal-header {
+    align-items: center;
+    border-bottom: 1px solid #f1f3f5;
+    display: flex;
+    justify-content: space-between;
+    padding: 18px 22px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-claim-modal .modal-title {
+    color: #23262b;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+body.bornado-single-ad-style-bornad .bornad-claim-modal .modal-body {
+    padding: 22px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-claim-modal label {
+    color: #4b525a;
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-claim-modal .form-control {
+    border: 1px solid #e4e7eb;
+    border-radius: 12px;
+    box-shadow: none;
+    min-height: 44px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-claim-modal textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+body.bornado-single-ad-style-bornad .bornad-claim-note {
+    color: #4b525a;
+    font-size: 0.93rem;
+    line-height: 2;
+    margin: 0 0 14px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-claim-feedback {
+    border-radius: 12px;
+    font-size: 0.88rem;
+    line-height: 1.9;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-claim-feedback.is-success {
+    background: #eef9f1;
+    color: #1f6f3d;
+}
+
+body.bornado-single-ad-style-bornad .bornad-claim-feedback.is-error {
+    background: #fff1f1;
+    color: #a63a3a;
+}
+
+@media (min-width: 1200px) {
+    body.bornado-single-ad-style-bornad .bornad-detail-main {
+        flex: 0 0 auto;
+        width: 48%;
+    }
+
+    body.bornado-single-ad-style-bornad .bornad-detail-sidebar {
+        flex: 0 0 auto;
+        width: 52%;
+    }
+}
+
+@media (max-width: 991.98px) {
+    body.bornado-single-ad-style-bornad .bornad-detail-sidebar {
+        position: static;
+    }
+
+    body.bornado-single-ad-style-bornad .bornad-seller-card--desktop {
+        display: none;
+    }
+
+    body.bornado-single-ad-style-bornad .bornad-seller-card--mobile {
+        display: block;
+    }
+
+    body.bornado-single-ad-style-bornad .bornad-tips-card,
+    body.bornado-single-ad-style-bornad .bornad-related-wrap,
+    body.bornado-single-ad-style-bornad .adt-recent-ads-sidebar {
+        display: none;
+    }
+}
+
+@media (max-width: 767.98px) {
+    body.bornado-single-ad-style-bornad .bornad-card-header,
+    body.bornado-single-ad-style-bornad .bornad-card-body {
+        padding: 16px;
+    }
+
+    body.bornado-single-ad-style-bornad .bornad-ad-title {
+        font-size: 1.35rem;
+    }
+
+    body.bornado-single-ad-style-bornad .bornad-detail-list > li {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    body.bornado-single-ad-style-bornad .bornad-detail-list > li strong,
+    body.bornado-single-ad-style-bornad .bornad-detail-list > li small,
+    body.bornado-single-ad-style-bornad .bornad-detail-list > li a {
+        text-align: right;
+    }
+
+    body.bornado-single-ad-style-bornad .bornad-toolbar {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(0, 1fr);
+        gap: 4px;
+        overflow: hidden;
+        justify-content: stretch;
+        align-items: stretch;
+        box-sizing: border-box;
+        width: calc(100% + 28px);
+        margin-inline: -14px;
+        padding-inline: 2px;
+        padding-bottom: 2px;
+    }
+
+    body.bornado-single-ad-style-bornad .bornad-toolbar .sb_chat_shortcode_btn,
+    body.bornado-single-ad-style-bornad .bornad-toolbar-button {
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 0;
+        padding: 0 6px;
+    }
+
+    body.bornado-single-ad-style-bornad .bornad-toolbar-button--claim {
+        grid-column: span 2;
+    }
+
+    body.bornado-single-ad-style-bornad .bornad-toolbar-button--claim span {
+        font-size: 0.68rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    body.bornado-single-ad-style-bornad .bornad-toolbar-button--claim i {
+        display: none;
+    }
+}

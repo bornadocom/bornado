@@ -419,7 +419,6 @@
 	top: 0;
 	left: 0 !important;
 	right: auto !important;
-	z-index: 2;
 	min-width: 44px;
 	min-height: 44px;
 	display: inline-flex;

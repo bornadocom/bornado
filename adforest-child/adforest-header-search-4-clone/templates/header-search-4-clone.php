@@ -9,6 +9,10 @@ if (function_exists('icl_t')) {
     $ad_in_menu_text = icl_t('adforest_theme', 'ad_in_menu_text', $ad_in_menu_text);
 }
 $sb_post_ad_page = isset($adforest_theme['sb_post_ad_page']) ? $adforest_theme['sb_post_ad_page'] : "";
+$sign_in_url = !empty($sb_sign_in_page) ? get_the_permalink($sb_sign_in_page) : '';
+$sign_up_url = !empty($sb_sign_up_page) ? get_the_permalink($sb_sign_up_page) : '';
+$show_sign_in = !empty($sign_in_url);
+$show_sign_up = !empty($sign_up_url);
 $responsive_logo = isset($adforest_theme['sb_site_logo_mobile']['url']) ? $adforest_theme['sb_site_logo_mobile']['url'] : ADFOREST_IMAGE_PATH . "/adt-logo.png";
 $home_page_logo = isset($adforest_theme['sb_home_logo']['url']) ? $adforest_theme['sb_home_logo']['url'] : ADFOREST_IMAGE_PATH . "/adt-logo.png";
 $user_id = get_current_user_id();
@@ -16,7 +20,7 @@ $user_id = get_current_user_id();
 $is_sticky_header = isset($adforest_theme['sb_sticky_header']) ? $adforest_theme['sb_sticky_header'] : '';
 $sticky_class = "";
 if ($is_sticky_header == '1') {
-    $sticky_class = "";
+    $sticky_class = "sticky-header";
 }
 
 $sb_profile_page = isset($adforest_theme['sb_profile_page']) ? $adforest_theme['sb_profile_page'] : '';
@@ -72,6 +76,13 @@ $field_labels = array(
     'ad_type' => isset($adforest_theme['header_search_ad_type_label']) && $adforest_theme['header_search_ad_type_label'] !== '' ? $adforest_theme['header_search_ad_type_label'] : $default_field_labels['ad_type'],
     'location' => isset($adforest_theme['header_search_location_label']) && $adforest_theme['header_search_location_label'] !== '' ? $adforest_theme['header_search_location_label'] : $default_field_labels['location'],
     'category' => isset($adforest_theme['header_search_category_label']) && $adforest_theme['header_search_category_label'] !== '' ? $adforest_theme['header_search_category_label'] : $default_field_labels['category'],
+);
+
+$field_display_labels = array(
+    'keyword' => $field_labels['keyword'],
+    'ad_type' => $field_labels['ad_type'],
+    'location' => esc_html__('کشور و شهر', 'adforest'),
+    'category' => $field_labels['category'],
 );
 
 $field_placeholders = array(
@@ -293,60 +304,413 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                     $all_filters_target_url = $search_actions['all_filters_action'];
                     ?>
                     <style>
-                        .adt-hero-search-tabs .search-filters-bar .filter-box {
-                            min-height: 62px;
+                        .adt-top-tabs-header {
+                            height: auto;
+                            padding: 10px 0;
+                            background: #ffffff;
+                            border-bottom: 1px solid #e7ebf0;
+                            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+                            z-index: 100;
                         }
 
+                        .adt-top-tabs-header .tabs-container {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            gap: 16px;
+                        }
+
+                        .adt-top-tabs-header .tabs-container .logo {
+                            margin-right: 0;
+                            flex: 0 0 auto;
+                        }
+
+                        .adt-top-tabs-header .tabs-container .logo img {
+                            display: block;
+                            max-height: 38px;
+                            width: auto;
+                        }
+
+                        @media (max-width: 767.98px) {
+                            .adt-top-tabs-header {
+                                display: none;
+                            }
+                        }
+
+                        .adt-top-tabs-header .tabs-wrapper {
+                            flex: 1 1 auto;
+                            min-width: 0;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 12px;
+                        }
+
+                        .adt-top-tabs-header .tabs-wrapper .nav.nav-pills {
+                            display: flex;
+                            flex-wrap: nowrap;
+                            align-items: center;
+                            gap: 6px;
+                            flex: 0 1 auto;
+                            max-width: 26%;
+                            min-width: 165px;
+                            margin: 0;
+                            padding: 0;
+                            overflow-x: auto;
+                            scrollbar-width: none;
+                        }
+
+                        .adt-top-tabs-header .tabs-wrapper .nav.nav-pills::-webkit-scrollbar {
+                            display: none;
+                        }
+
+                        .adt-top-tabs-header .tabs-wrapper ol li {
+                            margin: 0;
+                            flex: 0 0 auto;
+                        }
+
+                        .adt-top-tabs-header .tabs-wrapper ol li::before,
+                        .adt-top-tabs-header .tabs-wrapper ol li .nav-link.active::after {
+                            content: none;
+                        }
+
+                        .adt-top-tabs-header .tabs-wrapper ol li .nav-link {
+                            width: auto;
+                            min-width: max-content;
+                            padding: 8px 12px;
+                            border: 1px solid #e7ebf0;
+                            border-radius: 999px;
+                            background: #f8fafc;
+                            color: #475569;
+                            font-size: 12px;
+                            font-weight: 500;
+                            line-height: 1.2;
+                            transition: all 0.2s ease;
+                        }
+
+                        .adt-top-tabs-header .tabs-wrapper ol li .nav-link:hover,
+                        .adt-top-tabs-header .tabs-wrapper ol li .nav-link.active {
+                            background: #0f172a;
+                            border-color: #0f172a;
+                            color: #ffffff;
+                        }
+
+                        .adt-top-tabs-header .tabs-wrapper ol li .nav-link img {
+                            width: 15px;
+                            height: 15px;
+                            margin-inline-end: 6px;
+                            object-fit: contain;
+                        }
+
+                        .adt-top-tabs-header .tabs-wrapper .tab-content {
+                            flex: 0 1 620px;
+                            max-width: 620px;
+                            min-width: 0;
+                        }
+
+                        .adt-top-tabs-header .adt-hero-search-tabs {
+                            margin-bottom: 0;
+                        }
+
+                        .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar {
+                            position: static;
+                            width: 100%;
+                            min-width: 0;
+                            margin: 0;
+                            padding: 5px 8px;
+                            display: flex;
+                            align-items: center;
+                            gap: 0;
+                            border: 1px solid #e7ebf0;
+                            border-radius: 16px;
+                            background: #fbfcfe;
+                            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.035);
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .filter-box {
+                            position: relative;
+                            min-height: 0;
+                            min-width: 0;
+                            width: auto;
+                            flex: 1 1 0;
+                            padding: 0 10px;
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .filter-box--keyword {
+                            min-width: 135px;
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .filter-box--ad-type {
+                            min-width: 125px;
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .filter-box--location {
+                            min-width: 155px;
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .filter-box--category {
+                            min-width: 145px;
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .filter-box + .filter-box {
+                            border-inline-start: 1px solid #eef2f7;
+                        }
+
+                        .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar .filter-box.type-box::before {
+                            content: none;
+                        }
+
+                        .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar .filter-box label,
+                        .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-location-filter .blp__trigger-label {
+                            position: absolute !important;
+                            width: 1px;
+                            height: 1px;
+                            padding: 0;
+                            margin: -1px;
+                            overflow: hidden;
+                            clip: rect(0, 0, 0, 0);
+                            white-space: nowrap;
+                            border: 0;
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .filter-box input,
                         .adt-hero-search-tabs .search-filters-bar .filter-box select.default-select {
                             width: 100%;
                             height: 40px;
                             display: block;
-                            background-color: #f6f6f6;
-                            border: 1px solid #f0f0f0;
-                            border-radius: 4px;
-                            font-size: 14px;
+                            background: #f8fafc;
+                            border: 0;
+                            border-radius: 10px;
+                            font-size: 13px;
                             font-weight: 400;
-                            color: #6d6d6d;
+                            color: #0f172a;
                             line-height: 40px;
-                            padding: 0 46px 0 20px;
+                            padding: 0 34px 0 8px;
+                            box-shadow: none;
+                            transition: background-color 0.2s ease;
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .filter-box input::placeholder {
+                            color: #94a3b8;
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .filter-box input:focus,
+                        .adt-hero-search-tabs .search-filters-bar .filter-box select.default-select:focus {
+                            outline: none;
+                            background: #f8fafc;
+                        }
+
+                        .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar .select2-container {
+                            width: 100% !important;
+                        }
+
+                        .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar .select2-container--default .select2-selection--single {
+                            height: 40px;
+                            margin-bottom: 0;
+                            border: 0;
+                            border-radius: 10px;
+                            background: #f8fafc;
+                            box-shadow: none;
+                        }
+
+                        .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar .select2-container--default .select2-selection--single .select2-selection__rendered {
+                            height: 40px;
+                            padding: 0 34px 0 8px;
+                            font-size: 13px;
+                            font-weight: 400;
+                            line-height: 40px;
+                            color: #0f172a;
+                        }
+
+                        .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar .select2-container--default .select2-selection--single .select2-selection__arrow {
+                            width: 26px;
+                            height: 26px;
+                            top: 7px;
+                            right: 8px;
+                            background: transparent;
+                            border: 0;
+                            border-radius: 0;
+                        }
+
+                        .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar .select2-container--default .select2-selection--single .select2-selection__arrow b {
+                            border-color: #94a3b8 #94a3b8 transparent transparent;
+                            border-width: 1px 1px 0 0;
+                            width: 6px;
+                            height: 6px;
+                            margin-top: -4px;
+                            margin-left: -3px;
+                            transform: rotate(135deg);
+                        }
+
+                        .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+                            margin-top: -1px;
+                            transform: rotate(-45deg);
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .filter-box select.default-select {
                             -webkit-appearance: none;
                             -moz-appearance: none;
                             appearance: none;
-                            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='none' stroke='%236D6D6D' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+                            line-height: 40px;
+                            padding-top: 0;
+                            padding-bottom: 0;
+                            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='none' stroke='%2394A3B8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
                             background-repeat: no-repeat;
-                            background-position: right 16px center;
+                            background-position: right 10px center;
                             background-size: 10px 6px;
                         }
 
+                        html[dir="rtl"] .adt-hero-search-tabs .search-filters-bar .filter-box input,
                         html[dir="rtl"] .adt-hero-search-tabs .search-filters-bar .filter-box select.default-select {
-                            padding: 0 20px 0 46px;
-                            background-position: left 16px center;
+                            padding: 0 8px 0 34px;
                         }
 
-                        .adt-hero-search-tabs .search-filters-bar .filter-box select.default-select:focus {
-                            outline: none;
+                        html[dir="rtl"] .adt-hero-search-tabs .search-filters-bar .filter-box select.default-select {
+                            background-position: left 10px center;
+                        }
+
+                        html[dir="rtl"] .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar .select2-container--default .select2-selection--single .select2-selection__rendered {
+                            padding: 0 8px 0 34px;
+                        }
+
+                        html[dir="rtl"] .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar .select2-container--default .select2-selection--single .select2-selection__arrow {
+                            right: auto;
+                            left: 8px;
                         }
 
                         .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-keyword-submit {
-                            width: 38%;
+                            flex: 0.95 1 180px;
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-location-filter .blp__trigger {
+                            width: 100%;
+                            min-height: 40px;
+                            padding: 0 8px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            border: 0;
+                            border-radius: 10px;
+                            background: #f8fafc;
+                            box-shadow: none;
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-location-filter .blp__trigger:hover,
+                        .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-location-filter .blp__trigger:focus-within {
+                            background: #f8fafc;
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-location-filter .blp__summary {
+                            font-size: 13px;
+                            color: #0f172a;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-location-filter .blp__trigger-icon {
+                            width: 26px;
+                            height: 26px;
+                            background: transparent;
+                            border: 0;
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-location-filter .blp__panel {
+                            width: min(840px, 92vw);
                         }
 
                         .adt-hero-search-tabs .search-filters-bar .bornado-keyword-submit__row {
                             display: flex;
                             align-items: center;
-                            gap: 10px;
+                            gap: 6px;
                         }
 
                         .adt-hero-search-tabs .search-filters-bar .bornado-keyword-submit__row input {
                             flex: 1 1 auto;
+                            min-width: 0;
                         }
 
                         .adt-hero-search-tabs .search-filters-bar .search-button.bornado-inline-search-button {
-                            width: auto;
-                            min-width: 52px;
+                            width: 40px;
+                            min-width: 40px;
+                            height: 40px;
                             flex: 0 0 auto;
-                            padding: 8px 16px;
+                            padding: 0;
+                            border-radius: 10px;
+                            background: #f3f4f6;
+                            border: 1px solid #0f172a;
+                            color: #0f172a;
+                            box-shadow: none;
+                            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .search-button.bornado-inline-search-button i {
+                            margin: 0;
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .search-button.bornado-inline-search-button:hover,
+                        .adt-hero-search-tabs .search-filters-bar .search-button.bornado-inline-search-button:focus {
+                            background: #e5e7eb;
+                            border-color: #0f172a;
+                            color: #0f172a;
+                        }
+
+                        .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-location-filter .blp__panel {
+                            position: fixed;
+                            top: 92px;
+                            left: 50% !important;
+                            right: auto !important;
+                            width: min(840px, calc(100vw - 32px));
+                            max-width: none;
+                            transform: translateX(-50%) !important;
+                        }
+
+                        .adt-top-tabs-header .buttons-box {
+                            display: flex;
+                            align-items: center;
+                            gap: 4px;
+                            flex: 0 0 auto;
                             white-space: nowrap;
+                        }
+
+                        .adt-top-tabs-header .buttons-box .sign-in,
+                        .adt-top-tabs-header .buttons-box .sign-up {
+                            padding: 8px 10px;
+                            border: 0;
+                            border-radius: 8px;
+                            background: transparent;
+                            color: #334155;
+                            font-size: 12px;
+                        }
+
+                        .adt-top-tabs-header .buttons-box .sign-in.sign-in--with-register {
+                            border-right: 1px solid #e7ebf0;
+                        }
+
+                        .adt-top-tabs-header .buttons-box .ad-post-btn {
+                            margin-left: 0;
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 6px;
+                            min-height: 40px;
+                            padding: 0 16px;
+                            border: 1px solid #0f172a;
+                            border-radius: 11px;
+                            background: #0f172a;
+                            color: #ffffff;
+                            font-size: 12px;
+                            font-weight: 600;
+                            line-height: 1;
+                            box-shadow: none;
+                            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+                        }
+
+                        .adt-top-tabs-header .buttons-box .ad-post-btn:hover,
+                        .adt-top-tabs-header .buttons-box .ad-post-btn:focus {
+                            background: #1e293b;
+                            border-color: #1e293b;
+                            color: #ffffff;
                         }
 
                         html[dir="rtl"] .adt-top-tabs-header .buttons-box .adt-user-avatar ul.dropdown-user-login {
@@ -354,17 +718,119 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                             left: auto;
                         }
 
-                        @media (max-width: 991px) {
-                            .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-keyword-submit {
+                        @media (min-width: 768px) and (max-width: 991.98px) {
+                            .adt-top-tabs-header {
+                                padding: 10px 0 12px;
+                            }
+
+                            .adt-top-tabs-header .tabs-container {
+                                display: grid;
+                                grid-template-columns: auto 1fr auto;
+                                grid-template-areas:
+                                    "logo spacer buttons"
+                                    "search search search";
+                                align-items: center;
+                                row-gap: 12px;
+                                column-gap: 16px;
+                                direction: ltr;
+                            }
+
+                            .adt-top-tabs-header .tabs-container .logo {
+                                grid-area: logo;
+                                direction: rtl;
+                            }
+
+                            .adt-top-tabs-header .buttons-box {
+                                grid-area: buttons;
+                                justify-self: end;
+                                margin: 0;
+                                justify-content: flex-start;
+                                width: auto;
+                                flex-wrap: nowrap;
+                                gap: 6px;
+                                direction: rtl;
+                            }
+
+                            .adt-top-tabs-header .buttons-box .sign-in,
+                            .adt-top-tabs-header .buttons-box .sign-up {
+                                display: inline-flex !important;
+                                align-items: center;
+                                padding: 8px 8px;
+                                font-size: 11px;
+                            }
+
+                            .adt-top-tabs-header .buttons-box .ad-post-btn {
+                                min-height: 38px;
+                                padding: 0 12px;
+                                font-size: 11px;
+                            }
+
+                            .adt-top-tabs-header .tabs-wrapper {
+                                grid-area: search;
                                 width: 100%;
+                                flex: 0 0 100%;
+                                justify-content: flex-start;
+                                gap: 10px;
+                                flex-wrap: nowrap;
+                                direction: rtl;
+                            }
+
+                            .adt-top-tabs-header .tabs-wrapper .nav.nav-pills,
+                            .adt-top-tabs-header .tabs-wrapper .tab-content {
+                                width: auto;
+                            }
+
+                            .adt-top-tabs-header .tabs-wrapper .nav.nav-pills {
+                                flex: 0 0 auto;
+                                max-width: 220px;
+                                min-width: 180px;
+                            }
+
+                            .adt-top-tabs-header .tabs-wrapper .tab-content {
+                                flex: 1 1 auto;
+                                max-width: none;
+                                min-width: 0;
+                            }
+
+                            .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar {
+                                flex-wrap: nowrap;
+                                padding: 5px 8px;
+                                gap: 0;
+                            }
+
+                            .adt-hero-search-tabs .search-filters-bar .filter-box,
+                            .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-keyword-submit {
+                                flex: 1 1 0;
+                                flex-basis: auto;
+                                padding: 0 8px;
+                            }
+
+                            .adt-hero-search-tabs .search-filters-bar .filter-box + .filter-box {
+                                border-inline-start: 1px solid #eef2f7;
+                                border-top: 0;
+                                padding-top: 0;
                             }
 
                             .adt-hero-search-tabs .search-filters-bar .bornado-keyword-submit__row {
-                                flex-wrap: wrap;
+                                flex-wrap: nowrap;
                             }
 
                             .adt-hero-search-tabs .search-filters-bar .search-button.bornado-inline-search-button {
-                                width: 100%;
+                                width: 40px;
+                            }
+
+                            .adt-top-tabs-header .buttons-box .sign-in,
+                            .adt-top-tabs-header .buttons-box .adt-user-avatar {
+                                order: 1;
+                            }
+
+                            .adt-top-tabs-header .buttons-box .ad-post-btn {
+                                order: 2;
+                            }
+
+                            .adt-top-tabs-header .buttons-box .sign-up {
+                                order: 3;
+                                display: none !important;
                             }
                         }
                     </style>
@@ -383,10 +849,9 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                                     continue;
                                 }
 
-                                $label_text = $field_labels[$field_type];
-                                $placeholder_text = $field_placeholders[$field_type];
+                                $label_text = $field_display_labels[$field_type];
                                 $field_id = 'header-search-field-' . $field_type . '-' . $index;
-                                $wrapper_classes = 'filter-box';
+                                $wrapper_classes = 'filter-box filter-box--' . str_replace('_', '-', $field_type);
 
                                 if (in_array($field_type, array('ad_type', 'location', 'category'), true)) {
                                     $wrapper_classes .= ' type-box';
@@ -399,16 +864,16 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                                         $form_field_names[] = $field_name;
                                         ?>
                                         <div class="<?php echo esc_attr($wrapper_classes); ?> bornado-keyword-submit">
-                                            <label for="<?php echo esc_attr($field_id); ?>"><?php echo esc_html($label_text); ?></label>
+                                            <label><?php echo esc_html($label_text); ?></label>
                                             <div class="bornado-keyword-submit__row">
                                                 <input type="text"
                                                        id="<?php echo esc_attr($field_id); ?>"
                                                        name="<?php echo esc_attr($field_name); ?>"
                                                        data-search-role="title"
-                                                       placeholder="<?php echo esc_attr($placeholder_text); ?>"
+                                                       placeholder="<?php echo esc_attr($label_text); ?>"
                                                        value="<?php echo esc_attr($current_value); ?>">
-                                                <button class="search-button bornado-inline-search-button" type="submit">
-                                                    <i class="fas fa-search"></i><?php echo esc_html__("Search", "adforest"); ?>
+                                                <button class="search-button bornado-inline-search-button" type="submit" aria-label="<?php echo esc_attr__('Search', 'adforest'); ?>">
+                                                    <i class="fas fa-search" aria-hidden="true"></i>
                                                 </button>
                                             </div>
                                         </div>
@@ -431,7 +896,7 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                                                     id="<?php echo esc_attr($field_id); ?>"
                                                     name="<?php echo esc_attr($field_name); ?>"
                                                     data-search-role="ad_type">
-                                                <option value=""><?php echo esc_html($placeholder_text); ?></option>
+                                                <option value=""><?php echo esc_html($label_text); ?></option>
                                                 <?php
                                                 if (is_array($ad_types)) :
                                                     foreach ($ad_types as $type_term) :
@@ -464,35 +929,41 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                                         }
                                         $form_field_names[] = $field_name;
                                         ?>
-                                        <div class="<?php echo esc_attr($wrapper_classes); ?>">
-                                            <label for="<?php echo esc_attr($field_id); ?>"><?php echo esc_html($label_text); ?></label>
-                                            <select class="default-select"
-                                                    id="<?php echo esc_attr($field_id); ?>"
-                                                    name="<?php echo esc_attr($field_name); ?>"
-                                                    data-search-role="country">
-                                                <option value=""><?php echo esc_html__('تمام شهرها', 'adforest'); ?></option>
+                                        <div class="<?php echo esc_attr(trim($wrapper_classes . ' bornado-location-filter')); ?>">
+                                            <label><?php echo esc_html($label_text); ?></label>
+                                            <?php
+                                            if (function_exists('bornado_render_location_picker')) {
+                                                echo bornado_render_location_picker(
+                                                    array(
+                                                        'mode' => 'compact',
+                                                        'class_name' => 'adt-header-location-picker',
+                                                        'button_label' => $label_text,
+                                                        'summary_fallback' => $label_text,
+                                                        'submit_label' => esc_html__('اعمال', 'adforest'),
+                                                        'reset_label' => esc_html__('همه کشورها', 'adforest'),
+                                                        'panel_heading' => esc_html__('Select location', 'adforest'),
+                                                        'country_heading' => esc_html__('کشورها', 'adforest'),
+                                                        'city_heading' => esc_html__('شهرها', 'adforest'),
+                                                        'search_label' => esc_html__('جستجو در کشورها', 'adforest'),
+                                                        'city_label' => esc_html__('جستجو در شهرها', 'adforest'),
+                                                        'external_form_selector' => '.adt-hero-search-tabs',
+                                                        'render_hidden_input' => true,
+                                                        'submit_on_apply' => true,
+                                                        'input_name' => $field_name,
+                                                        'input_id' => $field_id,
+                                                        'input_data_role' => 'country',
+                                                    )
+                                                ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                            } else {
+                                                ?>
+                                                <input type="hidden"
+                                                       id="<?php echo esc_attr($field_id); ?>"
+                                                       name="<?php echo esc_attr($field_name); ?>"
+                                                       value="<?php echo esc_attr($current_value); ?>"
+                                                       data-search-role="country">
                                                 <?php
-                                    if (!empty($location_terms)) :
-                                        foreach ($location_terms as $location_term) :
-                                            if (!is_object($location_term)) {
-                                                continue;
-                                            }
-                                            $option_value = (string) $location_term->term_id;
-                                            $selected = '';
-                                            if ($current_value !== '') {
-                                                if ($current_value === $option_value || sanitize_title($current_value) === sanitize_title($location_term->slug) || $current_value === $location_term->name) {
-                                                    $selected = 'selected';
-                                                }
                                             }
                                             ?>
-                                            <option value="<?php echo esc_attr($option_value); ?>" <?php echo esc_attr($selected); ?>>
-                                                <?php echo esc_html($location_term->name); ?>
-                                            </option>
-                                        <?php
-                                        endforeach;
-                                    endif;
-                                    ?>
-                                            </select>
                                         </div>
                                         <?php
                                         break;
@@ -508,7 +979,7 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                                                     id="<?php echo esc_attr($field_id); ?>"
                                                     name="<?php echo esc_attr($field_name); ?>"
                                                     data-search-role="category">
-                                                <option value=""><?php echo esc_html__('تمام دسته بندی ها', 'adforest'); ?></option>
+                                                <option value=""><?php echo esc_html($label_text); ?></option>
                                                 <?php
                                     if (!empty($category_terms)) :
                                         foreach ($category_terms as $entry) :
@@ -688,10 +1159,14 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
             </script>
             <div class="buttons-box">
                 <?php if (!is_user_logged_in()) { ?>
-                    <a href="<?php echo esc_url(get_the_permalink($sb_sign_in_page), 'adforest') ?>" class="sign-in"><i
-                                class="fas fa-sign-in-alt"></i><?php echo esc_html__("Sign in", "adforest"); ?></a>
-                    <a href="<?php echo esc_url(get_the_permalink($sb_sign_up_page), 'adforest') ?>" class="sign-up"><i
-                                class="fas fa-sign-in-alt"></i><?php echo esc_html__("Register", "adforest"); ?></a>
+                    <?php if ($show_sign_in) : ?>
+                        <a href="<?php echo esc_url($sign_in_url); ?>" class="sign-in<?php echo $show_sign_up ? ' sign-in--with-register' : ''; ?>"><i
+                                    class="fas fa-sign-in-alt"></i><?php echo esc_html__("Sign in", "adforest"); ?></a>
+                    <?php endif; ?>
+                    <?php if ($show_sign_up) : ?>
+                        <a href="<?php echo esc_url($sign_up_url); ?>" class="sign-up"><i
+                                    class="fas fa-sign-in-alt"></i><?php echo esc_html__("Register", "adforest"); ?></a>
+                    <?php endif; ?>
                 <?php } else { ?>
                     <div class="adt-user-avatar">
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="top"

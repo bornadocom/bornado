@@ -682,6 +682,42 @@
 		});
 	}
 
+	if (topSearch && searchForm && titleInput) {
+		var collapseTimer = null;
+
+		var expandSearch = function () {
+			if (collapseTimer) {
+				window.clearTimeout(collapseTimer);
+				collapseTimer = null;
+			}
+			topSearch.classList.add("is-focused");
+		};
+
+		var collapseSearch = function () {
+			topSearch.classList.remove("is-focused");
+		};
+
+		searchForm.addEventListener("focusin", expandSearch);
+
+		searchForm.addEventListener("focusout", function (event) {
+			var nextTarget = event.relatedTarget;
+			if (nextTarget && searchForm.contains(nextTarget)) {
+				return;
+			}
+			if (collapseTimer) {
+				window.clearTimeout(collapseTimer);
+			}
+			collapseTimer = window.setTimeout(function () {
+				if (document.activeElement && searchForm.contains(document.activeElement)) {
+					return;
+				}
+				collapseSearch();
+			}, 60);
+		});
+
+		titleInput.addEventListener("touchstart", expandSearch, { passive: true });
+	}
+
 	window.addEventListener(
 		"scroll",
 		function () {

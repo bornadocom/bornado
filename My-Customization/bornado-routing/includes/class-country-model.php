@@ -6,9 +6,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Bornado_Country_Model {
 
 	const TAXONOMY             = 'ad_country';
+	const CURRENCY_TAXONOMY    = 'ad_currency';
 	const META_COUNTRY_CODE    = '_bornado_country_code';
 	const META_DISPLAY_NAME_EN = '_bornado_country_display_name_en';
 	const META_MARKET_STATUS   = '_bornado_country_market_status';
+	const META_CURRENCY_TERM_ID = '_bornado_country_currency_term_id';
 	const NONCE_ACTION         = 'bornado_country_model_save';
 	const NONCE_NAME           = 'bornado_country_model_nonce';
 
@@ -68,6 +70,18 @@ final class Bornado_Country_Model {
 				'auth_callback'     => array( __CLASS__, 'can_manage_terms' ),
 			)
 		);
+
+		register_term_meta(
+			self::TAXONOMY,
+			self::META_CURRENCY_TERM_ID,
+			array(
+				'type'              => 'integer',
+				'single'            => true,
+				'sanitize_callback' => array( __CLASS__, 'sanitize_currency_term_id' ),
+				'show_in_rest'      => true,
+				'auth_callback'     => array( __CLASS__, 'can_manage_terms' ),
+			)
+		);
 	}
 
 	/**
@@ -76,6 +90,7 @@ final class Bornado_Country_Model {
 	 * @return void
 	 */
 	public static function render_add_fields() {
+		$currency_options = self::get_currency_options();
 		wp_nonce_field( self::NONCE_ACTION, self::NONCE_NAME );
 		?>
 		<div class="form-field term-bornado-country-code-wrap">
@@ -97,6 +112,22 @@ final class Bornado_Country_Model {
 			</select>
 			<p><?php esc_html_e( 'Recommended only for root market terms. Child city terms will not keep these values.', 'bornado-routing' ); ?></p>
 		</div>
+		<div class="form-field term-bornado-country-currency-wrap">
+			<label for="bornado-country-currency"><?php esc_html_e( 'Currency', 'bornado-routing' ); ?></label>
+			<select name="bornado_country_currency_term_id" id="bornado-country-currency">
+				<option value="0"><?php esc_html_e( 'None', 'bornado-routing' ); ?></option>
+				<?php foreach ( $currency_options as $term_id => $label ) : ?>
+					<option value="<?php echo esc_attr( $term_id ); ?>"><?php echo esc_html( $label ); ?></option>
+				<?php endforeach; ?>
+			</select>
+			<p>
+				<?php
+				echo ! empty( $currency_options )
+					? esc_html__( 'Choose one of the currencies defined in the Ad Currency taxonomy. Child city terms inherit this from the root country.', 'bornado-routing' )
+					: esc_html__( 'No currencies found in the Ad Currency taxonomy yet. Create them first, then assign one here.', 'bornado-routing' );
+				?>
+			</p>
+		</div>
 		<?php
 	}
 
@@ -113,7 +144,8 @@ final class Bornado_Country_Model {
 			return;
 		}
 
-		$data = self::get_country_data( $term );
+		$data             = self::get_country_data( $term );
+		$currency_options = self::get_currency_options();
 		wp_nonce_field( self::NONCE_ACTION, self::NONCE_NAME );
 		?>
 		<tr class="form-field term-bornado-country-code-wrap">
@@ -139,6 +171,24 @@ final class Bornado_Country_Model {
 					<?php endforeach; ?>
 				</select>
 				<p class="description"><?php esc_html_e( 'Recommended only for root market terms. Child city terms will not keep these values.', 'bornado-routing' ); ?></p>
+			</td>
+		</tr>
+		<tr class="form-field term-bornado-country-currency-wrap">
+			<th scope="row"><label for="bornado-country-currency"><?php esc_html_e( 'Currency', 'bornado-routing' ); ?></label></th>
+			<td>
+				<select name="bornado_country_currency_term_id" id="bornado-country-currency">
+					<option value="0"><?php esc_html_e( 'None', 'bornado-routing' ); ?></option>
+					<?php foreach ( $currency_options as $term_id => $label ) : ?>
+						<option value="<?php echo esc_attr( $term_id ); ?>" <?php selected( (int) $data['currency_term_id'], (int) $term_id ); ?>><?php echo esc_html( $label ); ?></option>
+					<?php endforeach; ?>
+				</select>
+				<p class="description">
+					<?php
+					echo ! empty( $currency_options )
+						? esc_html__( 'Choose one of the currencies defined in the Ad Currency taxonomy. Child city terms inherit this from the root country.', 'bornado-routing' )
+						: esc_html__( 'No currencies found in the Ad Currency taxonomy yet. Create them first, then assign one here.', 'bornado-routing' );
+					?>
+				</p>
 			</td>
 		</tr>
 		<?php
@@ -171,16 +221,19 @@ final class Bornado_Country_Model {
 			delete_term_meta( $term_id, self::META_COUNTRY_CODE );
 			delete_term_meta( $term_id, self::META_DISPLAY_NAME_EN );
 			delete_term_meta( $term_id, self::META_MARKET_STATUS );
+			delete_term_meta( $term_id, self::META_CURRENCY_TERM_ID );
 			return;
 		}
 
 		$country_code    = isset( $_POST['bornado_country_code'] ) ? self::sanitize_country_code( wp_unslash( $_POST['bornado_country_code'] ) ) : '';
 		$display_name_en = isset( $_POST['bornado_country_display_name_en'] ) ? sanitize_text_field( wp_unslash( $_POST['bornado_country_display_name_en'] ) ) : '';
 		$market_status   = isset( $_POST['bornado_country_market_status'] ) ? self::sanitize_market_status( wp_unslash( $_POST['bornado_country_market_status'] ) ) : '';
+		$currency_term_id = isset( $_POST['bornado_country_currency_term_id'] ) ? self::sanitize_currency_term_id( wp_unslash( $_POST['bornado_country_currency_term_id'] ) ) : 0;
 
 		self::update_or_delete_term_meta( $term_id, self::META_COUNTRY_CODE, $country_code );
 		self::update_or_delete_term_meta( $term_id, self::META_DISPLAY_NAME_EN, $display_name_en );
 		self::update_or_delete_term_meta( $term_id, self::META_MARKET_STATUS, $market_status );
+		self::update_or_delete_term_meta( $term_id, self::META_CURRENCY_TERM_ID, $currency_term_id > 0 ? $currency_term_id : '' );
 	}
 
 	/**
@@ -192,6 +245,7 @@ final class Bornado_Country_Model {
 	public static function filter_admin_columns( $columns ) {
 		$columns['bornado_country_code']  = __( 'Country Code', 'bornado-routing' );
 		$columns['bornado_market_status'] = __( 'Market Status', 'bornado-routing' );
+		$columns['bornado_currency']      = __( 'Currency', 'bornado-routing' );
 
 		return $columns;
 	}
@@ -219,6 +273,10 @@ final class Bornado_Country_Model {
 			return isset( $options[ $data['market_status'] ] ) ? $options[ $data['market_status'] ] : '—';
 		}
 
+		if ( 'bornado_currency' === $column_name ) {
+			return $data['is_root_country'] && '' !== $data['currency_name'] ? $data['currency_name'] : '—';
+		}
+
 		return $content;
 	}
 
@@ -234,8 +292,10 @@ final class Bornado_Country_Model {
 			return self::get_empty_country_data();
 		}
 
-		$root_country = self::get_root_country_term( $term );
-		$is_root      = $root_country instanceof WP_Term && (int) $root_country->term_id === (int) $term->term_id;
+		$root_country     = self::get_root_country_term( $term );
+		$is_root          = $root_country instanceof WP_Term && (int) $root_country->term_id === (int) $term->term_id;
+		$currency_term_id = $root_country instanceof WP_Term ? (int) get_term_meta( $root_country->term_id, self::META_CURRENCY_TERM_ID, true ) : 0;
+		$currency_term    = self::get_currency_term_by_id( $currency_term_id );
 
 		return array(
 			'term_id'          => $root_country instanceof WP_Term ? (int) $root_country->term_id : 0,
@@ -244,6 +304,9 @@ final class Bornado_Country_Model {
 			'display_name_en'  => $root_country instanceof WP_Term ? (string) get_term_meta( $root_country->term_id, self::META_DISPLAY_NAME_EN, true ) : '',
 			'country_code'     => $root_country instanceof WP_Term ? (string) get_term_meta( $root_country->term_id, self::META_COUNTRY_CODE, true ) : '',
 			'market_status'    => $root_country instanceof WP_Term ? (string) get_term_meta( $root_country->term_id, self::META_MARKET_STATUS, true ) : '',
+			'currency_term_id' => $currency_term instanceof WP_Term ? (int) $currency_term->term_id : 0,
+			'currency_name'    => $currency_term instanceof WP_Term ? (string) $currency_term->name : '',
+			'currency_slug'    => $currency_term instanceof WP_Term ? (string) $currency_term->slug : '',
 			'is_root_country'  => $is_root,
 			'root_country_id'  => $root_country instanceof WP_Term ? (int) $root_country->term_id : 0,
 		);
@@ -326,6 +389,21 @@ final class Bornado_Country_Model {
 	}
 
 	/**
+	 * Sanitize a selected currency term ID.
+	 *
+	 * @param mixed $value Raw meta value.
+	 * @return int
+	 */
+	public static function sanitize_currency_term_id( $value, ...$args ) {
+		unset( $args );
+
+		$term_id = absint( $value );
+		$term    = self::get_currency_term_by_id( $term_id );
+
+		return $term instanceof WP_Term ? (int) $term->term_id : 0;
+	}
+
+	/**
 	 * Available market status options.
 	 *
 	 * @return array<string,string>
@@ -342,11 +420,57 @@ final class Bornado_Country_Model {
 	}
 
 	/**
+	 * Return available ad currency terms for admin dropdowns.
+	 *
+	 * @return array<int,string>
+	 */
+	private static function get_currency_options() {
+		$options = array();
+		$terms   = get_terms(
+			array(
+				'taxonomy'   => self::CURRENCY_TAXONOMY,
+				'hide_empty' => false,
+				'orderby'    => 'name',
+				'order'      => 'ASC',
+			)
+		);
+
+		if ( is_wp_error( $terms ) || empty( $terms ) ) {
+			return $options;
+		}
+
+		foreach ( $terms as $term ) {
+			if ( $term instanceof WP_Term ) {
+				$options[ (int) $term->term_id ] = (string) $term->name;
+			}
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Resolve a currency term by ID.
+	 *
+	 * @param int $term_id Currency term ID.
+	 * @return WP_Term|null
+	 */
+	private static function get_currency_term_by_id( $term_id ) {
+		$term_id = absint( $term_id );
+		if ( $term_id < 1 ) {
+			return null;
+		}
+
+		$term = get_term( $term_id, self::CURRENCY_TAXONOMY );
+
+		return $term instanceof WP_Term ? $term : null;
+	}
+
+	/**
 	 * Update term meta or delete it when empty.
 	 *
 	 * @param int    $term_id Term ID.
 	 * @param string $meta_key Meta key.
-	 * @param string $value Meta value.
+	 * @param string|int $value Meta value.
 	 * @return void
 	 */
 	private static function update_or_delete_term_meta( $term_id, $meta_key, $value ) {
@@ -371,6 +495,9 @@ final class Bornado_Country_Model {
 			'display_name_en' => '',
 			'country_code'    => '',
 			'market_status'   => '',
+			'currency_term_id' => 0,
+			'currency_name'   => '',
+			'currency_slug'   => '',
 			'is_root_country' => false,
 			'root_country_id' => 0,
 		);
