@@ -115,6 +115,29 @@
 		}
 	}
 
+	function syncPersistedLocationSelection(selected) {
+		var searchCore = window.BornadoSearchCore || null;
+		var locationKeys = ["country_id", "ad_country", "location", "city_id", "bornado_country", "bornado_city"];
+		var deepestTermId = Number(selected && selected.deepestTermId ? selected.deepestTermId : 0);
+
+		if (!searchCore) {
+			return;
+		}
+
+		if (deepestTermId > 0) {
+			var params = new URLSearchParams();
+			params.set("country_id", String(deepestTermId));
+			if (typeof searchCore.mergePersistedContext === "function") {
+				searchCore.mergePersistedContext(params);
+			}
+			return;
+		}
+
+		if (typeof searchCore.clearPersistedContext === "function") {
+			searchCore.clearPersistedContext(locationKeys);
+		}
+	}
+
 	function Picker(root) {
 		this.root = root;
 		this.config = parseConfig(root);
@@ -449,6 +472,7 @@
 		}
 		this.renderCities(0, []);
 		this.refreshSummary();
+		syncPersistedLocationSelection(this.state.selected);
 	};
 
 	Picker.prototype.applySelection = function () {
@@ -457,6 +481,7 @@
 		}
 
 		this.refreshSummary();
+		syncPersistedLocationSelection(this.state.selected);
 
 		if (!this.config.submitOnApply) {
 			this.closePanel();

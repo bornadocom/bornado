@@ -8,6 +8,7 @@ final class Bornado_Country_Model {
 	const TAXONOMY             = 'ad_country';
 	const CURRENCY_TAXONOMY    = 'ad_currency';
 	const META_COUNTRY_CODE    = '_bornado_country_code';
+	const META_PHONE_DIAL_CODE = '_bornado_country_phone_dial_code';
 	const META_DISPLAY_NAME_EN = '_bornado_country_display_name_en';
 	const META_MARKET_STATUS   = '_bornado_country_market_status';
 	const META_CURRENCY_TERM_ID = '_bornado_country_currency_term_id';
@@ -61,6 +62,18 @@ final class Bornado_Country_Model {
 
 		register_term_meta(
 			self::TAXONOMY,
+			self::META_PHONE_DIAL_CODE,
+			array(
+				'type'              => 'string',
+				'single'            => true,
+				'sanitize_callback' => array( __CLASS__, 'sanitize_phone_dial_code' ),
+				'show_in_rest'      => true,
+				'auth_callback'     => array( __CLASS__, 'can_manage_terms' ),
+			)
+		);
+
+		register_term_meta(
+			self::TAXONOMY,
 			self::META_MARKET_STATUS,
 			array(
 				'type'              => 'string',
@@ -102,6 +115,11 @@ final class Bornado_Country_Model {
 			<label for="bornado-country-display-name-en"><?php esc_html_e( 'English Display Name', 'bornado-routing' ); ?></label>
 			<input type="text" name="bornado_country_display_name_en" id="bornado-country-display-name-en" value="" />
 			<p><?php esc_html_e( 'Optional canonical English market label, for example United Kingdom.', 'bornado-routing' ); ?></p>
+		</div>
+		<div class="form-field term-bornado-country-phone-dial-code-wrap">
+			<label for="bornado-country-phone-dial-code"><?php esc_html_e( 'Phone Dial Code', 'bornado-routing' ); ?></label>
+			<input type="text" name="bornado_country_phone_dial_code" id="bornado-country-phone-dial-code" value="" maxlength="5" placeholder="+44" />
+			<p><?php esc_html_e( 'For root market terms only. Use the international calling code, for example +44, +1, +98, +971.', 'bornado-routing' ); ?></p>
 		</div>
 		<div class="form-field term-bornado-country-status-wrap">
 			<label for="bornado-country-market-status"><?php esc_html_e( 'Market Status', 'bornado-routing' ); ?></label>
@@ -162,6 +180,13 @@ final class Bornado_Country_Model {
 				<p class="description"><?php esc_html_e( 'Optional canonical English market label, for example United Kingdom.', 'bornado-routing' ); ?></p>
 			</td>
 		</tr>
+		<tr class="form-field term-bornado-country-phone-dial-code-wrap">
+			<th scope="row"><label for="bornado-country-phone-dial-code"><?php esc_html_e( 'Phone Dial Code', 'bornado-routing' ); ?></label></th>
+			<td>
+				<input type="text" name="bornado_country_phone_dial_code" id="bornado-country-phone-dial-code" value="<?php echo esc_attr( $data['phone_dial_code'] ); ?>" maxlength="5" placeholder="+44" />
+				<p class="description"><?php esc_html_e( 'For root market terms only. Use the international calling code, for example +44, +1, +98, +971.', 'bornado-routing' ); ?></p>
+			</td>
+		</tr>
 		<tr class="form-field term-bornado-country-status-wrap">
 			<th scope="row"><label for="bornado-country-market-status"><?php esc_html_e( 'Market Status', 'bornado-routing' ); ?></label></th>
 			<td>
@@ -219,6 +244,7 @@ final class Bornado_Country_Model {
 
 		if ( ! self::is_root_country_term( $term ) ) {
 			delete_term_meta( $term_id, self::META_COUNTRY_CODE );
+			delete_term_meta( $term_id, self::META_PHONE_DIAL_CODE );
 			delete_term_meta( $term_id, self::META_DISPLAY_NAME_EN );
 			delete_term_meta( $term_id, self::META_MARKET_STATUS );
 			delete_term_meta( $term_id, self::META_CURRENCY_TERM_ID );
@@ -226,11 +252,13 @@ final class Bornado_Country_Model {
 		}
 
 		$country_code    = isset( $_POST['bornado_country_code'] ) ? self::sanitize_country_code( wp_unslash( $_POST['bornado_country_code'] ) ) : '';
+		$phone_dial_code = isset( $_POST['bornado_country_phone_dial_code'] ) ? self::sanitize_phone_dial_code( wp_unslash( $_POST['bornado_country_phone_dial_code'] ) ) : '';
 		$display_name_en = isset( $_POST['bornado_country_display_name_en'] ) ? sanitize_text_field( wp_unslash( $_POST['bornado_country_display_name_en'] ) ) : '';
 		$market_status   = isset( $_POST['bornado_country_market_status'] ) ? self::sanitize_market_status( wp_unslash( $_POST['bornado_country_market_status'] ) ) : '';
 		$currency_term_id = isset( $_POST['bornado_country_currency_term_id'] ) ? self::sanitize_currency_term_id( wp_unslash( $_POST['bornado_country_currency_term_id'] ) ) : 0;
 
 		self::update_or_delete_term_meta( $term_id, self::META_COUNTRY_CODE, $country_code );
+		self::update_or_delete_term_meta( $term_id, self::META_PHONE_DIAL_CODE, $phone_dial_code );
 		self::update_or_delete_term_meta( $term_id, self::META_DISPLAY_NAME_EN, $display_name_en );
 		self::update_or_delete_term_meta( $term_id, self::META_MARKET_STATUS, $market_status );
 		self::update_or_delete_term_meta( $term_id, self::META_CURRENCY_TERM_ID, $currency_term_id > 0 ? $currency_term_id : '' );
@@ -244,6 +272,7 @@ final class Bornado_Country_Model {
 	 */
 	public static function filter_admin_columns( $columns ) {
 		$columns['bornado_country_code']  = __( 'Country Code', 'bornado-routing' );
+		$columns['bornado_phone_dial_code'] = __( 'Phone Dial Code', 'bornado-routing' );
 		$columns['bornado_market_status'] = __( 'Market Status', 'bornado-routing' );
 		$columns['bornado_currency']      = __( 'Currency', 'bornado-routing' );
 
@@ -271,6 +300,10 @@ final class Bornado_Country_Model {
 
 			$options = self::get_market_status_options();
 			return isset( $options[ $data['market_status'] ] ) ? $options[ $data['market_status'] ] : '—';
+		}
+
+		if ( 'bornado_phone_dial_code' === $column_name ) {
+			return $data['is_root_country'] && '' !== $data['phone_dial_code'] ? $data['phone_dial_code'] : '—';
 		}
 
 		if ( 'bornado_currency' === $column_name ) {
@@ -303,6 +336,7 @@ final class Bornado_Country_Model {
 			'display_name_fa'  => $root_country instanceof WP_Term ? (string) $root_country->name : '',
 			'display_name_en'  => $root_country instanceof WP_Term ? (string) get_term_meta( $root_country->term_id, self::META_DISPLAY_NAME_EN, true ) : '',
 			'country_code'     => $root_country instanceof WP_Term ? (string) get_term_meta( $root_country->term_id, self::META_COUNTRY_CODE, true ) : '',
+			'phone_dial_code'  => $root_country instanceof WP_Term ? (string) get_term_meta( $root_country->term_id, self::META_PHONE_DIAL_CODE, true ) : '',
 			'market_status'    => $root_country instanceof WP_Term ? (string) get_term_meta( $root_country->term_id, self::META_MARKET_STATUS, true ) : '',
 			'currency_term_id' => $currency_term instanceof WP_Term ? (int) $currency_term->term_id : 0,
 			'currency_name'    => $currency_term instanceof WP_Term ? (string) $currency_term->name : '',
@@ -371,6 +405,38 @@ final class Bornado_Country_Model {
 		$value = strtoupper( preg_replace( '/[^A-Za-z]/', '', (string) $value ) );
 
 		return strlen( $value ) <= 2 ? $value : substr( $value, 0, 2 );
+	}
+
+	/**
+	 * Sanitize an international phone dial code.
+	 *
+	 * @param mixed $value Raw meta value.
+	 * @return string
+	 */
+	public static function sanitize_phone_dial_code( $value, ...$args ) {
+		unset( $args );
+
+		$value = trim( (string) $value );
+		$value = preg_replace( '/[^\d+]/', '', $value );
+
+		if ( '' === $value ) {
+			return '';
+		}
+
+		if ( 0 === strpos( $value, '00' ) ) {
+			$value = '+' . substr( $value, 2 );
+		} elseif ( '+' !== substr( $value, 0, 1 ) ) {
+			$value = '+' . ltrim( $value, '+' );
+		}
+
+		$digits = preg_replace( '/[^\d]/', '', $value );
+		if ( '' === $digits ) {
+			return '';
+		}
+
+		$normalized = '+' . $digits;
+
+		return preg_match( '/^\+\d{1,4}$/', $normalized ) ? $normalized : '';
 	}
 
 	/**
@@ -494,6 +560,7 @@ final class Bornado_Country_Model {
 			'display_name_fa' => '',
 			'display_name_en' => '',
 			'country_code'    => '',
+			'phone_dial_code' => '',
 			'market_status'   => '',
 			'currency_term_id' => 0,
 			'currency_name'   => '',

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bornado.local/schemas/listing.published.v1.schema.json",
+  "title": "ListingPublishedV1",
+  "allOf": [
+    { "$ref": "./event-envelope.v1.schema.json" },
+    {
+      "type": "object",
+      "properties": {
+        "eventType": { "const": "listing.published" },
+        "payload": {
+          "type": "object",
+          "required": ["user", "listing"],
+          "properties": {
+            "user": {
+              "type": "object",
+              "required": ["id", "displayName"],
+              "properties": {
+                "id": { "type": "string" },
+                "displayName": { "type": "string" },
+                "email": { "type": "string" },
+                "phone": { "type": "string" }
+              }
+            },
+            "listing": {
+              "type": "object",
+              "required": ["id", "title", "manageUrl"],
+              "properties": {
+                "id": { "type": "string" },
+                "title": { "type": "string" },
+                "manageUrl": { "type": "string" },
+                "editUrl": { "type": "string" },
+                "deleteUrl": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

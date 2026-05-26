@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bornado.local/schemas/listing.expiring_soon.v1.schema.json",
+  "title": "ListingExpiringSoonV1",
+  "allOf": [
+    { "$ref": "./event-envelope.v1.schema.json" },
+    {
+      "type": "object",
+      "properties": {
+        "eventType": { "const": "listing.expiring_soon" },
+        "payload": {
+          "type": "object",
+          "required": ["listing"],
+          "properties": {
+            "listing": {
+              "type": "object",
+              "required": ["id", "title", "manageUrl"],
+              "properties": {
+                "id": { "type": "string" },
+                "title": { "type": "string" },
+                "manageUrl": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

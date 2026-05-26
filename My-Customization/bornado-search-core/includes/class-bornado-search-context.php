@@ -45,6 +45,16 @@ final class Bornado_Search_Context {
 		);
 
 		$default_action = self::get_search_page_url( (string) $args['widget_action'] );
+		if ( ! self::supports_contextual_filter_actions( $default_action ) ) {
+			return array(
+				'default_action'        => $default_action,
+				'all_countries_action'  => $default_action,
+				'all_cities_action'     => $default_action,
+				'all_categories_action' => $default_action,
+				'all_filters_action'    => $default_action,
+			);
+		}
+
 		$segments       = self::get_request_segments();
 		if ( ! empty( $segments ) ) {
 			$segments = self::strip_search_page_prefix( $segments, $default_action );
@@ -142,6 +152,34 @@ final class Bornado_Search_Context {
 		}
 
 		return home_url( user_trailingslashit( implode( '/', $segments ) ) );
+	}
+
+	/**
+	 * Limit contextual "remove filter" actions to real search/archive routes.
+	 *
+	 * On single ads or unrelated pages, deriving actions from the current path
+	 * would point back to that page and make header searches appear as refreshes.
+	 *
+	 * @param string $default_action Search page URL.
+	 * @return bool
+	 */
+	private static function supports_contextual_filter_actions( $default_action ) {
+		$route_context = function_exists( 'bornado_seo_routing_get_context' ) ? bornado_seo_routing_get_context() : array();
+		if ( ! empty( $route_context['is_seo_route'] ) && ! empty( $route_context['is_valid'] ) ) {
+			return true;
+		}
+
+		if ( is_tax( 'ad_country' ) || is_tax( 'ad_cats' ) ) {
+			return true;
+		}
+
+		$request_segments     = self::get_request_segments();
+		$search_page_segments = self::get_relative_path_segments( $default_action );
+		if ( empty( $request_segments ) || empty( $search_page_segments ) ) {
+			return false;
+		}
+
+		return self::segments_start_with( $request_segments, $search_page_segments );
 	}
 
 	/**

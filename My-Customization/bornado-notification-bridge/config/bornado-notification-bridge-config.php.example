@@ -1,0 +1,13 @@
+<?php
+
+if (!defined('BORNADO_NOTIFICATION_INGEST_URL')) {
+    define('BORNADO_NOTIFICATION_INGEST_URL', 'https://your-domain.com/notification-platform/public/events');
+}
+
+if (!defined('BORNADO_NOTIFICATION_SHARED_SECRET')) {
+    define('BORNADO_NOTIFICATION_SHARED_SECRET', 'replace-with-the-same-shared-secret-as-the-service');
+}
+
+if (!defined('BORNADO_NOTIFICATION_SOURCE_SYSTEM')) {
+    define('BORNADO_NOTIFICATION_SOURCE_SYSTEM', 'bornado-wordpress');
+}

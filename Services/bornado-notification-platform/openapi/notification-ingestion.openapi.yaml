@@ -1,0 +1,62 @@
+openapi: 3.1.0
+info:
+  title: Bornado Notification Ingestion API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8085
+paths:
+  /events:
+    post:
+      summary: Accept a business event for asynchronous notification delivery
+      security:
+        - bornadoSignature: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventEnvelope'
+      responses:
+        '202':
+          description: Event accepted and queued
+        '400':
+          description: Invalid JSON or missing body
+        '401':
+          description: Invalid signature
+        '422':
+          description: Schema validation failed
+components:
+  securitySchemes:
+    bornadoSignature:
+      type: apiKey
+      in: header
+      name: X-Bornado-Signature
+  schemas:
+    EventEnvelope:
+      type: object
+      required:
+        - eventId
+        - eventType
+        - eventVersion
+        - occurredAt
+        - sourceSystem
+        - idempotencyKey
+        - payload
+      properties:
+        eventId:
+          type: string
+        eventType:
+          type: string
+        eventVersion:
+          type: integer
+        occurredAt:
+          type: string
+          format: date-time
+        sourceSystem:
+          type: string
+        idempotencyKey:
+          type: string
+        locale:
+          type: string
+        payload:
+          type: object

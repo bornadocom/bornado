@@ -2,7 +2,7 @@
 /**
  * Plugin Name: AdForest Mobile Bottom Navigation
  * Description: Dynamic mobile bottom navigation for AdForest + Elementor without Elementor Pro.
- * Version: 1.3.0
+ * Version: 1.3.4
  * Author: Bornado
  * Text Domain: adf-mobile-bottom-nav
  */
@@ -59,14 +59,14 @@ final class ADF_Mobile_Bottom_Nav {
 			'adf-mobile-bottom-nav',
 			$plugin_url . 'assets/css/adf-mobile-bottom-nav.css',
 			array(),
-			'1.3.0'
+			'1.3.4'
 		);
 
 		wp_enqueue_script(
 			'adf-mobile-bottom-nav',
 			$plugin_url . 'assets/js/adf-mobile-bottom-nav.js',
 			array( 'bornado-search-core' ),
-			'1.3.0',
+			'1.3.4',
 			true
 		);
 
@@ -101,6 +101,9 @@ final class ADF_Mobile_Bottom_Nav {
 				'selectedCategory' => $this->get_selected_category(),
 				'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
 				'countriesNonce' => wp_create_nonce( 'adforest_get_countries_nonce' ),
+				'isLoggedIn'    => is_user_logged_in(),
+				'favoritesUrl'  => is_user_logged_in() ? $this->get_favorites_url() : '',
+				'favoritesLoginMessage' => __( 'برای مشاهده علاقه‌مندی‌ها ابتدا وارد حساب کاربری شوید.', 'adf-mobile-bottom-nav' ),
 			)
 		);
 	}
@@ -141,6 +144,7 @@ final class ADF_Mobile_Bottom_Nav {
 	private function get_nav_markup( $items, $from_shortcode = false ) {
 		$current_url = home_url( add_query_arg( array(), $GLOBALS['wp']->request ) );
 		$rendered    = array();
+		$items       = $this->filter_nav_items( $this->maybe_append_auth_item( $items ) );
 
 		foreach ( $items as $item ) {
 			$url = $this->resolve_item_link( $item );
@@ -148,16 +152,19 @@ final class ADF_Mobile_Bottom_Nav {
 				continue;
 			}
 
-			$is_active = $this->urls_match( $url, $current_url );
+			$item_label = $this->get_item_label( $item );
+			$is_active = $this->is_item_active( $item, $url, $current_url );
 			$classes   = 'adf-mbn__item' . ( $is_active ? ' is-active' : '' );
+			$link_attrs = $this->get_item_link_attrs( $item, $url );
 
 			$rendered[] = sprintf(
-				'<li class="%1$s"><a class="adf-mbn__link" href="%2$s" aria-label="%3$s">%4$s<span class="adf-mbn__label">%5$s</span>%6$s</a></li>',
+				'<li class="%1$s"><a class="adf-mbn__link" href="%2$s" aria-label="%3$s" %4$s>%5$s<span class="adf-mbn__label">%6$s</span>%7$s</a></li>',
 				esc_attr( $classes ),
 				esc_url( $url ),
-				esc_attr( $item['label'] ),
-				$this->get_icon_svg( $item['icon'], $item['label'] ),
-				esc_html( $item['label'] ),
+				esc_attr( $item_label ),
+				$link_attrs,
+				$this->get_icon_svg( $item['icon'], $item_label ),
+				esc_html( $item_label ),
 				! empty( $item['badge'] ) ? '<span class="adf-mbn__badge" aria-hidden="true">' . esc_html( $item['badge'] ) . '</span>' : ''
 			);
 		}
@@ -204,6 +211,148 @@ final class ADF_Mobile_Bottom_Nav {
 		return ! empty( $item['url'] ) ? esc_url_raw( $item['url'] ) : '';
 	}
 
+	private function is_item_active( $item, $url, $current_url ) {
+		if ( ! empty( $item['dynamic'] ) && 'auth' === $item['dynamic'] && ! is_user_logged_in() ) {
+			return false;
+		}
+
+		if ( ! empty( $item['dynamic'] ) && 'favorites' === $item['dynamic'] ) {
+			return is_user_logged_in()
+				&& isset( $_GET['page_type'] )
+				&& 'fav_ads' === sanitize_key( wp_unslash( $_GET['page_type'] ) );
+		}
+
+		if ( ! empty( $item['dynamic'] ) && 'post-ad' === $item['dynamic'] ) {
+			if ( ! is_user_logged_in() ) {
+				return false;
+			}
+
+			global $adforest_theme;
+
+			$page_id = isset( $adforest_theme['sb_post_ad_page'] )
+				? (int) apply_filters( 'adforest_language_page_id', $adforest_theme['sb_post_ad_page'] )
+				: 0;
+
+			if ( $page_id ) {
+				return is_page( $page_id );
+			}
+
+			return $this->urls_match( $this->get_post_ad_url(), $current_url );
+		}
+
+		return $this->urls_match( $url, $current_url );
+	}
+
+	private function get_item_link_attrs( $item, $url ) {
+		if ( ! empty( $item['dynamic'] ) && 'favorites' === $item['dynamic'] && ! is_user_logged_in() ) {
+			return 'data-adf-mbn-favorites-guest="1" role="button"';
+		}
+
+		if ( ! empty( $item['dynamic'] ) && 'post-ad' === $item['dynamic'] && ! is_user_logged_in() ) {
+			if ( function_exists( 'bornado_auth_modal_trigger_attrs' ) ) {
+				return bornado_auth_modal_trigger_attrs( 'login', 'phone' ) . ' role="button"';
+			}
+			return 'role="button"';
+		}
+
+		if ( empty( $item['dynamic'] ) || 'auth' !== $item['dynamic'] || is_user_logged_in() ) {
+			return '';
+		}
+
+		if ( function_exists( 'bornado_auth_modal_trigger_attrs' ) ) {
+			return bornado_auth_modal_trigger_attrs( 'login', 'phone' );
+		}
+
+		return '';
+	}
+
+	private function get_favorites_url() {
+		$profile = function_exists( 'bornado_auth_modal_profile_url' )
+			? bornado_auth_modal_profile_url()
+			: home_url( '/profile/' );
+
+		return add_query_arg( 'page_type', 'fav_ads', $profile );
+	}
+
+	private function get_post_ad_url() {
+		global $adforest_theme;
+
+		$page_id = isset( $adforest_theme['sb_post_ad_page'] )
+			? apply_filters( 'adforest_language_page_id', $adforest_theme['sb_post_ad_page'] )
+			: 0;
+
+		if ( $page_id ) {
+			$url = apply_filters( 'adforest_ad_post_verified_link', get_permalink( $page_id ) );
+			if ( $url ) {
+				return (string) $url;
+			}
+		}
+
+		return home_url( '/ad-post/' );
+	}
+
+	private function get_post_ad_guest_href() {
+		return add_query_arg( 'u', $this->get_post_ad_url(), home_url( '/' ) );
+	}
+
+	private function is_search_nav_item( $item ) {
+		$dynamic = isset( $item['dynamic'] ) ? (string) $item['dynamic'] : '';
+		if ( '' !== $dynamic ) {
+			return false;
+		}
+
+		$icon  = isset( $item['icon'] ) ? (string) $item['icon'] : '';
+		$label = isset( $item['label'] ) ? (string) $item['label'] : '';
+
+		return 'search' === $icon || 'جستجو' === $label;
+	}
+
+	private function filter_nav_items( $items ) {
+		if ( ! is_array( $items ) ) {
+			return array();
+		}
+
+		$filtered = array();
+		foreach ( $items as $item ) {
+			if ( $this->is_search_nav_item( $item ) ) {
+				continue;
+			}
+			$filtered[] = $item;
+		}
+
+		return $filtered;
+	}
+
+	private function maybe_append_auth_item( $items ) {
+		if ( is_user_logged_in() ) {
+			return $items;
+		}
+
+		foreach ( $items as $item ) {
+			if ( ! empty( $item['dynamic'] ) && 'auth' === $item['dynamic'] ) {
+				return $items;
+			}
+		}
+
+		$items[] = array(
+			'label'   => 'ورود',
+			'icon'    => 'user',
+			'url'     => function_exists( 'bornado_auth_modal_fallback_url' ) ? bornado_auth_modal_fallback_url( 'login' ) : home_url( '/' ),
+			'dynamic' => 'auth',
+			'badge'   => '',
+		);
+
+		return $items;
+	}
+
+	private function get_item_label( $item ) {
+		if ( ! empty( $item['dynamic'] ) && 'auth' === $item['dynamic'] && is_user_logged_in() ) {
+			return 'حساب من';
+		}
+
+		return isset( $item['label'] ) ? (string) $item['label'] : '';
+	}
+
 	private function get_top_search_markup( $settings ) {
 		global $adforest_theme;
 
@@ -231,6 +380,9 @@ final class ADF_Mobile_Bottom_Nav {
 			$logo_url = ADFOREST_IMAGE_PATH . '/adt-logo.png';
 		}
 		$logo_alt = get_bloginfo( 'name' );
+		$brand_home_url = function_exists( 'bornado_search_get_brand_home_url' )
+			? bornado_search_get_brand_home_url()
+			: home_url( '/' );
 
 		ob_start();
 		?>
@@ -262,7 +414,7 @@ final class ADF_Mobile_Bottom_Nav {
 					<?php echo $this->render_hidden_search_inputs( array( 'ad_title', 'country_id', 'ad_country', 'cat_id', 'ad_cats' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</form>
 				<?php if ( ! empty( $logo_url ) ) : ?>
-				<a class="adf-mobile-top-search__brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" aria-label="<?php echo esc_attr( $logo_alt ); ?>">
+				<a class="adf-mobile-top-search__brand" href="<?php echo esc_url( $brand_home_url ); ?>" aria-label="<?php echo esc_attr( $logo_alt ); ?>">
 					<img class="adf-mobile-top-search__brand-img" src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( $logo_alt ); ?>" loading="eager" decoding="async" />
 				</a>
 				<?php endif; ?>
@@ -483,7 +635,16 @@ final class ADF_Mobile_Bottom_Nav {
 	private function get_selected_city( $settings ) {
 		$requested     = '';
 		$has_requested = false;
-		if ( isset( $_GET['country_id'] ) ) {
+		$selected_location = class_exists( 'Bornado_Location_Picker_Service' ) && method_exists( 'Bornado_Location_Picker_Service', 'get_selected_location' )
+			? Bornado_Location_Picker_Service::get_selected_location()
+			: array();
+		if ( ! empty( $selected_location['city']['id'] ) ) {
+			$requested     = (string) absint( $selected_location['city']['id'] );
+			$has_requested = true;
+		} elseif ( ! empty( $selected_location['country']['id'] ) ) {
+			$requested     = (string) absint( $selected_location['country']['id'] );
+			$has_requested = true;
+		} elseif ( isset( $_GET['country_id'] ) ) {
 			$requested     = sanitize_text_field( wp_unslash( $_GET['country_id'] ) );
 			$has_requested = true;
 		} elseif ( isset( $_GET['ad_country'] ) ) {
@@ -617,14 +778,22 @@ final class ADF_Mobile_Bottom_Nav {
 			case 'home':
 				return home_url( '/' );
 			case 'dashboard':
-				$page_id = (int) get_option( 'adforest_profile_page' );
-				return $page_id ? get_permalink( $page_id ) : home_url( '/dashboard/' );
+				return function_exists( 'bornado_auth_modal_profile_url' ) ? bornado_auth_modal_profile_url() : home_url( '/profile/' );
+			case 'auth':
+				if ( is_user_logged_in() ) {
+					return function_exists( 'bornado_auth_modal_profile_url' ) ? bornado_auth_modal_profile_url() : home_url( '/profile/' );
+				}
+				return function_exists( 'bornado_auth_modal_fallback_url' ) ? bornado_auth_modal_fallback_url( 'login' ) : home_url( '/' );
 			case 'favorites':
-				$page_id = (int) get_option( 'adforest_fav_page' );
-				return $page_id ? get_permalink( $page_id ) : home_url( '/favorites/' );
+				if ( ! is_user_logged_in() ) {
+					return '#';
+				}
+				return $this->get_favorites_url();
 			case 'post-ad':
-				$page_id = (int) get_option( 'adforest_ad_post_page' );
-				return $page_id ? get_permalink( $page_id ) : home_url( '/post-ad/' );
+				if ( ! is_user_logged_in() ) {
+					return $this->get_post_ad_guest_href();
+				}
+				return $this->get_post_ad_url();
 			default:
 				return '';
 		}
@@ -695,6 +864,10 @@ final class ADF_Mobile_Bottom_Nav {
 		$clean = array();
 
 		foreach ( $items as $item ) {
+			if ( $this->is_search_nav_item( $item ) ) {
+				continue;
+			}
+
 			$label = sanitize_text_field( $item['label'] ?? '' );
 			if ( '' === $label ) {
 				continue;
@@ -739,33 +912,35 @@ final class ADF_Mobile_Bottom_Nav {
 					'badge'   => '',
 				),
 				array(
-					'label'   => 'جستجو',
-					'icon'    => 'search',
-					'url'     => home_url( '/search/' ),
-					'dynamic' => '',
-					'badge'   => '',
-				),
-				array(
 					'label'   => 'ثبت آگهی',
 					'icon'    => 'plus',
-					'url'     => home_url( '/post-ad/' ),
+					'url'     => $this->get_post_ad_url(),
 					'dynamic' => 'post-ad',
 					'badge'   => '',
 				),
 				array(
 					'label'   => 'علاقه‌مندی',
 					'icon'    => 'heart',
-					'url'     => home_url( '/favorites/' ),
+					'url'     => $this->get_favorites_url(),
 					'dynamic' => 'favorites',
-					'badge'   => '2',
+					'badge'   => '',
+				),
+				array(
+					'label'   => 'ورود',
+					'icon'    => 'user',
+					'url'     => function_exists( 'bornado_auth_modal_fallback_url' ) ? bornado_auth_modal_fallback_url( 'login' ) : home_url( '/' ),
+					'dynamic' => 'auth',
+					'badge'   => '',
 				),
 			),
 		);
 	}
 
 	private function get_settings() {
-		$options = get_option( self::OPTION_KEY, array() );
-		return wp_parse_args( $options, $this->defaults() );
+		$options = wp_parse_args( get_option( self::OPTION_KEY, array() ), $this->defaults() );
+		$options['items'] = $this->filter_nav_items( $options['items'] ?? array() );
+
+		return $options;
 	}
 
 	public function render_settings_page() {

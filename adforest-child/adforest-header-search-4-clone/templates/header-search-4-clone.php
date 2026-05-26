@@ -24,6 +24,19 @@ if ($is_sticky_header == '1') {
 }
 
 $sb_profile_page = isset($adforest_theme['sb_profile_page']) ? $adforest_theme['sb_profile_page'] : '';
+$selected_search_context = function_exists('bornado_search_get_selected_context')
+    ? bornado_search_get_selected_context()
+    : array();
+$selected_location_value = '';
+if (!empty($selected_search_context['city'])) {
+    $selected_location_value = (string) $selected_search_context['city'];
+} elseif (!empty($selected_search_context['country'])) {
+    $selected_location_value = (string) $selected_search_context['country'];
+}
+$selected_category_value = !empty($selected_search_context['category']) ? (int) $selected_search_context['category'] : 0;
+$brand_home_url = function_exists('bornado_search_get_brand_home_url')
+    ? bornado_search_get_brand_home_url()
+    : home_url('/');
 
 $topbar_cats = $adforest_theme['adforest_header_ad_cats_selection'] ?? [];
 $center_index = floor((count($topbar_cats) - 1) / 2);
@@ -253,7 +266,7 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
         <div class="tabs-container">
             <div class="logo" data-mobile-logo="<?php echo esc_url($responsive_logo) ?>"
                  data-sticky-logo="<?php echo esc_url($responsive_logo) ?>" <?php echo is_user_logged_in() ? 'style="margin-right: 0px !important"' : ""; ?> >
-                <a href="<?php echo esc_url(home_url('/')); ?>"><img src="<?php echo esc_url($site_logo); ?>"
+                <a href="<?php echo esc_url($brand_home_url); ?>"><img src="<?php echo esc_url($site_logo); ?>"
                                                             alt="<?php echo esc_attr__('logo', 'adforest') ?>"></a>
             </div>
             <div class="tabs-wrapper">
@@ -264,7 +277,7 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
 
                             if (!is_wp_error($taxonomy) && $taxonomy) :
                                 $taxonomy_image = get_option('adforest_taxonomy_image' . $taxonomy->term_id);
-                                $current_cat_id = isset($_GET['cat_id']) ? intval($_GET['cat_id']) : 0;
+                                $current_cat_id = $selected_category_value;
                                 $is_active = ($current_cat_id == $cat_id) ? 'active' : '';
                                 ?>
                                 <li class="nav-item" role="presentation">
@@ -920,13 +933,7 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                                     case 'location':
                                         $field_name = 'country_id';
                                         $current_value = '';
-                                        if (isset($_GET['country_id'])) {
-                                            $current_value = sanitize_text_field(wp_unslash($_GET['country_id']));
-                                        } elseif (isset($_GET['ad_country'])) {
-                                            $current_value = sanitize_text_field(wp_unslash($_GET['ad_country']));
-                                        } elseif (isset($_GET['location'])) {
-                                            $current_value = sanitize_text_field(wp_unslash($_GET['location']));
-                                        }
+                                        $current_value = $selected_location_value;
                                         $form_field_names[] = $field_name;
                                         ?>
                                         <div class="<?php echo esc_attr(trim($wrapper_classes . ' bornado-location-filter')); ?>">
@@ -970,7 +977,7 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
 
                                     case 'category':
                                         $field_name = 'cat_id';
-                                        $current_value = isset($_GET[$field_name]) ? intval($_GET[$field_name]) : 0;
+                                        $current_value = $selected_category_value;
                                         $form_field_names[] = $field_name;
                                         ?>
                                         <div class="<?php echo esc_attr($wrapper_classes); ?>">
@@ -1010,8 +1017,8 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                             array('type', 'title', 'paged', 'ad_country', 'location')
                         ));
 
-                        if (!$has_category_field && isset($_GET['cat_id'])) {
-                            adforest_header_render_hidden_fields('cat_id', intval($_GET['cat_id']));
+                        if (!$has_category_field && $selected_category_value > 0) {
+                            adforest_header_render_hidden_fields('cat_id', $selected_category_value);
                             $excluded_params[] = 'cat_id';
                         }
 
@@ -1035,6 +1042,10 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                         : new URLSearchParams(window.location.search);
 
                     urlParams.set('cat_id', catId);
+
+                    if (sharedSearchCore && typeof sharedSearchCore.mergePersistedContext === "function") {
+                        sharedSearchCore.mergePersistedContext(urlParams);
+                    }
 
                     // Redirect to the search page with the category parameter
                     const newUrl = searchPageUrl + '?' + urlParams.toString();
@@ -1160,11 +1171,11 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
             <div class="buttons-box">
                 <?php if (!is_user_logged_in()) { ?>
                     <?php if ($show_sign_in) : ?>
-                        <a href="<?php echo esc_url($sign_in_url); ?>" class="sign-in<?php echo $show_sign_up ? ' sign-in--with-register' : ''; ?>"><i
+                        <a href="<?php echo esc_url($sign_in_url); ?>" <?php echo function_exists('bornado_auth_modal_trigger_attrs') ? bornado_auth_modal_trigger_attrs('login', 'phone') : ''; ?> class="sign-in<?php echo $show_sign_up ? ' sign-in--with-register' : ''; ?>"><i
                                     class="fas fa-sign-in-alt"></i><?php echo esc_html__("Sign in", "adforest"); ?></a>
                     <?php endif; ?>
                     <?php if ($show_sign_up) : ?>
-                        <a href="<?php echo esc_url($sign_up_url); ?>" class="sign-up"><i
+                        <a href="<?php echo esc_url($sign_up_url); ?>" <?php echo function_exists('bornado_auth_modal_trigger_attrs') ? bornado_auth_modal_trigger_attrs('register', 'phone') : ''; ?> class="sign-up"><i
                                     class="fas fa-sign-in-alt"></i><?php echo esc_html__("Register", "adforest"); ?></a>
                     <?php endif; ?>
                 <?php } else { ?>

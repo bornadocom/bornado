@@ -51,6 +51,17 @@ if ( ! function_exists( 'bornado_search_get_selected_context' ) ) {
 	}
 }
 
+if ( ! function_exists( 'bornado_search_get_brand_home_url' ) ) {
+	/**
+	 * Return the logo destination based on the visitor's current location context.
+	 *
+	 * @return string
+	 */
+	function bornado_search_get_brand_home_url() {
+		return Bornado_Search_Core::get_brand_home_url();
+	}
+}
+
 if ( ! function_exists( 'bornado_search_build_clean_query_args' ) ) {
 	/**
 	 * Normalize a source array and drop empty values.

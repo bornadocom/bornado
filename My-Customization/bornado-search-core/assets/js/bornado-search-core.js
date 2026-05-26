@@ -1,6 +1,16 @@
 (function (window) {
 	"use strict";
 
+	var config = window.BornadoSearchCoreConfig || {};
+	var CONTEXT_KEYS = [
+		"country_id",
+		"ad_country",
+		"location",
+		"city_id",
+		"bornado_country",
+		"bornado_city"
+	];
+
 	function toElement(node) {
 		if (window.jQuery && node && node.jquery) {
 			return node[0] || null;
@@ -41,6 +51,65 @@
 		}
 
 		return new window.URLSearchParams();
+	}
+
+	function getCookieName() {
+		return String(config.cookieName || "bornado_search_context");
+	}
+
+	function getCookieTtl() {
+		var ttl = Number(config.cookieTtl || 2592000);
+		return ttl > 0 ? ttl : 2592000;
+	}
+
+	function readContextCookie() {
+		var cookieName = getCookieName();
+		var prefix = cookieName + "=";
+		var entries = String(document.cookie || "").split(";");
+
+		for (var index = 0; index < entries.length; index += 1) {
+			var item = entries[index].trim();
+			if (item.indexOf(prefix) !== 0) {
+				continue;
+			}
+
+			try {
+				var rawValue = decodeURIComponent(item.slice(prefix.length));
+				var parsed = JSON.parse(rawValue);
+				return parsed && typeof parsed === "object" ? parsed : {};
+			} catch (error) {
+				return {};
+			}
+		}
+
+		return {};
+	}
+
+	function normalizeContextValue(value) {
+		return value == null ? "" : String(value).trim();
+	}
+
+	function writeContextCookie(context) {
+		var payload = {};
+
+		CONTEXT_KEYS.forEach(function (key) {
+			if (!Object.prototype.hasOwnProperty.call(context || {}, key)) {
+				return;
+			}
+
+			var value = normalizeContextValue(context[key]);
+			if (value !== "") {
+				payload[key] = value;
+			}
+		});
+
+		document.cookie =
+			getCookieName() +
+			"=" +
+			encodeURIComponent(JSON.stringify(payload)) +
+			"; path=/; max-age=" +
+			String(getCookieTtl()) +
+			"; SameSite=Lax";
 	}
 
 	function isCustomManagedSearchForm(form) {
@@ -141,6 +210,61 @@
 		return api.buildSearchParamsFromSource(window.location.search) || new window.URLSearchParams();
 	};
 
+	api.getPersistedContext = function () {
+		return readContextCookie();
+	};
+
+	api.clearPersistedContext = function (keys) {
+		var persisted = readContextCookie();
+		(keys || []).forEach(function (key) {
+			delete persisted[key];
+		});
+		writeContextCookie(persisted);
+	};
+
+	api.mergePersistedContext = function (source) {
+		var persisted = readContextCookie();
+		var searchParams = api.buildSearchParamsFromSource(source);
+		if (!searchParams) {
+			return persisted;
+		}
+
+		CONTEXT_KEYS.forEach(function (key) {
+			if (!searchParams.has(key)) {
+				return;
+			}
+			persisted[key] = normalizeContextValue(searchParams.get(key));
+		});
+
+		writeContextCookie(persisted);
+		return persisted;
+	};
+
+	api.persistSearchParams = function (source) {
+		var persisted = readContextCookie();
+		var searchParams = api.buildSearchParamsFromSource(source);
+		if (!searchParams) {
+			writeContextCookie(persisted);
+			return persisted;
+		}
+
+		CONTEXT_KEYS.forEach(function (key) {
+			if (searchParams.has(key)) {
+				persisted[key] = normalizeContextValue(searchParams.get(key));
+				return;
+			}
+			delete persisted[key];
+		});
+
+		writeContextCookie(persisted);
+		return persisted;
+	};
+
+	api.persistFormContext = function (form) {
+		var searchParams = api.buildSearchParams(form);
+		return api.persistSearchParams(searchParams);
+	};
+
 	api.buildUrlFromForm = function (form, targetUrl) {
 		form = toElement(form);
 		if (!form || typeof window.URL === "undefined") {
@@ -159,6 +283,7 @@
 			return false;
 		}
 
+		api.persistSearchParams(url.search);
 		window.location.href = url.toString();
 		return true;
 	};

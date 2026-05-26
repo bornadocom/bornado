@@ -71,12 +71,16 @@ if (!function_exists('adforest_get_ad_images')) {
     {
         $re_order = get_post_meta($pid, '_sb_photo_arrangement_', true);
         if ($re_order !== '') {
-            return explode(',', $re_order);
+            $ordered_ids = array_values(array_filter(array_map('intval', array_map('trim', explode(',', $re_order)))));
+            if (!empty($ordered_ids)) {
+                return $ordered_ids;
+            }
         }
 
         $attached_media = get_attached_media('', $pid);
         if (!empty($attached_media)) {
-            return $attached_media;
+            // Numeric keys so callers like Recent Ads Widget ($media[0]) work.
+            return array_values(array_map('intval', array_keys($attached_media)));
         }
 
         $fallback_attachment_id = bornado_pick_fallback_image_for_ad_category($pid);
@@ -106,11 +110,35 @@ if (file_exists($bornado_breadcrumb_bootstrap)) {
 }
 
 /**
+ * Respect category-template Show/Hide flags in the category search sidebar.
+ */
+$bornado_category_search_sidebar_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-category-search-sidebar.php';
+if (file_exists($bornado_category_search_sidebar_bootstrap)) {
+    require_once $bornado_category_search_sidebar_bootstrap;
+}
+
+/**
  * Keep ad currency aligned with the selected country/city without touching theme core files.
  */
 $bornado_ad_currency_sync_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-ad-currency-sync.php';
 if (file_exists($bornado_ad_currency_sync_bootstrap)) {
     require_once $bornado_ad_currency_sync_bootstrap;
+}
+
+/**
+ * Shared phone-country helpers for ad post, auth modal, and profile UX.
+ */
+$bornado_phone_support_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-phone-support.php';
+if (file_exists($bornado_phone_support_bootstrap)) {
+    require_once $bornado_phone_support_bootstrap;
+}
+
+/**
+ * Keep ad phone numbers aligned with the selected country/city without touching theme core files.
+ */
+$bornado_ad_phone_sync_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-ad-phone-sync.php';
+if (file_exists($bornado_ad_phone_sync_bootstrap)) {
+    require_once $bornado_ad_phone_sync_bootstrap;
 }
 
 /**
@@ -127,6 +155,14 @@ if (file_exists($bornado_header_clone_bootstrap)) {
 $bornado_ad_post_guard_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-ad-post-guard.php';
 if (file_exists($bornado_ad_post_guard_bootstrap)) {
     require_once $bornado_ad_post_guard_bootstrap;
+}
+
+/**
+ * Keep dashboard profile phone UX aligned with the selected country dial code.
+ */
+$bornado_profile_phone_guard_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-profile-phone-guard.php';
+if (file_exists($bornado_profile_phone_guard_bootstrap)) {
+    require_once $bornado_profile_phone_guard_bootstrap;
 }
 
 /**

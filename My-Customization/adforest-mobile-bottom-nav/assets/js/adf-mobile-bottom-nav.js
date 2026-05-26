@@ -734,4 +734,41 @@
 		}
 		handleScroll();
 	});
+
+	var favoritesToastTimer = null;
+
+	function showFavoritesLoginMessage() {
+		var message = config.favoritesLoginMessage || "برای مشاهده علاقه‌مندی‌ها ابتدا وارد حساب کاربری شوید.";
+		var toast = document.querySelector(".adf-mbn-toast");
+
+		if (!toast) {
+			toast = document.createElement("div");
+			toast.className = "adf-mbn-toast";
+			toast.setAttribute("role", "status");
+			toast.setAttribute("aria-live", "polite");
+			document.body.appendChild(toast);
+		}
+
+		toast.textContent = message;
+		toast.classList.add("is-visible");
+
+		if (favoritesToastTimer) {
+			window.clearTimeout(favoritesToastTimer);
+		}
+
+		favoritesToastTimer = window.setTimeout(function () {
+			toast.classList.remove("is-visible");
+		}, 3200);
+	}
+
+	if (nav) {
+		nav.addEventListener("click", function (event) {
+			var guestLink = event.target.closest("[data-adf-mbn-favorites-guest]");
+			if (!guestLink) {
+				return;
+			}
+			event.preventDefault();
+			showFavoritesLoginMessage();
+		});
+	}
 })();

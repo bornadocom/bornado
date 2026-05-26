@@ -41,6 +41,16 @@ if ( ! function_exists( 'bornado_enqueue_ad_post_guard_assets' ) ) {
 					(int) get_current_user_id(),
 					(int) get_queried_object_id()
 				),
+				'phoneCountries' => function_exists( 'bornado_get_phone_country_options' ) ? bornado_get_phone_country_options() : array(),
+				'defaultPhoneCountry' => function_exists( 'bornado_get_default_phone_country_option' ) ? bornado_get_default_phone_country_option() : array(),
+				'i18n' => array(
+					'phoneExample' => __( 'نمونه نهایی', 'adforest-child' ),
+					'localPhoneExample' => __( 'نمونه شماره بدون کد کشور', 'adforest-child' ),
+					'selectCountry' => __( 'ابتدا کشور را انتخاب کنید تا کد تلفن همان کشور اعمال شود.', 'adforest-child' ),
+					'countryApplied' => __( 'کد کشور از کشور انتخابی آگهی گرفته می‌شود.', 'adforest-child' ),
+					'countryCodeLabel' => __( 'کد کشور', 'adforest-child' ),
+					'invalidPhone' => __( 'شماره واردشده هنوز قابل تبدیل به فرمت بین‌المللی معتبر نیست.', 'adforest-child' ),
+				),
 			)
 		);
 	}

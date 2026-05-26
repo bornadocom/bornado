@@ -1,0 +1,47 @@
+<?php
+declare(strict_types=1);
+
+return array(
+    'service' => array(
+        'base_url'      => 'http://127.0.0.1:8085',
+        'shared_secret' => 'replace-with-a-long-random-secret',
+    ),
+    'routing' => array(
+        'channel_providers' => array(
+            'whatsapp' => array('whatsapp-cloud-api'),
+            'sms'      => array('dry-run'),
+            'email'    => array('dry-run'),
+        ),
+    ),
+    'providers' => array(
+        'whatsapp-cloud-api' => array(
+            'enabled'               => true,
+            'base_url'              => 'https://graph.facebook.com',
+            'api_version'           => 'v22.0',
+            'phone_number_id'       => 'your-phone-number-id',
+            'access_token'          => 'your-system-user-access-token',
+            'message_mode'          => 'template',
+            'default_language_code' => 'fa',
+            'text_fallback_enabled' => false,
+            'timeout_seconds'       => 10,
+            'verify_ssl'            => true,
+            'template_map'          => array(
+                'listing.published' => array(
+                    'name'            => 'listing_published_v1',
+                    'language_code'   => 'fa',
+                    'body_parameters' => array(
+                        'payload.listing.title',
+                        'payload.listing.manageUrl',
+                    ),
+                ),
+                'user.registered' => array(
+                    'name'            => 'user_registered_v1',
+                    'language_code'   => 'fa',
+                    'body_parameters' => array(
+                        'payload.user.profileUrl',
+                    ),
+                ),
+            ),
+        ),
+    ),
+);

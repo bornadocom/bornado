@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bornado.local/schemas/user.registered.v1.schema.json",
+  "title": "UserRegisteredV1",
+  "allOf": [
+    { "$ref": "./event-envelope.v1.schema.json" },
+    {
+      "type": "object",
+      "properties": {
+        "eventType": { "const": "user.registered" },
+        "payload": {
+          "type": "object",
+          "required": ["user"],
+          "properties": {
+            "user": {
+              "type": "object",
+              "required": ["id", "profileUrl"],
+              "properties": {
+                "id": { "type": "string" },
+                "displayName": { "type": "string" },
+                "email": { "type": "string" },
+                "phone": { "type": "string" },
+                "profileUrl": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

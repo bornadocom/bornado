@@ -18,7 +18,7 @@ final class Bornado_Ad_Permalinks {
 	const QUERY_HASH             = 'bornado_ad_hash';
 	const QUERY_SLUG             = 'bornado_ad_slug';
 	const HASH_MIN_LENGTH        = 5;
-	const TITLE_MIN_LENGTH       = 60;
+	const TITLE_MIN_LENGTH       = 20;
 	const TITLE_MAX_LENGTH       = 80;
 	const AJAX_TITLE_ERROR_CODE  = 'ad_title_invalid';
 
@@ -583,7 +583,7 @@ final class Bornado_Ad_Permalinks {
 
 		$parts = wp_parse_url( $url );
 		if ( ! is_array( $parts ) ) {
-			return untrailingslashit( $url );
+			return rtrim( $url );
 		}
 
 		$query = array();
@@ -594,7 +594,22 @@ final class Bornado_Ad_Permalinks {
 
 		$normalized  = isset( $parts['scheme'] ) ? strtolower( $parts['scheme'] ) . '://' : '';
 		$normalized .= isset( $parts['host'] ) ? strtolower( $parts['host'] ) : '';
-		$normalized .= isset( $parts['path'] ) ? untrailingslashit( $parts['path'] ) : '';
+
+		if ( isset( $parts['port'] ) ) {
+			$normalized .= ':' . (int) $parts['port'];
+		}
+
+		$path = isset( $parts['path'] ) ? (string) $parts['path'] : '/';
+		if ( '' === $path ) {
+			$path = '/';
+		}
+
+		// Treat Unicode and percent-encoded path variants as the same URL, but still
+		// preserve trailing-slash differences for canonical enforcement.
+		$path = rawurldecode( $path );
+
+		// Keep non-root trailing slashes intact so `/ad/hash/slug` redirects to `/ad/hash/slug/`.
+		$normalized .= '/' === $path ? '/' : preg_replace( '#/+#', '/', $path );
 
 		if ( ! empty( $query ) ) {
 			$normalized .= '?' . http_build_query( $query, '', '&', PHP_QUERY_RFC3986 );

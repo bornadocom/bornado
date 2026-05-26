@@ -18,6 +18,10 @@
         "ad_country_cities",
         "ad_country_towns"
     ];
+    var phoneCountries = Array.isArray(config.phoneCountries) ? config.phoneCountries : [];
+    var defaultPhoneCountry = config.defaultPhoneCountry && typeof config.defaultPhoneCountry === "object"
+        ? config.defaultPhoneCountry
+        : null;
 
     function isFormField(element) {
         return !!(
@@ -159,6 +163,167 @@
                 }
             }, 120);
         });
+    }
+
+    function getI18n(key) {
+        return config.i18n && config.i18n[key] ? String(config.i18n[key]) : key;
+    }
+
+    function sanitizeDialCode(value) {
+        var cleaned = String(value || "").trim().replace(/[^\d+]/g, "");
+        if (!cleaned) {
+            return "";
+        }
+
+        if (cleaned.indexOf("00") === 0) {
+            cleaned = "+" + cleaned.slice(2);
+        } else if (cleaned.charAt(0) !== "+") {
+            cleaned = "+" + cleaned.replace(/^\++/, "");
+        }
+
+        cleaned = "+" + cleaned.replace(/[^\d]/g, "");
+
+        return /^\+\d{1,4}$/.test(cleaned) ? cleaned : "";
+    }
+
+    function normalizePhone(value, dialCode) {
+        var raw = String(value || "").trim();
+        var normalizedDialCode = sanitizeDialCode(dialCode);
+        var cleaned;
+        var digitsOnly;
+        var dialDigits;
+
+        if (!raw) {
+            return "";
+        }
+
+        cleaned = raw.replace(/[^\d+]/g, "");
+        if (!cleaned) {
+            return "";
+        }
+
+        if (cleaned.indexOf("00") === 0) {
+            cleaned = "+" + cleaned.slice(2);
+        }
+
+        if (cleaned.charAt(0) === "+") {
+            cleaned = "+" + cleaned.replace(/[^\d]/g, "");
+            return /^\+\d{8,16}$/.test(cleaned) ? cleaned : "";
+        }
+
+        if (!normalizedDialCode) {
+            return "";
+        }
+
+        digitsOnly = cleaned.replace(/[^\d]/g, "");
+        dialDigits = normalizedDialCode.replace(/[^\d]/g, "");
+
+        if (!digitsOnly || !dialDigits) {
+            return "";
+        }
+
+        if (digitsOnly.indexOf(dialDigits) === 0) {
+            cleaned = "+" + digitsOnly;
+        } else {
+            cleaned = "+" + dialDigits + digitsOnly.replace(/^0+/, "");
+        }
+
+        return /^\+\d{8,16}$/.test(cleaned) ? cleaned : "";
+    }
+
+    function getCountryByTermId(termId) {
+        var normalized = String(termId || "");
+        var match = null;
+
+        phoneCountries.some(function (country) {
+            if (String(country.termId || "") === normalized) {
+                match = country;
+                return true;
+            }
+            return false;
+        });
+
+        return match;
+    }
+
+    function ensurePhoneHint(input) {
+        var hint = input.parentNode ? input.parentNode.querySelector(".bornado-phone-helper-text") : null;
+        if (!hint && input.parentNode) {
+            hint = document.createElement("small");
+            hint.className = "bornado-phone-helper-text";
+            input.parentNode.appendChild(hint);
+        }
+
+        return hint;
+    }
+
+    function getLocalPhoneExample() {
+        return "9121234567";
+    }
+
+    function enhanceAdPostPhoneField(form) {
+        var phoneInput = form.querySelector('input[name="ad_contact_number"]');
+        var rootCountry = form.querySelector('select[name="ad_country"]');
+        var phoneHint;
+
+        if (!phoneInput) {
+            return;
+        }
+
+        phoneHint = ensurePhoneHint(phoneInput);
+
+        function currentCountry() {
+            if (!rootCountry) {
+                return defaultPhoneCountry;
+            }
+
+            return getCountryByTermId(rootCountry.value) || defaultPhoneCountry;
+        }
+
+        function syncPhoneHelp() {
+            var country = currentCountry();
+            var normalized = normalizePhone(phoneInput.value, country && country.dialCode ? country.dialCode : "");
+
+            phoneInput.setAttribute("placeholder", getLocalPhoneExample());
+
+            if (!phoneHint) {
+                return;
+            }
+
+            if (!phoneInput.value.trim()) {
+                phoneHint.textContent = country && country.dialCode
+                    ? getI18n("countryApplied") + " " + getI18n("localPhoneExample") + ": " + getLocalPhoneExample() + " | " + getI18n("phoneExample") + ": " + country.dialCode + getLocalPhoneExample()
+                    : getI18n("selectCountry");
+                return;
+            }
+
+            phoneHint.textContent = normalized
+                ? getI18n("phoneExample") + ": " + normalized
+                : getI18n("invalidPhone");
+        }
+
+        function applyNormalization() {
+            var country = currentCountry();
+            var normalized = normalizePhone(phoneInput.value, country && country.dialCode ? country.dialCode : "");
+
+            if (normalized) {
+                phoneInput.value = normalized;
+            }
+
+            syncPhoneHelp();
+        }
+
+        if (rootCountry) {
+            rootCountry.addEventListener("change", function () {
+                window.setTimeout(syncPhoneHelp, 200);
+            });
+        }
+
+        phoneInput.addEventListener("input", syncPhoneHelp);
+        phoneInput.addEventListener("blur", applyNormalization);
+        form.addEventListener("submit", applyNormalization, true);
+
+        syncPhoneHelp();
     }
 
     function restoreImmediateFields(form, draft, excludedNames) {
@@ -341,6 +506,7 @@
         bindDraftPersistence(form);
         bindAjaxSuccessCleanup();
         restoreDraft(form);
+        enhanceAdPostPhoneField(form);
     }
 
     if (document.readyState === "loading") {

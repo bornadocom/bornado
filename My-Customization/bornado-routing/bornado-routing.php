@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/includes/class-seo-landing-manager.php';
 require_once __DIR__ . '/includes/class-country-model.php';
 require_once __DIR__ . '/includes/class-country-currency-service.php';
+require_once __DIR__ . '/includes/class-country-phone-service.php';
 
 final class Bornado_SEO_Routing {
 
@@ -517,7 +518,12 @@ final class Bornado_SEO_Routing {
 
 		parse_str( $parsed_url['query'], $args );
 
-		$location_id = isset( $args['country_id'] ) ? (int) $args['country_id'] : 0;
+		$location_id = 0;
+		if ( isset( $args['country_id'] ) && '' !== $args['country_id'] ) {
+			$location_id = (int) $args['country_id'];
+		} elseif ( isset( $args['ad_country'] ) && '' !== $args['ad_country'] ) {
+			$location_id = (int) $args['ad_country'];
+		}
 		$cat_id      = self::get_selected_category_id_from_args( $args );
 		$paged      = 1;
 
@@ -541,7 +547,9 @@ final class Bornado_SEO_Routing {
 
 		unset(
 			$args['country_id'],
+			$args['ad_country'],
 			$args['cat_id'],
+			$args['ad_cats'],
 			$args['paged'],
 			$args['page'],
 			$args['ad_cat_sub'],
@@ -889,10 +897,15 @@ final class Bornado_SEO_Routing {
 
 		$current_args = self::get_request_query_args();
 		$selected_cat = self::get_selected_category_id_from_args( $current_args );
-		$has_seo_args = isset( $current_args['country_id'] ) || isset( $current_args['cat_id'] ) || isset( $current_args['ad_cat_sub'] ) || isset( $current_args['ad_cat_sub_sub'] ) || isset( $current_args['ad_cat_sub_sub_sub'] ) || isset( $current_args['ad_cat_sub_sub_sub_sub'] );
+		$has_seo_args = isset( $current_args['country_id'] ) || isset( $current_args['ad_country'] ) || isset( $current_args['cat_id'] ) || isset( $current_args['ad_cats'] ) || isset( $current_args['ad_cat_sub'] ) || isset( $current_args['ad_cat_sub_sub'] ) || isset( $current_args['ad_cat_sub_sub_sub'] ) || isset( $current_args['ad_cat_sub_sub_sub_sub'] );
 		$paged        = ! empty( self::$context['paged'] ) ? (int) self::$context['paged'] : 1;
 
-		$location_id = isset( $current_args['country_id'] ) ? (int) $current_args['country_id'] : 0;
+		$location_id = 0;
+		if ( isset( $current_args['country_id'] ) && '' !== $current_args['country_id'] ) {
+			$location_id = (int) $current_args['country_id'];
+		} elseif ( isset( $current_args['ad_country'] ) && '' !== $current_args['ad_country'] ) {
+			$location_id = (int) $current_args['ad_country'];
+		}
 		$cat_id      = $selected_cat ? $selected_cat : ( ! empty( self::$context['deepest_term'] ) ? (int) self::$context['deepest_term']->term_id : 0 );
 		$route_terms = self::get_route_terms_from_location_id( $location_id );
 
@@ -907,7 +920,9 @@ final class Bornado_SEO_Routing {
 		$remaining_args = $current_args;
 		unset(
 			$remaining_args['country_id'],
+			$remaining_args['ad_country'],
 			$remaining_args['cat_id'],
+			$remaining_args['ad_cats'],
 			$remaining_args['paged'],
 			$remaining_args['page'],
 			$remaining_args['ad_cat_sub'],
@@ -952,6 +967,8 @@ final class Bornado_SEO_Routing {
 
 		if ( isset( $_GET['country_id'] ) && $_GET['country_id'] !== '' ) {
 			$country_id = (int) wp_unslash( $_GET['country_id'] );
+		} elseif ( isset( $_GET['ad_country'] ) && $_GET['ad_country'] !== '' ) {
+			$country_id = (int) wp_unslash( $_GET['ad_country'] );
 		} elseif ( is_tax( 'ad_country' ) ) {
 			$term = get_queried_object();
 			if ( $term instanceof WP_Term ) {
@@ -1135,6 +1152,11 @@ final class Bornado_SEO_Routing {
 			}
 		}
 
+		$route_terms = self::get_single_ad_route_terms();
+		if ( $route_terms['country_term'] instanceof WP_Term ) {
+			return $route_terms['country_term'];
+		}
+
 		return null;
 	}
 
@@ -1161,7 +1183,99 @@ final class Bornado_SEO_Routing {
 			}
 		}
 
+		$route_terms = self::get_single_ad_route_terms();
+		if ( $route_terms['city_term'] instanceof WP_Term ) {
+			return $route_terms['city_term'];
+		}
+
 		return null;
+	}
+
+	/**
+	 * Reuse the current single ad location tree when building taxonomy links.
+	 *
+	 * @return array{country_term:WP_Term|null,city_term:WP_Term|null}
+	 */
+	private static function get_single_ad_route_terms() {
+		static $cached_terms = null;
+
+		if ( null !== $cached_terms ) {
+			return $cached_terms;
+		}
+
+		$cached_terms = array(
+			'country_term' => null,
+			'city_term'    => null,
+		);
+
+		if ( ! is_singular( 'ad_post' ) ) {
+			return $cached_terms;
+		}
+
+		$post_id = get_queried_object_id();
+		if ( $post_id < 1 ) {
+			return $cached_terms;
+		}
+
+		$raw_terms = wp_get_post_terms( $post_id, 'ad_country' );
+		if ( is_wp_error( $raw_terms ) || empty( $raw_terms ) ) {
+			return $cached_terms;
+		}
+
+		$terms_by_id   = array();
+		$deepest_term  = null;
+		$deepest_depth = -1;
+
+		foreach ( $raw_terms as $term ) {
+			if ( ! $term instanceof WP_Term ) {
+				continue;
+			}
+
+			$terms_by_id[ (int) $term->term_id ] = $term;
+			$depth = count( get_ancestors( (int) $term->term_id, 'ad_country', 'taxonomy' ) );
+			if ( $depth > $deepest_depth ) {
+				$deepest_depth = $depth;
+				$deepest_term  = $term;
+			}
+		}
+
+		if ( empty( $terms_by_id ) || ! $deepest_term instanceof WP_Term ) {
+			return $cached_terms;
+		}
+
+		$chain_ids   = array_reverse( array_map( 'intval', get_ancestors( (int) $deepest_term->term_id, 'ad_country', 'taxonomy' ) ) );
+		$chain_ids[] = (int) $deepest_term->term_id;
+		$chain       = array();
+
+		foreach ( $chain_ids as $term_id ) {
+			if ( isset( $terms_by_id[ $term_id ] ) ) {
+				$chain[] = $terms_by_id[ $term_id ];
+				continue;
+			}
+
+			$term = get_term( $term_id, 'ad_country' );
+			if ( $term instanceof WP_Term ) {
+				$chain[] = $term;
+			}
+		}
+
+		if ( empty( $chain ) ) {
+			return $cached_terms;
+		}
+
+		$cached_terms['country_term'] = reset( $chain );
+		foreach ( $chain as $term ) {
+			if ( count( get_ancestors( (int) $term->term_id, 'ad_country', 'taxonomy' ) ) === 2 ) {
+				$cached_terms['city_term'] = $term;
+				break;
+			}
+		}
+
+		if ( ! $cached_terms['city_term'] instanceof WP_Term ) {
+			$cached_terms['city_term'] = end( $chain );
+		}
+
+		return $cached_terms;
 	}
 
 	/**
@@ -1711,6 +1825,7 @@ final class Bornado_SEO_Routing {
 	private static function get_selected_category_id_from_args( array $args ) {
 		$keys = array(
 			'cat_id',
+			'ad_cats',
 			'ad_cat_sub',
 			'ad_cat_sub_sub',
 			'ad_cat_sub_sub_sub',
@@ -1760,7 +1875,7 @@ final class Bornado_SEO_Routing {
 	private static function normalize_url( $url ) {
 		$parts = wp_parse_url( $url );
 		if ( ! is_array( $parts ) ) {
-			return untrailingslashit( $url );
+			return rtrim( $url );
 		}
 
 		$query = array();
@@ -1769,9 +1884,24 @@ final class Bornado_SEO_Routing {
 			ksort( $query );
 		}
 
-		$normalized  = isset( $parts['scheme'] ) ? $parts['scheme'] . '://' : '';
-		$normalized .= isset( $parts['host'] ) ? $parts['host'] : '';
-		$normalized .= isset( $parts['path'] ) ? untrailingslashit( $parts['path'] ) : '';
+		$normalized  = isset( $parts['scheme'] ) ? strtolower( $parts['scheme'] ) . '://' : '';
+		$normalized .= isset( $parts['host'] ) ? strtolower( $parts['host'] ) : '';
+
+		if ( isset( $parts['port'] ) ) {
+			$normalized .= ':' . (int) $parts['port'];
+		}
+
+		$path = isset( $parts['path'] ) ? (string) $parts['path'] : '/';
+		if ( '' === $path ) {
+			$path = '/';
+		}
+
+		// Treat Unicode and percent-encoded path variants as the same URL while
+		// preserving trailing slash differences for canonical checks.
+		$path = rawurldecode( $path );
+
+		// Preserve trailing slash differences for canonical route enforcement.
+		$normalized .= '/' === $path ? '/' : preg_replace( '#/+#', '/', $path );
 
 		if ( ! empty( $query ) ) {
 			$normalized .= '?' . http_build_query( $query, '', '&', PHP_QUERY_RFC3986 );
