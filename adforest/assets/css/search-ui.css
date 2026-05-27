@@ -1,0 +1,1498 @@
+/* AdForest Search 2.0 — Modern Card Layouts
+ * Scoped under .adf-card-* so existing classic card styles
+ * (.adt-category-ad-card / .adt-property-ad-card etc.) are untouched.
+ */
+
+:root {
+    --adf-card-radius: 14px;
+    --adf-card-shadow: 0 1px 2px rgba(15, 23, 42, .06), 0 4px 16px rgba(15, 23, 42, .06);
+    --adf-card-shadow-hover: 0 4px 12px rgba(15, 23, 42, .08), 0 16px 40px rgba(15, 23, 42, .12);
+    --adf-card-border: 1px solid rgba(15, 23, 42, .06);
+    --adf-card-bg: #ffffff;
+    --adf-card-text: #0f172a;
+    --adf-card-muted: #64748b;
+    --adf-card-accent: #1f6feb;
+    --adf-card-accent-soft: rgba(31, 111, 235, .08);
+    --adf-badge-featured-bg: #f59e0b;
+    --adf-badge-urgent-bg: #ef4444;
+    --adf-badge-verified-bg: #10b981;
+    --adf-badge-type-bg: rgba(15, 23, 42, .82);
+    --adf-card-fav-color: #ef4444;
+    --adf-card-transition: 220ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.adf-card,
+.adf-card *,
+.adf-card *:before,
+.adf-card *:after {
+    box-sizing: border-box;
+}
+
+/* Reset the wrapper class added by the grid dispatcher so it lays out
+   cleanly inside the existing .adt-search-ads-grid container. */
+.adf-card-item {
+    margin: 0 0 24px;
+    display: flex;
+}
+
+.adf-card-item--list_view {
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 100%;
+}
+
+/* Search 2.0 Part 5 — when the legacy "List" Search Layout is active, the
+   render function flips the grid container into single-column "list mode"
+   and routes every card through card-list.php. These rules guarantee the
+   container behaves like a vertical stack regardless of the parent
+   theme's column-class styling. */
+.adt-search-ads-grid.adt-search-ads-list-mode {
+    display: block;
+}
+
+.adt-search-ads-grid.adt-search-ads-list-mode > .adf-card-item {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 18px;
+}
+
+.adt-search-ads-grid.adt-search-ads-list-mode > .adf-card-item:last-child {
+    margin-bottom: 0;
+}
+
+/* The .item wrappers in the topbar layout get a `top_bar_specific_style`
+ * class capped at `max-width: 300px !important` (adforest-main.css). That
+ * cap is correct for narrow 4-column grid cards but breaks list-row cards
+ * — the card collapses to a 300px portrait column. Override it with
+ * higher-specificity + !important so list rows span their container. */
+.adt-search-ads-grid.adt-search-ads-list-mode > .adf-card-item.top_bar_specific_style {
+    max-width: 100% !important;
+}
+
+/* Search 2.0 Part 6 — Featured Ads container in list mode.
+   Replaces the owl-carousel wrapper when the user is in List view so
+   featured cards stack vertically and use card-list.php styling. */
+.ad-featured-list-mode {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.ad-featured-list-mode > .adf-card-list {
+    width: 100%;
+}
+
+/* "Search Results" section header — sits between the Featured Ads stack
+ * and the main loop in list mode. Matches the existing .adt-ads-top-box
+ * styling used for the "Featured Ads" heading so both labels look
+ * symmetric. The extra margin pushes the heading clear of the featured
+ * stack above. */
+.adt-ads-results-heading {
+    margin-top: 28px;
+}
+
+/* Featured list cards — soft amber accent so individual featured ads
+ * stand apart from regular results even when both sections share the
+ * same list-row styling. The gradient fades out over ~320px so it
+ * highlights the left edge without tinting the entire row. */
+.adf-card-list--featured {
+    border-left: 4px solid #f59e0b;
+    background-image: linear-gradient(to right, rgba(245, 158, 11, .06), transparent 320px);
+}
+
+/* Shared badge primitives -------------------------------------------------- */
+.adf-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    backdrop-filter: blur(2px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .12);
+    white-space: nowrap;
+}
+
+.adf-badge--sm {
+    padding: 3px 8px;
+    font-size: 10px;
+}
+
+.adf-badge--featured  { background: var(--adf-badge-featured-bg); }
+.adf-badge--urgent    { background: var(--adf-badge-urgent-bg); }
+.adf-badge--verified  { background: var(--adf-badge-verified-bg); }
+.adf-badge--type      { background: var(--adf-badge-type-bg); }
+
+/* Modern card -------------------------------------------------------------- */
+.adf-card-modern {
+    width: 100%;
+    background: var(--adf-card-bg);
+    color: var(--adf-card-text);
+    border-radius: var(--adf-card-radius);
+    overflow: hidden;
+    box-shadow: var(--adf-card-shadow);
+    border: var(--adf-card-border);
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--adf-card-transition), box-shadow var(--adf-card-transition);
+}
+
+.adf-card-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--adf-card-shadow-hover);
+}
+
+.adf-card-modern__media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background: #f1f5f9;
+}
+
+.adf-card-modern__media-link,
+.adf-card-modern__media-link:focus {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.adf-card-modern__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 480ms ease;
+}
+
+.adf-card-modern:hover .adf-card-modern__img {
+    transform: scale(1.04);
+}
+
+.adf-card-modern__badges {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-width: calc(100% - 60px);
+}
+
+.adf-card-modern__fav {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .92);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--adf-card-fav-color);
+    text-decoration: none;
+    transition: background var(--adf-card-transition), transform var(--adf-card-transition);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
+}
+
+.adf-card-modern__fav:hover {
+    background: #fff;
+    transform: scale(1.06);
+}
+
+.adf-card-modern__body {
+    padding: 16px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+}
+
+.adf-card-modern__category {
+    align-self: flex-start;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--adf-card-accent);
+    background: var(--adf-card-accent-soft);
+    padding: 3px 10px;
+    border-radius: 999px;
+    text-decoration: none;
+}
+
+.adf-card-modern__title-link,
+.adf-card-modern__title-link:hover,
+.adf-card-modern__title-link:focus {
+    text-decoration: none;
+    color: inherit;
+}
+
+.adf-card-modern__title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0;
+    color: var(--adf-card-text);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: calc(1.35em * 2);
+}
+
+.adf-card-modern__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--adf-card-muted);
+}
+
+.adf-card-modern__meta i {
+    margin-right: 4px;
+}
+
+.adf-card-modern__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid rgba(15, 23, 42, .06);
+}
+
+.adf-card-modern__price {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--adf-card-text);
+}
+
+.adf-card-modern__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--adf-card-accent);
+    text-decoration: none;
+    transition: transform var(--adf-card-transition);
+}
+
+.adf-card-modern__cta:hover {
+    transform: translateX(2px);
+    color: var(--adf-card-accent);
+}
+
+/* Compact card ------------------------------------------------------------- */
+.adf-card-compact {
+    width: 100%;
+    background: var(--adf-card-bg);
+    border-radius: 10px;
+    overflow: hidden;
+    border: var(--adf-card-border);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow var(--adf-card-transition), transform var(--adf-card-transition);
+}
+
+.adf-card-compact:hover {
+    box-shadow: var(--adf-card-shadow);
+    transform: translateY(-2px);
+}
+
+.adf-card-compact__media {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: #f1f5f9;
+    overflow: hidden;
+}
+
+.adf-card-compact__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.adf-card-compact__badges {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.adf-card-compact__fav {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .92);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--adf-card-fav-color);
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.adf-card-compact__body {
+    padding: 10px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.adf-card-compact__title-link,
+.adf-card-compact__title-link:hover,
+.adf-card-compact__title-link:focus {
+    text-decoration: none;
+    color: inherit;
+}
+
+.adf-card-compact__title {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0;
+    color: var(--adf-card-text);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: calc(1.3em * 2);
+}
+
+.adf-card-compact__price {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--adf-card-text);
+}
+
+.adf-card-compact__location {
+    font-size: 11px;
+    color: var(--adf-card-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* List view card ----------------------------------------------------------- */
+.adf-card-list {
+    width: 100%;
+    background: var(--adf-card-bg);
+    border-radius: var(--adf-card-radius);
+    box-shadow: var(--adf-card-shadow);
+    border: var(--adf-card-border);
+    overflow: hidden;
+    display: flex;
+    transition: box-shadow var(--adf-card-transition), transform var(--adf-card-transition);
+}
+
+.adf-card-list:hover {
+    box-shadow: var(--adf-card-shadow-hover);
+    transform: translateY(-2px);
+}
+
+.adf-card-list__media {
+    position: relative;
+    flex: 0 0 280px;
+    max-width: 280px;
+    background: #f1f5f9;
+    overflow: hidden;
+}
+
+.adf-card-list__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    min-height: 200px;
+}
+
+.adf-card-list__badges {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.adf-card-list__body {
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-grow: 1;
+    min-width: 0; /* allow truncation in flex children */
+}
+
+.adf-card-list__crumbs {
+    font-size: 12px;
+    color: var(--adf-card-muted);
+}
+
+.adf-card-list__crumbs a {
+    color: var(--adf-card-accent);
+    text-decoration: none;
+}
+
+.adf-card-list__crumbs span {
+    margin: 0 4px;
+    color: var(--adf-card-muted);
+}
+
+.adf-card-list__title-link,
+.adf-card-list__title-link:hover,
+.adf-card-list__title-link:focus {
+    text-decoration: none;
+    color: inherit;
+}
+
+.adf-card-list__title {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 4px 0 0;
+    color: var(--adf-card-text);
+}
+
+.adf-card-list__excerpt {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--adf-card-muted);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.adf-card-list__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: 12px;
+    color: var(--adf-card-muted);
+}
+
+.adf-card-list__meta-item i {
+    margin-right: 4px;
+}
+
+.adf-card-list__meta-item--verified {
+    color: var(--adf-badge-verified-bg);
+    font-weight: 600;
+}
+
+.adf-card-list__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid rgba(15, 23, 42, .06);
+    gap: 12px;
+}
+
+.adf-card-list__price {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--adf-card-text);
+}
+
+.adf-card-list__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.adf-card-list__fav {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #f8fafc;
+    color: var(--adf-card-fav-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: background var(--adf-card-transition);
+}
+
+.adf-card-list__fav:hover { background: #fef2f2; }
+
+.adf-card-list__cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 18px;
+    background: var(--adf-card-accent);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background var(--adf-card-transition), transform var(--adf-card-transition);
+}
+
+.adf-card-list__cta:hover {
+    background: #1858c4;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+/* Responsive --------------------------------------------------------------- */
+@media (max-width: 991px) {
+    .adf-card-list {
+        flex-direction: column;
+    }
+    .adf-card-list__media {
+        flex: 0 0 auto;
+        max-width: 100%;
+        aspect-ratio: 16 / 9;
+    }
+    .adf-card-list__img { min-height: 0; }
+}
+
+@media (max-width: 575px) {
+    .adf-card-modern__title       { font-size: 15px; }
+    .adf-card-modern__price       { font-size: 16px; }
+    .adf-card-list__title         { font-size: 16px; }
+    .adf-card-list__price         { font-size: 18px; }
+    .adf-card-list__body          { padding: 14px 16px; }
+    .adf-card-compact__body       { padding: 8px 10px 10px; }
+    .adf-card-compact__title      { font-size: 12px; }
+}
+
+/* =================================================================
+ * Search 2.0 Part 7 — UI Polish layer
+ *
+ * Pure CSS enhancements applied on top of the base card styles. No
+ * template structure changes — every selector targets classes already
+ * present in card-modern.php / card-compact.php / card-list.php (the
+ * shared `.adf-card` base + per-variant `__*` elements).
+ *
+ * Scope: hover affordances, image motion, focus accessibility, list
+ * media aspect-ratio, fav-button consistency, mobile touch targets.
+ * ================================================================= */
+
+/* Shared baseline: every variant gets the same easing function so
+   cards feel like one family even though each variant tunes its own
+   transform/shadow profile. */
+.adf-card {
+    will-change: transform;
+}
+
+/* Image hover zoom — modern already has this; extend to compact and
+   list so the affordance is consistent across all three layouts. */
+.adf-card-compact__img,
+.adf-card-list__img {
+    transition: transform 480ms ease;
+}
+
+.adf-card-compact:hover .adf-card-compact__img,
+.adf-card-list:hover .adf-card-list__img {
+    transform: scale(1.04);
+}
+
+/* Fav button polish — bring compact + list up to the same elevation
+   as modern (white pill, soft shadow, scale-on-hover). */
+.adf-card-compact__fav {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
+    transition: background var(--adf-card-transition), transform var(--adf-card-transition);
+}
+
+.adf-card-compact__fav:hover {
+    background: #fff;
+    transform: scale(1.08);
+}
+
+.adf-card-list__fav {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+    transition: background var(--adf-card-transition), transform var(--adf-card-transition);
+}
+
+.adf-card-list__fav:hover {
+    transform: scale(1.06);
+}
+
+/* Active (favourited) state — visually distinct without a colour shift
+   that fights the heart icon's own colour change. */
+.adf-card-modern__fav.ad-favourited,
+.adf-card-compact__fav.ad-favourited,
+.adf-card-list__fav.ad-favourited {
+    background: var(--adf-card-fav-color);
+    color: #fff;
+}
+
+/* Keyboard focus rings — hidden with :focus:not(:focus-visible) so
+   mouse users don't see them, but keyboard users get a clear marker. */
+.adf-card-modern__title-link:focus-visible,
+.adf-card-compact__title-link:focus-visible,
+.adf-card-list__title-link:focus-visible,
+.adf-card-modern__cta:focus-visible,
+.adf-card-list__cta:focus-visible,
+.adf-card-modern__fav:focus-visible,
+.adf-card-compact__fav:focus-visible,
+.adf-card-list__fav:focus-visible {
+    outline: 2px solid var(--adf-card-accent);
+    outline-offset: 2px;
+}
+
+/* List view image — replace the min-height heuristic with a real
+   aspect-ratio so the image area is predictable at the desktop's
+   280px-wide media column. Below 992px the responsive rule above
+   already swaps to 16/9 + auto height. */
+@media (min-width: 992px) {
+    .adf-card-list__media {
+        aspect-ratio: 4 / 3;
+    }
+    .adf-card-list__img {
+        min-height: 0;
+        height: 100%;
+    }
+}
+
+/* Subtle category-chip hover lift on the modern card. */
+.adf-card-modern__category {
+    transition: background var(--adf-card-transition), color var(--adf-card-transition);
+}
+
+.adf-card-modern__category:hover {
+    background: var(--adf-card-accent);
+    color: #fff;
+}
+
+/* Slightly tighter price kerning so big numbers don't look airy. */
+.adf-card-modern__price,
+.adf-card-list__price,
+.adf-card-compact__price {
+    letter-spacing: -0.01em;
+}
+
+/* List CTA — add an arrow nudge that mirrors the modern card's CTA
+   for visual consistency. The text is provided by the template; this
+   adds the motion only. */
+.adf-card-list__cta {
+    gap: 6px;
+}
+
+.adf-card-list__cta:hover {
+    box-shadow: 0 6px 14px rgba(31, 111, 235, .25);
+}
+
+/* Better breakpoint for the list footer when content is tight — let
+   price + actions wrap rather than overflow. */
+@media (max-width: 480px) {
+    .adf-card-list__footer {
+        flex-wrap: wrap;
+        gap: 10px 12px;
+    }
+    .adf-card-list__actions {
+        margin-left: auto;
+    }
+}
+
+/* Touch targets — fav buttons get min 40×40 on touch viewports per
+   WCAG 2.5.5, without disturbing the visual size on desktop. */
+@media (max-width: 768px) {
+    .adf-card-modern__fav,
+    .adf-card-list__fav {
+        width: 40px;
+        height: 40px;
+    }
+    .adf-card-compact__fav {
+        width: 34px;
+        height: 34px;
+    }
+}
+
+/* =================================================================
+ * Search 2.0 Part 8 — Premium polish
+ *
+ * Deeper elevation, stronger price/title hierarchy, tighter compact
+ * grid, and smoother interaction. CSS-only; targets existing BEM
+ * selectors so no template edits are needed.
+ * ================================================================= */
+
+/* --- Depth upgrade: modern + compact cards -------------------------
+   Bumped from the default var(--adf-card-shadow) to a deeper pair of
+   shadows that signals elevation more clearly. List view already has
+   its own elevation tuned for the wider card, so it's left alone. */
+.adf-card-modern,
+.adf-card-compact {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, .06);
+    border: 1px solid rgba(0, 0, 0, .04);
+}
+
+.adf-card-modern:hover,
+.adf-card-compact:hover {
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .12);
+}
+
+/* --- Title hierarchy ---------------------------------------------- */
+.adf-card-modern__title {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    min-height: calc(1.4em * 2);
+}
+
+.adf-card-list__title {
+    font-weight: 700;
+    letter-spacing: -0.005em;
+}
+
+/* --- Price emphasis ----------------------------------------------- */
+.adf-card-modern__price,
+.adf-card-list__price {
+    font-size: 20px;
+    font-weight: 800;
+    color: #111827;
+}
+
+/* Compact keeps its smaller footprint — ramp weight, not size. */
+.adf-card-compact__price {
+    font-weight: 800;
+    color: #111827;
+}
+
+/* --- Category chip (modern card) ---------------------------------- */
+.adf-card-modern__category {
+    background: rgba(59, 130, 246, .1);
+    color: #2563eb;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 4px 10px;
+}
+
+.adf-card-modern__category:hover {
+    background: #2563eb;
+    color: #fff;
+}
+
+/* --- Favourite button premium treatment --------------------------- */
+.adf-card-modern__fav,
+.adf-card-compact__fav,
+.adf-card-list__fav {
+    background: rgba(255, 255, 255, .95);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(0, 0, 0, .05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, .1);
+}
+
+.adf-card-modern__fav:hover,
+.adf-card-compact__fav:hover,
+.adf-card-list__fav:hover {
+    transform: scale(1.08);
+}
+
+/* Preserve the active/favourited visual from Part 7 so the filled
+   red background still wins over the translucent white here. */
+.adf-card-modern__fav.ad-favourited,
+.adf-card-compact__fav.ad-favourited,
+.adf-card-list__fav.ad-favourited {
+    background: var(--adf-card-fav-color);
+    border-color: var(--adf-card-fav-color);
+}
+
+/* --- Compact grid tightening -------------------------------------- */
+.adf-card-compact__body {
+    padding: 8px 10px 10px;
+    gap: 3px;
+}
+
+.adf-card-compact__title {
+    font-size: 14px;
+    line-height: 1.3;
+    min-height: calc(1.3em * 2);
+}
+
+.adf-card-compact__location {
+    font-size: 12px;
+}
+
+/* --- Grid spacing consistency -------------------------------------
+   Theme's .adt-search-ads-grid keeps its existing flex/column layout;
+   we only adjust the per-item bottom margin so spacing between modern
+   cards reads at 18px without fighting the grid's row wrapping. */
+.adf-card-item {
+    margin-bottom: 18px;
+}
+
+/* --- Micro polish: smoother rendering ----------------------------- */
+.adf-card-modern,
+.adf-card-compact {
+    will-change: transform;
+    transform: translateZ(0);           /* promote to own layer */
+    backface-visibility: hidden;
+}
+
+/* Responsive mirror — keep the title/price emphasis readable on
+   small screens while honouring the mobile size caps set earlier. */
+@media (max-width: 575px) {
+    .adf-card-modern__title { font-size: 16px; }
+    .adf-card-modern__price,
+    .adf-card-list__price   { font-size: 18px; }
+    .adf-card-compact__title{ font-size: 13px; }
+}
+
+/* Reduced-motion users: kill all card transforms and image zoom so
+   nothing animates beyond a colour fade. */
+@media (prefers-reduced-motion: reduce) {
+    .adf-card,
+    .adf-card-modern,
+    .adf-card-compact,
+    .adf-card-list,
+    .adf-card-modern__img,
+    .adf-card-compact__img,
+    .adf-card-list__img,
+    .adf-card-modern__fav,
+    .adf-card-compact__fav,
+    .adf-card-list__fav,
+    .adf-card-modern__cta,
+    .adf-card-list__cta {
+        transition: none !important;
+    }
+    .adf-card-modern:hover,
+    .adf-card-compact:hover,
+    .adf-card-list:hover,
+    .adf-card-modern:hover .adf-card-modern__img,
+    .adf-card-compact:hover .adf-card-compact__img,
+    .adf-card-list:hover .adf-card-list__img,
+    .adf-card-modern__fav:hover,
+    .adf-card-compact__fav:hover,
+    .adf-card-list__fav:hover,
+    .adf-card-modern__cta:hover,
+    .adf-card-list__cta:hover {
+        transform: none !important;
+    }
+}
+
+/* =================================================================
+ * Search 2.0 Part 9 — Filter UX layer
+ *
+ * Active-filter chips, clear-all button, sidebar visual feedback,
+ * sticky desktop sidebar, mobile drawer, polished reset button, and
+ * a `.loading` alias for the existing AJAX loading state. All driven
+ * by search-ux.js — pure CSS injection points.
+ * ================================================================= */
+
+/* --- Active-filter chips bar -------------------------------------- */
+.adf-active-filters {
+    display: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 16px;
+}
+
+.adf-active-filters.is-visible {
+    display: flex;
+}
+
+.adf-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f3f4f6;
+    color: #1f2937;
+    border: 1px solid rgba(15, 23, 42, .06);
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 13px;
+    line-height: 1.2;
+    cursor: pointer;
+    user-select: none;
+    transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.adf-chip:hover,
+.adf-chip:focus {
+    background: #e5e7eb;
+    border-color: rgba(15, 23, 42, .12);
+    outline: none;
+}
+
+.adf-chip:focus-visible {
+    outline: 2px solid var(--adf-card-accent);
+    outline-offset: 2px;
+}
+
+.adf-chip__label { font-weight: 600; }
+.adf-chip__value { color: #374151; }
+
+.adf-chip__x {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-left: 4px;
+    font-size: 14px;
+    line-height: 1;
+    color: #6b7280;
+    transition: background .2s ease, color .2s ease;
+}
+
+.adf-chip:hover .adf-chip__x {
+    background: rgba(15, 23, 42, .08);
+    color: #111827;
+}
+
+/* Clear-all button — sits inline with the chips */
+.adf-clear-all {
+    background: transparent;
+    border: none;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ef4444;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background .2s ease;
+}
+
+.adf-clear-all:hover {
+    background: rgba(239, 68, 68, .08);
+}
+
+/* --- Sidebar visual feedback for active filters -------------------
+ * The previous rule painted a heavy `border-left: 3px` + brand-tinted
+ * background on every `.adf-filter-active` wrapper. In practice the
+ * JS marker lands on a parent that often wraps several widget panels,
+ * so the highlight appeared on EVERY filter section after a search —
+ * users perceived it as a layout regression rather than a useful cue.
+ * Keep the class in the DOM (search-ux.js still adds it) but make the
+ * visual feedback subtle: a slightly bolder heading on the active
+ * panel, no border / no background tint. */
+#adforest-ajax-sidebar .adf-filter-active .accordion-button,
+#adforest-ajax-sidebar .adf-filter-active > h3,
+#adforest-ajax-sidebar .adf-filter-active > .panel-heading,
+#adforest-ajax-sidebar .adf-filter-active > .widget-title {
+    font-weight: 600;
+}
+
+/* --- Reset button polish (existing [data-adforest-reset]) --------- */
+.adforest-ajax-reset[data-adforest-reset],
+.adforest-ajax-reset {
+    background: #f9fafb;
+    border: 1px solid rgba(15, 23, 42, .08);
+    border-radius: 8px;
+    padding: 8px 14px;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background .2s ease, border-color .2s ease, color .2s ease;
+}
+
+.adforest-ajax-reset:hover,
+.adforest-ajax-reset[data-adforest-reset]:hover {
+    background: #fff;
+    border-color: rgba(15, 23, 42, .16);
+    color: #111827;
+}
+
+/* --- Sticky desktop sidebar --------------------------------------- */
+@media (min-width: 992px) {
+    #adforest-ajax-sidebar {
+        position: sticky;
+        top: 20px;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+        align-self: flex-start;
+    }
+    /* Soft scrollbar so it doesn't fight the theme palette. */
+    #adforest-ajax-sidebar::-webkit-scrollbar      { width: 8px; }
+    #adforest-ajax-sidebar::-webkit-scrollbar-thumb {
+        background: rgba(15, 23, 42, .15);
+        border-radius: 4px;
+    }
+    #adforest-ajax-sidebar::-webkit-scrollbar-thumb:hover {
+        background: rgba(15, 23, 42, .25);
+    }
+}
+
+/* --- Loading state alias ------------------------------------------
+   Existing JS toggles `.adforest-ajax-loading`; search-ux.js mirrors
+   that to `.loading` so external/spec CSS using either name works. */
+#adforest-ajax-results.loading {
+    opacity: .55;
+    pointer-events: none;
+    transition: opacity .15s ease-in-out;
+}
+
+/* --- Mobile drawer ------------------------------------------------- */
+.adf-mobile-filters-btn {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: var(--adf-card-accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 14px;
+    box-shadow: 0 4px 14px rgba(31, 111, 235, .18);
+    cursor: pointer;
+}
+
+.adf-mobile-filters-btn:hover {
+    background: #1858c4;
+    color: #fff;
+}
+
+.adf-filters-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, .45);
+    z-index: 1040;
+}
+
+@media (max-width: 991px) {
+    .adf-mobile-filters-btn { display: inline-flex; }
+
+    body.adf-mobile-filters-open {
+        overflow: hidden;
+    }
+
+    body.adf-mobile-filters-open .adf-filters-backdrop {
+        display: block;
+    }
+
+    body.adf-mobile-filters-open #adforest-ajax-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 86%;
+        max-width: 380px;
+        max-height: 100vh;
+        overflow-y: auto;
+        background: #fff;
+        z-index: 1050;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, .18);
+        padding: 20px 16px 80px;
+        transform: translateX(0);
+        transition: transform .3s ease;
+    }
+
+    /* Closed state on mobile when the open class is missing — keep the
+       sidebar in its NATURAL flow (whatever the theme decides) so we
+       never hide content when the JS isn't ready. */
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .adf-chip,
+    .adf-clear-all,
+    #adforest-ajax-sidebar,
+    .adf-mobile-filters-btn,
+    body.adf-mobile-filters-open #adforest-ajax-sidebar {
+        transition: none !important;
+    }
+}
+
+/* =================================================================
+ * Search 2.0 Part 10 — Radius Search polish
+ *
+ * Real selectors from template-parts/layouts/widgets/sidebar/
+ * radius-search.php: #sb-radius-form / .form-field / #rd /
+ * .search-btn / .search-btn-title / .crosshair_btn / #suggestions-box.
+ *
+ * Scoped entirely under #adforest-ajax-sidebar so the same form in
+ * other contexts (header search bar, homepage hero) is unaffected.
+ * Positioning of the buttons relative to the input is left to the
+ * base theme — we only polish surface styling (borders, focus, colors).
+ * ================================================================= */
+
+#adforest-ajax-sidebar #sb-radius-form.for-radius {
+    padding: 4px 0 2px;
+}
+
+/* --- Form-field spacing (.form-group in the spec) ----------------- */
+#adforest-ajax-sidebar #sb-radius-form .form-field {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+#adforest-ajax-sidebar #sb-radius-form .form-field:last-of-type {
+    margin-bottom: 4px;
+}
+
+/* --- Inputs ------------------------------------------------------- */
+#adforest-ajax-sidebar #sb-radius-form input.form-control {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    padding: 10px 14px;
+    font-size: 14px;
+    line-height: 1.35;
+    background: #fff;
+    color: #0f172a;
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+#adforest-ajax-sidebar #sb-radius-form input.form-control::placeholder {
+    color: #9ca3af;
+}
+
+#adforest-ajax-sidebar #sb-radius-form input.form-control:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .15);
+    outline: none;
+}
+
+#adforest-ajax-sidebar #sb-radius-form input.form-control[readonly],
+#adforest-ajax-sidebar #sb-radius-form input.form-control[disabled] {
+    background: #f9fafb;
+    color: #374151;
+    cursor: default;
+}
+
+/* --- Primary search button (gradient red per spec) ---------------- */
+#adforest-ajax-sidebar #sb-radius-form .search-btn,
+#adforest-ajax-sidebar #sb-radius-form .search-btn-title {
+    border-radius: 10px;
+    background: linear-gradient(135deg, #ff3d3d, #ff6b6b);
+    border: none;
+    color: #fff;
+    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    box-shadow: 0 2px 8px rgba(255, 61, 61, .22);
+}
+
+#adforest-ajax-sidebar #sb-radius-form .search-btn:hover,
+#adforest-ajax-sidebar #sb-radius-form .search-btn-title:hover,
+#adforest-ajax-sidebar #sb-radius-form .search-btn:focus,
+#adforest-ajax-sidebar #sb-radius-form .search-btn-title:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(255, 61, 61, .32);
+    filter: brightness(1.03);
+    color: #fff;
+}
+
+#adforest-ajax-sidebar #sb-radius-form .search-btn:focus-visible,
+#adforest-ajax-sidebar #sb-radius-form .search-btn-title:focus-visible {
+    outline: 2px solid rgba(255, 61, 61, .5);
+    outline-offset: 2px;
+}
+
+/* --- Secondary geolocation button --------------------------------- */
+#adforest-ajax-sidebar #sb-radius-form .crosshair_btn {
+    border-radius: 10px;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    color: #6b7280;
+    transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+#adforest-ajax-sidebar #sb-radius-form .crosshair_btn:hover,
+#adforest-ajax-sidebar #sb-radius-form .crosshair_btn:focus {
+    background: rgba(37, 99, 235, .08);
+    border-color: rgba(37, 99, 235, .25);
+    color: #2563eb;
+    transform: translateY(-1px);
+}
+
+#adforest-ajax-sidebar #sb-radius-form .crosshair_btn:focus-visible {
+    outline: 2px solid rgba(37, 99, 235, .5);
+    outline-offset: 2px;
+}
+
+/* --- Location-icon tint sync (Part 5 of spec) --------------------
+   The spec assumes a separate .location-icon element; the real markup
+   puts the icon inside the crosshair_btn. Sync the icon colour to the
+   location input's focus state via the shared .form-field parent. */
+#adforest-ajax-sidebar #sb-radius-form .form-field:focus-within .crosshair_btn {
+    color: #2563eb;
+    border-color: rgba(37, 99, 235, .25);
+}
+
+/* --- Suggestions dropdown modernize ------------------------------- */
+#adforest-ajax-sidebar #suggestions-box.suggestions-box {
+    width: 100%;
+    max-height: 220px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, .12);
+    margin-top: 4px;
+    overflow-y: auto;
+    z-index: 2000;
+}
+
+#adforest-ajax-sidebar .suggestion-item {
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #374151;
+    transition: background .15s ease, color .15s ease;
+}
+
+#adforest-ajax-sidebar .suggestion-item:hover {
+    background: rgba(37, 99, 235, .08);
+    color: #1e3a8a;
+}
+
+/* --- Hide the pinless search input when theme option disables it -- */
+#adforest-ajax-sidebar #sb-radius-form input.form-control.hideSearchInput {
+    display: none;
+}
+
+/* --- Mobile tuning ------------------------------------------------ */
+@media (max-width: 991px) {
+    #adforest-ajax-sidebar #sb-radius-form.for-radius {
+        padding: 2px 0;
+    }
+    #adforest-ajax-sidebar #sb-radius-form input.form-control {
+        font-size: 13px;
+        padding: 9px 12px;
+    }
+    #adforest-ajax-sidebar #sb-radius-form .form-field {
+        margin-bottom: 8px;
+    }
+}
+
+/* --- Reduced motion ---------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    #adforest-ajax-sidebar #sb-radius-form input.form-control,
+    #adforest-ajax-sidebar #sb-radius-form .search-btn,
+    #adforest-ajax-sidebar #sb-radius-form .search-btn-title,
+    #adforest-ajax-sidebar #sb-radius-form .crosshair_btn,
+    #adforest-ajax-sidebar .suggestion-item {
+        transition: none !important;
+    }
+    #adforest-ajax-sidebar #sb-radius-form .search-btn:hover,
+    #adforest-ajax-sidebar #sb-radius-form .search-btn-title:hover,
+    #adforest-ajax-sidebar #sb-radius-form .crosshair_btn:hover {
+        transform: none !important;
+    }
+}
+
+/* =================================================================
+ * Search 2.0 Part 11 — Unified input+button layout
+ *
+ * Makes .form-field render as a single merged control: input on the
+ * left (left-rounded, no right border), one or more trailing buttons
+ * on the right (right-rounded on the last). Flattens the Part 10
+ * gradient / shadow / hover lift so the button reads as part of the
+ * same surface, not a floating CTA.
+ *
+ * Covers both widgets under the sidebar:
+ *   title.php         — .form-field > input#ad_title + button.search-btn-title
+ *   radius-search.php — .form-field > input + <div>(search+crosshair buttons)
+ *                       .form-field > input + button.search-btn
+ *
+ * Specificity note: Part 10 scoped radius rules to
+ *   #adforest-ajax-sidebar #sb-radius-form ... (2,1,1/0)
+ * so Part 11 twins selectors with the same ID chain, relying on
+ * source order to take precedence at matching specificity.
+ * ================================================================= */
+
+/* --- Flex row: input + trailing buttons are baseline-aligned ----- */
+#adforest-ajax-sidebar .form-field {
+    display: flex;
+    align-items: stretch;
+    position: relative;
+}
+
+/* --- Shared height for parity ------------------------------------ */
+#adforest-ajax-sidebar .form-field > input.form-control,
+#adforest-ajax-sidebar .form-field > button,
+#adforest-ajax-sidebar .form-field > div > button,
+#adforest-ajax-sidebar #sb-radius-form .form-field > input.form-control,
+#adforest-ajax-sidebar #sb-radius-form .form-field > button,
+#adforest-ajax-sidebar #sb-radius-form .form-field > div > button {
+    height: 42px;
+    box-sizing: border-box;
+}
+
+/* --- Input: left-rounded, flex:1, no right border -----------------
+   Twin selectors so the radius-specific (2,1,1) chain from Part 10
+   is matched and superseded by source order. */
+#adforest-ajax-sidebar .form-field > input.form-control,
+#adforest-ajax-sidebar #sb-radius-form .form-field > input.form-control {
+    flex: 1 1 auto;
+    min-width: 0;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border: 1px solid #e5e7eb;
+    border-right: 0;
+    padding: 0 14px;
+    font-size: 14px;
+    line-height: 1.35;
+    background: #fff;
+    color: #0f172a;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+/* --- Button(s) wrapper (radius location has an inner <div>) ------ */
+#adforest-ajax-sidebar .form-field > div {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: stretch;
+}
+
+/* --- Trailing button(s): right-merged -----------------------------
+   The LAST button on the right gets the right-radius; any earlier
+   buttons in a two-button wrapper sit flush in the middle with no
+   radius so the whole trio reads as one pill. */
+#adforest-ajax-sidebar .form-field > button,
+#adforest-ajax-sidebar .form-field > div > button:last-child,
+#adforest-ajax-sidebar .form-field > div > button:only-child,
+#adforest-ajax-sidebar #sb-radius-form .form-field > button,
+#adforest-ajax-sidebar #sb-radius-form .form-field > div > button:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: 0;
+    padding: 0 14px;
+    min-width: 42px;
+    flex: 0 0 auto;
+}
+
+#adforest-ajax-sidebar .form-field > div > button:first-child:not(:only-child),
+#adforest-ajax-sidebar #sb-radius-form .form-field > div > button:first-child:not(:only-child) {
+    border-radius: 0;
+    padding: 0 12px;
+    min-width: 40px;
+    flex: 0 0 auto;
+    border-right: 1px solid rgba(255, 255, 255, .22);
+}
+
+/* --- Flatten Part 10's floating / gradient treatment --------------
+   Solid red fill, no shadow, no hover lift. Unified across all three
+   button classes in the sidebar. */
+#adforest-ajax-sidebar .search-btn,
+#adforest-ajax-sidebar .search-btn-title,
+#adforest-ajax-sidebar .crosshair_btn,
+#adforest-ajax-sidebar #sb-radius-form .search-btn,
+#adforest-ajax-sidebar #sb-radius-form .search-btn-title,
+#adforest-ajax-sidebar #sb-radius-form .crosshair_btn {
+    background: #ff3d3d;
+    background-image: none;
+    color: #fff;
+    border: none;
+    box-shadow: none;
+    transform: none;
+    filter: none;
+    transition: background .2s ease;
+}
+
+#adforest-ajax-sidebar .search-btn:hover,
+#adforest-ajax-sidebar .search-btn-title:hover,
+#adforest-ajax-sidebar .crosshair_btn:hover,
+#adforest-ajax-sidebar .search-btn:focus,
+#adforest-ajax-sidebar .search-btn-title:focus,
+#adforest-ajax-sidebar .crosshair_btn:focus,
+#adforest-ajax-sidebar #sb-radius-form .search-btn:hover,
+#adforest-ajax-sidebar #sb-radius-form .search-btn-title:hover,
+#adforest-ajax-sidebar #sb-radius-form .crosshair_btn:hover,
+#adforest-ajax-sidebar #sb-radius-form .search-btn:focus,
+#adforest-ajax-sidebar #sb-radius-form .search-btn-title:focus,
+#adforest-ajax-sidebar #sb-radius-form .crosshair_btn:focus {
+    background: #e63232;
+    background-image: none;
+    color: #fff;
+    box-shadow: none;
+    transform: none;
+    filter: none;
+}
+
+/* --- Softer focus ring -------------------------------------------
+   The earlier 3-px bright glow fought the merged look. 2-px inner
+   ring keeps the cue without overpowering the unified surface. */
+#adforest-ajax-sidebar input.form-control:focus,
+#adforest-ajax-sidebar #sb-radius-form input.form-control:focus {
+    outline: none;
+    border-color: rgba(37, 99, 235, .45);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, .15);
+}
+
+/* Paired focus: when the input is focused, flash the same subtle ring
+   on the trailing button(s) so the whole merged control lights up
+   as one unit. */
+#adforest-ajax-sidebar .form-field:focus-within > button,
+#adforest-ajax-sidebar .form-field:focus-within > div > button:last-child,
+#adforest-ajax-sidebar #sb-radius-form .form-field:focus-within > button,
+#adforest-ajax-sidebar #sb-radius-form .form-field:focus-within > div > button:last-child {
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, .15);
+    z-index: 1;
+}
+
+/* --- Suggestions dropdown re-anchor to merged input ---------------
+ * #suggestions-box is `position: absolute` (inline style from the
+ * radius-search widget template). Without a positioned ancestor, the
+ * Nominatim/OpenStreetMap suggestions fall through to the sidebar
+ * container and render at the very bottom of the sidebar — far away
+ * from the input that triggered them. Anchoring the form lets the
+ * top/left/right values below place the dropdown directly under it.
+ */
+#adforest-ajax-sidebar #sb-radius-form {
+    position: relative;
+}
+#adforest-ajax-sidebar #suggestions-box.suggestions-box {
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+}
+
+/* --- Mobile: keep 42px touch target ------------------------------- */
+@media (max-width: 991px) {
+    #adforest-ajax-sidebar .form-field > input.form-control,
+    #adforest-ajax-sidebar .form-field > button,
+    #adforest-ajax-sidebar .form-field > div > button,
+    #adforest-ajax-sidebar #sb-radius-form .form-field > input.form-control,
+    #adforest-ajax-sidebar #sb-radius-form .form-field > button,
+    #adforest-ajax-sidebar #sb-radius-form .form-field > div > button {
+        height: 42px;
+        font-size: 14px;
+    }
+}
+
+/* --- Reduced motion ----------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    #adforest-ajax-sidebar .form-field > input.form-control,
+    #adforest-ajax-sidebar .form-field > button,
+    #adforest-ajax-sidebar .form-field > div > button {
+        transition: none !important;
+    }
+}
+
+/* =========================================================
+ * AdForest Search Topbar — Minimal safe CSS (2026-04-23)
+ *
+ * Full revert: all Parts 12–28 topbar customizations removed.
+ * Only two height/width rules remain so inputs and buttons
+ * render at a consistent 42px. Bootstrap grid and the theme's
+ * own layout handle everything else.
+ * ========================================================= */
+
+section.adt-ads-topbar-section .adt-ads-topbar-content .form-control {
+    height: 42px;
+}
+
+section.adt-ads-topbar-section .adt-ads-topbar-content button {
+    height: 42px;
+    width: 42px;
+}
+

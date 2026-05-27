@@ -224,11 +224,7 @@ if (isset($adforest_theme['sb_show_recently_viewed_on_ad_detail']) && 1 == $adfo
 }
 
 if ($is_price_enabled) {
-    if ('no_price' === $price_type) {
-        $price_html = esc_html__('No Price', 'adforest');
-    } else {
-        $price_html = adforest_adPrice($pid, 'negotiable-single', '');
-    }
+    $price_html = adforest_adPrice($pid, 'negotiable-single', '');
 
     if ('' !== $price_html) {
         if (preg_match('/<small>(.*)<\/small>/Us', $price_html, $price_type_match)) {
@@ -240,7 +236,7 @@ if ($is_price_enabled) {
         }
     }
 
-    if ('' !== $price_type && 'no_price' !== $price_type) {
+    if (function_exists('bornado_ad_has_numeric_price_value') && bornado_ad_has_numeric_price_value($pid) && '' !== $price_type && 'no_price' !== $price_type) {
         if ('Fixed' === $price_type) {
             $price_type_label = __('Fixed', 'adforest');
         } elseif ('Negotiable' === $price_type) {
@@ -400,39 +396,54 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
 
                         <?php
                         if (($communication_mode == 'both' || $communication_mode == 'phone') && '' !== $contact_num) {
-                            $call_now = 'javascript:void(0);';
-                            if (wp_is_mobile()) {
-                                $call_now = 'tel:' . adforest_get_CallAbleNumber(get_post_meta($pid, '_adforest_poster_contact', true));
-                            }
-
-                            if (adforest_showPhone_to_users()) {
-                                $call_now = 'javascript:void(0)';
+                            $masked_num = substr($contact_num, 0, -5) . str_repeat('x', 5);
+                            $requires_login = adforest_showPhone_to_users();
+                            $call_now = '#';
+                            if ($requires_login) {
                                 $adforest_login_page = isset($adforest_theme['sb_sign_in_page']) ? $adforest_theme['sb_sign_in_page'] : '';
                                 $adforest_login_page = apply_filters('adforest_language_page_id', $adforest_login_page);
                                 if ('' !== $adforest_login_page) {
                                     $call_now = adforest_login_with_redirect_url_param(adforest_get_current_url());
                                 }
                             }
-
-                            $masked_num = substr($contact_num, 0, -5) . str_repeat('x', 5);
                             ?>
                             <div class="bornad-contact-list">
-                                <a class="bornad-contact-item" href="<?php echo esc_url($call_now); ?>">
-                                    <span class="bornad-contact-icon"><img src="<?php echo esc_url(trailingslashit(get_template_directory_uri()) . 'images/phone-icon.svg'); ?>" alt="phone"></span>
-                                    <span class="bornad-contact-text">
-                                        <small><?php echo adforest_showPhone_to_users() ? esc_html__('Login to View', 'adforest') : esc_html__('Click To Show', 'adforest'); ?></small>
-                                        <strong class="style_2_ph"><?php echo esc_html($masked_num); ?></strong>
-                                    </span>
-                                </a>
-
-                                <?php if ($allow_whatsapp) { ?>
+                                <?php if ($requires_login) { ?>
                                     <a class="bornad-contact-item" href="<?php echo esc_url($call_now); ?>">
-                                        <span class="bornad-contact-icon"><img src="<?php echo esc_url(trailingslashit(get_template_directory_uri()) . 'images/whatsapp-icon.svg'); ?>" alt="whatsapp"></span>
+                                        <span class="bornad-contact-icon"><img src="<?php echo esc_url(trailingslashit(get_template_directory_uri()) . 'images/phone-icon.svg'); ?>" alt="phone"></span>
                                         <span class="bornad-contact-text">
-                                            <small><?php echo adforest_showPhone_to_users() ? esc_html__('Login to View', 'adforest') : esc_html__('Click To Show', 'adforest'); ?></small>
+                                            <small><?php esc_html_e('Login to View', 'adforest'); ?></small>
                                             <strong class="style_2_ph"><?php echo esc_html($masked_num); ?></strong>
                                         </span>
                                     </a>
+                                <?php } else { ?>
+                                    <div class="bornad-contact-item bornad-contact-item--reveal">
+                                        <span class="bornad-contact-icon"><img src="<?php echo esc_url(trailingslashit(get_template_directory_uri()) . 'images/phone-icon.svg'); ?>" alt="phone"></span>
+                                        <span class="bornad-contact-text">
+                                            <small class="toggle-contact-number" style="cursor:pointer;" data-ad-id="<?php echo intval($pid); ?>"><?php esc_html_e('Click To Show', 'adforest'); ?></small>
+                                            <a class="style_2_ph" href="javascript:void(0)"><?php echo esc_html($masked_num); ?></a>
+                                        </span>
+                                    </div>
+                                <?php } ?>
+
+                                <?php if ($allow_whatsapp) { ?>
+                                    <?php if ($requires_login) { ?>
+                                        <a class="bornad-contact-item" href="<?php echo esc_url($call_now); ?>">
+                                            <span class="bornad-contact-icon"><img src="<?php echo esc_url(trailingslashit(get_template_directory_uri()) . 'images/whatsapp-icon.svg'); ?>" alt="whatsapp"></span>
+                                            <span class="bornad-contact-text">
+                                                <small><?php esc_html_e('Login to View', 'adforest'); ?></small>
+                                                <strong class="style_2_ph"><?php echo esc_html($masked_num); ?></strong>
+                                            </span>
+                                        </a>
+                                    <?php } else { ?>
+                                        <div class="bornad-contact-item bornad-contact-item--reveal">
+                                            <span class="bornad-contact-icon"><img src="<?php echo esc_url(trailingslashit(get_template_directory_uri()) . 'images/whatsapp-icon.svg'); ?>" alt="whatsapp"></span>
+                                            <span class="bornad-contact-text">
+                                                <small class="toggle-contact-number" style="cursor:pointer;" data-ad-id="<?php echo intval($pid); ?>"><?php esc_html_e('Click To Show', 'adforest'); ?></small>
+                                                <a class="style_2_ph" href="javascript:void(0)"><?php echo esc_html($masked_num); ?></a>
+                                            </span>
+                                        </div>
+                                    <?php } ?>
                                 <?php } ?>
                             </div>
                         <?php } ?>
@@ -940,39 +951,54 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
 
                 <?php
                 if (($communication_mode == 'both' || $communication_mode == 'phone') && '' !== $contact_num) {
-                    $call_now = 'javascript:void(0);';
-                    if (wp_is_mobile()) {
-                        $call_now = 'tel:' . adforest_get_CallAbleNumber(get_post_meta($pid, '_adforest_poster_contact', true));
-                    }
-
-                    if (adforest_showPhone_to_users()) {
-                        $call_now = 'javascript:void(0)';
+                    $masked_num = substr($contact_num, 0, -5) . str_repeat('x', 5);
+                    $requires_login = adforest_showPhone_to_users();
+                    $call_now = '#';
+                    if ($requires_login) {
                         $adforest_login_page = isset($adforest_theme['sb_sign_in_page']) ? $adforest_theme['sb_sign_in_page'] : '';
                         $adforest_login_page = apply_filters('adforest_language_page_id', $adforest_login_page);
                         if ('' !== $adforest_login_page) {
                             $call_now = adforest_login_with_redirect_url_param(adforest_get_current_url());
                         }
                     }
-
-                    $masked_num = substr($contact_num, 0, -5) . str_repeat('x', 5);
                     ?>
                     <div class="bornad-contact-list">
-                        <a class="bornad-contact-item" href="<?php echo esc_url($call_now); ?>">
-                            <span class="bornad-contact-icon"><img src="<?php echo esc_url(trailingslashit(get_template_directory_uri()) . 'images/phone-icon.svg'); ?>" alt="phone"></span>
-                            <span class="bornad-contact-text">
-                                <small><?php echo adforest_showPhone_to_users() ? esc_html__('Login to View', 'adforest') : esc_html__('Click To Show', 'adforest'); ?></small>
-                                <strong class="style_2_ph"><?php echo esc_html($masked_num); ?></strong>
-                            </span>
-                        </a>
-
-                        <?php if ($allow_whatsapp) { ?>
+                        <?php if ($requires_login) { ?>
                             <a class="bornad-contact-item" href="<?php echo esc_url($call_now); ?>">
-                                <span class="bornad-contact-icon"><img src="<?php echo esc_url(trailingslashit(get_template_directory_uri()) . 'images/whatsapp-icon.svg'); ?>" alt="whatsapp"></span>
+                                <span class="bornad-contact-icon"><img src="<?php echo esc_url(trailingslashit(get_template_directory_uri()) . 'images/phone-icon.svg'); ?>" alt="phone"></span>
                                 <span class="bornad-contact-text">
-                                    <small><?php echo adforest_showPhone_to_users() ? esc_html__('Login to View', 'adforest') : esc_html__('Click To Show', 'adforest'); ?></small>
+                                    <small><?php esc_html_e('Login to View', 'adforest'); ?></small>
                                     <strong class="style_2_ph"><?php echo esc_html($masked_num); ?></strong>
                                 </span>
                             </a>
+                        <?php } else { ?>
+                            <div class="bornad-contact-item bornad-contact-item--reveal">
+                                <span class="bornad-contact-icon"><img src="<?php echo esc_url(trailingslashit(get_template_directory_uri()) . 'images/phone-icon.svg'); ?>" alt="phone"></span>
+                                <span class="bornad-contact-text">
+                                    <small class="toggle-contact-number" style="cursor:pointer;" data-ad-id="<?php echo intval($pid); ?>"><?php esc_html_e('Click To Show', 'adforest'); ?></small>
+                                    <a class="style_2_ph" href="javascript:void(0)"><?php echo esc_html($masked_num); ?></a>
+                                </span>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($allow_whatsapp) { ?>
+                            <?php if ($requires_login) { ?>
+                                <a class="bornad-contact-item" href="<?php echo esc_url($call_now); ?>">
+                                    <span class="bornad-contact-icon"><img src="<?php echo esc_url(trailingslashit(get_template_directory_uri()) . 'images/whatsapp-icon.svg'); ?>" alt="whatsapp"></span>
+                                    <span class="bornad-contact-text">
+                                        <small><?php esc_html_e('Login to View', 'adforest'); ?></small>
+                                        <strong class="style_2_ph"><?php echo esc_html($masked_num); ?></strong>
+                                    </span>
+                                </a>
+                            <?php } else { ?>
+                                <div class="bornad-contact-item bornad-contact-item--reveal">
+                                    <span class="bornad-contact-icon"><img src="<?php echo esc_url(trailingslashit(get_template_directory_uri()) . 'images/whatsapp-icon.svg'); ?>" alt="whatsapp"></span>
+                                    <span class="bornad-contact-text">
+                                        <small class="toggle-contact-number" style="cursor:pointer;" data-ad-id="<?php echo intval($pid); ?>"><?php esc_html_e('Click To Show', 'adforest'); ?></small>
+                                        <a class="style_2_ph" href="javascript:void(0)"><?php echo esc_html($masked_num); ?></a>
+                                    </span>
+                                </div>
+                            <?php } ?>
                         <?php } ?>
                     </div>
                 <?php } ?>

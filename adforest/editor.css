@@ -1,0 +1,9 @@
+/*
+ * Classic editor stylesheet for the AdForest theme.
+ *
+ * Referenced by `add_editor_style( 'editor.css' )` in
+ * inc/theme_settings.php. Kept intentionally minimal — the live front-end
+ * pulls its styles from `assets/css/` so the classic editor doesn't need
+ * to mirror them in full. Add overrides here only when WYSIWYG output
+ * diverges enough from the rendered page to confuse content editors.
+ */

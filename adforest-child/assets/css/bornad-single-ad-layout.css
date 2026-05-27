@@ -386,10 +386,16 @@ body.bornado-single-ad-style-bornad .bornad-contact-text small {
     font-size: 0.8rem;
 }
 
-body.bornado-single-ad-style-bornad .bornad-contact-text strong {
+body.bornado-single-ad-style-bornad .bornad-contact-text strong,
+body.bornado-single-ad-style-bornad .bornad-contact-text a.style_2_ph {
     color: #24282d;
     font-size: 0.95rem;
     font-weight: 700;
+    text-decoration: none;
+}
+
+body.bornado-single-ad-style-bornad .bornad-contact-item--reveal {
+    cursor: default;
 }
 
 body.bornado-single-ad-style-bornad .bornad-whatsapp-cta {

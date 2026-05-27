@@ -34,9 +34,6 @@ if (!empty($selected_search_context['city'])) {
     $selected_location_value = (string) $selected_search_context['country'];
 }
 $selected_category_value = !empty($selected_search_context['category']) ? (int) $selected_search_context['category'] : 0;
-$brand_home_url = function_exists('bornado_search_get_brand_home_url')
-    ? bornado_search_get_brand_home_url()
-    : home_url('/');
 
 $topbar_cats = $adforest_theme['adforest_header_ad_cats_selection'] ?? [];
 $center_index = floor((count($topbar_cats) - 1) / 2);
@@ -232,8 +229,7 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
         const defaultCatId = <?php echo json_encode( (int) $default_cat_id ); ?>;
         const defaultSlug = <?php echo json_encode( sanitize_title( $default_slug ) ); ?>;
         if (!params.has('cat_id') && defaultCatId && defaultSlug) {
-            params.set('cat_id', defaultCatId);
-            const newUrl = `${window.location.pathname}?${params.toString()}`;
+rams.toString()}`;
             window.history.pushState({}, '', newUrl);
 
             const tabTriggerEl = document.querySelector(`#pills-${defaultSlug}-tab`);
@@ -267,7 +263,7 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
             <div class="logo" data-mobile-logo="<?php echo esc_url($responsive_logo) ?>"
                  data-sticky-logo="<?php echo esc_url($responsive_logo) ?>" <?php echo is_user_logged_in() ? 'style="margin-right: 0px !important"' : ""; ?> >
                 <a href="<?php echo esc_url($brand_home_url); ?>"><img src="<?php echo esc_url($site_logo); ?>"
-                                                            alt="<?php echo esc_attr__('logo', 'adforest') ?>"></a>
+                <a href="<?php echo esc_url(home_url('/')); ?>"><img src="<?php echo esc_url($site_logo); ?>"
             </div>
             <div class="tabs-wrapper">
                 <?php if (!empty($topbar_cats)) : ?>
@@ -285,6 +281,9 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                                             id="pills-<?php echo esc_attr($taxonomy->slug); ?>-tab"
                                             data-bs-toggle="pill"
                                             data-bs-target="#pills-<?php echo esc_attr($taxonomy->slug); ?>"
+                                            type="button" role="tab"
+                                            aria-controls="pills-<?php echo esc_attr($taxonomy->slug); ?>"
+                                                       data-target-url="<?php echo esc_url($tab_target_url); ?>"
                                             type="button" role="tab"
                                             aria-controls="pills-<?php echo esc_attr($taxonomy->slug); ?>"
                                             aria-selected="<?php echo esc_attr( $current_cat_id === $cat_id ? 'true' : 'false' ); ?>"
@@ -996,8 +995,11 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                                             }
                                             $option_label = $entry['label'];
                                             $selected = ($current_value && $current_value === (int) $category_term->term_id) ? 'selected' : '';
+                                            $option_target_url = function_exists('bornado_seo_routing_get_contextual_url')
+                                                ? bornado_seo_routing_get_contextual_url(array('cat_id' => (int) $category_term->term_id))
+                                                : '';
                                             ?>
-                                            <option value="<?php echo esc_attr($category_term->term_id); ?>" <?php echo esc_attr($selected); ?>>
+                                            <option value="<?php echo esc_attr($category_term->term_id); ?>" data-target-url="<?php echo esc_url($option_target_url); ?>" <?php echo esc_attr($selected); ?>>
                                                 <?php echo esc_html($option_label); ?>
                                             </option>
                                         <?php
@@ -1035,29 +1037,12 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
 
             <script>
                 function setCategory(catId) {
-                    const searchPageUrl = '<?php echo esc_url($safe_action_url); ?>';
                     const sharedSearchCore = window.BornadoSearchCore || null;
                     const urlParams = sharedSearchCore && typeof sharedSearchCore.getCleanCurrentSearchParams === "function"
                         ? sharedSearchCore.getCleanCurrentSearchParams()
                         : new URLSearchParams(window.location.search);
-
-                    urlParams.set('cat_id', catId);
-
-                    if (sharedSearchCore && typeof sharedSearchCore.mergePersistedContext === "function") {
-                        sharedSearchCore.mergePersistedContext(urlParams);
-                    }
-
-                    // Redirect to the search page with the category parameter
-                    const newUrl = searchPageUrl + '?' + urlParams.toString();
-
-                    window.location.href = newUrl;
-                }
-
-                document.addEventListener("DOMContentLoaded", function () {
-                    const searchForm = document.querySelector(".adt-hero-search-tabs");
-                    const searchCore = window.BornadoSearchCore || null;
-                    if (!searchForm) {
-                        return;
+                    const targetButton = document.querySelector('#pills-tab [onclick="setCategory(' + String(catId) + ')"]');
+n;
                     }
 
                     function submitSearchFormState() {

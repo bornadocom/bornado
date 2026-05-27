@@ -1,0 +1,4104 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Adforest Elementor\n"
+"POT-Creation-Date: 2026-05-21 22:07+0500\n"
+"PO-Revision-Date: 2026-05-21 22:08+0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+"X-Generator: Poedit 2.4.3\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: adforest-elementor.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+
+#: AdPostMaphandler.php:108 AdPostMaphandler.php:379
+msgid "No results found"
+msgstr "لم يتم العثور على نتائج"
+
+#: AdPostMaphandler.php:664
+msgid "Map"
+msgstr "خريطة"
+
+#: AdPostMaphandler.php:668
+msgid "Drag pin for your pin-point location."
+msgstr "حرك العلامة للإشارة إلى موقعك."
+
+#: AdPostMaphandler.php:676 AdPostMaphandler.php:683
+msgid "Latitude"
+msgstr "خط العرض"
+
+#: AdPostMaphandler.php:690 AdPostMaphandler.php:697
+msgid "Longitude"
+msgstr "خط الطول"
+
+#: ad_post_shortcode.php:42
+msgid "Post Ad"
+msgstr "نشر الاعلان"
+
+#: ad_post_shortcode.php:87 widgets/LocationsModern.php:88
+#: widgets/MainHero4.php:430
+msgid "Default"
+msgstr "افتراضي"
+
+#: ad_post_shortcode.php:162
+msgid "Update Ad"
+msgstr "تحديث الإعلان"
+
+#: ad_post_shortcode.php:297
+msgid "Select Your Country"
+msgstr "اختر المدينة"
+
+#: ad_post_shortcode.php:298
+msgid "Select Your State"
+msgstr "اختار فئة"
+
+#: ad_post_shortcode.php:299
+msgid "Select Your City"
+msgstr "اختر مدينتك"
+
+#: ad_post_shortcode.php:300
+msgid "Select Your Town"
+msgstr "اختر مدينتك"
+
+#: ad_post_shortcode.php:319 ad_post_shortcode.php:593
+#: ad_post_shortcode.php:686 ad_post_shortcode.php:758
+#: ad_post_shortcode.php:821 ad_post_shortcode.php:965
+msgid "This field is required."
+msgstr "هذا الحقل مطلوب."
+
+#: ad_post_shortcode.php:320 ad_post_shortcode.php:687
+#: ad_post_shortcode.php:838
+msgid "Select Option"
+msgstr "حدد الخيار"
+
+#: ad_post_shortcode.php:445 ad_post_shortcode.php:483
+msgid "Featured ads remaining: Unlimited"
+msgstr "الإعلانات المميزة المتبقية: غير محدود"
+
+#: ad_post_shortcode.php:449 ad_post_shortcode.php:486
+msgid "Featured ads remaining:"
+msgstr "الإعلانات المميزة المتبقية"
+
+#: ad_post_shortcode.php:449 widget_shortcodes.php:861
+#: widget_shortcodes.php:868 widget_shortcodes.php:875
+#: widget_shortcodes.php:882 widget_shortcodes.php:889
+#: widget_shortcodes.php:896 widget_shortcodes.php:903
+#: widget_shortcodes.php:912 widget_shortcodes.php:983
+#: widgets/AdfHomePricing.php:265
+msgid "Unlimited"
+msgstr "غير محدود"
+
+#: ad_post_shortcode.php:461 ad_post_shortcode.php:497
+msgid "Make it featured"
+msgstr "أجعله أعلان مميز"
+
+#: ad_post_shortcode.php:476 ad_post_shortcode.php:513
+msgid "If you want to make it featured then please have a look on"
+msgstr "إذا كنت تريد ان تجعله مميز يرجى إلقاء نظره علي"
+
+#: ad_post_shortcode.php:478 ad_post_shortcode.php:515
+msgid "Packages. "
+msgstr "الباقات."
+
+#: ad_post_shortcode.php:523
+msgid "This ad is already featured."
+msgstr "هذا الإعلان مميز بالفعل."
+
+#: ad_post_shortcode.php:589
+msgid "ON"
+msgstr "تشغيل"
+
+#: ad_post_shortcode.php:590
+msgid "OFF"
+msgstr "إيقاف"
+
+#: ad_post_shortcode.php:592
+msgid "Choose Bidding option"
+msgstr "اختر خيار عروض الأسعار"
+
+#: ad_post_shortcode.php:599
+msgid "Bidding close date"
+msgstr "تاريخ إغلاق السوم"
+
+#: ad_post_shortcode.php:599
+msgid "For countdown"
+msgstr "للعد التنازلي"
+
+#: ad_post_shortcode.php:600
+msgid "Click to select"
+msgstr "انقر للاختيار"
+
+#: ad_post_shortcode.php:607
+msgid "Loading"
+msgstr "تحميل"
+
+#: ad_post_shortcode.php:620 widget_shortcodes.php:7546
+msgid "All Categories"
+msgstr "جميع الفئات"
+
+#: ad_post_shortcode.php:652
+msgid "General Information"
+msgstr "معلومات عامة"
+
+#: ad_post_shortcode.php:659
+msgid "Ad Details"
+msgstr "تفاصيل الإعلان"
+
+#: ad_post_shortcode.php:666 ad_post_shortcode.php:904
+msgid "Contact Information"
+msgstr "معلومات الاتصال"
+
+#: ad_post_shortcode.php:674
+msgid "Select Your Category"
+msgstr "حدد فئتك"
+
+#: ad_post_shortcode.php:677
+msgid "Select Your Categories"
+msgstr "حدد الفئات الخاصة بك"
+
+#: ad_post_shortcode.php:680
+msgid "Select Suitable Category For Your Ad"
+msgstr "حدد الفئة المناسبة للتنبيه الخاص بك"
+
+#: ad_post_shortcode.php:703
+msgid "Select Your Package"
+msgstr "اختر باقتك"
+
+#: ad_post_shortcode.php:706
+msgid "Select a package from which you want to post the Ad"
+msgstr "حدد الحزمة التي تريد نشر الإعلان منها"
+
+#: ad_post_shortcode.php:716
+msgid "Ad Details for AI Suggestions"
+msgstr "تمكين اقتراحات إعلانات الذكاء الاصطناعي"
+
+#: ad_post_shortcode.php:719
+msgid ""
+"These details help generate better AI-powered title and description "
+"suggestions."
+msgstr ""
+"تساعد هذه التفاصيل في إنتاج اقتراحات أفضل للعناوين والوصف المدعومة بالذكاء "
+"الاصطناعي."
+
+#: ad_post_shortcode.php:733 ad_post_shortcode.php:870
+#: ad_post_shortcode.php:897 widgets/AdfHomeFeatured.php:569
+msgid "Next"
+msgstr "التالي"
+
+#: ad_post_shortcode.php:740
+msgid "General information"
+msgstr "المعلومات العامة"
+
+#: ad_post_shortcode.php:752 widget_shortcodes.php:2244
+#: widgets/AdListModern.php:42 widgets/AdPostModern.php:113
+#: widgets/AdfHomeTrust.php:42 widgets/AdforestContactUs.php:88
+#: widgets/AdforestContactUs.php:119 widgets/AdsModernBg.php:44
+#: widgets/AdtCallToAction.php:58 widgets/AdtCallToAction.php:110
+#: widgets/AdtInfo.php:42 widgets/BrandsCarousel.php:44
+#: widgets/CategorySlider.php:37 widgets/ClassicHome.php:120
+#: widgets/CyberSaleHero.php:41 widgets/DealsOfTheDay.php:62
+#: widgets/DirectoryHero.php:149 widgets/DirectoryHero.php:185
+#: widgets/DirectoryHero.php:188 widgets/EcommerceDealsBoxes.php:73
+#: widgets/EcommerceHome.php:68 widgets/EventHomeHero.php:111
+#: widgets/EventListWidget.php:42 widgets/LocationsFancy.php:42
+#: widgets/LocationsFancy2.php:42 widgets/LocationsModern.php:64
+#: widgets/MainHero2.php:146 widgets/MainHero2.php:149
+#: widgets/MainHero3.php:115 widgets/MainHero3.php:118
+#: widgets/MainHero3.php:160 widgets/MainHero4.php:392 widgets/MainHero5.php:41
+#: widgets/MainHero6.php:99 widgets/MultivendorHero.php:41
+#: widgets/MultivendorProductCarousel.php:58
+#: widgets/MultivendorProductCategories.php:41
+#: widgets/MultivendorProductsGrid.php:41
+#: widgets/MultivendorProductsWithSidebar.php:57 widgets/OurArticles.php:42
+#: widgets/RealEstateHero.php:142
+msgid "Title"
+msgstr "العنوان"
+
+#: ad_post_shortcode.php:756
+#, php-format
+msgid "Enter title character limit (%d)"
+msgstr "أدخل عدد أحرف العنوان ("
+
+#: ad_post_shortcode.php:767 widgets/CyberSaleHero.php:48
+#: widgets/MainHero2.php:154 widgets/MainHero2.php:157 widgets/MainHero5.php:48
+#: widgets/MultivendorHero.php:48
+msgid "Tagline"
+msgstr "(الشعار) الخط"
+
+#: ad_post_shortcode.php:771
+msgid "Ad Tagline"
+msgstr "شعار الإعلان"
+
+#: ad_post_shortcode.php:792
+msgid "Get AI Suggestions"
+msgstr "احصل على اقتراحات للذكاء الاصطناعي"
+
+#: ad_post_shortcode.php:796
+msgid "Generating AI suggestions..."
+msgstr "توليد اقتراحات للذكاء الاصطناعي..."
+
+#: ad_post_shortcode.php:812 widgets/AdListModern.php:48
+#: widgets/AdfHomeTrust.php:47 widgets/AdforestContactUs.php:110
+#: widgets/AdforestContactUs.php:129 widgets/AdtCallToAction.php:65
+#: widgets/AdtCallToAction.php:117 widgets/DealsOfTheDay.php:72
+#: widgets/EcommerceDealsBoxes.php:83 widgets/EventListWidget.php:49
+#: widgets/LocationsFancy.php:48 widgets/OurArticles.php:49
+msgid "Description"
+msgstr "الوصف"
+
+#: ad_post_shortcode.php:818
+msgid "Ad Description"
+msgstr "وصف الإعلان المميز"
+
+#: ad_post_shortcode.php:834 widget_shortcodes.php:5999
+msgid "Currency"
+msgstr "العملة"
+
+#: ad_post_shortcode.php:837
+msgid "Choose option"
+msgstr "اختر أحد الخيارات"
+
+#: ad_post_shortcode.php:868 ad_post_shortcode.php:895
+#: ad_post_shortcode.php:1023 widgets/AdfHomeFeatured.php:566
+msgid "Previous"
+msgstr "السابق"
+
+#: ad_post_shortcode.php:879
+msgid "Media"
+msgstr "الوسائط"
+
+#: ad_post_shortcode.php:887
+msgid "Click the box below to ad Videos"
+msgstr "انقر فوق المربع أدناه لإضافة الفيديو !"
+
+#: ad_post_shortcode.php:889
+msgid "upload only videos (mp4, ogg, webm) files with a max file size of "
+msgstr "قم بتحميل ملفات مقاطع الفيديو فقط (MP4 و OGG و WebM) بحجم ملف أقصى"
+
+#: ad_post_shortcode.php:909 ad_post_shortcode.php:913
+msgid "Phone Number"
+msgstr "رقم الهاتف"
+
+#: ad_post_shortcode.php:919
+msgid "Your Name"
+msgstr "اسمك"
+
+#: ad_post_shortcode.php:923 widget_shortcodes.php:138
+msgid "Enter Your Name"
+msgstr "أدخل أسمك"
+
+#: ad_post_shortcode.php:930
+msgid "Website"
+msgstr "الموقع الالكتروني"
+
+#: ad_post_shortcode.php:934
+msgid "Listing Website eg. http://example.com"
+msgstr "علي سبيل المثال. https://www.bluemediaco.com"
+
+#: ad_post_shortcode.php:939 widget_shortcodes.php:2250
+#: widget_shortcodes.php:4116 widget_shortcodes.php:6351
+#: widget_shortcodes.php:6549 widget_shortcodes.php:6931
+#: widgets/AdfHomeLocations.php:93 widgets/DirectoryHero.php:150
+#: widgets/EventHomeHero.php:112 widgets/MainHero3.php:161
+#: widgets/MainHero4.php:394 widgets/MainHero6.php:100
+#: widgets/RealEstateHero.php:143
+msgid "Location"
+msgstr "الموقع"
+
+#: ad_post_shortcode.php:957 widget_shortcodes.php:697
+#: widgets/AdforestContactUs.php:185 widgets/AdforestContactUs.php:192
+msgid "Address"
+msgstr "العنوان"
+
+#: ad_post_shortcode.php:962
+msgid "Ad Address"
+msgstr "عنوان الإعلان"
+
+#: ad_post_shortcode.php:972
+msgid "You Current Location"
+msgstr "أنت الموقع الحالي"
+
+#: ad_post_shortcode.php:1005 widget_shortcodes.php:189
+#: widget_shortcodes.php:274
+msgid "Please accept terms and conditions."
+msgstr "فضلا قبول الأحكام والشروط"
+
+#: ad_post_shortcode.php:1007 widget_shortcodes.php:276
+msgid "I agree to "
+msgstr "أوافق على الموقع"
+
+#: ad_post_shortcode.php:1033
+msgid "Maximum upload limit reached"
+msgstr "تم الوصول إلى الحد الأقصى للتحميل"
+
+#: ad_post_shortcode.php:1035
+msgid "Drop your files here or click to upload."
+msgstr "قم بإسقاط ملفاتك هنا أو انقر للتحميل."
+
+#: ad_post_shortcode.php:1037
+msgid "Your browser does not support drag'n'drop file uploads."
+msgstr "المتصفح الخاص بك لا يدعم السحب والافلات لرفع الملفات."
+
+#: ad_post_shortcode.php:1041
+msgid ""
+"Please use the fallback form below to upload your files like in the olden "
+"days."
+msgstr "الرجاء استخدام النموذج الاحتياطي أدناه لتحميل ملفاتك."
+
+#: ad_post_shortcode.php:1043
+msgid "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB."
+msgstr ""
+"الحجم كبير جدا.  ({{filesize}}MiB). حجم الملف الاقصي: {{maxFilesize}}MiB."
+
+#: ad_post_shortcode.php:1045
+msgid "You can't upload files of this type."
+msgstr "لا يمكنك تحميل صور من هذا النوع."
+
+#: ad_post_shortcode.php:1047
+msgid "Server responded with {{statusCode}} code."
+msgstr "تم رد الخادم باستخدام رمز {{statusCode}}."
+
+#: ad_post_shortcode.php:1049
+msgid "Cancel upload"
+msgstr "إلغاء الرفع"
+
+#: ad_post_shortcode.php:1051
+msgid "Are you sure you want to cancel this upload?"
+msgstr "هل أنت متأكد من  أنك تريد الغاء الرفع؟"
+
+#: ad_post_shortcode.php:1053
+msgid "Remove file"
+msgstr "إزالة الملف"
+
+#: ad_post_shortcode.php:1056
+msgid "You can not upload any more files."
+msgstr "لا يمكنك تحميل أي ملفات أخرى."
+
+#: ad_post_shortcode.php:1061
+#, php-format
+msgid "You can only upload %d images."
+msgstr "يمكنك فقط رفع %d الصور."
+
+#: ad_post_shortcode.php:1068
+msgid "Your package has been used or expired, please purchase new."
+msgstr "تم استخدام الحزمة الخاصة بك أو انتهت صلاحيتها ، يرجى شراء جديد."
+
+#: ad_post_shortcode.php:1079
+msgid "Please Select Category first"
+msgstr "الرجاء تحديد فئة فرعية للمتابعة"
+
+#: adforest-elementor.php:98
+#, php-format
+msgid "\"%1$s\" requires \"%2$s\" to be installed and activated."
+msgstr "\"%1$s\" يتطلب تثبيت \"%2$s\" وتنشيطه."
+
+#: adforest-elementor.php:99 adforest-elementor.php:112
+msgid "Adforest Elementor Widgets "
+msgstr "أدوات Adforest Elementor "
+
+#: adforest-elementor.php:100 adforest-elementor.php:126
+msgid "Elementor "
+msgstr "مصمم الصفحات"
+
+#: adforest-elementor.php:111 adforest-elementor.php:125
+#, php-format
+msgid "\"%1$s\" requires \"%2$s\" version %3$s or greater."
+msgstr "يتطلب \"%1$s\" إصدار \"%2$s\" %3$s أو أكبر."
+
+#: adforest-elementor.php:113
+msgid "Elementor"
+msgstr "مصمم الصفحات"
+
+#: adforest-elementor.php:127
+msgid "PHP"
+msgstr "Php"
+
+#: adforest_elementor_functions.php:75 widget_shortcodes.php:833
+#: widgets/AdfHomeFeatured.php:367 widgets/AdsModernBg.php:69
+#: widgets/FeaturedAds.php:89
+msgid "All"
+msgstr "الكل"
+
+#: adforest_elementor_functions.php:77 widget_shortcodes.php:4118
+#: widget_shortcodes.php:6353 widget_shortcodes.php:6551
+#: widget_shortcodes.php:6933 widgets/AdLocations.php:83
+#: widgets/AdfHomeHero.php:108 widgets/AdsAndLocationMiniBoxes.php:217
+#: widgets/LocationsFancy.php:80 widgets/LocationsFancy2.php:74
+#: widgets/LocationsModern.php:120 widgets/MainHero4.php:528
+msgid "Select Location"
+msgstr "اختر الموقع الجغرافى"
+
+#: adforest_elementor_functions.php:79
+msgid "Select Warranty"
+msgstr "حدد الضمان"
+
+#: adforest_elementor_functions.php:81
+msgid "Select Condition"
+msgstr "اختر الحالة"
+
+#: adforest_elementor_functions.php:83 widgets/AdGridCarouselFancy.php:143
+#: widgets/AdGridCarouselModern.php:62 widgets/AdGridFancy.php:98
+#: widgets/AdListModern.php:55 widgets/CategoryBasedAds.php:119
+msgid "Select Ad Type"
+msgstr "الرجاء تحديد نوع الإعلان."
+
+#: adforest_elementor_functions.php:85
+msgid "Select Product Type"
+msgstr "الرجاء تحديد نوع الإعلان."
+
+#: adforest_elementor_functions.php:87
+msgid "Select ad categories"
+msgstr "حدد نوع تحميل فئات الإعلانات في جميع عناصر صفحة Visual Composer"
+
+#: adforest_elementor_functions.php:110
+msgid "Select Layout Type"
+msgstr "تحديد نوع التخطيط"
+
+#: adforest_elementor_functions.php:111
+msgid "Grid 1"
+msgstr "عمود واحد"
+
+#: adforest_elementor_functions.php:112
+msgid "Grid 2"
+msgstr "الشبكة 2"
+
+#: adforest_elementor_functions.php:113
+msgid "Grid 3"
+msgstr "الشبكة 3"
+
+#: adforest_elementor_functions.php:114
+msgid "Grid 4"
+msgstr "الشبكة 4"
+
+#: adforest_elementor_functions.php:115
+msgid "Grid 5"
+msgstr "الشبكة 5"
+
+#: adforest_elementor_functions.php:116
+msgid "Grid 6"
+msgstr "الشبكة 6"
+
+#: adforest_elementor_functions.php:117
+msgid "Grid 7"
+msgstr "الشبكة 7"
+
+#: adforest_elementor_functions.php:118
+msgid "Grid 8"
+msgstr "الشبكة 8"
+
+#: adforest_elementor_functions.php:119
+msgid "Grid 9"
+msgstr "الشبكة 9"
+
+#: adforest_elementor_functions.php:120
+msgid "Grid 10"
+msgstr "شبكة 10"
+
+#: adforest_elementor_functions.php:121
+msgid "Grid 11"
+msgstr "نوع الشبكة"
+
+#: adforest_elementor_functions.php:122
+msgid "List"
+msgstr "Grid Categories"
+
+#: adforest_elementor_functions.php:303
+msgid "Added to your favourites."
+msgstr "تمت الإضافه الى المفضلة."
+
+#: adforest_elementor_functions.php:306
+msgid "Ad removed from your favourites."
+msgstr "تمت إزالة المورد إلى المفضلة."
+
+#: adforest_elementor_functions.php:361
+msgid "No Vendor Found!"
+msgstr "لم يتم العثور"
+
+#: adforest_elementor_functions.php:453
+msgid "Forgot Your Password?"
+msgstr "نسيت كلمة السر .؟"
+
+#: adforest_elementor_functions.php:460 widget_shortcodes.php:154
+#: widget_shortcodes.php:468 widgets/AdforestContactUs.php:225
+#: widgets/AdforestContactUs.php:232
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+#: adforest_elementor_functions.php:461
+msgid "Your Email"
+msgstr "بريدك الالكتروني"
+
+#: adforest_elementor_functions.php:464
+msgid "Please enter valid email."
+msgstr "الرجاء إدخال بريد إلكتروني صحيح."
+
+#: adforest_elementor_functions.php:472
+msgid "Reset My Password"
+msgstr "إعادة تعيين كلمة المرور الخاصة بي"
+
+#: adforest_elementor_functions.php:474 widget_shortcodes.php:208
+msgid "Processing..."
+msgstr "معالجة..."
+
+#: adforest_elementor_functions.php:491
+msgid "Enter code"
+msgstr "أدخل الكود"
+
+#: adforest_elementor_functions.php:497
+msgid "Verify now "
+msgstr "التحقق من متجري"
+
+#: adforest_elementor_functions.php:498
+msgid "Processing ..."
+msgstr "معالجة ..."
+
+#: adforest_elementor_functions.php:499
+msgid "Verify now"
+msgstr "التحقق من متجري"
+
+#: adforest_elementor_functions.php:500
+msgid "Resend"
+msgstr "إعادة ارسال"
+
+#: adforest_elementor_functions.php:510
+msgid "Verify phone number"
+msgstr "يرجى التحقق من رقم هاتفك لإرسال رسالة."
+
+#: adforest_elementor_functions.php:762 widget_shortcodes.php:5533
+#: widgets/AdfHomePricing.php:323 widgets/AdfHomePricing.php:339
+msgid "Free"
+msgstr "مجاني"
+
+#: adforest_elementor_functions.php:764 adforest_elementor_functions.php:766
+msgid "No Price"
+msgstr "السعر"
+
+#: adforest_elementor_functions.php:768
+msgid "Price On Call"
+msgstr "عند الاتصال"
+
+#: adforest_elementor_functions.php:1073
+msgid "Product"
+msgstr "المنتج"
+
+#: adforest_elementor_functions.php:1095 adforest_elementor_functions.php:1170
+#, php-format
+msgid "%s Reviews"
+msgstr "%s مرجعات"
+
+#: adforest_elementor_functions.php:1113
+msgid "Add to cart"
+msgstr "اضف للسلة"
+
+#: adforest_elementor_functions.php:1115
+msgid "Cart icon"
+msgstr "أيقونة زر السلة"
+
+#: adforest_elementor_functions.php:1161
+msgid "Product image"
+msgstr "صورة المنتج"
+
+#: adforest_elementor_functions.php:1192 widget_shortcodes.php:3472
+#: widget_shortcodes.php:3864
+msgid "Detail Now"
+msgstr "التفاصيل الآن"
+
+#: plugin.php:251 plugin.php:263
+msgid "Adforest Widgets"
+msgstr "ودجات"
+
+#: traits/SliderControlsTrait.php:31
+msgid "Slider Settings"
+msgstr "إعدادات المنزلق المميزة"
+
+#: traits/SliderControlsTrait.php:66
+msgid "Loop the Slider?"
+msgstr "هل أعيد تدوير المنزلق؟"
+
+#: traits/SliderControlsTrait.php:68 traits/SliderControlsTrait.php:81
+#: traits/SliderControlsTrait.php:112 widget_shortcodes.php:933
+#: widget_shortcodes.php:960 widgets/AdLocations.php:123
+#: widgets/AdsAndLocationMiniBoxes.php:42
+#: widgets/AdsAndLocationMiniBoxes.php:159
+#: widgets/AdsAndLocationMiniBoxes.php:267
+#: widgets/AdsAndLocationMiniBoxes.php:278
+#: widgets/AdsAndLocationMiniBoxes.php:332
+#: widgets/AdsAndLocationMiniBoxes.php:358 widgets/AdsModernBg.php:88
+#: widgets/ClassicHome.php:280 widgets/FeaturedAds.php:137
+#: widgets/FeaturedAds.php:168 widgets/FeaturedAds.php:227
+#: widgets/MainHero4.php:53 widgets/MainHero4.php:96 widgets/MainHero4.php:125
+#: widgets/MainHero4.php:244 widgets/MainHero4.php:366
+#: widgets/MainHero4.php:493 widgets/MainHero4.php:567
+#: widgets/MainHero4.php:597 widgets/MainHero4.php:619
+#: widgets/MainHero4.php:673 widgets/MiniCategorySlider.php:46
+#: widgets/MultivendorProductCarousel.php:129 widgets/RecentAds.php:93
+#: widgets/RecentAds.php:115 widgets/RecentAds.php:142
+#: widgets/RecentAds.php:196
+msgid "Yes"
+msgstr "نعم"
+
+#: traits/SliderControlsTrait.php:69 traits/SliderControlsTrait.php:82
+#: traits/SliderControlsTrait.php:113 widget_shortcodes.php:920
+#: widget_shortcodes.php:945 widget_shortcodes.php:972
+#: widgets/AdLocations.php:124 widgets/AdsAndLocationMiniBoxes.php:43
+#: widgets/AdsAndLocationMiniBoxes.php:160
+#: widgets/AdsAndLocationMiniBoxes.php:266
+#: widgets/AdsAndLocationMiniBoxes.php:279
+#: widgets/AdsAndLocationMiniBoxes.php:333
+#: widgets/AdsAndLocationMiniBoxes.php:359 widgets/AdsModernBg.php:89
+#: widgets/ClassicHome.php:281 widgets/FeaturedAds.php:138
+#: widgets/FeaturedAds.php:169 widgets/FeaturedAds.php:228
+#: widgets/MainHero4.php:54 widgets/MainHero4.php:97 widgets/MainHero4.php:126
+#: widgets/MainHero4.php:245 widgets/MainHero4.php:367
+#: widgets/MainHero4.php:494 widgets/MainHero4.php:568
+#: widgets/MainHero4.php:598 widgets/MainHero4.php:620
+#: widgets/MainHero4.php:674 widgets/MiniCategorySlider.php:47
+#: widgets/MultivendorProductCarousel.php:130 widgets/RecentAds.php:94
+#: widgets/RecentAds.php:116 widgets/RecentAds.php:143
+#: widgets/RecentAds.php:197
+msgid "No"
+msgstr "لا"
+
+#: traits/SliderControlsTrait.php:79
+msgid "Autoplay Slider?"
+msgstr "شريط التشغيل التلقائي؟"
+
+#: traits/SliderControlsTrait.php:92
+msgid "Slider Autoplay Speed (ms)"
+msgstr "سرعة التشغيل التلقائي للشريط (ms)"
+
+#: traits/SliderControlsTrait.php:110
+msgid "Autoplay Pause on Hover?"
+msgstr "إيقاف التشغيل التلقائي عند الهويم؟"
+
+#: widget_shortcodes.php:40 widget_shortcodes.php:374
+msgid "This field is required.Should be a valid integer value"
+msgstr "هذا الحقل مطلوب. يجب أن تكون قيمة صحيحة صحيحة"
+
+#: widget_shortcodes.php:40 widget_shortcodes.php:42 widget_shortcodes.php:374
+#: widget_shortcodes.php:376
+msgid "Your Contact Number"
+msgstr "رقم الهاتف"
+
+#: widget_shortcodes.php:48 widget_shortcodes.php:73 widget_shortcodes.php:381
+#: widget_shortcodes.php:396
+msgid "+CountrycodePhonenumber"
+msgstr "+ رمز البلد رقم الهاتف"
+
+#: widget_shortcodes.php:48 widget_shortcodes.php:73 widget_shortcodes.php:381
+#: widget_shortcodes.php:396
+msgid "Format should be +CountrycodePhonenumber"
+msgstr "يجب أن يكون التنسيق + كود الدولة رقم هاتف"
+
+#: widget_shortcodes.php:69
+msgid "Register with Phone Number"
+msgstr "التسجيل برقم الهاتف"
+
+#: widget_shortcodes.php:72
+msgid "Register with Email"
+msgstr "التسجيل باستخدام البريد الإلكتروني"
+
+#: widget_shortcodes.php:81 widget_shortcodes.php:414
+msgid "Signin With LinkedIn"
+msgstr "تسجيل الدخول باستخدام LinkedIn"
+
+#: widget_shortcodes.php:90 widget_shortcodes.php:99 widget_shortcodes.php:423
+#: widget_shortcodes.php:432
+msgid "facebook logo"
+msgstr "شعار فيسبوك"
+
+#: widget_shortcodes.php:104 widget_shortcodes.php:437
+msgid "google logo"
+msgstr "شعار جوجل"
+
+#: widget_shortcodes.php:136 widget_shortcodes.php:257
+msgid "Name"
+msgstr "الاسم"
+
+#: widget_shortcodes.php:140
+msgid "Please enter your name."
+msgstr "من فضلك أدخل اسمك."
+
+#: widget_shortcodes.php:147 widget_shortcodes.php:266
+#: widget_shortcodes.php:556
+msgid "Contact Number"
+msgstr "رقم الاتصال"
+
+#: widget_shortcodes.php:156 widget_shortcodes.php:470
+msgid "Enter Your Email Address"
+msgstr "أدخل عنوان بريدك الإلكتروني"
+
+#: widget_shortcodes.php:159
+msgid "Please enter a valid email address."
+msgstr "من فضلك أدخل بريد إلكتروني صحيح."
+
+#: widget_shortcodes.php:164 widget_shortcodes.php:477
+msgid "Password"
+msgstr "كلمة المرور"
+
+#: widget_shortcodes.php:167 widget_shortcodes.php:480
+msgid "Your Password"
+msgstr "كلمة المرور"
+
+#: widget_shortcodes.php:169
+msgid "Please enter your password"
+msgstr "الرجاء إدخال كلمة المرور"
+
+#: widget_shortcodes.php:175 widget_shortcodes.php:179
+msgid "Confirm Password"
+msgstr "تأكيد كلمة المرور"
+
+#: widget_shortcodes.php:181
+msgid "Password does not match"
+msgstr "كلمة المرور غير متطابقة"
+
+#: widget_shortcodes.php:192
+msgid "I agree to"
+msgstr "أوافق على ذلك"
+
+#: widget_shortcodes.php:206
+msgid "Register"
+msgstr "تسجيل"
+
+#: widget_shortcodes.php:210
+msgid "Redirecting..."
+msgstr "إعادة توجيه..."
+
+#: widget_shortcodes.php:215 widget_shortcodes.php:294
+#: widget_shortcodes.php:518 widget_shortcodes.php:583
+msgid "or"
+msgstr "أو"
+
+#: widget_shortcodes.php:234 widget_shortcodes.php:313
+msgid "Already have an account? "
+msgstr "هل لديك حساب بالفعل؟ "
+
+#: widget_shortcodes.php:236 widget_shortcodes.php:315
+#: widget_shortcodes.php:508 widgets/AdforestSignIn.php:20
+msgid "Sign In"
+msgstr "تسجيل الدخول"
+
+#: widget_shortcodes.php:260
+msgid "Name is required."
+msgstr "الاسم مطلوب."
+
+#: widget_shortcodes.php:289
+msgid "Register Account"
+msgstr "تسجيل حساب"
+
+#: widget_shortcodes.php:323
+msgid "Verification email has been sent to your email."
+msgstr "تم إرسال بريد إلكتروني للتحقق إلى بريدك الإلكتروني."
+
+#: widget_shortcodes.php:325 widget_shortcodes.php:608
+msgid "Verify Recaptcha to process"
+msgstr "تحقق من Recaptcha للمعالجة"
+
+#: widget_shortcodes.php:327
+msgid "Admin will verify your account and let you know shortly."
+msgstr "سيتحقق المسؤول من حسابك ويخبرك قريبا."
+
+#: widget_shortcodes.php:392
+msgid "Login with Phone Number"
+msgstr "تسجيل الدخول باستخدام رقم الهاتف"
+
+#: widget_shortcodes.php:395
+msgid "Login with Email"
+msgstr "تسجيل الدخول بالبريد الإلكتروني"
+
+#: widget_shortcodes.php:490 widget_shortcodes.php:565
+msgid "Remember Me"
+msgstr "تذكرني"
+
+#: widget_shortcodes.php:497
+msgid "Forget Password"
+msgstr "نسيت كلمة المرور"
+
+#: widget_shortcodes.php:537 widget_shortcodes.php:602
+msgid "Don't have an account? "
+msgstr "ليس لديك حساب؟ "
+
+#: widget_shortcodes.php:539 widget_shortcodes.php:604
+#: widgets/AdforestSignUp.php:20
+msgid "Sign Up"
+msgstr "التسجيل"
+
+#: widget_shortcodes.php:575
+msgid "Login"
+msgstr "تسجيل الدخول"
+
+#: widget_shortcodes.php:708 widgets/AdforestContactUs.php:205
+#: widgets/AdforestContactUs.php:212
+msgid "Phone"
+msgstr "الهاتف"
+
+#: widget_shortcodes.php:719
+msgid "Email Address"
+msgstr "عنوان البريد الإلكتروني"
+
+#: widget_shortcodes.php:823 widget_shortcodes.php:833
+#: widgets/ClassicHome.php:38 widgets/MainHero2.php:200
+msgid "Categories"
+msgstr "التصنيفات"
+
+#: widget_shortcodes.php:823
+msgid "Show All"
+msgstr "عرض الكل"
+
+#: widget_shortcodes.php:860
+msgid "Validity (Days):"
+msgstr "الصلاحية (أيام):"
+
+#: widget_shortcodes.php:867
+msgid "Ads:"
+msgstr "إعلانات:"
+
+#: widget_shortcodes.php:874
+msgid "Ads Expiry (Days):"
+msgstr "أيام انتهاء صلاحية الإعلانات البسيطة"
+
+#: widget_shortcodes.php:881
+msgid "Featured Ads:"
+msgstr "إعلان غير مميز"
+
+#: widget_shortcodes.php:888
+msgid "Featured Ads Expiry:"
+msgstr "أيام انتهاء صلاحية الإعلانات البسيطة"
+
+#: widget_shortcodes.php:895
+msgid "Bump-up Ads:"
+msgstr "إعلانات الوفور:"
+
+#: widget_shortcodes.php:902
+msgid "No Of Images :"
+msgstr "صور الإعلان"
+
+#: widget_shortcodes.php:911 widget_shortcodes.php:919
+msgid "Allow Bidding :"
+msgstr "السماح بعلامات:"
+
+#: widget_shortcodes.php:930 widget_shortcodes.php:942
+msgid "Video URL :"
+msgstr "رابط الفيديو"
+
+#: widget_shortcodes.php:957 widget_shortcodes.php:969
+msgid "Allow Tags :"
+msgstr "السماح بعلامات:"
+
+#: widget_shortcodes.php:982
+msgid "No Of Events :"
+msgstr "عدد الفعاليات"
+
+#: widget_shortcodes.php:990 widget_shortcodes.php:994
+#: widget_shortcodes.php:999 widget_shortcodes.php:1007
+msgid "Allowed Categories"
+msgstr "التصنيفات المسموح بها"
+
+#: widget_shortcodes.php:990
+msgid " All"
+msgstr "گشت بابه‌ته‌كان"
+
+#: widget_shortcodes.php:1007
+msgid " None"
+msgstr " لاشيء"
+
+#: widget_shortcodes.php:1014
+msgid "Buy Now"
+msgstr "اشتري الآن"
+
+#: widget_shortcodes.php:1558
+msgid "Explore Categories."
+msgstr "استكشف"
+
+#: widget_shortcodes.php:1560
+msgid "Browse All Different "
+msgstr "الكل"
+
+#: widget_shortcodes.php:1560
+#, php-format
+msgid "%s Categories"
+msgstr "%s تصنيفات"
+
+#: widget_shortcodes.php:1809
+msgid "("
+msgstr "("
+
+#: widget_shortcodes.php:2073 widgets/AdfHomeFeatured.php:428
+#: widgets/AdsAndLocationMiniBoxes.php:54
+#: widgets/AdsAndLocationMiniBoxes.php:115
+#: widgets/AdsAndLocationMiniBoxes.php:302 widgets/AdsModernBg.php:68
+#: widgets/CategoryBasedAds.php:123 widgets/FeaturedAds.php:88
+#: widgets/FeaturedAds.php:200 widgets/MainHero4.php:166
+#: widgets/MainHero4.php:288 widgets/MainHero4.php:631 widgets/RecentAds.php:40
+#: widgets/RecentAds.php:163
+msgid "Featured"
+msgstr "مميز"
+
+#: widget_shortcodes.php:2099
+msgid "Detail"
+msgstr "التفاصيل"
+
+#: widget_shortcodes.php:2247 widget_shortcodes.php:4094
+#: widget_shortcodes.php:4798 widget_shortcodes.php:6329
+#: widget_shortcodes.php:6527 widget_shortcodes.php:6909
+msgid "Enter Keywords"
+msgstr "أدخل كلمات البحث"
+
+#: widget_shortcodes.php:2253
+msgid "Enter Location"
+msgstr "ادخال الموقع"
+
+#: widget_shortcodes.php:2261 widget_shortcodes.php:4100
+#: widget_shortcodes.php:6335 widget_shortcodes.php:6533
+#: widget_shortcodes.php:6915 widgets/DirectoryHero.php:151
+#: widgets/EcommerceHome.php:336 widgets/EventHomeHero.php:113
+#: widgets/MainHero3.php:162 widgets/MainHero4.php:393
+#: widgets/MainHero6.php:101 widgets/RealEstateHero.php:144
+msgid "Category"
+msgstr "التصنيف"
+
+#: widget_shortcodes.php:2264 widget_shortcodes.php:4102
+#: widget_shortcodes.php:6337 widget_shortcodes.php:6535
+#: widget_shortcodes.php:6917 widgets/AdfHomeHero.php:93
+#: widgets/BrandsCarousel.php:65 widgets/ClassicHome.php:58
+#: widgets/DirectoryHero.php:102 widgets/DirectoryHero.php:208
+#: widgets/MainHero1.php:117 widgets/MainHero1.php:153
+#: widgets/MainHero2.php:177 widgets/MainHero6.php:158
+#: widgets/MiniCategorySlider.php:67
+#: widgets/MultivendorCategorySliderMini.php:57 widgets/RealEstateHero.php:184
+#: widgets/RealEstateHero.php:238
+msgid "Select Category"
+msgstr "اختر تصنيف"
+
+#: widget_shortcodes.php:2282
+msgid "Reset Search"
+msgstr "إعادة البحث"
+
+#: widget_shortcodes.php:2287
+msgid "Advanced Search"
+msgstr "بحث متقدم"
+
+#: widget_shortcodes.php:2289 widget_shortcodes.php:6112
+#: widgets/AdfHomeHero.php:113
+msgid "Search Now"
+msgstr "ابحث الان"
+
+#: widget_shortcodes.php:2670
+#, php-format
+msgid "%d ads"
+msgstr "إعلانات %d"
+
+#: widget_shortcodes.php:2872 widgets/RecentAds.php:17
+msgid "Recent Ads"
+msgstr "أحدث الإعلانات"
+
+#: widget_shortcodes.php:2872 widgets/FeaturedAds.php:17
+#: widgets/MainHero4.php:117
+msgid "Featured Ads"
+msgstr "إعلانات مميزة"
+
+#: widget_shortcodes.php:3444 widget_shortcodes.php:3833
+msgid "Add to Wishlist"
+msgstr "اضف للمفضلة"
+
+#: widget_shortcodes.php:3448 widget_shortcodes.php:3837
+msgid "Remove From Wishlist"
+msgstr "ازالة من المفضلة"
+
+#: widget_shortcodes.php:3562 widget_shortcodes.php:3901
+#: widget_shortcodes.php:7459
+msgid "Reviews "
+msgstr "التقييمات"
+
+#: widget_shortcodes.php:3775 widget_shortcodes.php:3972
+msgid "No products found."
+msgstr "لا يوجد منتجات."
+
+#: widget_shortcodes.php:4092 widget_shortcodes.php:4131
+#: widget_shortcodes.php:5816 widget_shortcodes.php:6327
+#: widget_shortcodes.php:6366 widget_shortcodes.php:6525
+#: widget_shortcodes.php:6564 widget_shortcodes.php:6907
+#: widget_shortcodes.php:6946 widgets/AdfHomeHero.php:82
+msgid "Search"
+msgstr "بحث"
+
+#: widget_shortcodes.php:4141 widget_shortcodes.php:6375
+#: widget_shortcodes.php:6955
+msgid "Popular:"
+msgstr "الأشهر"
+
+#: widget_shortcodes.php:4175 widgets/DirectoryHero.php:187
+msgid "Find by Categories"
+msgstr "كيف تجد هذا"
+
+#: widget_shortcodes.php:4631
+msgid "No locations available"
+msgstr "لا توجد مواقع متاحة"
+
+#: widget_shortcodes.php:4725
+msgid "No posts found"
+msgstr "لم يتم العثور على أية رسائل"
+
+#: widget_shortcodes.php:4804
+msgid "Make"
+msgstr "الماركة"
+
+#: widget_shortcodes.php:4806
+msgid "Select Make"
+msgstr "تحديد الماركة"
+
+#: widget_shortcodes.php:4819
+msgid "Model"
+msgstr "نموذج"
+
+#: widget_shortcodes.php:4821 widget_shortcodes.php:4846
+#: widget_shortcodes.php:4883 widget_shortcodes.php:4893
+msgid "Select Model"
+msgstr "- تحديد -"
+
+#: widget_shortcodes.php:4827
+msgid "Variant"
+msgstr "متعدد"
+
+#: widget_shortcodes.php:4829 widget_shortcodes.php:4847
+#: widget_shortcodes.php:4888 widget_shortcodes.php:4894
+#: widget_shortcodes.php:4915 widget_shortcodes.php:4924
+msgid "Select Variant"
+msgstr "الخط البديل"
+
+#: widget_shortcodes.php:4997
+msgid " Ads"
+msgstr " إعلانات"
+
+#: widget_shortcodes.php:5511
+msgid " Reviews"
+msgstr " تقييمات"
+
+#: widget_shortcodes.php:5531
+msgid "Price on Call"
+msgstr "الاتصال لمعرفة السعر"
+
+#: widget_shortcodes.php:5548
+msgid "Details"
+msgstr "تفاصيل"
+
+#: widget_shortcodes.php:5793 widget_shortcodes.php:6273
+msgid "Show More"
+msgstr "أظهر المزيد"
+
+#: widget_shortcodes.php:5795
+msgid "Show Less"
+msgstr "عرض أقل"
+
+#: widget_shortcodes.php:5832
+msgid "Search Filter"
+msgstr "فلترة البحث"
+
+#: widget_shortcodes.php:5874
+msgid "Radius in km"
+msgstr "نصف القطر بالكيلومتر"
+
+#: widget_shortcodes.php:5877
+msgid "Radius in Miles"
+msgstr "نصف القطر بالأميال"
+
+#: widget_shortcodes.php:5888
+msgid "Type Location..."
+msgstr "اكتب الموقع ..."
+
+#: widget_shortcodes.php:5898
+msgid "Get Location..."
+msgstr "الحصول على الموقع ..."
+
+#: widget_shortcodes.php:5905 widgets/ClassicHome.php:121
+msgid "Radius Search"
+msgstr "بحث شعاعي"
+
+#: widget_shortcodes.php:5974 widgets/AdfHomeLocations.php:112
+msgid "Locations"
+msgstr "المواقع"
+
+#: widget_shortcodes.php:5977
+msgid "Select an Option"
+msgstr "حدد اختيارا"
+
+#: widget_shortcodes.php:6086
+msgid "Ads Price"
+msgstr "الإعلانات على شبكة البحث بالسعر *للبحث فقط*"
+
+#: widget_shortcodes.php:6090
+msgid "Price ("
+msgstr "السعر ("
+
+#: widget_shortcodes.php:6200
+msgid "No Ads found."
+msgstr "لم يتم العثور على إعلانات."
+
+#: widget_shortcodes.php:7168
+msgid " Events"
+msgstr "حد الأحداث المجانية"
+
+#: widgets/AboutUsEvents.php:20
+msgid "Event Experience"
+msgstr "تجربة الحدث"
+
+#: widgets/AboutUsEvents.php:38 widgets/AboutUsModern.php:38
+#: widgets/AdGridCarouselFancy.php:36 widgets/AdGridCarouselModern.php:37
+#: widgets/AdGridFancy.php:36 widgets/AdLocations.php:36
+#: widgets/AdforestAboutUs.php:38 widgets/AdforestPackages.php:44
+#: widgets/AdforestWorkflow.php:35 widgets/AdsAndLocationMiniBoxes.php:33
+#: widgets/AdsModernBg.php:31 widgets/AdtInfo.php:36
+#: widgets/CarDealerHero.php:36 widgets/CategoryBasedAds.php:38
+#: widgets/CategorySlider.php:31 widgets/DirectoryHero.php:35
+#: widgets/EventHomeHero.php:35 widgets/EventListWidget.php:36
+#: widgets/EventsGridCarousel.php:36 widgets/FeaturedAds.php:31
+#: widgets/FlashSaleWidget.php:36 widgets/FrequentlyAskedQuestions.php:36
+#: widgets/HorizontalAd.php:36 widgets/HowItWorksModern.php:35
+#: widgets/LocationsFancy.php:36 widgets/LocationsFancy2.php:36
+#: widgets/LocationsModern.php:36 widgets/MainHero1.php:37
+#: widgets/MainHero2.php:37 widgets/MainHero3.php:37 widgets/MainHero6.php:35
+#: widgets/MiniCategorySlider.php:37
+#: widgets/MultivendorCategorySliderMini.php:35 widgets/OurArticles.php:36
+#: widgets/PartnersSlider.php:40 widgets/RealEstateHero.php:43
+#: widgets/RecentAds.php:31
+msgid "Basic"
+msgstr "أساسي"
+
+#: widgets/AboutUsEvents.php:45 widgets/AdGridCarouselFancy.php:43
+#: widgets/AdGridFancy.php:43 widgets/AdforestAboutUs.php:45
+#: widgets/AdtInfo.php:67 widgets/CarDealerHero.php:42
+#: widgets/DealsOfTheDay.php:42 widgets/EcommerceDealsBoxes.php:64
+#: widgets/EcommerceHome.php:48 widgets/LocationsModern.php:54
+#: widgets/MainHero1.php:43 widgets/MainHero2.php:43 widgets/MainHero3.php:43
+msgid "Background Image"
+msgstr "صورة الخلفية"
+
+#: widgets/AboutUsEvents.php:53 widgets/AboutUsEvents.php:56
+#: widgets/AboutUsEvents.php:66 widgets/AboutUsModern.php:53
+#: widgets/AboutUsModern.php:56 widgets/AboutUsModern.php:66
+#: widgets/AdGridCarouselFancy.php:50 widgets/AdGridCarouselModern.php:43
+#: widgets/AdGridFancy.php:50 widgets/AdLocations.php:50
+#: widgets/AdforestAboutUs.php:52 widgets/AdforestAboutUs.php:55
+#: widgets/AdforestAboutUs.php:64 widgets/AdforestAboutUs.php:133
+#: widgets/AdforestAboutUs.php:136 widgets/AdforestAboutUs.php:145
+#: widgets/AdforestPackages.php:64 widgets/AdforestSignIn.php:45
+#: widgets/AdforestSignIn.php:49 widgets/AdforestSignIn.php:89
+#: widgets/AdforestSignIn.php:93 widgets/AdforestSignUp.php:46
+#: widgets/AdforestSignUp.php:50 widgets/AdforestSignUp.php:116
+#: widgets/AdforestSignUp.php:120 widgets/AdforestWorkflow.php:41
+#: widgets/AdforestWorkflow.php:44 widgets/AdforestWorkflow.php:53
+#: widgets/AdsAndLocationMiniBoxes.php:287 widgets/CarDealerHero.php:53
+#: widgets/CarDealerHero.php:56 widgets/CategoryBasedAds.php:77
+#: widgets/DirectoryHero.php:60 widgets/DirectoryHero.php:63
+#: widgets/EventHomeHero.php:60 widgets/EventHomeHero.php:63
+#: widgets/EventsGridCarousel.php:42 widgets/EventsGridCarousel.php:45
+#: widgets/FeaturedAds.php:37 widgets/FeaturedAds.php:40
+#: widgets/FrequentlyAskedQuestions.php:42
+#: widgets/FrequentlyAskedQuestions.php:45
+#: widgets/FrequentlyAskedQuestions.php:54 widgets/HowItWorksModern.php:54
+#: widgets/HowItWorksModern.php:57 widgets/HowItWorksModern.php:66
+#: widgets/MainHero1.php:54 widgets/MainHero1.php:57 widgets/MainHero2.php:54
+#: widgets/MainHero2.php:57 widgets/MainHero3.php:63 widgets/MainHero3.php:66
+#: widgets/MainHero6.php:49 widgets/MainHero6.php:52
+#: widgets/RealEstateHero.php:71 widgets/RealEstateHero.php:74
+#: widgets/RecentAds.php:57
+msgid "Section Title"
+msgstr "عنوان القسم"
+
+#: widgets/AboutUsEvents.php:63 widgets/AboutUsModern.php:63
+#: widgets/AdforestAboutUs.php:61 widgets/AdforestWorkflow.php:50
+#: widgets/FrequentlyAskedQuestions.php:51 widgets/HowItWorksModern.php:63
+msgid "Section Tag Line"
+msgstr "عبر الخط"
+
+#: widgets/AboutUsEvents.php:73 widgets/AboutUsModern.php:73
+#: widgets/AdGridFancy.php:59 widgets/AdforestAboutUs.php:70
+#: widgets/AdforestAboutUs.php:142 widgets/AdforestPackages.php:73
+#: widgets/AdtInfo.php:49 widgets/CarDealerHero.php:71
+#: widgets/CarDealerHero.php:74 widgets/DirectoryHero.php:79
+#: widgets/DirectoryHero.php:82 widgets/EventHomeHero.php:78
+#: widgets/EventHomeHero.php:81 widgets/FrequentlyAskedQuestions.php:60
+#: widgets/MainHero1.php:69 widgets/MainHero6.php:67 widgets/MainHero6.php:70
+#: widgets/RealEstateHero.php:89 widgets/RealEstateHero.php:92
+msgid "Section Description"
+msgstr "وصف القسم"
+
+#: widgets/AboutUsEvents.php:84
+msgid "Image 1"
+msgstr "الصورة 1"
+
+#: widgets/AboutUsEvents.php:92
+msgid "Image 2"
+msgstr "الصورة 2"
+
+#: widgets/AboutUsEvents.php:100 widgets/AboutUsModern.php:92
+#: widgets/AdforestAboutUs.php:96
+msgid "URL or Link"
+msgstr "URL أو الرابط"
+
+#: widgets/AboutUsEvents.php:102 widgets/AboutUsModern.php:94
+#: widgets/AdforestAboutUs.php:98
+msgid "Youtube video link"
+msgstr "رابط فيديو يوتيوب"
+
+#: widgets/AboutUsEvents.php:110 widgets/AboutUsModern.php:102
+msgid "Experience Title"
+msgstr "عنوان الخبرة"
+
+#: widgets/AboutUsEvents.php:112 widgets/AboutUsModern.php:104
+#: widgets/AdforestAboutUs.php:107
+msgid "Experience heading"
+msgstr "خبرة في التوجه"
+
+#: widgets/AboutUsEvents.php:120 widgets/AboutUsModern.php:112
+#: widgets/AdforestAboutUs.php:114
+msgid "Experience Description"
+msgstr "وصف الخبرة"
+
+#: widgets/AboutUsEvents.php:122 widgets/AboutUsModern.php:114
+#: widgets/AdforestAboutUs.php:116
+msgid "Experience description"
+msgstr "وصف التجربة"
+
+#: widgets/AboutUsEvents.php:129 widgets/AboutUsModern.php:121
+#: widgets/AdGridCarouselModern.php:116 widgets/AdsModernBg.php:51
+#: widgets/AdtCallToAction.php:72 widgets/AdtCallToAction.php:124
+#: widgets/DealsOfTheDay.php:82 widgets/EcommerceDealsBoxes.php:93
+#: widgets/EcommerceHome.php:77 widgets/EventListWidget.php:56
+#: widgets/LocationsModern.php:71 widgets/MainHero5.php:55
+#: widgets/MultivendorHero.php:55 widgets/MultivendorProductsWithSidebar.php:64
+msgid "Button Text"
+msgstr "نص الزر"
+
+#: widgets/AboutUsEvents.php:137 widgets/AboutUsModern.php:129
+#: widgets/AdGridCarouselFancy.php:121 widgets/AdGridCarouselModern.php:125
+#: widgets/AdforestSignIn.php:135 widgets/AdforestSignUp.php:161
+#: widgets/AdsModernBg.php:58 widgets/AdtCallToAction.php:79
+#: widgets/AdtCallToAction.php:131 widgets/CategoryBasedAds.php:91
+#: widgets/DealsOfTheDay.php:91 widgets/EcommerceDealsBoxes.php:102
+#: widgets/EventListWidget.php:63 widgets/LocationsModern.php:78
+#: widgets/MainHero5.php:62 widgets/MultivendorHero.php:62
+#: widgets/MultivendorProductCarousel.php:89
+#: widgets/MultivendorProductCategories.php:55
+#: widgets/MultivendorProductsWithSidebar.php:71 widgets/RecentAds.php:70
+msgid "Button Link"
+msgstr "رابط الزر"
+
+#: widgets/AboutUsEvents.php:147 widgets/AboutUsModern.php:139
+#: widgets/AdforestAboutUs.php:126
+msgid "Features Settings"
+msgstr "إعدادات الميزات"
+
+#: widgets/AboutUsEvents.php:154 widgets/AboutUsModern.php:146
+msgid "Service"
+msgstr "الخدمة"
+
+#: widgets/AboutUsEvents.php:157 widgets/AboutUsModern.php:149
+msgid "service"
+msgstr "خدمة"
+
+#: widgets/AboutUsEvents.php:164 widgets/AboutUsModern.php:156
+#: widgets/AdforestAboutUs.php:163 widgets/PartnersSlider.php:84
+msgid "Add Client"
+msgstr "إضافة عميل"
+
+#: widgets/AboutUsModern.php:20
+msgid "About us Modern"
+msgstr "من نحن حديث"
+
+#: widgets/AboutUsModern.php:84 widgets/AdforestAboutUs.php:80
+#: widgets/FrequentlyAskedQuestions.php:70
+msgid "large image"
+msgstr "صورة"
+
+#: widgets/AdGridCarouselFancy.php:19
+msgid "Ad Grid Carousel Fancy"
+msgstr "شبكة إعلانية دائري يتوهم"
+
+#: widgets/AdGridCarouselFancy.php:53 widgets/AdGridCarouselModern.php:46
+#: widgets/AdGridFancy.php:53
+msgid "Enter Section Title"
+msgstr "أدخل عنوان للفصل"
+
+#: widgets/AdGridCarouselFancy.php:59 widgets/AdGridCarouselModern.php:53
+msgid "Section Desc"
+msgstr "قسم القسم"
+
+#: widgets/AdGridCarouselFancy.php:61 widgets/AdGridCarouselModern.php:55
+#: widgets/AdGridFancy.php:62
+msgid "Enter Section Description"
+msgstr "أدخل وصف القسم"
+
+#: widgets/AdGridCarouselFancy.php:79 widgets/AdGridCarouselModern.php:83
+#: widgets/AdGridFancy.php:68
+msgid "Ad Title Limit(In Characters)"
+msgstr "الحد الأقصى لعنوان الإعلان (بالأحرف)"
+
+#: widgets/AdGridCarouselFancy.php:89 widgets/AdGridCarouselModern.php:93
+#: widgets/CategoryBasedAds.php:57
+msgid "Select Ad Category"
+msgstr "اختر فئة الإعلان"
+
+#: widgets/AdGridCarouselFancy.php:101 widgets/AdGridCarouselModern.php:105
+msgid "Number of Ads"
+msgstr "عدد الإعلانات"
+
+#: widgets/AdGridCarouselFancy.php:112 widgets/AdforestSignIn.php:126
+#: widgets/AdforestSignUp.php:152 widgets/CategoryBasedAds.php:84
+#: widgets/MultivendorProductCarousel.php:82
+#: widgets/MultivendorProductCategories.php:48
+#: widgets/MultivendorProductsGrid.php:49 widgets/RecentAds.php:63
+msgid "Button Title"
+msgstr "عنوان الزر والرابط"
+
+#: widgets/AdGridCarouselFancy.php:115
+msgid "Enter Button Title"
+msgstr "أدخل عنوان الزر"
+
+#: widgets/AdGridCarouselFancy.php:124
+msgid "Enter Button Link"
+msgstr "أدخل زر الارتباط"
+
+#: widgets/AdGridCarouselFancy.php:152 widgets/AdGridCarouselModern.php:148
+#: widgets/AdGridFancy.php:107 widgets/CategoryBasedAds.php:132
+#: widgets/FeaturedAds.php:121 widgets/MainHero4.php:218
+#: widgets/MainHero4.php:340
+msgid "Select No of Grid Columns"
+msgstr "حدد عدد أعمدة الشبكة"
+
+#: widgets/AdGridCarouselFancy.php:155 widgets/AdGridCarouselModern.php:137
+#: widgets/AdGridCarouselModern.php:151 widgets/AdGridFancy.php:123
+#: widgets/CategoryBasedAds.php:135 widgets/MainHero4.php:206
+#: widgets/MainHero4.php:221 widgets/MainHero4.php:328
+#: widgets/MainHero4.php:343
+msgid "1"
+msgstr "عنوان 1"
+
+#: widgets/AdGridCarouselFancy.php:156 widgets/AdGridCarouselModern.php:138
+#: widgets/AdGridCarouselModern.php:152 widgets/AdGridFancy.php:110
+#: widgets/AdGridFancy.php:124 widgets/CategoryBasedAds.php:136
+#: widgets/ClassicHome.php:347 widgets/FeaturedAds.php:124
+#: widgets/MainHero4.php:207 widgets/MainHero4.php:222
+#: widgets/MainHero4.php:329 widgets/MainHero4.php:344
+msgid "2"
+msgstr "2"
+
+#: widgets/AdGridCarouselFancy.php:157 widgets/AdGridCarouselModern.php:139
+#: widgets/AdGridCarouselModern.php:153 widgets/AdGridFancy.php:111
+#: widgets/AdGridFancy.php:125 widgets/CategoryBasedAds.php:137
+#: widgets/ClassicHome.php:348 widgets/FeaturedAds.php:125
+#: widgets/MainHero4.php:208 widgets/MainHero4.php:223
+#: widgets/MainHero4.php:330 widgets/MainHero4.php:345
+msgid "3"
+msgstr "3"
+
+#: widgets/AdGridCarouselFancy.php:158 widgets/AdGridCarouselModern.php:140
+#: widgets/AdGridCarouselModern.php:154 widgets/AdGridFancy.php:112
+#: widgets/AdGridFancy.php:126 widgets/CategoryBasedAds.php:138
+#: widgets/ClassicHome.php:349 widgets/FeaturedAds.php:126
+msgid "4"
+msgstr "4"
+
+#: widgets/AdGridCarouselFancy.php:159 widgets/AdGridCarouselModern.php:155
+#: widgets/AdGridFancy.php:113 widgets/CategoryBasedAds.php:139
+#: widgets/ClassicHome.php:350
+msgid "5"
+msgstr "الشبكة 5"
+
+#: widgets/AdGridCarouselModern.php:20
+msgid "Ad Grid Carousel Modern"
+msgstr "شبكة إعلانية دائرية حديثة"
+
+#: widgets/AdGridCarouselModern.php:134 widgets/AdGridFancy.php:120
+#: widgets/CategoryBasedAds.php:106
+msgid "Select Grid Style"
+msgstr "حدد نمط الشبكة"
+
+#: widgets/AdGridFancy.php:19
+msgid "Ad Grid Fancy"
+msgstr "شبكة الإعلانات الفاخرة"
+
+#: widgets/AdGridFancy.php:76
+msgid "Limit Number of Ads"
+msgstr "الحد من عدد الإعلانات"
+
+#: widgets/AdListModern.php:19
+msgid "Ads List Modern"
+msgstr "قائمة الإعلانات الحديثة"
+
+#: widgets/AdListModern.php:36 widgets/AdtCallToAction.php:88
+#: widgets/EcommerceDealsBoxes.php:54
+#: widgets/MultivendorProductsWithSidebar.php:97
+msgid "Right"
+msgstr "يمين"
+
+#: widgets/AdListModern.php:65
+msgid "Select Number of Ads to Show"
+msgstr "حدد عدد الإعلانات المراد عرضها"
+
+#: widgets/AdLocations.php:19 widgets/ClassicHome.php:128
+msgid "Ad Locations"
+msgstr "مواقع الإعلان"
+
+#: widgets/AdLocations.php:42 widgets/AdsModernBg.php:37
+#: widgets/AdtCallToAction.php:42 widgets/AdtCallToAction.php:94
+#: widgets/FlashSaleWidget.php:42 widgets/MainHero3.php:55
+#: widgets/PartnersSlider.php:47
+msgid "Background Color"
+msgstr "صورة الخلفية"
+
+#: widgets/AdLocations.php:56 widgets/AdtInfo.php:55
+msgid "Section Button Text"
+msgstr "نص زر القسم"
+
+#: widgets/AdLocations.php:63 widgets/AdtInfo.php:61
+msgid "Section Button Link"
+msgstr "رابط زر القسم"
+
+#: widgets/AdLocations.php:95 widgets/AdsAndLocationMiniBoxes.php:229
+#: widgets/BrandsCarousel.php:85 widgets/CategorySlider.php:69
+#: widgets/ClassicHome.php:70 widgets/DirectoryHero.php:114
+#: widgets/DirectoryHero.php:220 widgets/LocationsFancy.php:92
+#: widgets/LocationsFancy2.php:86 widgets/LocationsModern.php:132
+#: widgets/MainHero1.php:129 widgets/MainHero1.php:165
+#: widgets/MainHero2.php:189 widgets/MainHero4.php:540
+#: widgets/MainHero6.php:170 widgets/MiniCategorySlider.php:79
+#: widgets/MultivendorProductCategories.php:107
+#: widgets/MultivendorProductCategories.php:141 widgets/RealEstateHero.php:196
+#: widgets/RealEstateHero.php:250
+msgid "Upload Image"
+msgstr "رفع صورة"
+
+#: widgets/AdLocations.php:106 widgets/AdsAndLocationMiniBoxes.php:240
+msgid "Locations Repeater"
+msgstr "مكرر المواقع"
+
+#: widgets/AdLocations.php:120
+msgid "Do you want to show an Ad?"
+msgstr "هل تريد عرض إعلان؟"
+
+#: widgets/AdLocations.php:130
+msgid "Advert Image"
+msgstr "صورة الإعلان"
+
+#: widgets/AdLocations.php:132
+msgid "302×464"
+msgstr "302×464"
+
+#: widgets/AdPostModern.php:20
+msgid "Ad Post - Modern"
+msgstr "نشر الإعلان -النسخة الحديثة"
+
+#: widgets/AdPostModern.php:39
+msgid "General Settings"
+msgstr "الاعدادات العامة"
+
+#: widgets/AdPostModern.php:45
+msgid "Form Title"
+msgstr "عنوان النموذج"
+
+#: widgets/AdPostModern.php:47
+msgid "Ad Post"
+msgstr "إضافة إعلان"
+
+#: widgets/AdPostModern.php:54 widgets/AdPostModern.php:130
+msgid "Terms & Condition Field"
+msgstr "حقل الشروط والأحكام"
+
+#: widgets/AdPostModern.php:57 widgets/EcommerceHome.php:165
+msgid "Hide"
+msgstr "إخفاء"
+
+#: widgets/AdPostModern.php:58 widgets/EcommerceHome.php:164
+msgid "Show"
+msgstr "عرض"
+
+#: widgets/AdPostModern.php:66 widgets/AdforestSignUp.php:66
+#: widgets/AdforestSignUp.php:69
+msgid "Terms & Condition Title"
+msgstr "عنوان الشروط والأحكام"
+
+#: widgets/AdPostModern.php:86
+msgid "Terms & Conditions Link"
+msgstr "رابط الشروط والأحكام"
+
+#: widgets/AdPostModern.php:121
+msgid "Slug"
+msgstr "شعار"
+
+#: widgets/AdPostModern.php:133
+msgid "Textfield"
+msgstr "حقل النص"
+
+#: widgets/AdPostModern.php:134
+msgid "Select/List"
+msgstr "تحديد / قائمة"
+
+#: widgets/AdPostModern.php:141
+msgid "Values for Select/List"
+msgstr "القيم للتحديد/قائمة"
+
+#: widgets/AdPostModern.php:143
+msgid "Like: value1,value2,value3"
+msgstr "مثل: قيمة 1, قيمة 2, قيمه 3 "
+
+#: widgets/AdfHomeCategories.php:23
+msgid "Modern Home — Categories"
+msgstr "AdForest - المنزل (مودرن)"
+
+#: widgets/AdfHomeCategories.php:31 widgets/AdfHomeFeatured.php:31
+#: widgets/AdfHomeHero.php:36 widgets/AdfHomeLocations.php:56
+#: widgets/AdfHomePricing.php:57 widgets/AdfHomeTrust.php:31
+#: widgets/DealsOfTheDay.php:34 widgets/EcommerceDealsBoxes.php:41
+msgid "Content"
+msgstr "المحتوى"
+
+#: widgets/AdfHomeCategories.php:35 widgets/AdfHomeHero.php:129
+msgid "Number of categories"
+msgstr "لا توجد فئات"
+
+#: widgets/AdfHomeCategories.php:42 widgets/AdfHomeHero.php:138
+msgid "Show ad count"
+msgstr "إظهار العدد"
+
+#: widgets/AdfHomeCategories.php:48 widgets/AdfHomeHero.php:145
+msgid "Order by"
+msgstr "ترتيب حسب"
+
+#: widgets/AdfHomeCategories.php:52 widgets/AdfHomeHero.php:149
+msgid "Most used"
+msgstr "الأكثر مشاهدة"
+
+#: widgets/AdfHomeCategories.php:53 widgets/AdfHomeHero.php:150
+msgid "Name (A–Z)"
+msgstr "الاسم (من أ إلى ياء)"
+
+#: widgets/AdfHomeCategories.php:54 widgets/AdfHomeHero.php:151
+msgid "Custom order"
+msgstr "تخصيص الطلب"
+
+#: widgets/AdfHomeCategories.php:134 widgets/AdfHomeHero.php:660
+#: widgets/AdfHomeLocations.php:239
+#, php-format
+msgid "%s Ad"
+msgid_plural "%s Ads"
+msgstr[0] "إعلان %s"
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: widgets/AdfHomeFeatured.php:23
+msgid "Modern Home — Featured Ads"
+msgstr "AdForest - المنزل (مودرن)"
+
+#: widgets/AdfHomeFeatured.php:35 widgets/AdfHomeLocations.php:60
+#: widgets/AdfHomePricing.php:61
+msgid "Heading"
+msgstr "عنوان 1"
+
+#: widgets/AdfHomeFeatured.php:37
+msgid "Featured Advertisings"
+msgstr "الإعلانات المميزة"
+
+#: widgets/AdfHomeFeatured.php:40 widgets/AdfHomeHero.php:60
+#: widgets/AdfHomeLocations.php:65 widgets/AdfHomePricing.php:66
+#: widgets/EcommerceHome.php:59
+msgid "Subtitle"
+msgstr "عنوان فرعي"
+
+#: widgets/AdfHomeFeatured.php:43
+msgid ""
+"Discover our featured listings and find the best deals on a wide range of "
+"products and services."
+msgstr ""
+"اكتشف قوائمنا المميزة وابحث عن أفضل العروض على مجموعة واسعة من المنتجات "
+"والخدمات."
+
+#: widgets/AdfHomeFeatured.php:46
+msgid "Ad type to show"
+msgstr "نوع الإعلان إلى عرض"
+
+#: widgets/AdfHomeFeatured.php:50
+msgid "Featured only"
+msgstr "فقط"
+
+#: widgets/AdfHomeFeatured.php:51
+msgid "Simple only (not featured)"
+msgstr "بسيط فقط (غير مميز)"
+
+#: widgets/AdfHomeFeatured.php:52
+msgid "Both featured and simple"
+msgstr "عادي أو مميز"
+
+#: widgets/AdfHomeFeatured.php:54
+msgid ""
+"Filters which posts appear. \"Featured only\" uses the _adforest_is_feature "
+"meta = 1 condition."
+msgstr ""
+"تصفية المنشورات التي تظهر. \"المميز فقط\" يستخدم شرط _adforest_is_feature "
+"meta = 1."
+
+#: widgets/AdfHomeFeatured.php:57
+msgid "Ads to show"
+msgstr "لا مزيد من الإعلانات التي يجب عرضها"
+
+#: widgets/AdfHomeFeatured.php:64
+msgid "Category tabs"
+msgstr "فئة"
+
+#: widgets/AdfHomeFeatured.php:69
+msgid "0 hides the filter row entirely."
+msgstr "0 يخفي صف المرشح بالكامل."
+
+#: widgets/AdfHomeFeatured.php:72
+msgid "View All URL"
+msgstr "عرض الكل"
+
+#: widgets/AdfHomeFeatured.php:74
+msgid "https://..."
+msgstr "https://..."
+
+#: widgets/AdfHomeFeatured.php:86 widgets/MultivendorProductsGrid.php:86
+msgid "Grid Type"
+msgstr "نوع الشبكة"
+
+#: widgets/AdfHomeFeatured.php:90
+msgid "Modern Card (Default — carousel)"
+msgstr "البطاقة الحديثة (الافتراضية — الدوامة)"
+
+#: widgets/AdfHomeFeatured.php:91
+msgid "Style 1 (Classic)"
+msgstr "الأسلوب 1 (كلاسيكي)"
+
+#: widgets/AdfHomeFeatured.php:92
+msgid "Style 2 (Classic)"
+msgstr "ستايل 2 (كلاسيكي)"
+
+#: widgets/AdfHomeFeatured.php:93
+msgid "Style 3 (Classic)"
+msgstr "الأسلوب 3 (كلاسيكي)"
+
+#: widgets/AdfHomeFeatured.php:94
+msgid "Modern Card"
+msgstr "البطاقة الحديثة"
+
+#: widgets/AdfHomeFeatured.php:95
+msgid "Compact Grid"
+msgstr "الشبكة المدمجة"
+
+#: widgets/AdfHomeFeatured.php:96
+msgid "List View"
+msgstr "عرض القائمة"
+
+#: widgets/AdfHomeFeatured.php:98
+msgid ""
+"Mirrors the styles available under Theme Options → Ads settings → Search "
+"setting → Grid Type, but applies only to this widget. \"Default\" uses the "
+"carousel-based modern cards; the other six render in a static grid (rows of "
+"cards)."
+msgstr ""
+"يعكس الأنماط المتاحة تحت إعدادات خيارات القوالب → إعدادات الإعلانات → إعداد "
+"البحث → نوع الشبكة، لكنه ينطبق فقط على هذا الويدجت. \"الافتراضي\" يستخدم "
+"البطاقات الحديثة القائمة على الدوارات؛ أما الستة الأخرى فهي تظهر في شبكة "
+"ثابتة (صفوف من البطاقات)."
+
+#: widgets/AdfHomeFeatured.php:101
+msgid "Cards per row"
+msgstr "البطاقات لكل صف"
+
+#: widgets/AdfHomeFeatured.php:105
+msgid "2 cards"
+msgstr "بطاقتان"
+
+#: widgets/AdfHomeFeatured.php:106
+msgid "3 cards"
+msgstr "3 بطاقات"
+
+#: widgets/AdfHomeFeatured.php:107
+msgid "4 cards"
+msgstr "4 بطاقات"
+
+#: widgets/AdfHomeFeatured.php:110
+msgid ""
+"Applies to the static grid layouts. List View always renders one card per "
+"row."
+msgstr ""
+"ينطبق ذلك على تخطيطات الشبكة الثابتة. عرض القائمة دائما يعرض بطاقة واحدة لكل "
+"صف."
+
+#: widgets/AdfHomeFeatured.php:373 widgets/CategoryBasedAds.php:86
+#: widgets/FeaturedAds.php:49 widgets/FeaturedAds.php:107
+#: widgets/MultivendorProductCategories.php:50
+#: widgets/MultivendorProductsGrid.php:51 widgets/RecentAds.php:65
+msgid "View All"
+msgstr "عرض الكل"
+
+#: widgets/AdfHomeFeatured.php:430
+msgid "Add to favourites"
+msgstr "أضف إلى المفضلة"
+
+#: widgets/AdfHomeFeatured.php:449
+msgid "—"
+msgstr "—"
+
+#: widgets/AdfHomeFeatured.php:495
+msgid "Click to remove from favourite"
+msgstr "انقر للإزالة من المفضل"
+
+#: widgets/AdfHomeFeatured.php:495
+msgid "Click to make it favourite"
+msgstr "انقر لجعله مفضلا"
+
+#: widgets/AdfHomeHero.php:28
+msgid "Modern Home — Hero + Categories"
+msgstr "المنزل الحديث — البطل + الفئات"
+
+#: widgets/AdfHomeHero.php:40
+msgid "Badge text"
+msgstr "تمكيين بطاقة التمييز"
+
+#: widgets/AdfHomeHero.php:42
+msgid "100% Free Ads Forever"
+msgstr "إعلانات 100% Free للأبد"
+
+#: widgets/AdfHomeHero.php:45
+msgid "Small uppercase line"
+msgstr "خط صغير ذو حروف كبيرة"
+
+#: widgets/AdfHomeHero.php:47
+msgid "Welcome to"
+msgstr "مرحبا بك في"
+
+#: widgets/AdfHomeHero.php:50
+msgid "Headline (before accent)"
+msgstr "العنوان الرئيسي (قبل اللهجة)"
+
+#: widgets/AdfHomeHero.php:52
+msgid "Visit, Classified, Web &"
+msgstr "زيارة، مبوبة، ويب &"
+
+#: widgets/AdfHomeHero.php:55
+msgid "Accent word"
+msgstr "كلمة لهجة"
+
+#: widgets/AdfHomeHero.php:57
+msgid "More."
+msgstr "المزيد."
+
+#: widgets/AdfHomeHero.php:63
+msgid ""
+"AdForest is the most innovative, user-friendly and reliable classified ads "
+"WordPress theme from the trusted author."
+msgstr ""
+"AdForest هو أكثر قالب ووردبريس للإعلانات المبوبة ابتكارا وسهولة الاستخدام "
+"وموثوقية من المؤلف الموثوق."
+
+#: widgets/AdfHomeHero.php:69
+msgid "Hero background"
+msgstr "صورة الخلفية"
+
+#: widgets/AdfHomeHero.php:73
+msgid "Background image"
+msgstr "صورة الخلفية"
+
+#: widgets/AdfHomeHero.php:76
+msgid ""
+"Optional. If empty, the section uses the soft brand-tinted gradient shown in "
+"the default layout."
+msgstr ""
+"اختياري. إذا كان فارغا، يستخدم القسم التدرج الملون بعلامة تجارية ناعمة كما "
+"هو موضح في التخطيط الافتراضي."
+
+#: widgets/AdfHomeHero.php:86
+msgid "Search placeholder"
+msgstr "العنصر النائب:"
+
+#: widgets/AdfHomeHero.php:88
+msgid "What are you looking for?"
+msgstr "ما الذي تبحث عنه؟"
+
+#: widgets/AdfHomeHero.php:91
+msgid "Category placeholder"
+msgstr "فئة العنصر النائب للحقل"
+
+#: widgets/AdfHomeHero.php:96
+msgid "Location filter source"
+msgstr "مصدر"
+
+#: widgets/AdfHomeHero.php:100
+msgid "Custom dropdown (ad_country taxonomy)"
+msgstr "قائمة منسدلة مخصصة (ad_country تصنيف)"
+
+#: widgets/AdfHomeHero.php:101
+msgid "Google Places autocomplete"
+msgstr "الإكمال التلقائي لجوجل بليسز"
+
+#: widgets/AdfHomeHero.php:103
+msgid ""
+"Google Places requires the Maps API key in <strong>Theme Options → Maps → "
+"Google Maps API Key</strong>. Falls back to the taxonomy dropdown when the "
+"key is missing."
+msgstr ""
+"يتطلب Google Places مفتاح واجهة برمجة تطبيقات الخرائط في <strong>خيارات "
+"القالب → الخرائط → مفتاح واجهة برمجة تطبيقات خرائط جوجل</strong>. يعود إلى "
+"قائمة التصنيف المنسدلة عندما يكون المفتاح مفقودا."
+
+#: widgets/AdfHomeHero.php:106
+msgid "Location placeholder"
+msgstr "الموزع المؤقت لحقل الموقع"
+
+#: widgets/AdfHomeHero.php:111
+msgid "Search button text"
+msgstr "زر الثيم: لون نص"
+
+#: widgets/AdfHomeHero.php:119
+msgid "Categories below search"
+msgstr "فئات البحث"
+
+#: widgets/AdfHomeHero.php:123
+msgid "Show categories grid"
+msgstr "إظهار الشبكة / عرض القائمة"
+
+#: widgets/AdfHomeHero.php:134
+msgid ""
+"6 cards are visible at once. Extras become reachable via the navigation "
+"arrows."
+msgstr "تظهر 6 بطاقات في نفس الوقت. تصبح الإضافات متاحة عبر أسهم الملاحة."
+
+#: widgets/AdfHomeHero.php:157
+msgid ""
+"Each category's image comes from <strong>WP Admin → Listings → Categories → "
+"edit term → Image</strong>. Empty images fall back to a folder icon."
+msgstr ""
+"صورة كل فئة مأخوذة من <strong>قوائم إدارة → ووردبريس → الفئات → مصطلح تعديل "
+"→ صورة</strong>. الصور الفارغة تعود إلى أيقونة المجلد."
+
+#: widgets/AdfHomeHero.php:494
+msgid "Google Maps API key is not set"
+msgstr "مفتاح واجهة برمجة تطبيقات خرائط جوجل غير محدد"
+
+#: widgets/AdfHomeHero.php:495
+msgid ""
+"Add the key in Theme Options → Maps → Google Maps API Key. Until then the "
+"location autocomplete will not work."
+msgstr ""
+"أضف المفتاح في خيارات القالب → الخرائط → مفتاح واجهة برمجة تطبيقات خرائط "
+"جوجل. حتى ذلك الحين، لن يعمل إكمال الموقع التلقائي."
+
+#: widgets/AdfHomeHero.php:507
+msgid "Google Maps API key error"
+msgstr "خطأ في مفتاح واجهة برمجة تطبيقات Google Maps"
+
+#: widgets/AdfHomeHero.php:508
+msgid ""
+"The configured key is invalid, restricted to other domains, expired, over "
+"its quota, or has billing disabled. Open the browser console for the exact "
+"Google error code, then fix the key in Theme Options → Maps."
+msgstr ""
+"المفتاح المكون غير صالح، أو مقيد بنطاقات أخرى، أو منتهية الصلاحية، أو تجاوز "
+"حصته، أو تم تعطيل الفوترة. افتح وحدة التصفح، لتبحث عن رمز خطأ جوجل بالضبط، "
+"ثم أصلح المفتاح في خيارات القالب → الخرائط."
+
+#: widgets/AdfHomeHero.php:527
+msgid ""
+"The Places API is disabled, billing is off, or the key is restricted from "
+"this domain. In Google Cloud Console, enable \"Places API\" (the legacy one "
+"— \"Places API (New)\" alone will not work with this widget), confirm "
+"billing is active, and verify HTTP-referrer restrictions allow this site."
+msgstr ""
+"واجهة برمجة التطبيقات الخاصة بالأماكن معطلة، أو إيقاف الفوترة، أو المفتاح "
+"مقيد من هذا النطاق. في Google Cloud Console، قم بتفعيل \"واجهة برمجة "
+"التطبيقات للأماكن\" (القديمة — \"واجهة برمجة تطبيقات الأماكن (الجديدة)\" "
+"وحدها لن تعمل مع هذا الجهاز)، وتأكد من تفعيل الفوترة، وتحقق من أن قيود HTTP-"
+"referrer تسمح بهذا الموقع."
+
+#: widgets/AdfHomeHero.php:529
+msgid ""
+"The Places API has exceeded its quota or rate limit. Check Google Cloud "
+"Console → APIs & Services → Quotas."
+msgstr ""
+"واجهة برمجة تطبيقات الأماكن تجاوزت الحد الأقصى أو السعر. تحقق من Google "
+"Cloud Console → واجهات برمجة التطبيقات والخدمات → الحصص."
+
+#: widgets/AdfHomeHero.php:531
+msgid ""
+"Places API rejected the request as invalid. Verify the API key configuration."
+msgstr "Places API رفضت الطلب باعتباره غير صالح. تحقق من تكوين مفتاح API."
+
+#: widgets/AdfHomeHero.php:533
+msgid "Places API endpoint was not found."
+msgstr "لم يتم العثور على نقطة نهاية API في الأماكن."
+
+#: widgets/AdfHomeHero.php:535
+msgid "Places API returned an unexpected status: "
+msgstr "أعاد واجهة برمجة التطبيقات الخاصة ب Places حالة غير متوقعة: "
+
+#: widgets/AdfHomeHero.php:538
+msgid "Google Places API issue"
+msgstr "مشكلة واجهة برمجة تطبيقات Google Places"
+
+#: widgets/AdfHomeHero.php:544
+msgid "Google Places probe failed"
+msgstr "فشل مسبار Google Places"
+
+#: widgets/AdfHomeHero.php:545
+msgid "Could not instantiate the Places AutocompleteService."
+msgstr "لم أتمكن من إنشاء خدمة الاكتمال التلقائي للأماكن."
+
+#: widgets/AdfHomeHero.php:575
+msgid "Google Places initialization failed"
+msgstr "فشل تهيئة Google Places"
+
+#: widgets/AdfHomeHero.php:576
+msgid "An unknown error occurred while initializing the location autocomplete."
+msgstr "حدث خطأ غير معروف أثناء تهيئة الإكمال التلقائي للموقع."
+
+#: widgets/AdfHomeHero.php:594
+msgid "Google Maps script failed to load"
+msgstr "فشل سكريبت خرائط جوجل في التحميل"
+
+#: widgets/AdfHomeHero.php:595
+msgid ""
+"The browser could not reach maps.googleapis.com. Check your network, ad-"
+"blockers, or CSP rules."
+msgstr ""
+"لم يتمكن المتصفح من الوصول إلى maps.googleapis.com. تحقق من شبكتك، أو أدوات "
+"منع الإعلانات، أو قواعد CSP."
+
+#: widgets/AdfHomeHero.php:611
+msgid "Google Places did not initialize"
+msgstr "لم يتم تهيئة Google Places"
+
+#: widgets/AdfHomeHero.php:612
+msgid ""
+"The Maps API loaded slowly or partially. Verify the API key has the Places "
+"API enabled and that referrer restrictions allow this domain."
+msgstr ""
+"واجهة برمجة تطبيقات الخرائط كانت تحمل ببطء أو جزئيا. تحقق من أن مفتاح API "
+"يحتوي على واجهة برمجة تطبيقات الأماكن مفعلة وأن قيود المرجع تسمح بهذا النطاق."
+
+#: widgets/AdfHomeHero.php:627
+msgid "Google Places: API key missing"
+msgstr "أماكن جوجل: مفتاح واجهة برمجة التطبيقات مفقود"
+
+#: widgets/AdfHomeHero.php:628
+msgid ""
+"Set the Google Maps API key in Theme Options → Maps → Google Maps API Key. "
+"The location field will render but autocomplete will not attach until the "
+"key is saved."
+msgstr ""
+"قم بتعيين مفتاح واجهة برمجة تطبيقات خرائط جوجل في خيارات القوالب → الخرائط → "
+"مفتاح واجهة برمجة تطبيقات خرائط جوجل. سيتم عرض حقل الموقع لكن الإكمال "
+"التلقائي لن يرتبط حتى يتم حفظ المفتاح."
+
+#: widgets/AdfHomeHero.php:635
+msgid "Previous categories"
+msgstr "الفئات السابقة"
+
+#: widgets/AdfHomeHero.php:668
+msgid "Next categories"
+msgstr "التالي >>"
+
+#: widgets/AdfHomeLocations.php:28
+msgid "Modern Home — Top Locations"
+msgstr "المنزل الحديث — أفضل المواقع"
+
+#: widgets/AdfHomeLocations.php:38
+msgid "— Select location —"
+msgstr "اختر الموقع الجغرافى"
+
+#: widgets/AdfHomeLocations.php:62
+msgid "Top Locations"
+msgstr "أفضل المواقع"
+
+#: widgets/AdfHomeLocations.php:68
+msgid "Find ads by top locations."
+msgstr "ابحث عن الإعلانات حسب المواقع الرئيسية."
+
+#: widgets/AdfHomeLocations.php:72 widgets/AdfHomePricing.php:73
+msgid "Source"
+msgstr "مصدر"
+
+#: widgets/AdfHomeLocations.php:76
+msgid "Auto — top locations by ad count"
+msgstr "Auto — المواقع الأعلى حسب عدد الإعلانات"
+
+#: widgets/AdfHomeLocations.php:77
+msgid "Manual — choose specific locations"
+msgstr "الدليل — اختر مواقع محددة"
+
+#: widgets/AdfHomeLocations.php:82
+msgid "Locations to show"
+msgstr "لا يوجد (عرض جميع المواقع)"
+
+#: widgets/AdfHomeLocations.php:99
+msgid "Image (override)"
+msgstr "صورة"
+
+#: widgets/AdfHomeLocations.php:102
+msgid ""
+"Optional. Falls back to the image set in WP Admin → Locations → edit term → "
+"Image, then to the theme placeholder."
+msgstr ""
+"اختياري. يعود إلى مجموعة الصور في مواقع إدارة ووردبريس → → →تعديل مصطلح "
+"الصورة، ثم إلى القالب المؤقت."
+
+#: widgets/AdfHomeLocations.php:105
+msgid "Display name (override)"
+msgstr "اسم العرض (تجاوز)"
+
+#: widgets/AdfHomeLocations.php:108
+msgid "Optional. Defaults to the term name."
+msgstr "اختياري. الافتراضي يستخدم اسم المصطلح."
+
+#: widgets/AdfHomePricing.php:24
+msgid "Modern Home — Pricing Plans"
+msgstr "المنزل الحديث — خطط التسعير"
+
+#: widgets/AdfHomePricing.php:35
+msgid "— Select package —"
+msgstr "اختر طردا..."
+
+#: widgets/AdfHomePricing.php:63
+msgid "Our Pricing Plans"
+msgstr "خطط التسعير لدينا"
+
+#: widgets/AdfHomePricing.php:69
+msgid ""
+"Choose the perfect plan for your needs and start posting ads today. All "
+"plans include core features."
+msgstr ""
+"اختر الخطة المثالية لاحتياجاتك وابدأ بنشر الإعلانات اليوم. تشمل جميع الخطط "
+"الميزات الأساسية."
+
+#: widgets/AdfHomePricing.php:77
+msgid "Auto — recent packages"
+msgstr "أوتو — الطرود الحديثة"
+
+#: widgets/AdfHomePricing.php:78
+msgid "Manual — choose specific packages"
+msgstr "الدليل — اختر حزم محددة"
+
+#: widgets/AdfHomePricing.php:83
+msgid "Plans to show"
+msgstr "خطط للعرض"
+
+#: widgets/AdfHomePricing.php:91
+msgid "\"Popular\" card index"
+msgstr "الأشهر"
+
+#: widgets/AdfHomePricing.php:96
+msgid "Zero-indexed (0 = first, 1 = middle, etc.). Set to -1 to disable."
+msgstr "مفهرسة صفرية (0 = الأول، 1 = الوسط، وهكذا). ضبطه على -1 للتعطيل."
+
+#: widgets/AdfHomePricing.php:103
+msgid "Package"
+msgstr "طَرد"
+
+#: widgets/AdfHomePricing.php:109
+msgid "Mark as Popular"
+msgstr "الأشهر"
+
+#: widgets/AdfHomePricing.php:113
+msgid ""
+"Highlights this card with the \"Popular\" badge. Enable on one card at most."
+msgstr ""
+"تبرز هذه البطاقة بشارة \"الشعبية\". تفعيل البطاقة على بطاقة واحدة كحد أقصى."
+
+#: widgets/AdfHomePricing.php:117
+msgid "Packages"
+msgstr "الحزم"
+
+#: widgets/AdfHomePricing.php:218
+msgid "Popular"
+msgstr "الأشهر"
+
+#: widgets/AdfHomePricing.php:294
+msgid "Validity (Days)"
+msgstr "صحة"
+
+#: widgets/AdfHomePricing.php:295 widgets/CategoryBasedAds.php:79
+#: widgets/ClassicHome.php:316
+msgid "Ads"
+msgstr "إعلانات"
+
+#: widgets/AdfHomePricing.php:296
+msgid "Ad Expiry (Days)"
+msgstr "انتهاء صلاحية الإعلان (أيام)"
+
+#: widgets/AdfHomePricing.php:297 widgets/AdfHomePricing.php:358
+msgid "Feature Ads"
+msgstr "إعلانات مميزة"
+
+#: widgets/AdfHomePricing.php:298
+msgid "Featured Expiry"
+msgstr "أيام انتهاء الصلاحية المميزة"
+
+#: widgets/AdfHomePricing.php:299
+msgid "Bump-up Ads"
+msgstr "تصادم الإعلانات"
+
+#: widgets/AdfHomePricing.php:300 widgets/AdfHomePricing.php:359
+msgid "Images per Ad"
+msgstr "الصور لكل إعلان"
+
+#: widgets/AdfHomePricing.php:301
+msgid "Allow Bidding"
+msgstr "السماح بالمزايدة"
+
+#: widgets/AdfHomePricing.php:302
+msgid "Video URLs"
+msgstr "رابط الفيديو"
+
+#: widgets/AdfHomePricing.php:303
+msgid "Allow Tags"
+msgstr "السماح بالعلامات"
+
+#: widgets/AdfHomePricing.php:326 widgets/AdfHomePricing.php:340
+#: widgets/AdfHomePricing.php:341
+msgid "Monthly"
+msgstr "شهري"
+
+#: widgets/AdfHomePricing.php:334 widgets/AdfHomePricing.php:362
+msgid "Get Started"
+msgstr "ابدأ"
+
+#: widgets/AdfHomePricing.php:339
+msgid "Basic Plan"
+msgstr "الباقة الأساسية"
+
+#: widgets/AdfHomePricing.php:340
+msgid "Gold Plan"
+msgstr "خطة الذهب"
+
+#: widgets/AdfHomePricing.php:341
+msgid "Silver Plan"
+msgstr "خطة سيلفر"
+
+#: widgets/AdfHomePricing.php:355
+msgid "Post Ads"
+msgstr "انشر الإعلانات"
+
+#: widgets/AdfHomePricing.php:356
+msgid "Edit Ads"
+msgstr "تحرير \\ تعديل الإعلانات"
+
+#: widgets/AdfHomePricing.php:357
+msgid "Delete Ads"
+msgstr "حذف الإعلانات"
+
+#: widgets/AdfHomePricing.php:360
+msgid "Customer Support"
+msgstr "دعم العملاء‬"
+
+#: widgets/AdfHomeTrust.php:23
+msgid "Modern Home — Trust Strip"
+msgstr "المنزل الحديث — ترست ستريب"
+
+#: widgets/AdfHomeTrust.php:36
+msgid "Icon class"
+msgstr "Icon Class"
+
+#: widgets/AdfHomeTrust.php:39
+msgid "Font Awesome class — e.g. \"fa fa-tag\", \"fa fa-shield-alt\"."
+msgstr "فئة الخط الرائعة — مثل \"fa fa-tag\"، \"fa fa-shield-alt\"."
+
+#: widgets/AdfHomeTrust.php:44 widgets/AdfHomeTrust.php:58
+msgid "100% Free"
+msgstr "100% Fري"
+
+#: widgets/AdfHomeTrust.php:50 widgets/AdfHomeTrust.php:58
+msgid "Post ads with no hidden fees, ever."
+msgstr "انشر إعلانات بدون رسوم خفية، أبدا."
+
+#: widgets/AdfHomeTrust.php:54
+msgid "Cells"
+msgstr "الخلايا"
+
+#: widgets/AdfHomeTrust.php:59
+msgid "Secure"
+msgstr "استخدم كلمة مرور آمنة"
+
+#: widgets/AdfHomeTrust.php:59
+msgid "Every listing is reviewed before going live."
+msgstr "يتم مراجعة كل إعلان قبل النشر."
+
+#: widgets/AdfHomeTrust.php:60
+msgid "Trusted"
+msgstr "موثوق"
+
+#: widgets/AdfHomeTrust.php:60
+msgid "Thousands of buyers and sellers every day."
+msgstr "آلاف المشترين والبائعين يوميا."
+
+#: widgets/AdfHomeTrust.php:61
+msgid "Support"
+msgstr "الدعم"
+
+#: widgets/AdfHomeTrust.php:61
+msgid "Friendly help is one click away."
+msgstr "المساعدة الودية على بعد نقرة واحدة."
+
+#: widgets/AdfHomeTrust.php:67
+msgid "Tint background with brand color"
+msgstr "خلفيه القسم"
+
+#: widgets/AdfHomeTrust.php:71
+msgid "When off, the strip uses a neutral white background."
+msgstr "عند إزالته، يستخدم الشريط خلفية بيضاء محايدة."
+
+#: widgets/AdfHomeTrust.php:101
+msgid "Trust badges"
+msgstr "شارات الثقة"
+
+#: widgets/AdforestAboutUs.php:20
+msgid "About us"
+msgstr "معلومات عنا"
+
+#: widgets/AdforestAboutUs.php:82 widgets/FrequentlyAskedQuestions.php:72
+msgid "524x464"
+msgstr "524 × 464"
+
+#: widgets/AdforestAboutUs.php:88 widgets/FrequentlyAskedQuestions.php:78
+msgid "small image"
+msgstr "رؤوس الأموال الصغيرة"
+
+#: widgets/AdforestAboutUs.php:90 widgets/FrequentlyAskedQuestions.php:80
+msgid "294x280"
+msgstr "294 × 280"
+
+#: widgets/AdforestAboutUs.php:105
+msgid "Experience Header"
+msgstr "رأس الخبرة"
+
+#: widgets/AdforestAboutUs.php:151 widgets/AdforestContactUs.php:148
+msgid "Icon"
+msgstr "أيقونة"
+
+#: widgets/AdforestAboutUs.php:153
+msgid "Please use reguler font"
+msgstr "يرجى استخدام خط reguler"
+
+#: widgets/AdforestContactUs.php:20
+msgid "Contact Us"
+msgstr "اتصل بنا"
+
+#: widgets/AdforestContactUs.php:39
+msgid "Basic Settings"
+msgstr "الإعدادات الأساسية"
+
+#: widgets/AdforestContactUs.php:46 widgets/AdforestContactUs.php:49
+msgid "Contact Form Title"
+msgstr "عنوان نموذج الاتصال"
+
+#: widgets/AdforestContactUs.php:56 widgets/AdforestContactUs.php:59
+msgid "Contact Info Title"
+msgstr "عنوان معلومات الاتصال"
+
+#: widgets/AdforestContactUs.php:66
+msgid "Contact form 7 shortcode"
+msgstr "نموذج الاتصال 7 الرمز القصير"
+
+#: widgets/AdforestContactUs.php:78
+msgid "Left Side Settings"
+msgstr "إعدادات الجانب الأيسر"
+
+#: widgets/AdforestContactUs.php:85
+msgid "Title 1"
+msgstr "العنوان 1"
+
+#: widgets/AdforestContactUs.php:95 widgets/AdforestSignIn.php:111
+#: widgets/AdforestSignUp.php:138 widgets/DirectoryHero.php:49
+#: widgets/EventHomeHero.php:49 widgets/HowItWorksModern.php:42
+#: widgets/MainHero5.php:69 widgets/MultivendorHero.php:69
+msgid "Section Image"
+msgstr "الصور"
+
+#: widgets/AdforestContactUs.php:107
+msgid "Description 1"
+msgstr "الوصف 1"
+
+#: widgets/AdforestContactUs.php:116
+msgid "Title 2"
+msgstr "عنوان 2"
+
+#: widgets/AdforestContactUs.php:126
+msgid "Description 2"
+msgstr "الوصف 2"
+
+#: widgets/AdforestContactUs.php:139
+msgid "Social Media Icons"
+msgstr "آيكونات السوشال ميديا"
+
+#: widgets/AdforestContactUs.php:160
+msgid "Link"
+msgstr "رابط"
+
+#: widgets/AdforestContactUs.php:162 widgets/AdforestSignUp.php:78
+msgid "https://your-link.com"
+msgstr "https://themeforest.net/user/scriptsbundle/"
+
+#: widgets/AdforestContactUs.php:172
+msgid "Social Icons"
+msgstr "أيقونات التواصل الاجتماعي"
+
+#: widgets/AdforestPackages.php:22
+msgid "Products - Modern 2"
+msgstr "المنتجات موردون 2"
+
+#: widgets/AdforestPackages.php:51
+msgid "Section Design"
+msgstr "تصميم القسم"
+
+#: widgets/AdforestPackages.php:54
+#: widgets/MultivendorProductsWithSidebar.php:185
+msgid "Modern"
+msgstr "عصري"
+
+#: widgets/AdforestPackages.php:55
+#: widgets/MultivendorProductsWithSidebar.php:186
+msgid "Fancy"
+msgstr "رائعة"
+
+#: widgets/AdforestPackages.php:66 widgets/AdforestSignIn.php:48
+#: widgets/AdforestSignIn.php:92 widgets/AdforestSignUp.php:49
+#: widgets/AdforestSignUp.php:119
+msgid "For color {color}warp text within this tag{/color}"
+msgstr "لـ {color} نص اللواء في هذه العلامة{/color}"
+
+#: widgets/AdforestPackages.php:75
+msgid "Type your description here"
+msgstr "اكتب الوصف الخاص بك هنا"
+
+#: widgets/AdforestPackages.php:88
+msgid "Products"
+msgstr "المنتجات"
+
+#: widgets/AdforestPackages.php:96
+msgid "Select Product"
+msgstr "اختر المنتج"
+
+#: widgets/AdforestPackages.php:106
+msgid "Product Items"
+msgstr "عناصر المنتج"
+
+#: widgets/AdforestPackages.php:121
+msgid "Select Columns"
+msgstr "حدد الأعمدة"
+
+#: widgets/AdforestSignIn.php:39
+msgid "Form Setting"
+msgstr "إعداد النموذج"
+
+#: widgets/AdforestSignIn.php:56 widgets/AdforestSignIn.php:100
+#: widgets/AdforestSignUp.php:56 widgets/AdforestSignUp.php:127
+msgid "Short Description"
+msgstr "الوصف القصير"
+
+#: widgets/AdforestSignIn.php:67
+msgid "Captcha Code"
+msgstr "كود الكابتشا"
+
+#: widgets/AdforestSignIn.php:69 widgets/AdforestSignUp.php:93
+msgid "Captcha is for stop spamming"
+msgstr "كلمة التحقق لوقف الإزعاجات"
+
+#: widgets/AdforestSignIn.php:71 widgets/AdforestSignUp.php:95
+msgid "Please select"
+msgstr "يرجى الإختيار"
+
+#: widgets/AdforestSignIn.php:72 widgets/AdforestSignUp.php:96
+msgid "With Capcha"
+msgstr "مع Capcha"
+
+#: widgets/AdforestSignIn.php:73 widgets/AdforestSignUp.php:97
+msgid "Without Capcha"
+msgstr "بدون كابشا"
+
+#: widgets/AdforestSignIn.php:81 widgets/AdforestSignUp.php:108
+msgid "Other section settings"
+msgstr "إعدادات القسم الأخرى"
+
+#: widgets/AdforestSignIn.php:123 widgets/AdforestSignUp.php:149
+msgid "Button  Title"
+msgstr "عنوان الزر"
+
+#: widgets/AdforestSignIn.php:132 widgets/AdforestSignUp.php:158
+msgid "Button link"
+msgstr "زر الرابط"
+
+#: widgets/AdforestSignUp.php:39
+msgid "General"
+msgstr "عام"
+
+#: widgets/AdforestSignUp.php:76
+msgid "Terms & Conditions"
+msgstr "الشروط والاحكام"
+
+#: widgets/AdforestSignUp.php:91
+msgid "Capcha Code"
+msgstr "رمز التحقق"
+
+#: widgets/AdforestWorkflow.php:18 widgets/AdforestWorkflow.php:61
+#: widgets/HowItWorksModern.php:74
+msgid "Workflow"
+msgstr "سير العمل"
+
+#: widgets/AdforestWorkflow.php:67 widgets/HowItWorksModern.php:80
+msgid "Icon 1"
+msgstr "أيقونة 1"
+
+#: widgets/AdforestWorkflow.php:90 widgets/AdforestWorkflow.php:93
+#: widgets/HowItWorksModern.php:103 widgets/HowItWorksModern.php:106
+msgid "Workflow Title 1"
+msgstr "عنوان سير العمل 1"
+
+#: widgets/AdforestWorkflow.php:100 widgets/AdforestWorkflow.php:103
+#: widgets/HowItWorksModern.php:113 widgets/HowItWorksModern.php:116
+msgid "Workflow Tag Line 1"
+msgstr "خط علامة سير العمل 1"
+
+#: widgets/AdforestWorkflow.php:110 widgets/HowItWorksModern.php:123
+msgid "Icon 2"
+msgstr "أيقونة 2"
+
+#: widgets/AdforestWorkflow.php:133 widgets/AdforestWorkflow.php:136
+#: widgets/HowItWorksModern.php:146 widgets/HowItWorksModern.php:149
+msgid "Workflow Title 2"
+msgstr "عنوان سير العمل 2"
+
+#: widgets/AdforestWorkflow.php:142 widgets/AdforestWorkflow.php:145
+#: widgets/HowItWorksModern.php:155 widgets/HowItWorksModern.php:158
+msgid "Workflow Tag Line 2"
+msgstr "سطر علامة سير العمل 2"
+
+#: widgets/AdforestWorkflow.php:151 widgets/HowItWorksModern.php:164
+msgid "Icon 3"
+msgstr "أيقونة 3"
+
+#: widgets/AdforestWorkflow.php:174 widgets/AdforestWorkflow.php:177
+#: widgets/HowItWorksModern.php:187 widgets/HowItWorksModern.php:190
+msgid "Workflow Title 3"
+msgstr "عنوان سير العمل 3"
+
+#: widgets/AdforestWorkflow.php:183 widgets/AdforestWorkflow.php:186
+#: widgets/HowItWorksModern.php:196 widgets/HowItWorksModern.php:199
+msgid "Workflow Tag Line 3"
+msgstr "سطر علامة سير العمل 3"
+
+#: widgets/AdsAndLocationMiniBoxes.php:19
+msgid "Mini ADs & Location"
+msgstr "الإعلانات المصغرة والموقع"
+
+#: widgets/AdsAndLocationMiniBoxes.php:39
+msgid "Show Main Section Top Carousel"
+msgstr "إظهار القسم الرئيسي أعلى دائري"
+
+#: widgets/AdsAndLocationMiniBoxes.php:50
+msgid "What type of ads do you want to show on the upper 1st section?"
+msgstr "ما نوع الإعلانات التي تريد عرضها في القسم الأول العلوي؟"
+
+#: widgets/AdsAndLocationMiniBoxes.php:53
+#: widgets/AdsAndLocationMiniBoxes.php:114
+#: widgets/AdsAndLocationMiniBoxes.php:301 widgets/AdsModernBg.php:67
+#: widgets/FeaturedAds.php:199 widgets/MainHero4.php:630
+#: widgets/RecentAds.php:39 widgets/RecentAds.php:162
+msgid "Recent"
+msgstr "الأخيرة"
+
+#: widgets/AdsAndLocationMiniBoxes.php:65
+msgid "1st Section Title"
+msgstr "عنوان القسم 1"
+
+#: widgets/AdsAndLocationMiniBoxes.php:76
+msgid "1st Section Button Text"
+msgstr "1 نص زر القسم"
+
+#: widgets/AdsAndLocationMiniBoxes.php:87
+msgid "1st Section Button Link"
+msgstr "1 رابط زر القسم"
+
+#: widgets/AdsAndLocationMiniBoxes.php:97
+#: widgets/AdsAndLocationMiniBoxes.php:145 widgets/AdsModernBg.php:75
+#: widgets/EventListWidget.php:77 widgets/RecentAds.php:47
+msgid "Number of Ads to show in main section?"
+msgstr "عدد الإعلانات التي سيتم عرضها في القسم الرئيسي؟"
+
+#: widgets/AdsAndLocationMiniBoxes.php:111
+msgid "What type of ads do you want to show on the upper 2nd section?"
+msgstr "ما نوع الإعلانات التي تريد عرضها في القسم الثاني العلوي؟"
+
+#: widgets/AdsAndLocationMiniBoxes.php:123
+msgid "2nd Section Title"
+msgstr "عنوان القسم 2"
+
+#: widgets/AdsAndLocationMiniBoxes.php:131
+msgid "2nd Section Button Text"
+msgstr "2 نص زر القسم"
+
+#: widgets/AdsAndLocationMiniBoxes.php:138
+msgid "2nd Section Button Link"
+msgstr "رابط زر القسم 2"
+
+#: widgets/AdsAndLocationMiniBoxes.php:156
+msgid "Show Horizontal Advertisement."
+msgstr "عرض الإعلان الأفقي."
+
+#: widgets/AdsAndLocationMiniBoxes.php:168 widgets/FeaturedAds.php:147
+#: widgets/HorizontalAd.php:57
+msgid "Horizontal Advertisement image"
+msgstr "صورة إعلان أفقي"
+
+#: widgets/AdsAndLocationMiniBoxes.php:170 widgets/MainHero4.php:106
+msgid "1320×140"
+msgstr "1320×140"
+
+#: widgets/AdsAndLocationMiniBoxes.php:180
+msgid "Location Section Title"
+msgstr "عنوان قسم الموقع"
+
+#: widgets/AdsAndLocationMiniBoxes.php:188
+msgid "Locations Section Button Text"
+msgstr "نص زر قسم المواقع"
+
+#: widgets/AdsAndLocationMiniBoxes.php:196
+msgid "Locations Section Button Link"
+msgstr "رابط زر قسم المواقع"
+
+#: widgets/AdsAndLocationMiniBoxes.php:257
+msgid "Right Section Settings"
+msgstr "إعدادات القسم الأيمن"
+
+#: widgets/AdsAndLocationMiniBoxes.php:263
+msgid "Hide the Sidebar"
+msgstr "إخفاء التفاصيل"
+
+#: widgets/AdsAndLocationMiniBoxes.php:275
+msgid "Show Ads in Right Sidebar."
+msgstr "عرض الإعلانات في الشريط الجانبي الأيمن."
+
+#: widgets/AdsAndLocationMiniBoxes.php:298
+msgid "What type of ads do you want to show on the right sidebar?"
+msgstr "ما نوع الإعلانات التي تريد عرضها على الشريط الجانبي الأيسر؟"
+
+#: widgets/AdsAndLocationMiniBoxes.php:314 widgets/MainHero4.php:642
+msgid "Number of Ads to show in Right Sidebar?"
+msgstr "عدد الإعلانات التي يجب عرضها في الشريط الجانبي الأيمن؟"
+
+#: widgets/AdsAndLocationMiniBoxes.php:329
+msgid "Show Ad 1 in Right Sidebar."
+msgstr "عرض الإعلان 1 في الشريط الجانبي الأيمن."
+
+#: widgets/AdsAndLocationMiniBoxes.php:343
+msgid "Right Advert Image"
+msgstr "صورة الإعلان الأيمن"
+
+#: widgets/AdsAndLocationMiniBoxes.php:345 widgets/AdsModernBg.php:99
+#: widgets/FeaturedAds.php:238 widgets/MainHero4.php:578
+#: widgets/MainHero4.php:608 widgets/MainHero4.php:684
+#: widgets/MultivendorProductsWithSidebar.php:146 widgets/RecentAds.php:103
+#: widgets/RecentAds.php:124 widgets/RecentAds.php:206
+msgid "303x485"
+msgstr "303 × 485"
+
+#: widgets/AdsAndLocationMiniBoxes.php:355
+msgid "Show Ad 2 in Right Sidebar."
+msgstr "عرض الإعلان 2 في الشريط الجانبي الأيسر."
+
+#: widgets/AdsAndLocationMiniBoxes.php:369 widgets/MainHero4.php:682
+msgid "Right Advert Image 2"
+msgstr "صورة الإعلان الأيمن 2"
+
+#: widgets/AdsAndLocationMiniBoxes.php:371
+msgid "303x294"
+msgstr "303 × 294"
+
+#: widgets/AdsModernBg.php:17
+msgid "Ads Modern with Background"
+msgstr "إعلانات حديثة مع خلفية"
+
+#: widgets/AdsModernBg.php:64
+msgid "What type of ads do you want to show?"
+msgstr "ما نوع الإعلانات التي تريد عرضها؟"
+
+#: widgets/AdsModernBg.php:85
+msgid "Show Ad?"
+msgstr "عرض معرف الإعلان في صفحة تفاصيل الإعلان"
+
+#: widgets/AdsModernBg.php:97 widgets/AdtCallToAction.php:49
+#: widgets/AdtCallToAction.php:101
+msgid "Advert"
+msgstr "الإعلان"
+
+#: widgets/AdtCallToAction.php:19
+msgid "ADT Call to Action"
+msgstr "دعوة ADT للعمل"
+
+#: widgets/AdtCallToAction.php:36 widgets/EcommerceDealsBoxes.php:55
+#: widgets/MultivendorProductsWithSidebar.php:96
+msgid "Left"
+msgstr "يسار"
+
+#: widgets/AdtInfo.php:19
+msgid "Adt Info"
+msgstr "معلومات Adt"
+
+#: widgets/BrandsCarousel.php:20
+msgid "Brands Carousel"
+msgstr "شريط تمرير العلامات التجارية"
+
+#: widgets/BrandsCarousel.php:38
+msgid "Brands"
+msgstr "العلامات التجارية"
+
+#: widgets/BrandsCarousel.php:96 widgets/RealEstateHero.php:261
+msgid "Carousel Categories"
+msgstr "سلايدر الاقسام"
+
+#: widgets/CarDealerHero.php:19
+msgid "Car Dealer Hero"
+msgstr "بطل تاجر السيارات"
+
+#: widgets/CarDealerHero.php:62 widgets/CarDealerHero.php:65
+#: widgets/DirectoryHero.php:70 widgets/DirectoryHero.php:73
+#: widgets/EventHomeHero.php:69 widgets/EventHomeHero.php:72
+#: widgets/MainHero1.php:61 widgets/MainHero1.php:64 widgets/MainHero2.php:62
+#: widgets/MainHero2.php:65 widgets/MainHero3.php:71 widgets/MainHero3.php:74
+#: widgets/MainHero6.php:58 widgets/MainHero6.php:61 widgets/MainHero6.php:135
+#: widgets/MainHero6.php:138 widgets/RealEstateHero.php:80
+#: widgets/RealEstateHero.php:83
+msgid "Section Tagline"
+msgstr "مقطع سطر الوصف"
+
+#: widgets/CarDealerHero.php:82 widgets/DirectoryHero.php:137
+#: widgets/EventHomeHero.php:99 widgets/MainHero3.php:109
+#: widgets/MainHero6.php:87 widgets/RealEstateHero.php:100
+msgid "Search Section"
+msgstr "قسم البحث"
+
+#: widgets/CarDealerHero.php:99 widgets/ClassicHome.php:117
+#: widgets/DirectoryHero.php:146 widgets/EventHomeHero.php:108
+#: widgets/MainHero3.php:135 widgets/MainHero3.php:157
+#: widgets/MainHero4.php:389 widgets/MainHero4.php:405 widgets/MainHero6.php:96
+#: widgets/RealEstateHero.php:117 widgets/RealEstateHero.php:139
+msgid "Field Type"
+msgstr "نوع الحقل"
+
+#: widgets/CarDealerHero.php:110 widgets/MainHero3.php:146
+#: widgets/RealEstateHero.php:128
+msgid "Classified Ad Types"
+msgstr "أنواع الإعلانات المبوبة"
+
+#: widgets/CarDealerHero.php:120
+msgid "Enable Title Search?"
+msgstr "تمكين البحث عن العنوان؟"
+
+#: widgets/CarDealerHero.php:129
+msgid "Title Field Label"
+msgstr "تسمية حقل العنوان"
+
+#: widgets/CarDealerHero.php:131
+msgid "Explore"
+msgstr "استكشف"
+
+#: widgets/CarDealerHero.php:152
+msgid "Select Taxonomy"
+msgstr "اختر تصنيف"
+
+#: widgets/CarDealerHero.php:156
+msgid "Select a taxonomy to show on the search form."
+msgstr "حدد تصنيفا لعرضه في نموذج البحث."
+
+#: widgets/CategoryBasedAds.php:21
+msgid "Category Based Ads"
+msgstr "الإعلانات القائمة على الفئة"
+
+#: widgets/CategoryBasedAds.php:67
+msgid "Number of Ads to show?"
+msgstr "عدد الإعلانات المراد عرضها؟"
+
+#: widgets/CategoryBasedAds.php:93
+msgid "#"
+msgstr "#"
+
+#: widgets/CategoryBasedAds.php:98
+msgid "Ad Title Limit (In Characters)"
+msgstr "الحد الأقصى لعنوان الإعلان (بالأحرف)"
+
+#: widgets/CategoryBasedAds.php:109 widgets/ClassicHome.php:334
+#: widgets/FeaturedAds.php:74
+msgid "Style 1"
+msgstr "النمط 1"
+
+#: widgets/CategoryBasedAds.php:110 widgets/ClassicHome.php:335
+#: widgets/FeaturedAds.php:75
+msgid "Style 2"
+msgstr "النمط 2"
+
+#: widgets/CategoryBasedAds.php:111 widgets/ClassicHome.php:336
+#: widgets/FeaturedAds.php:76
+msgid "Style 3"
+msgstr "النمط 3"
+
+#: widgets/CategoryBasedAds.php:122 widgets/FeaturedAds.php:87
+#: widgets/MainHero4.php:165 widgets/MainHero4.php:287
+msgid "Regular"
+msgstr "عادي"
+
+#: widgets/CategoryBasedAds.php:124 widgets/MainHero4.php:167
+#: widgets/MainHero4.php:289 widgets/RecentAds.php:41
+msgid "Both"
+msgstr "كلاهما"
+
+#: widgets/CategorySlider.php:17
+msgid "Types Carousel"
+msgstr "أنواع دائري"
+
+#: widgets/CategorySlider.php:57
+msgid "Select Type"
+msgstr "حدد النوع"
+
+#: widgets/CategorySlider.php:80
+msgid "Carousel Types"
+msgstr "أنواع الرف الدائري"
+
+#: widgets/ClassicHome.php:20
+msgid "Classic Home Widget"
+msgstr "القطعة المنزلية الكلاسيكية"
+
+#: widgets/ClassicHome.php:81 widgets/MiniCategorySlider.php:90
+msgid "Categories Repeater"
+msgstr "الأقسام مكرر"
+
+#: widgets/ClassicHome.php:97
+msgid "Filters"
+msgstr "الفلاتر"
+
+#: widgets/ClassicHome.php:105 widgets/ClassicHome.php:107
+msgid "Filter Button Text"
+msgstr "نص زر التصفية"
+
+#: widgets/ClassicHome.php:122
+msgid "Condition"
+msgstr "الحالة"
+
+#: widgets/ClassicHome.php:123
+msgid "Warranty"
+msgstr "الضمان"
+
+#: widgets/ClassicHome.php:124
+msgid "Price"
+msgstr "السعر"
+
+#: widgets/ClassicHome.php:125
+msgid "Ad"
+msgstr "اعلان"
+
+#: widgets/ClassicHome.php:126
+msgid "Ad Categories"
+msgstr "تصنيفات الإعلان"
+
+#: widgets/ClassicHome.php:127 widgets/FeaturedAds.php:84
+#: widgets/HorizontalAd.php:43
+msgid "Ad Type"
+msgstr "نوع الإعلان"
+
+#: widgets/ClassicHome.php:129
+msgid "Ad Currency"
+msgstr "عملة الإعلان"
+
+#: widgets/ClassicHome.php:132
+msgid "Select the field type for this item"
+msgstr "حدد نوع الحقل لهذا العنصر"
+
+#: widgets/ClassicHome.php:139
+msgid "Ad Title Heading"
+msgstr "عنوان عنوان الإعلان"
+
+#: widgets/ClassicHome.php:151
+msgid "Ad Currency Heading"
+msgstr "عنوان عملة الإعلان"
+
+#: widgets/ClassicHome.php:163
+msgid "Radius Search Title"
+msgstr "عنوان بحث Radius"
+
+#: widgets/ClassicHome.php:175
+msgid "Condition Title"
+msgstr "عنوان الشرط"
+
+#: widgets/ClassicHome.php:178
+msgid "Enter the title for the condition"
+msgstr "أدخل عنوان الشرط"
+
+#: widgets/ClassicHome.php:188
+msgid "Ad Locations Title"
+msgstr "عنوان المواقع الجغرافية للإعلان"
+
+#: widgets/ClassicHome.php:191
+msgid "Enter the title for the Locations"
+msgstr "أدخل عنوان المواقع"
+
+#: widgets/ClassicHome.php:201
+msgid "Ad Type Title"
+msgstr "عنوان نوع الإعلان"
+
+#: widgets/ClassicHome.php:204
+msgid "Enter the title for the Ad Type"
+msgstr "أدخل عنوان نوع الإعلان"
+
+#: widgets/ClassicHome.php:214
+msgid "Warranty Title"
+msgstr "عنوان الضمان"
+
+#: widgets/ClassicHome.php:217
+msgid "Enter the title for the warranty"
+msgstr "أدخل عنوان الضمان"
+
+#: widgets/ClassicHome.php:227
+msgid "Minimum Price"
+msgstr "الحد الأدني للسعر"
+
+#: widgets/ClassicHome.php:230
+msgid "Enter the minimum price"
+msgstr "أدخل الحد الأدنى للسعر"
+
+#: widgets/ClassicHome.php:240
+msgid "Maximum Price"
+msgstr "الحد الأقصى للسعر"
+
+#: widgets/ClassicHome.php:243
+msgid "Enter the maximum price"
+msgstr "أدخل الحد الأقصى للسعر"
+
+#: widgets/ClassicHome.php:253 widgets/MainHero4.php:65
+msgid "Ad Image"
+msgstr "صورة إعلان"
+
+#: widgets/ClassicHome.php:255
+msgid "Upload an image for the ad"
+msgstr "تحميل صورة للإعلان"
+
+#: widgets/ClassicHome.php:265
+msgid "Ad Categories Title"
+msgstr "عنوان الفئات الإعلانية"
+
+#: widgets/ClassicHome.php:268
+msgid "Enter the title for the Categories"
+msgstr "أدخل عنوان الفئات"
+
+#: widgets/ClassicHome.php:278
+msgid "Enable Show More On Categories"
+msgstr "تمكين إظهار المزيد من الفئات؟"
+
+#: widgets/ClassicHome.php:293
+msgid "Number Of Categories Before Show More"
+msgstr "عدد الفئات قبل عرض المزيد"
+
+#: widgets/ClassicHome.php:305
+msgid "Repeater Items"
+msgstr "عناصر مكرر"
+
+#: widgets/ClassicHome.php:323
+msgid "Ad title (limit in characters)"
+msgstr "عنوان الإعلان (الحد الأقصى بالأحرف)"
+
+#: widgets/ClassicHome.php:331 widgets/FeaturedAds.php:71
+msgid "Ad Grid Style"
+msgstr "نمط الشبكة الإعلانية"
+
+#: widgets/ClassicHome.php:344
+msgid "Ad Grid Columns"
+msgstr "أعمدة شبكة الإعلانات"
+
+#: widgets/ClassicHome.php:358
+msgid "Number of Ads Per page"
+msgstr "عدد الإعلانات لكل صفحة"
+
+#: widgets/CyberSaleHero.php:19
+msgid "Cyber Sale Hero"
+msgstr "بطل بيع الإنترنت"
+
+#: widgets/CyberSaleHero.php:36 widgets/MainHero5.php:36
+#: widgets/MultivendorHero.php:36 widgets/MultivendorProductCarousel.php:53
+#: widgets/MultivendorProductCarouselWithAds.php:36
+#: widgets/MultivendorProductCategories.php:36
+#: widgets/MultivendorProductsGrid.php:36
+#: widgets/MultivendorProductsWithSidebar.php:52
+#: widgets/MultivendorServices.php:36
+msgid "Main"
+msgstr "الرئيسية"
+
+#: widgets/CyberSaleHero.php:55
+msgid "Sale Text"
+msgstr "نص البيع"
+
+#: widgets/CyberSaleHero.php:62
+msgid "Sale End Date"
+msgstr "تاريخ نهاية البيع"
+
+#: widgets/CyberSaleHero.php:68 widgets/DirectoryHero.php:41
+#: widgets/EventHomeHero.php:41 widgets/MainHero6.php:41
+#: widgets/RealEstateHero.php:60
+msgid "Section Background Image"
+msgstr "صوره خلفية القسم"
+
+#: widgets/CyberSaleHero.php:70 widgets/MainHero5.php:71
+#: widgets/MultivendorHero.php:71
+msgid "724×335"
+msgstr "724×335"
+
+#: widgets/CyberSaleHero.php:78
+msgid "Section Main Image"
+msgstr "الصورة الرئيسية للقسم"
+
+#: widgets/CyberSaleHero.php:87
+msgid "Section Sale Text Image"
+msgstr "صورة نصية للبيع"
+
+#: widgets/CyberSaleHero.php:96
+msgid "Section Discount Image"
+msgstr "صورة خصم القسم"
+
+#: widgets/DealsOfTheDay.php:18
+msgid "Deals of the Day"
+msgstr "عروض اليوم"
+
+#: widgets/DealsOfTheDay.php:51
+msgid "Overlay Color"
+msgstr "تراكب اللون"
+
+#: widgets/DealsOfTheDay.php:64
+msgid "Deals Of The Day"
+msgstr "عروض اليوم"
+
+#: widgets/DealsOfTheDay.php:74
+#, php-format
+msgid "Get a chance, Save up to 50% discount"
+msgstr "احصل على فرصة، وفر ما يصل إلى 50% discount"
+
+#: widgets/DealsOfTheDay.php:84 widgets/EcommerceDealsBoxes.php:95
+#: widgets/EcommerceDealsBoxes.php:119 widgets/EcommerceDealsBoxes.php:126
+#: widgets/EcommerceHome.php:79
+msgid "Shop Now"
+msgstr "تسوق الآن"
+
+#: widgets/DealsOfTheDay.php:103 widgets/EcommerceDealsBoxes.php:139
+#: widgets/LocationsModern.php:42
+msgid "Style"
+msgstr "النمط"
+
+#: widgets/DealsOfTheDay.php:112
+msgid "Box Background"
+msgstr "خلفية الصندوق"
+
+#: widgets/DealsOfTheDay.php:122 widgets/EcommerceDealsBoxes.php:148
+msgid "Title Typography"
+msgstr "خط العنوان"
+
+#: widgets/DealsOfTheDay.php:130 widgets/EcommerceDealsBoxes.php:156
+msgid "Title Color"
+msgstr "لون العنوان"
+
+#: widgets/DealsOfTheDay.php:142 widgets/EcommerceDealsBoxes.php:168
+msgid "Description Typography"
+msgstr "إعدادات الطباعة"
+
+#: widgets/DealsOfTheDay.php:150 widgets/EcommerceDealsBoxes.php:176
+msgid "Description Color"
+msgstr "الوصف:"
+
+#: widgets/DealsOfTheDay.php:162 widgets/EcommerceDealsBoxes.php:188
+msgid "Button Typography"
+msgstr "خط الزر"
+
+#: widgets/DealsOfTheDay.php:170 widgets/EcommerceDealsBoxes.php:196
+msgid "Button Text Color"
+msgstr "لون نص الزر"
+
+#: widgets/DealsOfTheDay.php:181 widgets/EcommerceDealsBoxes.php:207
+msgid "Button Background Color"
+msgstr "لون خلفية الزر"
+
+#: widgets/DirectoryHero.php:18
+msgid "Directory Hero"
+msgstr "بطل الدليل"
+
+#: widgets/DirectoryHero.php:125 widgets/DirectoryHero.php:231
+#: widgets/EventHomeHero.php:150 widgets/MainHero1.php:91
+#: widgets/RealEstateHero.php:207
+msgid "Popular Categories"
+msgstr "تصنيفات شائعة"
+
+#: widgets/DirectoryHero.php:160 widgets/EventHomeHero.php:122
+#: widgets/MainHero3.php:171 widgets/MainHero6.php:110
+#: widgets/RealEstateHero.php:153
+msgid "Classified Search Fields"
+msgstr "حقول البحث المصنفة"
+
+#: widgets/DirectoryHero.php:179
+msgid "Category Carousel Section"
+msgstr "فئة قسم دائري"
+
+#: widgets/EcommerceDealsBoxes.php:23
+msgid "Ecommerce Deals Boxes"
+msgstr "صناديق صفقات التجارة الإلكترونية"
+
+#: widgets/EcommerceDealsBoxes.php:51
+msgid "Content Alignment"
+msgstr "محاذاة النص"
+
+#: widgets/EcommerceDealsBoxes.php:76 widgets/EcommerceDealsBoxes.php:117
+msgid "Hand Gloves"
+msgstr "قفازات اليد"
+
+#: widgets/EcommerceDealsBoxes.php:86 widgets/EcommerceDealsBoxes.php:118
+#: widgets/EcommerceDealsBoxes.php:125
+#, php-format
+msgid "Save up to 50% discount"
+msgstr "احصل على فرصة، وفر ما يصل إلى 50% discount"
+
+#: widgets/EcommerceDealsBoxes.php:111
+msgid "Deals Boxes"
+msgstr "صناديق الصفقات"
+
+#: widgets/EcommerceDealsBoxes.php:124
+msgid "Best Earrings"
+msgstr "أفضل أقراط"
+
+#: widgets/EcommerceHome.php:22
+msgid "Ecommerce Hero"
+msgstr "بطل الدليل"
+
+#: widgets/EcommerceHome.php:40
+msgid "Left Panel"
+msgstr "لوحة الخيارات"
+
+#: widgets/EcommerceHome.php:61
+msgid "Collection 2025"
+msgstr "مجموعة 2025"
+
+#: widgets/EcommerceHome.php:70
+msgid "Luxury Furnitures"
+msgstr "أثاث فاخر"
+
+#: widgets/EcommerceHome.php:85
+msgid "Button URL"
+msgstr "زر الإعلان المثبت للبريد"
+
+#: widgets/EcommerceHome.php:93 widgets/MultivendorProductCarousel.php:139
+msgid "Countdown End Date/Time"
+msgstr "تاريخ / وقت انتهاء العد التنازلي"
+
+#: widgets/EcommerceHome.php:95 widgets/MultivendorProductCarousel.php:141
+msgid "When the sale ends."
+msgstr "عندما ينتهي البيع."
+
+#: widgets/EcommerceHome.php:111
+msgid "Product Category"
+msgstr "فئة المنتج"
+
+#: widgets/EcommerceHome.php:120
+msgid "Custom Image (optional)"
+msgstr "صورة مخصصة (اختياري)"
+
+#: widgets/EcommerceHome.php:130
+msgid "Override Title (optional)"
+msgstr "تجاوز العنوان (اختياري)"
+
+#: widgets/EcommerceHome.php:138
+msgid "Override Count Text (e.g. “16 Products”)"
+msgstr "تجاوز نص العدد (على سبيل المثال، \"16 منتجا\")"
+
+#: widgets/EcommerceHome.php:146 widgets/MultivendorProductsGrid.php:57
+msgid "Link URL"
+msgstr "رابط URL"
+
+#: widgets/EcommerceHome.php:155
+msgid "Right Panel Categories"
+msgstr "لوحة الخيارات"
+
+#: widgets/EcommerceHome.php:162
+msgid "Show Categories Section"
+msgstr "عرض قسم الفئات"
+
+#: widgets/EcommerceHome.php:173
+msgid "Categories Items"
+msgstr "تم تأكيد الحساب"
+
+#: widgets/EcommerceHome.php:186
+msgid "Columns"
+msgstr "اعمدة"
+
+#: widgets/EcommerceHome.php:205
+msgid "Layout & Spacing"
+msgstr "التخطيط والتباعد"
+
+#: widgets/EcommerceHome.php:212
+msgid "Container Max Width (px)"
+msgstr "أقصى عرض للحاوية (بكسل)"
+
+#: widgets/EcommerceHome.php:220
+msgid "Gutter between items (px)"
+msgstr "مزراب بين العناصر (بكسل)"
+
+#: widgets/EcommerceHome.php:293
+msgid "Sale Ends In:"
+msgstr "تنتهي المزايدة ب"
+
+#: widgets/EcommerceHome.php:338
+#, php-format
+msgid "%s Product"
+msgid_plural "%s Products"
+msgstr[0] "‫‏‫%s منتج"
+msgstr[1] "المنتجات"
+msgstr[2] "المنتجات"
+msgstr[3] "المنتجات"
+msgstr[4] "المنتجات"
+msgstr[5] "المنتجات"
+
+#: widgets/EventHomeHero.php:18
+msgid "Event Home Hero"
+msgstr "بطل المنزل للحدث"
+
+#: widgets/EventHomeHero.php:87 widgets/EventHomeHero.php:90
+#: widgets/MainHero6.php:76 widgets/MainHero6.php:79
+msgid "Play Button Link"
+msgstr "رابط زر التشغيل"
+
+#: widgets/EventListWidget.php:19
+msgid "Event List Widget"
+msgstr "أداة قائمة الأحداث"
+
+#: widgets/EventListWidget.php:70
+msgid "Event Title Limit (In Characters)"
+msgstr "حد عنوان الحدث (بالأحرف)"
+
+#: widgets/EventsGridCarousel.php:19
+msgid "Event Grid Carousel"
+msgstr "دائري شبكة الحدث"
+
+#: widgets/EventsGridCarousel.php:51
+msgid "Event Title Limit(In Characters)"
+msgstr "حد عنوان الحدث (بالأحرف)"
+
+#: widgets/EventsGridCarousel.php:72
+msgid "Select Event Category"
+msgstr "حدد فئة الحدث"
+
+#: widgets/EventsGridCarousel.php:83
+msgid "Number of Events"
+msgstr "عدد الأحداث"
+
+#: widgets/FeaturedAds.php:47
+msgid "Section Top Button Text"
+msgstr "نص الزر العلوي للقسم"
+
+#: widgets/FeaturedAds.php:55
+msgid "Section Top Button Link"
+msgstr "رابط زر القسم العلوي"
+
+#: widgets/FeaturedAds.php:63
+msgid "Grid Title Limit"
+msgstr "حد عنوان الشبكة"
+
+#: widgets/FeaturedAds.php:97
+msgid "No. of Featured Ads to Show"
+msgstr "الحد الأقصى لعرض الإعلانات المميزة"
+
+#: widgets/FeaturedAds.php:105
+msgid "Section Bottom Button Text"
+msgstr "نص زر القسم السفلي"
+
+#: widgets/FeaturedAds.php:113
+msgid "Section Bottom Button Link"
+msgstr "رابط زر القسم السفلي"
+
+#: widgets/FeaturedAds.php:134 widgets/MainHero4.php:50
+msgid "Show Main Section Top Advert"
+msgstr "إظهار القسم الرئيسي أعلى إعلان"
+
+#: widgets/FeaturedAds.php:149
+msgid "728x90"
+msgstr "728 × 90"
+
+#: widgets/FeaturedAds.php:160 widgets/RecentAds.php:134
+msgid "Left Section Settings"
+msgstr "إعدادات القسم الأيسر"
+
+#: widgets/FeaturedAds.php:165
+msgid "Show Ads in Left Sidebar."
+msgstr "عرض الإعلانات في الشريط الجانبي الأيسر."
+
+#: widgets/FeaturedAds.php:177 widgets/RecentAds.php:151
+msgid "Ads Sidebar Title"
+msgstr "عنوان الشريط الجانبي للإعلانات"
+
+#: widgets/FeaturedAds.php:187
+msgid "Ads Sidebar Title Limit"
+msgstr "الحد الأقصى لعنوان الشريط الجانبي للإعلانات"
+
+#: widgets/FeaturedAds.php:196
+msgid "What type of ads do you want to show on the sidebar?"
+msgstr "ما نوع الإعلانات التي تريد عرضها على الشريط الجانبي؟"
+
+#: widgets/FeaturedAds.php:211
+msgid "Number of Ads to show in Sidebar?"
+msgstr "عدد الإعلانات التي يجب عرضها في الشريط الجانبي؟"
+
+#: widgets/FeaturedAds.php:224 widgets/RecentAds.php:193
+msgid "Show Advert in Sidebar."
+msgstr "عرض الإعلان في الشريط الجانبي."
+
+#: widgets/FeaturedAds.php:236 widgets/MainHero4.php:576
+#: widgets/RecentAds.php:204
+msgid "Left Advert Image"
+msgstr "صورة الإعلان الأيسر"
+
+#: widgets/FlashSaleWidget.php:18
+msgid "Flash Sale Widget"
+msgstr "فلاش بيع القطعة"
+
+#: widgets/FlashSaleWidget.php:50
+msgid "Header image"
+msgstr "صورة الترويسة العلوية (الهيدر)"
+
+#: widgets/FlashSaleWidget.php:58
+msgid "Left Image Ad"
+msgstr "إعلان الصورة اليسرى"
+
+#: widgets/FlashSaleWidget.php:66
+msgid "Right Image Ad"
+msgstr "إعلان الصورة اليمنى"
+
+#: widgets/FlashSaleWidget.php:74
+msgid "No of Ads to Show"
+msgstr "لا مزيد من الإعلانات لعرضها"
+
+#: widgets/FrequentlyAskedQuestions.php:18
+msgid "Adforest FAQs"
+msgstr "الأسئلة الشائعة حول Adforest"
+
+#: widgets/FrequentlyAskedQuestions.php:88
+msgid "FAQs Settings"
+msgstr "إعدادات الأسئلة الشائعة"
+
+#: widgets/FrequentlyAskedQuestions.php:95
+#: widgets/FrequentlyAskedQuestions.php:98
+msgid "Question"
+msgstr "سؤال"
+
+#: widgets/FrequentlyAskedQuestions.php:104
+#: widgets/FrequentlyAskedQuestions.php:107
+msgid "Answer"
+msgstr "إجابة"
+
+#: widgets/FrequentlyAskedQuestions.php:114
+msgid "Add FAQ"
+msgstr "أضف أسئلة شائعة"
+
+#: widgets/HorizontalAd.php:19
+msgid "Horizontal AD"
+msgstr "AD الأفقي"
+
+#: widgets/HorizontalAd.php:46
+msgid "Image"
+msgstr "صورة"
+
+#: widgets/HorizontalAd.php:47
+msgid "Custom HTML"
+msgstr "HTML مخصص"
+
+#: widgets/HorizontalAd.php:48
+msgid "Google AdSense"
+msgstr "جوجل AdSense"
+
+#: widgets/HorizontalAd.php:59
+msgid ""
+"1320×140. For AdSense: paste your full AdSense code (script + ins tags)."
+msgstr ""
+"1320×140. بالنسبة ل AdSense: قم بلصق كود AdSense الكامل (وسوم السكريبت + "
+"الداخل)."
+
+#: widgets/HorizontalAd.php:81
+msgid "Google AdSense Ad — renders on frontend only"
+msgstr "إعلانات جوجل AdSense — العرضات فقط على الواجهة الأمامية"
+
+#: widgets/HowItWorksModern.php:18
+msgid "How It Works Modern"
+msgstr "كيف تعمل الحديثة"
+
+#: widgets/HowItWorksModern.php:208
+msgid "3rd Section"
+msgstr "العنوان 3 القسم"
+
+#: widgets/HowItWorksModern.php:215 widgets/HowItWorksModern.php:218
+msgid "Box Title 1"
+msgstr "عنوان المربع 1"
+
+#: widgets/HowItWorksModern.php:225 widgets/HowItWorksModern.php:286
+msgid "Box Background Color"
+msgstr "لون خلفية الصندوق"
+
+#: widgets/HowItWorksModern.php:234 widgets/HowItWorksModern.php:237
+msgid "Box Tagline 1"
+msgstr "شعار الصندوق 1"
+
+#: widgets/HowItWorksModern.php:244 widgets/HowItWorksModern.php:247
+msgid "Box Btn Text 1"
+msgstr "مربع Btn النص 1"
+
+#: widgets/HowItWorksModern.php:254 widgets/HowItWorksModern.php:257
+msgid "Box Btn Link 1"
+msgstr "صندوق Btn Link 1"
+
+#: widgets/HowItWorksModern.php:264
+msgid "Box Image 1"
+msgstr "صورة الصندوق 1"
+
+#: widgets/HowItWorksModern.php:276 widgets/HowItWorksModern.php:279
+msgid "Box Title 2"
+msgstr "عنوان الصندوق 2"
+
+#: widgets/HowItWorksModern.php:295 widgets/HowItWorksModern.php:298
+msgid "Box Tagline 2"
+msgstr "شعار الصندوق 2"
+
+#: widgets/HowItWorksModern.php:305 widgets/HowItWorksModern.php:308
+msgid "Box Btn Text 2"
+msgstr "مربع Btn نص 2"
+
+#: widgets/HowItWorksModern.php:315 widgets/HowItWorksModern.php:318
+msgid "Box Btn Link 2"
+msgstr "صندوق Btn Link 2"
+
+#: widgets/HowItWorksModern.php:325
+msgid "Box Image 2"
+msgstr "صورة الصندوق 2"
+
+#: widgets/LocationsFancy.php:19
+msgid "Locations Fancy"
+msgstr "المواقع الفاخرة"
+
+#: widgets/LocationsFancy.php:103
+msgid "Carousel Locations"
+msgstr "مواقع دائرية"
+
+#: widgets/LocationsFancy2.php:19
+msgid "Locations Fancy 2"
+msgstr "المواقع الفاخرة 2"
+
+#: widgets/LocationsFancy2.php:97 widgets/LocationsModern.php:143
+msgid "Select Locations"
+msgstr "حدد المواقع"
+
+#: widgets/LocationsModern.php:19
+msgid "Locations Modern"
+msgstr "المواقع الحديثة"
+
+#: widgets/LocationsModern.php:85
+msgid "Button Style"
+msgstr "شكل الزر"
+
+#: widgets/LocationsModern.php:89 widgets/PartnersSlider.php:51
+msgid "Dark"
+msgstr "داكن"
+
+#: widgets/LocationsModern.php:96
+msgid "Top Text"
+msgstr "لون"
+
+#: widgets/MainHero1.php:19
+msgid "Main Hero 1"
+msgstr "البطل الرئيسي 1"
+
+#: widgets/MainHero1.php:45
+msgid "1280x800"
+msgstr "1280x800"
+
+#: widgets/MainHero1.php:140
+msgid "Sidebar Categories"
+msgstr "فئات الشريط الجانبي"
+
+#: widgets/MainHero1.php:176 widgets/MainHero6.php:181
+msgid "Main Section Categories"
+msgstr "فئات الأقسام الرئيسية"
+
+#: widgets/MainHero2.php:19
+msgid "Main Hero 2"
+msgstr "البطل الرئيسي 2"
+
+#: widgets/MainHero2.php:71
+msgid "Badge Text Top"
+msgstr "أعلى نص الشارة"
+
+#: widgets/MainHero2.php:73
+msgid "No 1"
+msgstr "عنوان 1"
+
+#: widgets/MainHero2.php:74 widgets/MainHero2.php:82 widgets/MainHero2.php:90
+msgid "Badge Text"
+msgstr "نص الشارة"
+
+#: widgets/MainHero2.php:79
+msgid "Badge Text Middle"
+msgstr "شارة نص الأوسط"
+
+#: widgets/MainHero2.php:81
+msgid "PETFOREST"
+msgstr "PETFOREST"
+
+#: widgets/MainHero2.php:87
+msgid "Badge Text Bottom"
+msgstr "أسفل نص الشارة"
+
+#: widgets/MainHero2.php:89
+msgid "WordPress"
+msgstr "ووردبريس"
+
+#: widgets/MainHero2.php:96
+msgid "Background Image 2"
+msgstr "صورة الخلفية 2"
+
+#: widgets/MainHero2.php:107
+msgid "Background Image 3"
+msgstr "صورة الخلفية 3"
+
+#: widgets/MainHero2.php:117
+msgid "Background Image 4"
+msgstr "صورة الخلفية 4"
+
+#: widgets/MainHero2.php:127
+msgid "Arrow PNG"
+msgstr "السهم PNG"
+
+#: widgets/MainHero2.php:140 widgets/MainHero6.php:129
+#: widgets/RealEstateHero.php:218
+msgid "Category Section"
+msgstr "بلوك التصنيف"
+
+#: widgets/MainHero3.php:19
+msgid "Main Hero 3"
+msgstr "البطل الرئيسي 3"
+
+#: widgets/MainHero3.php:80 widgets/MainHero3.php:83
+msgid "Secondary Text Top"
+msgstr "أعلى النص الثانوي"
+
+#: widgets/MainHero3.php:89 widgets/MainHero3.php:92
+msgid "Secondary Text Center"
+msgstr "مركز النص الثانوي"
+
+#: widgets/MainHero3.php:98 widgets/MainHero3.php:101
+msgid "Secondary Text Bottom"
+msgstr "أسفل النص الثانوي"
+
+#: widgets/MainHero4.php:23
+msgid "Main Hero 4"
+msgstr "البطل الرئيسي 4"
+
+#: widgets/MainHero4.php:45
+msgid "Top Advertisement Carousel"
+msgstr "أعلى إعلان دائري"
+
+#: widgets/MainHero4.php:67
+msgid "Image Size: 1320x140"
+msgstr "حجم الصورة: 1320x140"
+
+#: widgets/MainHero4.php:75
+msgid "Ads List"
+msgstr "قائمة الإعلانات"
+
+#: widgets/MainHero4.php:89
+msgid "Middle Advertisement"
+msgstr "الإعلان الأوسط"
+
+#: widgets/MainHero4.php:93
+msgid "Show Main Section Center Advert"
+msgstr "إظهار إعلان مركز القسم الرئيسي"
+
+#: widgets/MainHero4.php:104
+msgid "Main Section Center Advert"
+msgstr "القسم الرئيسي إعلان مركز"
+
+#: widgets/MainHero4.php:122
+msgid "Show Featured Ad Carousel"
+msgstr "عرض الإعلانات الدوارة المميزة"
+
+#: widgets/MainHero4.php:133
+msgid "Featured Ads Title"
+msgstr "عنوان الإعلانات المميزة"
+
+#: widgets/MainHero4.php:143
+msgid "Featured Ads Button Text"
+msgstr "نص زر الإعلانات المميزة"
+
+#: widgets/MainHero4.php:153
+msgid "Featured Ads Button Link"
+msgstr "رابط زر الإعلانات المميزة"
+
+#: widgets/MainHero4.php:162
+msgid "Select Ad Type In Carousel"
+msgstr "حدد نوع الإعلان في الإعلانات الدوارة"
+
+#: widgets/MainHero4.php:177
+msgid "Number of Ads to show in Featured ads."
+msgstr "عدد الإعلانات المطلوب عرضها في الإعلانات المميزة."
+
+#: widgets/MainHero4.php:190 widgets/MainHero4.php:312
+msgid "Number of letters in Ad Title"
+msgstr "عدد الأحرف في عنوان الإعلان"
+
+#: widgets/MainHero4.php:203 widgets/MainHero4.php:325
+msgid "Select Grid Type"
+msgstr "حدد نوع الشبكة"
+
+#: widgets/MainHero4.php:236
+msgid "Regular Ads"
+msgstr "إعلانات عادية"
+
+#: widgets/MainHero4.php:241
+msgid "Show Regular Ad Section"
+msgstr "عرض قسم الإعلانات العادي"
+
+#: widgets/MainHero4.php:252
+msgid "Regular Ads Title"
+msgstr "عنوان الإعلانات العادية"
+
+#: widgets/MainHero4.php:263
+msgid "Regular Ads Button Text"
+msgstr "نص زر الإعلانات العادية"
+
+#: widgets/MainHero4.php:274
+msgid "Regular Ads Button Link"
+msgstr "رابط زر الإعلانات العادية"
+
+#: widgets/MainHero4.php:284
+msgid "Select Ad Type In Section"
+msgstr "حدد نوع الإعلان في القسم"
+
+#: widgets/MainHero4.php:299
+msgid "Number of Ads to show in Regular ads."
+msgstr "عدد الإعلانات التي سيتم عرضها في الإعلانات العادية."
+
+#: widgets/MainHero4.php:358
+msgid "Left Sidebar Settings"
+msgstr "إعدادات الشريط الجانبي الأيسر"
+
+#: widgets/MainHero4.php:363
+msgid "Show Search in the sidebar?"
+msgstr "إظهار البحث في الشريط الجانبي؟"
+
+#: widgets/MainHero4.php:375
+msgid "Search Sidebar Title"
+msgstr "عنوان الشريط الجانبي للبحث"
+
+#: widgets/MainHero4.php:395
+msgid "Address (Map Autocomplete)"
+msgstr "العنوان (الإكمال التلقائي للخريطة)"
+
+#: widgets/MainHero4.php:415
+msgid "Placeholder Text"
+msgstr "مكان حامل النص"
+
+#: widgets/MainHero4.php:419
+msgid "Enter placeholder text..."
+msgstr "أدخل نص العنصر النائب..."
+
+#: widgets/MainHero4.php:426
+msgid "Load Mode"
+msgstr "الوضع التجريبي"
+
+#: widgets/MainHero4.php:434
+msgid "AJAX Based"
+msgstr "Ajax Based"
+
+#: widgets/MainHero4.php:449
+msgid "Fields"
+msgstr "حقول"
+
+#: widgets/MainHero4.php:456
+msgid "Keywords"
+msgstr "الكلمات المفتاحية"
+
+#: widgets/MainHero4.php:461
+msgid "Select category..."
+msgstr "اختر الفئة:"
+
+#: widgets/MainHero4.php:466
+msgid "Enter location..."
+msgstr "ادخال الموقع"
+
+#: widgets/MainHero4.php:479
+msgid "Search Button Text"
+msgstr "نص زر البحث"
+
+#: widgets/MainHero4.php:490
+msgid "Show Locations in the sidebar?"
+msgstr "إظهار المواقع في الشريط الجانبي؟"
+
+#: widgets/MainHero4.php:502
+msgid "Location Sidebar Title"
+msgstr "عنوان الشريط الجانبي للموقع"
+
+#: widgets/MainHero4.php:551
+msgid "Sidebar Locations Repeater"
+msgstr "مكرر مواقع الشريط الجانبي"
+
+#: widgets/MainHero4.php:564
+msgid "Show Ad in the Left sidebar?"
+msgstr "هل تظهر الإعلان في الشريط الجانبي الأيسر؟"
+
+#: widgets/MainHero4.php:589
+msgid "Right Sidebar Settings"
+msgstr "إعدادات الشريط الجانبي الأيمن"
+
+#: widgets/MainHero4.php:594
+msgid "Show Ad 1 in the right sidebar?"
+msgstr "عرض الإعلان 1 في الشريط الجانبي الأيمن؟"
+
+#: widgets/MainHero4.php:606
+msgid "Right Advert Image 1"
+msgstr "صورة الإعلان الأيمن 1"
+
+#: widgets/MainHero4.php:616
+msgid "Show Right sidebar Ads?"
+msgstr "عرض إعلانات الشريط الجانبي الأيمن؟"
+
+#: widgets/MainHero4.php:627
+msgid "What type of ads do you want to show on the Right sidebar?"
+msgstr "ما نوع الإعلانات التي تريد عرضها على الشريط الجانبي الأيسر؟"
+
+#: widgets/MainHero4.php:656
+msgid "Number of letters in Ad Title?"
+msgstr "عدد الأحرف في عنوان الإعلان؟"
+
+#: widgets/MainHero4.php:670
+msgid "Show Ad 2 in the right sidebar?"
+msgstr "هل تظهر الإعلان 2 في الشريط الجانبي الأيمن؟"
+
+#: widgets/MainHero4.php:694
+msgid "Hero Slider Settings"
+msgstr "إعدادات منزلق الأبطال"
+
+#: widgets/MainHero4.php:702
+msgid "Featured Ads Slider Settings"
+msgstr "عرض شريط تمرير الإعلانات المميزة"
+
+#: widgets/MainHero5.php:19
+msgid "Main Hero 5"
+msgstr "البطل الرئيسي 5"
+
+#: widgets/MainHero5.php:79
+msgid "Section Background Color"
+msgstr "خلفيه القسم"
+
+#: widgets/MainHero6.php:18
+msgid "Main Hero 6"
+msgstr "البطل الرئيسي 6"
+
+#: widgets/MainHero6.php:137
+msgid "Find By Categories"
+msgstr "البحث حسب الفئات"
+
+#: widgets/MiniCategorySlider.php:20
+msgid "Mini Category Slider"
+msgstr "ميني فئة المنزلق"
+
+#: widgets/MiniCategorySlider.php:43
+msgid "Hide categories that have no ads?"
+msgstr "إخفاء الفئات التي لا تحتوي على إعلانات؟"
+
+#: widgets/MultivendorCategorySliderMini.php:18
+msgid "Multivendor Mini Category Slider"
+msgstr "متعدد البائعين مصغرة فئة المنزلق"
+
+#: widgets/MultivendorCategorySliderMini.php:69
+#: widgets/MultivendorProductCarousel.php:72
+#: widgets/MultivendorProductCategories.php:117
+msgid "Product Categories"
+msgstr "فئات المنتجات"
+
+#: widgets/MultivendorHero.php:19
+msgid "Multivendor Hero"
+msgstr "بطل متعدد البائعين"
+
+#: widgets/MultivendorProductCarousel.php:19
+msgid "Multivendor Product Carousel"
+msgstr "دائري المنتج متعدد البائعين"
+
+#: widgets/MultivendorProductCarousel.php:65
+#: widgets/MultivendorProductsWithSidebar.php:165
+msgid "Product Title Limit"
+msgstr "حد عنوان المنتج في صفحة المتجر"
+
+#: widgets/MultivendorProductCarousel.php:77
+#: widgets/MultivendorProductsWithSidebar.php:177
+msgid "Select one or more product categories to show products from."
+msgstr "حدد فئة منتجات واحدة أو أكثر لعرض المنتجات منها."
+
+#: widgets/MultivendorProductCarousel.php:96
+#: widgets/MultivendorProductsWithSidebar.php:182
+msgid "Grid Style"
+msgstr "نمط الشبكة"
+
+#: widgets/MultivendorProductCarousel.php:99
+#: widgets/MultivendorProductsGrid.php:89
+msgid "Grid Type 1"
+msgstr "نوع الشبكة"
+
+#: widgets/MultivendorProductCarousel.php:100
+#: widgets/MultivendorProductsGrid.php:90
+msgid "Grid Type 2"
+msgstr "نوع الشبكة"
+
+#: widgets/MultivendorProductCarousel.php:106
+#: widgets/MultivendorProductsGrid.php:111
+#: widgets/MultivendorProductsWithSidebar.php:192
+msgid "Grid Columns"
+msgstr "أعمدة الشبكة"
+
+#: widgets/MultivendorProductCarousel.php:109
+#: widgets/MultivendorProductsWithSidebar.php:195
+msgid "Two"
+msgstr "اثنين"
+
+#: widgets/MultivendorProductCarousel.php:110
+#: widgets/MultivendorProductsWithSidebar.php:196
+msgid "Three"
+msgstr "ثلاثة"
+
+#: widgets/MultivendorProductCarousel.php:111
+#: widgets/MultivendorProductsWithSidebar.php:197
+msgid "Four"
+msgstr "أربعة"
+
+#: widgets/MultivendorProductCarousel.php:112
+#: widgets/MultivendorProductsWithSidebar.php:198
+msgid "Five"
+msgstr "خمسة"
+
+#: widgets/MultivendorProductCarousel.php:118
+msgid "No of Products"
+msgstr "عدد المنتجات"
+
+#: widgets/MultivendorProductCarousel.php:126
+msgid "Show Countdown?"
+msgstr "إظهار العد التنازلي؟"
+
+#: widgets/MultivendorProductCarouselWithAds.php:19
+msgid "Multivendor Product Carousel With Ads"
+msgstr "دائري المنتج متعدد البائعين مع الإعلانات"
+
+#: widgets/MultivendorProductCarouselWithAds.php:41
+msgid "Header Title"
+msgstr "عنوان الهيدر"
+
+#: widgets/MultivendorProductCarouselWithAds.php:48
+msgid "Header Image"
+msgstr "صورة الرأس ( Header )"
+
+#: widgets/MultivendorProductCarouselWithAds.php:54
+msgid "Header Button Title"
+msgstr "عنوان زر الرأس"
+
+#: widgets/MultivendorProductCarouselWithAds.php:61
+msgid "Header Button Link"
+msgstr "رابط زر الرأس"
+
+#: widgets/MultivendorProductCarouselWithAds.php:68
+msgid "Limit Products"
+msgstr "منتجات الحد"
+
+#: widgets/MultivendorProductCarouselWithAds.php:75
+msgid "Limit Products Title"
+msgstr "عنوان منتجات الحد"
+
+#: widgets/MultivendorProductCarouselWithAds.php:82
+msgid "Left Advert"
+msgstr "الإعلان الأيسر"
+
+#: widgets/MultivendorProductCarouselWithAds.php:88
+msgid "Right Image"
+msgstr "الصورة الصحيحة"
+
+#: widgets/MultivendorProductCategories.php:19
+msgid "Multivendor Product Categories"
+msgstr "فئات المنتجات متعددة البائعين"
+
+#: widgets/MultivendorProductCategories.php:63
+msgid "Category Source"
+msgstr "مصدر الفئة"
+
+#: widgets/MultivendorProductCategories.php:66
+msgid "WooCommerce"
+msgstr "ووكومرس"
+
+#: widgets/MultivendorProductCategories.php:67
+msgid "Classified"
+msgstr "إعلانات مبوبة"
+
+#: widgets/MultivendorProductCategories.php:97
+#: widgets/MultivendorProductsWithSidebar.php:124
+msgid "Select Product Category"
+msgstr "اختر فئة المنتج"
+
+#: widgets/MultivendorProductCategories.php:131
+msgid "Select Classified Category"
+msgstr "حدد الفئة المصنفة"
+
+#: widgets/MultivendorProductCategories.php:151
+msgid "Classified Categories"
+msgstr "الاقسام:"
+
+#: widgets/MultivendorProductsGrid.php:19
+msgid "Multivendor Products Grid"
+msgstr "شبكة المنتجات متعددة البائعين"
+
+#: widgets/MultivendorProductsGrid.php:43
+msgid "Our Products"
+msgstr "منتجاتنا"
+
+#: widgets/MultivendorProductsGrid.php:65
+msgid "Button Position"
+msgstr "موضع الزر"
+
+#: widgets/MultivendorProductsGrid.php:68
+#: widgets/MultivendorProductsWithSidebar.php:137
+msgid "Top"
+msgstr "أعلى"
+
+#: widgets/MultivendorProductsGrid.php:69
+#: widgets/MultivendorProductsWithSidebar.php:138
+msgid "Bottom"
+msgstr "اسفل"
+
+#: widgets/MultivendorProductsGrid.php:77
+msgid "Number of Posts"
+msgstr "عدد المنشورات"
+
+#: widgets/MultivendorProductsGrid.php:99
+msgid "Title Character Limit"
+msgstr "حد أحرف العنوان"
+
+#: widgets/MultivendorProductsWithSidebar.php:19
+msgid "Multivendor Product With Sidebar"
+msgstr "منتج متعدد البائعين مع الشريط الجانبي"
+
+#: widgets/MultivendorProductsWithSidebar.php:78
+msgid "Product Title Limit Sidebar"
+msgstr "الشريط الجانبي لحد عنوان المنتج"
+
+#: widgets/MultivendorProductsWithSidebar.php:85
+msgid "Product Limit Sidebar"
+msgstr "الشريط الجانبي لحد المنتج"
+
+#: widgets/MultivendorProductsWithSidebar.php:92
+msgid "Sidebar Position"
+msgstr "مكان الشريط الجانبي"
+
+#: widgets/MultivendorProductsWithSidebar.php:103
+msgid "Sidebar Title"
+msgstr "عنوان الشريط الجانبي"
+
+#: widgets/MultivendorProductsWithSidebar.php:128
+msgid "Choose a product category"
+msgstr "اختر فئة المنتج"
+
+#: widgets/MultivendorProductsWithSidebar.php:133
+msgid "Advert Position"
+msgstr "موقف الإعلان"
+
+#: widgets/MultivendorProductsWithSidebar.php:144
+msgid "Vertical Advert"
+msgstr "إعلان Adforest العمودي"
+
+#: widgets/MultivendorProductsWithSidebar.php:153
+msgid "Products Grid"
+msgstr "شبكة المنتجات"
+
+#: widgets/MultivendorProductsWithSidebar.php:158
+msgid "Product Limit"
+msgstr "الحد الاقصي للمنتج"
+
+#: widgets/MultivendorProductsWithSidebar.php:172
+msgid "Grid Product Categories"
+msgstr "فئات منتجات الشبكة"
+
+#: widgets/MultivendorServices.php:19
+msgid "Multivendor Services"
+msgstr "خدمات متعددة البائعين"
+
+#: widgets/MultivendorServices.php:43 widgets/MultivendorServices.php:45
+msgid "Service Title"
+msgstr "عنوان الخدمة"
+
+#: widgets/MultivendorServices.php:51 widgets/MultivendorServices.php:53
+msgid "Service Description"
+msgstr "وصف الخدمات"
+
+#: widgets/MultivendorServices.php:59
+msgid "Icon Class (e.g., fas fa-shipping-fast)"
+msgstr "فئة الأيقونات (على سبيل المثال ، fas fa-shipping-fast)"
+
+#: widgets/MultivendorServices.php:67
+msgid "Services Boxes"
+msgstr "صناديق الخدمات"
+
+#: widgets/OurArticles.php:19
+msgid "Our Articles"
+msgstr "مقالاتنا"
+
+#: widgets/OurArticles.php:56
+msgid "No. of Articles to show."
+msgstr "لا. من المقالات المراد إظهارها."
+
+#: widgets/PartnersSlider.php:22
+msgid "Clients/Partners"
+msgstr "العملاء / الشركاء"
+
+#: widgets/PartnersSlider.php:50
+msgid "Light"
+msgstr "فاتح"
+
+#: widgets/PartnersSlider.php:64
+msgid "Client or Partners"
+msgstr "العميل أو الشركاء"
+
+#: widgets/PartnersSlider.php:72
+msgid "Logo"
+msgstr "الشعار"
+
+#: widgets/PartnersSlider.php:74
+msgid "135x35"
+msgstr "135 × 35"
+
+#: widgets/RealEstateHero.php:18
+msgid "Real Estate Hero"
+msgstr "بطل العقارات"
+
+#: widgets/RealEstateHero.php:49
+msgid "Side Image"
+msgstr "صورة جانبية"
+
+#: widgets/RealEstateHero.php:51
+msgid "This image will appear on the right side of the hero section"
+msgstr "ستظهر هذه الصورة على الجانب الأيمن من قسم البطل"
+
+#: widgets/RealEstateHero.php:62
+msgid "This image will be used as the background for the entire hero section"
+msgstr "سيتم استخدام هذه الصورة كخلفية لقسم البطل بأكمله"
+
+#: widgets/RecentAds.php:36
+msgid "What type of ads do you want to show on the main section?"
+msgstr "ما نوع الإعلانات التي تريد عرضها في القسم الرئيسي؟"
+
+#: widgets/RecentAds.php:76
+msgid "Ad Title Limit Main"
+msgstr "الحد الأقصى لعنوان الإعلان الرئيسي"
+
+#: widgets/RecentAds.php:85
+msgid "Right Side Ads Section"
+msgstr "قسم الإعلانات على الجانب الأيمن"
+
+#: widgets/RecentAds.php:90
+msgid "Do you want to show Ad 1 on the right section?"
+msgstr "هل تريد عرض الإعلان 1 في القسم الأيسر؟"
+
+#: widgets/RecentAds.php:101
+msgid "Ad 1"
+msgstr "الإعلان 1"
+
+#: widgets/RecentAds.php:112
+msgid "Do you want to show Ad 2 on the right section?"
+msgstr "هل تريد عرض الإعلان 2 في القسم الأيمن؟"
+
+#: widgets/RecentAds.php:122
+msgid "Ad 2"
+msgstr "إعلان 2"
+
+#: widgets/RecentAds.php:139
+msgid "Show Sidebar Ads?"
+msgstr "عرض إعلانات الشريط الجانبي؟"
+
+#: widgets/RecentAds.php:159
+msgid "What type of ads do you want to show on the left sidebar?"
+msgstr "ما نوع الإعلانات التي تريد عرضها على الشريط الجانبي الأيسر؟"
+
+#: widgets/RecentAds.php:173
+msgid "Number of Ads to show in Left Sidebar?"
+msgstr "عدد الإعلانات التي يجب عرضها في الشريط الجانبي الأيسر؟"
+
+#: widgets/RecentAds.php:186
+msgid "Ad Title Limit Sidebar"
+msgstr "الشريط الجانبي لحد عنوان الإعلان"
+
+#. Plugin Name of the plugin/theme
+msgid "Adforest Elementor"
+msgstr "عنصر Adforest"
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "https://themeforest.net/user/scriptsbundle/"
+msgstr "https://themeforest.net/user/scriptsbundle/"
+
+#. Description of the plugin/theme
+msgid "This plugin is used to add shortcodes by Elementor Pagebuilder."
+msgstr ""
+"يستخدم هذا المكون الإضافي لإضافة الرموز القصيرة بواسطة Elementor Pagebuilder."
+
+#. Author of the plugin/theme
+msgid "Scripts Bundle"
+msgstr "حزمة البرامج النصية"
+
+#~ msgid " ads"
+#~ msgstr " اعلانات"
+
+#~ msgid "0.0"
+#~ msgstr "0.0"
+
+#~ msgid "Subtitle Typography"
+#~ msgstr "طباعة العنوان الفرعي"
+
+#~ msgid "Subtitle Color"
+#~ msgstr "لون العنوان الفرعي"
+
+#~ msgid "Button Background"
+#~ msgstr "لون خلفية الأزرار"
+
+#~ msgid "Bump it up"
+#~ msgstr "ترقية الإعلان"
+
+#~ msgid "Bump-up ads remaining: Unlimited"
+#~ msgstr "الإعلانات المتبقية من الارتفاع: غير محدود"
+
+#~ msgid "Bump it up on the top of the list."
+#~ msgstr "ارفعه في أعلى القائمة."
+
+#~ msgid "Bump-up ads remaining:"
+#~ msgstr "رفع الإعلان المتبقية:"
+
+#~ msgid "If you want to bump it up then please have a look on"
+#~ msgstr "إذا كنت تريد ترقية الإعلان أعلى القائمة الرجاء إلقاء نظره علي"
+
+#~ msgid "Ad Images"
+#~ msgstr "صور الإعلان"
+
+#~ msgid "Maximum file size: "
+#~ msgstr "حجم الملفات المحمله صفر"
+
+#~ msgid "Select Suitable Package For Your Ad"
+#~ msgstr "حدد الفئة المناسبة للتنبيه الخاص بك"

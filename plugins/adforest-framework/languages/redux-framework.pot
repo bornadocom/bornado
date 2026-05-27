@@ -1,0 +1,1453 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: Adforest Framework\n"
+"POT-Creation-Date: 2026-05-21 22:11+0500\n"
+"PO-Revision-Date: 2026-05-21 22:09+0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.3\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: index.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+
+#: ad-post/custom_category_templates.php:83
+#: ad-post/custom_category_templates.php:677
+msgid "Field Name"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:86
+#: ad-post/custom_category_templates.php:684
+msgid "Status"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:89
+msgid "Is Required?"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:94
+msgid "Price"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:99
+#: ad-post/custom_category_templates.php:126
+#: ad-post/custom_category_templates.php:154
+#: ad-post/custom_category_templates.php:182
+#: ad-post/custom_category_templates.php:210
+#: ad-post/custom_category_templates.php:240
+#: ad-post/custom_category_templates.php:270
+#: ad-post/custom_category_templates.php:300
+msgid "Show"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:102
+#: ad-post/custom_category_templates.php:129
+#: ad-post/custom_category_templates.php:157
+#: ad-post/custom_category_templates.php:185
+#: ad-post/custom_category_templates.php:213
+#: ad-post/custom_category_templates.php:243
+#: ad-post/custom_category_templates.php:273
+#: ad-post/custom_category_templates.php:303
+msgid "Hide"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:111
+#: ad-post/custom_category_templates.php:139
+#: ad-post/custom_category_templates.php:166
+#: ad-post/custom_category_templates.php:194
+#: ad-post/custom_category_templates.php:222
+#: ad-post/custom_category_templates.php:253
+#: ad-post/custom_category_templates.php:283
+#: ad-post/custom_category_templates.php:313
+#: ad-post/custom_category_templates.php:719
+#: ad-post/custom_category_templates.php:726
+#: ad-post/custom_category_templates.php:743 cpt/index.php:428
+#: cpt/index.php:450
+msgid "Yes"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:114
+#: ad-post/custom_category_templates.php:142
+#: ad-post/custom_category_templates.php:169
+#: ad-post/custom_category_templates.php:197
+#: ad-post/custom_category_templates.php:225
+#: ad-post/custom_category_templates.php:256
+#: ad-post/custom_category_templates.php:286
+#: ad-post/custom_category_templates.php:316
+#: ad-post/custom_category_templates.php:720
+#: ad-post/custom_category_templates.php:727
+#: ad-post/custom_category_templates.php:744 cpt/index.php:432
+#: cpt/index.php:454
+msgid "No"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:121
+msgid "Price Type"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:149
+msgid "Video URL"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:177
+msgid "Ad Tags"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:205
+msgid "Ad Images"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:233
+msgid "Item Condition"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:264 cpt/index.php:109
+msgid "Warranty"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:294 ad-post/index.php:40
+msgid "Ad Type"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:347
+msgid "Add More Fields"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:577
+msgid "View website"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:630
+msgid "Input - Textfield"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:631
+msgid "Options - Select Box"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:632
+msgid "Options - Check Box"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:633
+msgid "Options - Advance Check Box"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:634
+msgid "Date - Input"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:635
+msgid "Website URL"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:636
+msgid "Input - Number Range"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:637
+msgid "Select Colors"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:638
+msgid "Options - Radio Buttons"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:641
+#: ad-post/custom_category_templates.php:680
+#: ad-post/custom_category_templates.php:742
+#: ad-post/custom_category_templates.php:750
+#: ad-post/custom_category_templates.php:1055
+#: ad-post/custom_category_templates.php:1315
+#: ad-post/custom_category_templates.php:1600
+#: ad-post/custom_category_templates.php:1616
+msgid "Select Option"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:678
+msgid "Slug Name"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:679
+msgid "Columns"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:681
+msgid "Enter Values"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:682
+msgid "Required?"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:683
+msgid "Remove Field"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:685
+msgid "In Search"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:686
+msgid "In Ad Grid"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:690
+msgid "New Field"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:695
+msgid ""
+"If you have option (Input - Number Range). Then the first value will be "
+"slider minimum value 2nd will be max value and 3rd will be intervals i.e   0|"
+"100000|1 "
+msgstr ""
+
+#: ad-post/custom_category_templates.php:697
+msgid ""
+"If you have option (Select Colors). Then add them in following way. code:"
+"name|code:name|code:name  e.g.  #fff:white|#000:black "
+msgstr ""
+
+#: ad-post/custom_category_templates.php:701
+msgid "Click to toggle"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:733
+msgid "1 Column"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:734
+msgid "2 Columns"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:735
+msgid "3 Columns"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:736
+msgid "4 Columns"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:751
+msgid "Active"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:752
+msgid "Inactive"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:759
+msgid "Enter Field title here."
+msgstr ""
+
+#: ad-post/custom_category_templates.php:763
+msgid "Edit"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:763
+msgid ""
+"Enter the slug name. It must be unique. Change it with caution. only alpha "
+"numeric and _, Do not use space between two words"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:767
+msgid "Enter Values seprated by "
+msgstr ""
+
+#: ad-post/custom_category_templates.php:806
+msgctxt "Taxonomy General Name"
+msgid "Form Templates"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:807
+msgctxt "Taxonomy Singular Name"
+msgid "Form Template"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:808
+msgid "Category Templates"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:809
+msgid "All Items"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:810
+msgid "Parent Item"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:811
+msgid "Parent Item:"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:812
+msgid "New Item Name"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:813
+msgid "Add New Item"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:814
+msgid "Edit Item"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:815
+msgid "Update Item"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:816
+msgid "View Item"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:817
+msgid "Separate items with commas"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:818
+msgid "Add or remove items"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:819
+msgid "Choose from the most used"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:820
+msgid "Popular Items"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:821
+msgid "Search Items"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:822
+msgid "Not Found"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:823
+msgid "No items"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:824
+msgid "Items list"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:825
+msgid "Items list navigation"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:866
+msgid "Are You sure you want to remove this field."
+msgstr ""
+
+#: ad-post/custom_category_templates.php:957
+msgid "Duplicate Slug Name"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1052
+#: custom-fields/ad_custom_fields.php:575
+msgid "Select Template"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1056
+msgid "Default Template"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1060
+#: custom-fields/ad_custom_fields.php:582
+msgid "You can assign this template each level category."
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1068
+#: ad-post/custom_category_templates.php:1073
+msgid "Make Bidding"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1075
+msgid ""
+"<b>Note : </b>Enable this option and please make sure you are using <b>"
+"\"selective\"</b> Bidding category type. <b>( Dashboard >> Appearance >> "
+"Theme options >> Bidding Settings\n"
+"                    >> Bidding Category Type)</b>"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1083
+#: ad-post/custom_category_templates.php:1087
+msgid "Is Paid"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1090
+msgid ""
+"Enable this option to enforce users to buy category base package to post in "
+"this category."
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1262
+msgid "This field is required."
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1270
+msgid "This field is required. only enteger are allowed between range "
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1284
+#, php-format
+msgid "Please enter the number between %d and %d"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1347
+msgid "Please select a checkbox"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1349
+msgid "Please select a checkbox."
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1383
+#: ad-post/custom_category_templates.php:1387
+msgid "Please enter a valid URL."
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1457
+msgid "Please select a radio button"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1458
+msgid "Please select a radio button."
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1541
+msgid "only numbers allowed."
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1628
+msgid "Package Essentials/Addons"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1637 cpt/index.php:354
+msgid "Simple Ad Expiry (in days)"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1639 cpt/index.php:281
+#: cpt/index.php:338 cpt/index.php:356 cpt/index.php:378
+msgid "Like 30, 40 or 50 but must be an inter value."
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1643 cpt/index.php:360
+msgid ""
+"Simple ads expiry in days, -1 means never experies. If simple expiry field "
+"is empty then it will use the expiry days from Theme Options."
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1647 cpt/index.php:34
+msgid "Categories"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1726
+msgid "Duplicate"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1740
+msgid "Duplicated"
+msgstr ""
+
+#: ad-post/custom_category_templates.php:1756
+msgid ""
+"A category template with the duplicated name already exists in this taxonomy."
+msgstr ""
+
+#: ad-post/index.php:6
+msgid "Update AD"
+msgstr ""
+
+#: ad-post/index.php:19
+msgid "Ad update with front only available when you are using Adforest theme."
+msgstr ""
+
+#: ad-post/index.php:25
+msgid "Update this AD"
+msgstr ""
+
+#: ad-post/index.php:53
+msgid "Simple"
+msgstr ""
+
+#: ad-post/index.php:57
+msgid "Featured"
+msgstr ""
+
+#: adforest_timezones.php:389 inc/adforest-common-functions.php:861
+msgid "Select Timezone"
+msgstr ""
+
+#: cpt/index.php:13
+msgid "Countries"
+msgstr ""
+
+#: cpt/index.php:20
+msgid "Classified Ads"
+msgstr ""
+
+#: cpt/index.php:42
+msgctxt "taxonomy general name"
+msgid "Ad Locations"
+msgstr ""
+
+#: cpt/index.php:43
+msgctxt "taxonomy singular name"
+msgid "Location"
+msgstr ""
+
+#: cpt/index.php:44
+msgid "Search Ad Locations"
+msgstr ""
+
+#: cpt/index.php:45
+msgid "All Ad Locations"
+msgstr ""
+
+#: cpt/index.php:46
+msgid "Parent Location"
+msgstr ""
+
+#: cpt/index.php:47
+msgid "Parent Location:"
+msgstr ""
+
+#: cpt/index.php:48
+msgid "Edit Location"
+msgstr ""
+
+#: cpt/index.php:49
+msgid "Update Location"
+msgstr ""
+
+#: cpt/index.php:50
+msgid "Add New Location"
+msgstr ""
+
+#: cpt/index.php:51
+msgid "New Location Name"
+msgstr ""
+
+#: cpt/index.php:52
+msgid "Ad Locations"
+msgstr ""
+
+#: cpt/index.php:68
+msgid "Tags"
+msgstr ""
+
+#: cpt/index.php:79
+msgid "Currency"
+msgstr ""
+
+#: cpt/index.php:89
+msgid "Condition"
+msgstr ""
+
+#: cpt/index.php:99
+msgid "Type"
+msgstr ""
+
+#: cpt/index.php:128
+msgid "Claims"
+msgstr ""
+
+#: cpt/index.php:145
+msgid "Reported"
+msgstr ""
+
+#: cpt/index.php:146
+msgid "Bids"
+msgstr ""
+
+#: cpt/index.php:160
+msgid "Users report to this AD."
+msgstr ""
+
+#: cpt/index.php:171
+msgid "mark as"
+msgstr ""
+
+#: cpt/index.php:196
+msgid "Bidder"
+msgstr ""
+
+#: cpt/index.php:197
+msgid "Bid"
+msgstr ""
+
+#: cpt/index.php:198
+msgid "Time"
+msgstr ""
+
+#: cpt/index.php:199
+msgid "Comment"
+msgstr ""
+
+#: cpt/index.php:200 user_profile/index.php:302
+msgid "Action"
+msgstr ""
+
+#: cpt/index.php:243 user_profile/index.php:330
+msgid "Delete"
+msgstr ""
+
+#: cpt/index.php:252
+msgid "There is no bid on this ad yet."
+msgstr ""
+
+#: cpt/index.php:267 cpt/index.php:268
+msgid "Package Essentials"
+msgstr ""
+
+#: cpt/index.php:279 cpt/index.php:376
+msgid "Featured Ad Expiry (in days)"
+msgstr ""
+
+#: cpt/index.php:286 cpt/index.php:383
+msgid ""
+"Featured ads expiry in days, -1 means never experies. If featured expiry "
+"field is empty then it will use the expiry days from Theme Options."
+msgstr ""
+
+#: cpt/index.php:324
+msgid "Package BG Color"
+msgstr ""
+
+#: cpt/index.php:328
+msgid "White"
+msgstr ""
+
+#: cpt/index.php:331
+msgid "Dark"
+msgstr ""
+
+#: cpt/index.php:336
+msgid "Package Expiry"
+msgstr ""
+
+#: cpt/index.php:341
+msgid "Expiry in days, -1 means never experied unless used it."
+msgstr ""
+
+#: cpt/index.php:344
+msgid "Simple Ads"
+msgstr ""
+
+#: cpt/index.php:346 cpt/index.php:368 cpt/index.php:391 cpt/index.php:464
+#: cpt/index.php:505
+msgid "Must be an inter value."
+msgstr ""
+
+#: cpt/index.php:350 cpt/index.php:372 cpt/index.php:396 cpt/index.php:404
+#: cpt/index.php:442 cpt/index.php:509
+msgid "-1 means unlimited."
+msgstr ""
+
+#: cpt/index.php:366
+msgid "Featured Ads"
+msgstr ""
+
+#: cpt/index.php:389
+msgid "Bump Ads"
+msgstr ""
+
+#: cpt/index.php:399
+msgid "Allow Bidding"
+msgstr ""
+
+#: cpt/index.php:401 cpt/index.php:412 cpt/index.php:439
+msgid "Must be an integer value."
+msgstr ""
+
+#: cpt/index.php:410
+msgid "Make Bidding paid  on Ad detail page"
+msgstr ""
+
+#: cpt/index.php:416
+msgid ""
+"-1 means unlimited.You would not  be able to post bidding on the ad detail "
+"page unless you enable bidding, which you may do via the settings menu."
+msgstr ""
+
+#: cpt/index.php:423
+msgid "Allow Tags"
+msgstr ""
+
+#: cpt/index.php:425 cpt/index.php:447
+msgid "Select an option"
+msgstr ""
+
+#: cpt/index.php:437
+msgid "Number of Images ( while ad posting )"
+msgstr ""
+
+#: cpt/index.php:445
+msgid "Allow Video Link ( while ad posting)"
+msgstr ""
+
+#: cpt/index.php:462
+msgid "Claim ad"
+msgstr ""
+
+#: cpt/index.php:472
+msgid "Allow Categories ( while ad posting )"
+msgstr ""
+
+#: cpt/index.php:474
+msgid "Select categories"
+msgstr ""
+
+#: cpt/index.php:476
+msgid "All"
+msgstr ""
+
+#: cpt/index.php:496
+msgid ""
+"Load only those categories which are \"Is paid\" enabled in category meta. "
+"( dashboard >> Classified Ads >> Categories >> Is paid checkbox field. )"
+msgstr ""
+
+#: cpt/index.php:503
+msgid "Number of events"
+msgstr ""
+
+#: cpt/index.php:621
+msgid "Country"
+msgstr ""
+
+#: cpt/index.php:624
+msgid "This should be follow ISO2 like"
+msgstr ""
+
+#: cpt/index.php:625
+msgid "US"
+msgstr ""
+
+#: cpt/index.php:626
+msgid "for USA and"
+msgstr ""
+
+#: cpt/index.php:627
+msgid "CA"
+msgstr ""
+
+#: cpt/index.php:628
+msgid "for Canada"
+msgstr ""
+
+#: cpt/index.php:630
+msgid "Read More."
+msgstr ""
+
+#: cpt/index.php:718
+msgid "Icon Name"
+msgstr ""
+
+#: cpt/index.php:726
+msgid "Check icons list."
+msgstr ""
+
+#: cpt/index.php:766 cpt/index.php:780
+msgid "Bump This Ad At Top"
+msgstr ""
+
+#: cpt/index.php:776
+msgid "Current Date: "
+msgstr ""
+
+#: cpt/index.php:776
+msgid " And Time: "
+msgstr ""
+
+#: cpt/index.php:785
+msgid "Are Your Sure You Want To Bumb The Ad"
+msgstr ""
+
+#: cpt/index.php:840
+msgid "Assign AD"
+msgstr ""
+
+#: cpt/index.php:851
+msgid "Select Author"
+msgstr ""
+
+#: cpt/index.php:918 cpt/index.php:1053
+msgid "Claim Status"
+msgstr ""
+
+#: cpt/index.php:919
+msgid "Claimer"
+msgstr ""
+
+#: cpt/index.php:920
+msgid "Contact No"
+msgstr ""
+
+#: cpt/index.php:1003
+msgid "Detial About Claim"
+msgstr ""
+
+#: cpt/index.php:1038
+msgid "Claimed By"
+msgstr ""
+
+#: cpt/index.php:1043
+msgid "Claimed Author Name."
+msgstr ""
+
+#: cpt/index.php:1047
+msgid "Claim Detials"
+msgstr ""
+
+#: cpt/index.php:1049
+msgid "Additional proof to expedite your claim approval..."
+msgstr ""
+
+#: cpt/index.php:1056
+msgid "Pending"
+msgstr ""
+
+#: cpt/index.php:1057
+msgid "Approved"
+msgstr ""
+
+#: cpt/index.php:1058
+msgid "Decline"
+msgstr ""
+
+#: cpt/index.php:1060
+msgid "Status for current claim"
+msgstr ""
+
+#: cpt/index.php:1064
+msgid "Claimer Contact"
+msgstr ""
+
+#: cpt/index.php:1067
+msgid "Claimer contact number"
+msgstr ""
+
+#: cpt/index.php:1117
+msgid "Listing Ownership Changed"
+msgstr ""
+
+#: cpt/index.php:1118 cpt/index.php:1152
+msgid "The ownership of your listing has been changed, please check it. "
+msgstr ""
+
+#: cpt/index.php:1151
+msgid "Claim Listing Approval"
+msgstr ""
+
+#: cpt/index.php:1186
+msgid "Listing Claim Declined"
+msgstr ""
+
+#: cpt/index.php:1187
+msgid "Unfortunately! your claim has been declined, please check it. "
+msgstr ""
+
+#: custom-fields/ad_custom_fields.php:578
+msgid "Select An Option"
+msgstr ""
+
+#: custom-fields/ad_custom_fields.php:579
+msgid "No Template"
+msgstr ""
+
+#: custom-fields/ad_custom_fields.php:618
+#: custom-fields/ad_custom_fields.php:624
+msgid "Adforest Category Template"
+msgstr ""
+
+#: custom-fields/ad_custom_fields.php:633
+#: custom-fields/ad_custom_fields.php:639
+msgid "Adforest Category Template WPML"
+msgstr ""
+
+#: custom-fields/ad_custom_fields.php:656
+msgid "Display in search"
+msgstr ""
+
+#: custom-fields/ad_custom_fields.php:657
+msgid "Enable/Disable this field to show in search page."
+msgstr ""
+
+#: functions.php:33
+msgid "Please select one of the ad report options."
+msgstr ""
+
+#: functions.php:38
+msgid "Comment cannot be empty"
+msgstr ""
+
+#: functions.php:43
+msgid "You have reported already."
+msgstr ""
+
+#: functions.php:64
+msgid "Ad Reported"
+msgstr ""
+
+#: functions.php:65
+msgid "Users reported this ad, please check it. "
+msgstr ""
+
+#: functions.php:98
+msgid "Reported successfully."
+msgstr ""
+
+#: functions.php:118 functions.php:173 functions.php:202
+msgid "New Messages"
+msgstr ""
+
+#: functions.php:119 functions.php:174
+msgid "Got new message on ads"
+msgstr ""
+
+#: functions.php:141
+msgid "Email sent to the ad author successfully"
+msgstr ""
+
+#: functions.php:153
+msgid "Oops! Something went wrong.Please Check your Mailing details."
+msgstr ""
+
+#: functions.php:515
+msgid "Email server not responding"
+msgstr ""
+
+#: functions.php:519
+msgid "Email is not registered with us."
+msgstr ""
+
+#: functions.php:531
+msgid "New Ad"
+msgstr ""
+
+#: functions.php:532
+msgid "Got new ad"
+msgstr ""
+
+#: functions.php:564
+msgid "New Rating"
+msgstr ""
+
+#: functions.php:566
+msgid "Got new Rating"
+msgstr ""
+
+#: functions.php:739
+msgid "Email has been sent ssuccesfully"
+msgstr ""
+
+#: functions.php:1091
+msgid "Ad Rating"
+msgstr ""
+
+#: functions.php:1109 functions.php:1140
+msgid "You are not allowed to perform this action."
+msgstr ""
+
+#: functions.php:1115 functions.php:1146
+msgid "Invalid meta id provided."
+msgstr ""
+
+#: functions.php:1122
+msgid "Failed to delete the user rating. Please try again."
+msgstr ""
+
+#: functions.php:1125
+msgid "User rating deleted successfully."
+msgstr ""
+
+#: functions.php:1153
+msgid "Failed to delete the bid. Please try again."
+msgstr ""
+
+#: functions.php:1156
+msgid "Bid deleted successfully."
+msgstr ""
+
+#: functions.php:1179
+msgid "Invalid user selected."
+msgstr ""
+
+#: functions.php:1208 functions.php:1300
+msgid "Message has been sent."
+msgstr ""
+
+#: functions.php:1210 functions.php:1302
+msgid "Message not sent, please try later."
+msgstr ""
+
+#: functions.php:1217 functions.php:1311
+msgid "You are spammer ! Get out.."
+msgstr ""
+
+#: functions.php:1219 functions.php:1313
+msgid "please verify captcha code."
+msgstr ""
+
+#: functions.php:1232
+msgid "Security check failed."
+msgstr ""
+
+#: functions.php:1248
+msgid "You can use this widget on ad details page only"
+msgstr ""
+
+#: functions.php:1401
+msgid "Every 7 Hours"
+msgstr ""
+
+#: functions.php:1616
+msgid "You are not allowed to run this action."
+msgstr ""
+
+#: functions.php:1655
+msgid "Images have been synchronised successfully."
+msgstr ""
+
+#: functions.php:1666
+msgid "You do not have permission."
+msgstr ""
+
+#: functions.php:1706
+#, php-format
+msgid "%s ads have been activated."
+msgstr ""
+
+#: functions.php:1709
+msgid "You do not have inactive ads."
+msgstr ""
+
+#: inc/adforest-common-functions.php:33
+msgctxt "ad_post"
+msgid "Rejected"
+msgstr ""
+
+#: inc/adforest-common-functions.php:38
+#, php-format
+msgid "Rejected <span class=\"count\">(%s)</span>"
+msgid_plural "Rejected <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/adforest-common-functions.php:244
+msgid "User blocked successfully"
+msgstr ""
+
+#: inc/adforest-common-functions.php:246 inc/adforest-common-functions.php:270
+msgid "Oopss ! something wrong between sender and receiver"
+msgstr ""
+
+#: inc/adforest-common-functions.php:248
+msgid "Sorry ! You cannot block yourself."
+msgstr ""
+
+#: inc/adforest-common-functions.php:250 inc/adforest-common-functions.php:274
+msgid "Oopss ! something went wrong."
+msgstr ""
+
+#: inc/adforest-common-functions.php:268
+msgid "User unblocked successfully"
+msgstr ""
+
+#: inc/adforest-common-functions.php:272
+msgid "Sorry ! You cannot unblock yourself."
+msgstr ""
+
+#: inc/adforest-common-functions.php:301 inc/adforest-common-functions.php:309
+msgid " Unblock User"
+msgstr ""
+
+#: inc/adforest-common-functions.php:303 inc/adforest-common-functions.php:307
+msgid " Block User"
+msgstr ""
+
+#: inc/adforest-common-functions.php:393
+msgid "Note : Please take your database backup before updation."
+msgstr ""
+
+#: inc/adforest-common-functions.php:456
+msgid "Database Updated successfully."
+msgstr ""
+
+#: inc/adforest-common-functions.php:469
+msgid "Are you sure to update this ?"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:11
+msgid "Package Expiry Notification"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:19
+msgid "Package Expiry SUBJECT"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:25
+msgid "Package Expiry FROM"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:26
+#: inc/class-commom-email-templates.php:132
+msgid "NAME valid@email.com is compulsory as we gave in default."
+msgstr ""
+
+#: inc/class-commom-email-templates.php:32
+msgid "Package Expiry MESSAGE"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:38
+msgid ""
+"%site_name% , %package_subcriber% , %package_name% , %no_of_days% will be "
+"translated accordingly."
+msgstr ""
+
+#: inc/class-commom-email-templates.php:97
+#: inc/class-commom-email-templates.php:107
+msgid "Ad Expiry Notification"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:108
+msgid ""
+"<b class=\"sb-admin-note\"> Note : </b> This functionality works hiddenly "
+"notify the users before and after ad expiry .This option takes a lot of load "
+"so any one who wishes to choose this option must have a good server that can "
+"support heavy load."
+msgstr ""
+
+#: inc/class-commom-email-templates.php:114
+msgid "Ad Expiry Notification before"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:115
+msgid "add the number of days before package expiry notification"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:117
+msgid "should be integer value. <b>( Days )</b>"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:124
+msgid "Ads Expiry subject"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:131
+msgid "Ad Expiry From"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:139
+msgid "Ad Expiry Message"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:146
+#: inc/class-commom-email-templates.php:213
+msgid ""
+"%site_name% , %ad_author% , %ad_title% , %no_of_days% will be translated "
+"accordingly."
+msgstr ""
+
+#: inc/class-commom-email-templates.php:206
+msgid "After Ad Expiry Message"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:271
+msgid "Bid Winner Email"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:279
+msgid "Bid email subject"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:280
+msgid "%site_name% will be translated accordingly."
+msgstr ""
+
+#: inc/class-commom-email-templates.php:286
+msgid "Bid email FROM"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:292
+msgid "FROM: NAME valid@email.com is compulsory as we gave in default."
+msgstr ""
+
+#: inc/class-commom-email-templates.php:298
+msgid "Bid email template"
+msgstr ""
+
+#: inc/class-commom-email-templates.php:299
+msgid ""
+"%site_name% , %bid_winner_name% , %bid_link%  will be translated accordingly."
+msgstr ""
+
+#: index.php:99
+msgid "Request failed. Please reload the page and try again."
+msgstr ""
+
+#: user_profile/index.php:24
+msgid "Adforest User Profile"
+msgstr ""
+
+#: user_profile/index.php:27
+msgid "Badge Color"
+msgstr ""
+
+#: user_profile/index.php:30
+msgid "Select Type"
+msgstr ""
+
+#: user_profile/index.php:32
+msgid "Green"
+msgstr ""
+
+#: user_profile/index.php:35
+msgid "Orange"
+msgstr ""
+
+#: user_profile/index.php:38
+msgid "Blue"
+msgstr ""
+
+#: user_profile/index.php:40
+msgid "Red"
+msgstr ""
+
+#: user_profile/index.php:45
+msgid "Badge Text"
+msgstr ""
+
+#: user_profile/index.php:53
+msgid "Phone Number"
+msgstr ""
+
+#: user_profile/index.php:58
+msgid "+CountrycodeMobilenumber"
+msgstr ""
+
+#: user_profile/index.php:62
+msgid "Phone no. verified"
+msgstr ""
+
+#: user_profile/index.php:72 user_profile/index.php:90
+msgid "Select option"
+msgstr ""
+
+#: user_profile/index.php:75
+msgid "Not verified"
+msgstr ""
+
+#: user_profile/index.php:78
+msgid "Verified"
+msgstr ""
+
+#: user_profile/index.php:84 user_profile/index.php:424
+msgid "User Type"
+msgstr ""
+
+#: user_profile/index.php:93 user_profile/index.php:470
+msgid "Individual"
+msgstr ""
+
+#: user_profile/index.php:96 user_profile/index.php:472
+msgid "Dealer"
+msgstr ""
+
+#: user_profile/index.php:101
+msgid "User Location"
+msgstr ""
+
+#: user_profile/index.php:111
+msgid "User Introduction"
+msgstr ""
+
+#: user_profile/index.php:140
+msgid "Trusted User"
+msgstr ""
+
+#: user_profile/index.php:149
+msgid ""
+"By making the user trusted. User's ads will be approved even (Admin "
+"Approval) is turn on in Theme Options. "
+msgstr ""
+
+#: user_profile/index.php:155
+msgid "Block Messaging?"
+msgstr ""
+
+#: user_profile/index.php:166
+msgid "Block this user to send messging against ads"
+msgstr ""
+
+#: user_profile/index.php:171
+msgid "Send User email?"
+msgstr ""
+
+#: user_profile/index.php:176
+msgid "Send mail"
+msgstr ""
+
+#: user_profile/index.php:179
+msgid ""
+"Click on button to send email to user to let him know about his account "
+"verification"
+msgstr ""
+
+#: user_profile/index.php:186
+msgid "Give User Packages"
+msgstr ""
+
+#: user_profile/index.php:192
+msgid "Select a Package"
+msgstr ""
+
+#: user_profile/index.php:198
+msgid "No packages found"
+msgstr ""
+
+#: user_profile/index.php:208
+msgid "User Packages/Subscriptions"
+msgstr ""
+
+#: user_profile/index.php:283 user_profile/index.php:811
+#: user_profile/index.php:835 user_profile/index.php:887
+#: user_profile/index.php:948
+msgid "Revoke Package"
+msgstr ""
+
+#: user_profile/index.php:295
+msgid "User Rating"
+msgstr ""
+
+#: user_profile/index.php:299
+msgid "Username who rated"
+msgstr ""
+
+#: user_profile/index.php:300
+msgid "Rating"
+msgstr ""
+
+#: user_profile/index.php:301
+msgid "Comments"
+msgstr ""
+
+#: user_profile/index.php:327
+msgid "Star"
+msgstr ""
+
+#: user_profile/index.php:338
+msgid "There is no rating of this user yet."
+msgstr ""
+
+#: user_profile/index.php:423
+msgid "Display Name"
+msgstr ""
+
+#: user_profile/index.php:429
+msgid "Ads"
+msgstr ""
+
+#: user_profile/index.php:443
+msgid "Expired"
+msgstr ""
+
+#: user_profile/index.php:512
+msgid "Trusted?"
+msgstr ""
+
+#: user_profile/index.php:533 user_profile/index.php:778
+msgid "Are you sure you want to do this?"
+msgstr ""
+
+#: user_profile/index.php:676
+msgid "Your Package Has Been Revoked - %site_name%"
+msgstr ""
+
+#: user_profile/index.php:815
+msgid "Package:"
+msgstr ""
+
+#: user_profile/index.php:816
+msgid "User:"
+msgstr ""
+
+#: user_profile/index.php:817
+msgid "User Email:"
+msgstr ""
+
+#: user_profile/index.php:821
+msgid "Reason for revocation (required):"
+msgstr ""
+
+#: user_profile/index.php:823
+msgid "Please provide a reason for revoking this package..."
+msgstr ""
+
+#: user_profile/index.php:829
+msgid "Send email notification to user"
+msgstr ""
+
+#: user_profile/index.php:834
+msgid "Cancel"
+msgstr ""
+
+#: user_profile/index.php:858
+msgid "Loading..."
+msgstr ""
+
+#: user_profile/index.php:878 user_profile/index.php:882
+msgid "Error loading user information"
+msgstr ""
+
+#: user_profile/index.php:914
+msgid "Please provide a reason for revocation"
+msgstr ""
+
+#: user_profile/index.php:918
+msgid ""
+"Are you sure you want to revoke this package? This action cannot be undone."
+msgstr ""
+
+#: user_profile/index.php:923
+msgid "Processing..."
+msgstr ""
+
+#: user_profile/index.php:938
+msgid "Package revoked successfully!"
+msgstr ""
+
+#: user_profile/index.php:941 user_profile/index.php:945
+msgid "Error revoking package"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Adforest Framework"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "https://themeforest.net/user/scriptsbundle/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "This plugin is essential for the proper theme funcationality."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Scripts Bundle"
+msgstr ""

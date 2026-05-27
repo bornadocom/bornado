@@ -98,16 +98,6 @@ if (!function_exists('bornado_category_search_sidebar_get_term_id')) {
 
         $term_id = 0;
 
-        if (is_tax('ad_cats')) {
-            $term_id = (int) get_queried_object_id();
-            return $term_id;
-        }
-
-        if (isset($_GET['cat_id']) && is_numeric($_GET['cat_id']) && (int) $_GET['cat_id'] > 0) {
-            $term_id = (int) $_GET['cat_id'];
-            return $term_id;
-        }
-
         if (function_exists('bornado_seo_routing_get_context')) {
             $context = bornado_seo_routing_get_context();
             if (is_array($context)) {
@@ -121,6 +111,16 @@ if (!function_exists('bornado_category_search_sidebar_get_term_id')) {
                     return $term_id;
                 }
             }
+        }
+
+        if (is_tax('ad_cats')) {
+            $term_id = (int) get_queried_object_id();
+            return $term_id;
+        }
+
+        if (isset($_GET['cat_id']) && is_numeric($_GET['cat_id']) && (int) $_GET['cat_id'] > 0) {
+            $term_id = (int) $_GET['cat_id'];
+            return $term_id;
         }
 
         return 0;

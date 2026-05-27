@@ -94,6 +94,16 @@ if (!function_exists('adforest_get_ad_images')) {
 }
 
 /**
+ * Show Negotiable (توافقی) for ads without a price before parent helpers load.
+ * Search cards also need the MU bootstrap in bornado-search-core/mu-plugin-loader.php
+ * because get_ad_post_details() is defined by Elementor before this file runs.
+ */
+$bornado_empty_ad_price_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-empty-ad-price.php';
+if (file_exists($bornado_empty_ad_price_bootstrap) && !function_exists('bornado_get_negotiable_price_label')) {
+    require_once $bornado_empty_ad_price_bootstrap;
+}
+
+/**
  * Load Search Core compatibility shims before the parent theme defines pluggable helpers.
  */
 $bornado_search_compat_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-search-compat.php';
@@ -115,6 +125,14 @@ if (file_exists($bornado_breadcrumb_bootstrap)) {
 $bornado_category_search_sidebar_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-category-search-sidebar.php';
 if (file_exists($bornado_category_search_sidebar_bootstrap)) {
     require_once $bornado_category_search_sidebar_bootstrap;
+}
+
+/**
+ * Show full titles in AdForest Recent Ads sidebar widget.
+ */
+$bornado_recent_ads_sidebar_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-recent-ads-sidebar.php';
+if (file_exists($bornado_recent_ads_sidebar_bootstrap)) {
+    require_once $bornado_recent_ads_sidebar_bootstrap;
 }
 
 /**
@@ -221,6 +239,117 @@ if (!function_exists('bornado_is_ad_search_view')) {
     }
 }
 
+if (!function_exists('bornado_get_search_card_deepest_location_name')) {
+    /**
+     * Resolve the deepest assigned AdForest location term for one ad card.
+     *
+     * @param int $post_id Ad post ID.
+     * @return string
+     */
+    function bornado_get_search_card_deepest_location_name($post_id)
+    {
+        $post_id = (int) $post_id;
+        if ($post_id <= 0) {
+            return '';
+        }
+
+        $terms = wp_get_post_terms($post_id, 'ad_country');
+        if (is_wp_error($terms) || empty($terms)) {
+            return '';
+        }
+
+        usort($terms, static function ($left, $right) {
+            $left_depth  = count(get_ancestors((int) $left->term_id, 'ad_country', 'taxonomy'));
+            $right_depth = count(get_ancestors((int) $right->term_id, 'ad_country', 'taxonomy'));
+
+            return $right_depth <=> $left_depth;
+        });
+
+        $term = reset($terms);
+
+        if ($term instanceof WP_Term && !empty($term->name)) {
+            return (string) $term->name;
+        }
+
+        $location_meta = trim((string) get_post_meta($post_id, '_adforest_ad_location', true));
+
+        return $location_meta;
+    }
+}
+
+if (!function_exists('bornado_get_search_card_relative_posted_label')) {
+    /**
+     * Build a short Persian relative posted-time label for search cards.
+     *
+     * @param int $post_id Ad post ID.
+     * @return string
+     */
+    function bornado_get_search_card_relative_posted_label($post_id)
+    {
+        if (function_exists('mcew_get_relative_posted_label')) {
+            return (string) mcew_get_relative_posted_label($post_id);
+        }
+
+        $from = (int) get_post_time('U', true, $post_id);
+        if ($from <= 0) {
+            return '';
+        }
+
+        $to   = (int) current_time('timestamp');
+        $diff = abs($to - $from);
+
+        if ($diff >= (15 * DAY_IN_SECONDS)) {
+            return date_i18n('j F Y', $from);
+        }
+
+        if ($diff < HOUR_IN_SECONDS) {
+            $mins = max(1, (int) round($diff / MINUTE_IN_SECONDS));
+
+            return sprintf('%s دقیقه پیش', number_format_i18n($mins));
+        }
+
+        if ($diff < DAY_IN_SECONDS) {
+            $hours = max(1, (int) round($diff / HOUR_IN_SECONDS));
+
+            return sprintf('%s ساعت پیش', number_format_i18n($hours));
+        }
+
+        if ($diff < YEAR_IN_SECONDS) {
+            $days = max(1, (int) round($diff / DAY_IN_SECONDS));
+
+            return sprintf('%s روز پیش', number_format_i18n($days));
+        }
+
+        $years = max(1, (int) round($diff / YEAR_IN_SECONDS));
+
+        return sprintf('%s سال پیش', number_format_i18n($years));
+    }
+}
+
+if (!function_exists('bornado_get_search_card_posted_location_text')) {
+    /**
+     * Build the combined "time ago in city" label used under search-card prices.
+     *
+     * @param int $post_id Ad post ID.
+     * @return string
+     */
+    function bornado_get_search_card_posted_location_text($post_id)
+    {
+        $posted_label = trim((string) bornado_get_search_card_relative_posted_label($post_id));
+        $city_label   = trim((string) bornado_get_search_card_deepest_location_name($post_id));
+
+        if ('' === $posted_label) {
+            return $city_label;
+        }
+
+        if ('' === $city_label) {
+            return $posted_label;
+        }
+
+        return $posted_label . ' در ' . $city_label;
+    }
+}
+
 if (!function_exists('bornado_get_theme_style_handles')) {
     /**
      * Parent style handles to load child overrides after (whichever is registered).
@@ -290,6 +419,124 @@ add_action('wp_enqueue_scripts', function () {
         (string) filemtime($search_css)
     );
 }, 200);
+
+/**
+ * Bridge AdForest's legacy mobile filters drawer with Search 2.0's new drawer state.
+ *
+ * Parent theme currently has two parallel mobile-filter systems:
+ * - legacy sidebar mode toggles `.mobile-filters.active`
+ * - Search 2.0 toggles `body.adf-mobile-filters-open`
+ *
+ * On sidebar search pages with mobile filters enabled, keep those two states
+ * in sync from the child theme layer so the new Filters button actually opens
+ * the existing mobile drawer, without editing theme core files.
+ */
+add_action('wp_enqueue_scripts', function () {
+    if (is_admin() || !bornado_is_ad_search_view()) {
+        return;
+    }
+
+    global $adforest_theme;
+
+    $search_design = isset($adforest_theme['search_design']) ? (string) $adforest_theme['search_design'] : '';
+    $mobile_filters_enabled = !empty($adforest_theme['search_design_sidebar_mob_filter']);
+
+    if ($search_design !== 'sidebar' || !$mobile_filters_enabled) {
+        return;
+    }
+
+    $css = '@media (max-width: 991px) {'
+        . 'body.adf-mobile-filters-open #adforest-ajax-sidebar.mobile-filters {'
+        . 'display: block !important;'
+        . '}'
+        . '}';
+
+    wp_register_style('bornado-mobile-search-filter-bridge', false);
+    wp_enqueue_style('bornado-mobile-search-filter-bridge');
+    wp_add_inline_style('bornado-mobile-search-filter-bridge', $css);
+
+    $js = "
+    document.addEventListener('DOMContentLoaded', function () {
+        var body = document.body;
+        var sidebar = document.getElementById('adforest-ajax-sidebar');
+        if (!body || !sidebar || !sidebar.classList.contains('mobile-filters')) {
+            return;
+        }
+
+        var syncing = false;
+        var mobileBreakpoint = 992;
+
+        function isMobileViewport() {
+            return window.innerWidth < mobileBreakpoint;
+        }
+
+        function setOpenState(isOpen) {
+            body.classList.toggle('adf-mobile-filters-open', !!isOpen);
+            sidebar.classList.toggle('active', !!isOpen);
+        }
+
+        function syncFromBody() {
+            if (syncing) return;
+            syncing = true;
+            sidebar.classList.toggle('active', body.classList.contains('adf-mobile-filters-open'));
+            syncing = false;
+        }
+
+        function syncFromSidebar() {
+            if (syncing) return;
+            syncing = true;
+            body.classList.toggle('adf-mobile-filters-open', sidebar.classList.contains('active'));
+            syncing = false;
+        }
+
+        syncFromBody();
+
+        document.addEventListener('click', function (event) {
+            var target = event.target;
+            if (!target || !target.closest) {
+                return;
+            }
+
+            var openTrigger = target.closest('#adf-open-filters, .mobile-filters-btn a');
+            if (openTrigger && isMobileViewport()) {
+                event.preventDefault();
+                setOpenState(!body.classList.contains('adf-mobile-filters-open'));
+                return;
+            }
+
+            var closeTrigger = target.closest('.adf-filters-backdrop, .filter-close-btn, .close-sidebar');
+            if (closeTrigger) {
+                event.preventDefault();
+                setOpenState(false);
+            }
+        });
+
+        window.addEventListener('resize', function () {
+            if (!isMobileViewport()) {
+                setOpenState(false);
+            }
+        });
+
+        if (typeof MutationObserver === 'undefined') {
+            return;
+        }
+
+        new MutationObserver(syncFromBody).observe(body, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+
+        new MutationObserver(syncFromSidebar).observe(sidebar, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    });
+    ";
+
+    wp_register_script('bornado-mobile-search-filter-bridge', '', array(), null, true);
+    wp_enqueue_script('bornado-mobile-search-filter-bridge');
+    wp_add_inline_script('bornado-mobile-search-filter-bridge', $js);
+}, 210);
 
 /**
  * Load the same price slider dependency outside the default Ad Search page.
