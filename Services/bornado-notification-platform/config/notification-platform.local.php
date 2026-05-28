@@ -1,16 +1,39 @@
 <?php
 declare(strict_types=1);
 
+$sharedSecret = trim((string) (getenv('BORNADO_NOTIFICATION_SHARED_SECRET') ?: 'be67d9eef04f5f9cffbbbcf811e5bd02'));
+$opsKey       = trim((string) (getenv('BORNADO_NOTIFICATION_OPS_KEY') ?: $sharedSecret));
+$phoneNumberId = trim((string) (getenv('BORNADO_WA_PHONE_NUMBER_ID') ?: '1099127826622214'));
+$accessToken   = trim((string) (getenv('BORNADO_WA_ACCESS_TOKEN') ?: 'EAAWSyHZCFB1kBRjpUNhi73IGPynCZClZAJiG8TxgLLZCDqPi6c3yz2cZAyafwQGpkh9stMalIVMxEqjVqvZCwfPXHpcKzyd5OimElrc5zZBcDbLZBlmbuWhPPahakiyohP4xFA3VaJ48N2cPNlwxNRi6MMShO3wbOg5ymfrxIy9gfePGjgfY2bNZCZCQhZBtKp2Uj7XUgZDZD'));
+
 return array(
     'service' => array(
         'base_url'      => 'https://bornado.com',
-        'shared_secret' => 'W6MgZximyrmt/CbO9djHA12cCPrbdlEy',
+        'shared_secret' => $sharedSecret,
+        'ops_key'       => $opsKey,
     ),
     'routing' => array(
+        'events' => array(
+            'listing.published' => array(
+                'channels' => array('whatsapp'),
+            ),
+            'user.registered' => array(
+                'channels' => array(),
+            ),
+            'listing.rejected' => array(
+                'channels' => array(),
+            ),
+            'listing.expiring_soon' => array(
+                'channels' => array(),
+            ),
+            'payment.completed' => array(
+                'channels' => array(),
+            ),
+        ),
         'channel_providers' => array(
             'whatsapp' => array('whatsapp-cloud-api'),
-            'sms'      => array('dry-run'),
-            'email'    => array('dry-run'),
+            'sms'      => array(),
+            'email'    => array(),
         ),
     ),
     'providers' => array(
@@ -18,8 +41,8 @@ return array(
             'enabled'               => true,
             'base_url'              => 'https://graph.facebook.com',
             'api_version'           => 'v22.0',
-            'phone_number_id'       => '1085939971276418',
-            'access_token'          => 'EAAWSyHZCFB1kBRgm8clt0tlpb3iUoDQcnRRMqOJkX3zzlHSFonMDycZBOeB7itjzGGOqQZCSrsZC8tj11uYwYZBN5B9daoI7isVfXPwnvZBRRkZCKAW8EGTZBsqeZCOixcfGxXyuTd2GmW3wtZABbPZAevq6hYsIj78dZAxa8VFrw3Dy1A7DQJ8Bwpg84Eo2AQYt4bgqYItge1IaMkOz4PZChyBKP8JSbqX93rBVYAEM0IlG0LZCPPJiJlqtozV7aDKe6rhE5haBHAAno11n9vUNCHAHPwkocD',
+            'phone_number_id'       => $phoneNumberId,
+            'access_token'          => $accessToken,
             'message_mode'          => 'template',
             'default_language_code' => 'en_US',
             'text_fallback_enabled' => false,
@@ -37,6 +60,14 @@ return array(
                     'body_parameters' => array(),
                 ),
             ),
+        ),
+    ),
+    'webhooks' => array(
+        'whatsapp' => array(
+            'verify_token'    => trim((string) (getenv('BORNADO_WA_WEBHOOK_VERIFY_TOKEN') ?: '77849858769122034828')),
+            'app_secret'      => trim((string) (getenv('BORNADO_WA_APP_SECRET') ?: 'be67d9eef04f5f9cffbbbcf811e5bd02')),
+            'phone_number_id' => $phoneNumberId,
+            'inbound_mode'    => trim((string) (getenv('BORNADO_WA_WEBHOOK_INBOUND_MODE') ?: 'log_only')),
         ),
     ),
 );

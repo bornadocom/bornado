@@ -32,6 +32,7 @@ $mergeConfig = static function (array $base, array $override) use (&$mergeConfig
 
 $sharedSecret = getenv('BORNADO_NOTIFICATION_SHARED_SECRET');
 $serviceUrl   = getenv('BORNADO_NOTIFICATION_SERVICE_URL');
+$opsKey       = getenv('BORNADO_NOTIFICATION_OPS_KEY');
 $splitCsv     = static function ($value, array $default = array()) {
     if (!is_string($value) || '' === trim($value)) {
         return $default;
@@ -92,6 +93,9 @@ $config = array(
         'source_system' => getenv('BORNADO_NOTIFICATION_SOURCE_SYSTEM') ?: 'bornado-wordpress',
         'base_url'      => $serviceUrl ?: 'http://localhost:8085',
         'shared_secret' => is_string($sharedSecret) ? trim($sharedSecret) : '',
+        'ops_key'       => is_string($opsKey) && '' !== trim($opsKey)
+            ? trim($opsKey)
+            : (is_string($sharedSecret) ? trim($sharedSecret) : ''),
         'default_locale'=> getenv('BORNADO_NOTIFICATION_DEFAULT_LOCALE') ?: 'fa-IR',
     ),
     'queue' => array(
@@ -101,8 +105,20 @@ $config = array(
         'failed_dir'     => $storageDir . DIRECTORY_SEPARATOR . 'outbox' . DIRECTORY_SEPARATOR . 'failed',
     ),
     'logging' => array(
-        'delivery_log' => $storageDir . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'delivery.jsonl',
-        'state_dir'    => $storageDir . DIRECTORY_SEPARATOR . 'state',
+        'delivery_log'          => $storageDir . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'delivery.jsonl',
+        'state_dir'             => $storageDir . DIRECTORY_SEPARATOR . 'state',
+        'whatsapp_webhook_log'  => $storageDir . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'whatsapp-webhook.jsonl',
+        'whatsapp_state_dir'    => $storageDir . DIRECTORY_SEPARATOR . 'whatsapp' . DIRECTORY_SEPARATOR . 'state',
+        'whatsapp_inbound_dir'  => $storageDir . DIRECTORY_SEPARATOR . 'whatsapp' . DIRECTORY_SEPARATOR . 'inbound',
+        'ops_dir'               => $storageDir . DIRECTORY_SEPARATOR . 'ops',
+    ),
+    'webhooks' => array(
+        'whatsapp' => array(
+            'verify_token'   => trim((string) (getenv('BORNADO_WA_WEBHOOK_VERIFY_TOKEN') ?: '')),
+            'app_secret'     => trim((string) (getenv('BORNADO_WA_APP_SECRET') ?: '')),
+            'phone_number_id'=> trim((string) (getenv('BORNADO_WA_PHONE_NUMBER_ID') ?: '')),
+            'inbound_mode'   => trim((string) (getenv('BORNADO_WA_WEBHOOK_INBOUND_MODE') ?: 'log_only')),
+        ),
     ),
     'routing' => array(
         'allow_optimistic_channel_routing' => array(

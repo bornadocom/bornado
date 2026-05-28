@@ -11,7 +11,7 @@ require __DIR__ . '/Services/bornado-notification-platform/bootstrap.php';
 $config = require __DIR__ . '/Services/bornado-notification-platform/config/notification-platform.php';
 
 $providedKey = isset($_GET['key']) ? trim((string) $_GET['key']) : '';
-$expectedKey = trim((string) ($config['service']['shared_secret'] ?? ''));
+$expectedKey = trim((string) ($config['service']['ops_key'] ?? $config['service']['shared_secret'] ?? ''));
 
 if ('' === $expectedKey || !hash_equals($expectedKey, $providedKey)) {
     http_response_code(403);

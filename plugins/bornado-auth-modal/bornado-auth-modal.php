@@ -41,6 +41,8 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 
 			add_action( 'wp_ajax_bornado_auth_phone_preflight', array( $this, 'ajax_phone_preflight' ) );
 			add_action( 'wp_ajax_nopriv_bornado_auth_phone_preflight', array( $this, 'ajax_phone_preflight' ) );
+			add_action( 'wp_ajax_bornado_auth_resolve_continue_token', array( $this, 'ajax_resolve_continue_token' ) );
+			add_action( 'wp_ajax_nopriv_bornado_auth_resolve_continue_token', array( $this, 'ajax_resolve_continue_token' ) );
 			add_action( 'wp_ajax_bornado_auth_firebase_login', array( $this, 'ajax_firebase_login' ) );
 			add_action( 'wp_ajax_nopriv_bornado_auth_firebase_login', array( $this, 'ajax_firebase_login' ) );
 			add_action( 'wp_ajax_bornado_auth_firebase_register', array( $this, 'ajax_firebase_register' ) );
@@ -173,6 +175,7 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 				'registerNonce'         => wp_create_nonce( 'sb_register_secure' ),
 				'forgotNonce'           => wp_create_nonce( 'sb_forgot_pass_secure' ),
 				'phonePreflightNonce'   => wp_create_nonce( 'bornado_auth_phone_preflight' ),
+				'continueTokenNonce'    => wp_create_nonce( 'bornado_auth_resolve_continue_token' ),
 				'firebaseLoginNonce'    => wp_create_nonce( 'bornado_auth_firebase_login' ),
 				'firebaseRegisterNonce' => wp_create_nonce( 'bornado_auth_firebase_register' ),
 				'phoneEnabled'          => ! empty( $adforest_theme['sb_register_with_phone'] ),
@@ -517,6 +520,53 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 			);
 		}
 
+		public function ajax_resolve_continue_token() {
+			$this->verify_ajax_nonce( 'bornado_auth_resolve_continue_token', 'security' );
+
+			$token   = isset( $_POST['continue_token'] ) ? wp_unslash( $_POST['continue_token'] ) : '';
+			$payload = $this->parse_continue_token( $token );
+
+			if ( is_wp_error( $payload ) ) {
+				wp_send_json_error( array( 'message' => $payload->get_error_message() ), 422 );
+			}
+
+			$phone = $this->normalize_phone_number( isset( $payload['phone'] ) ? (string) $payload['phone'] : '' );
+			if ( ! $this->is_valid_phone_number( $phone ) ) {
+				wp_send_json_error( array( 'message' => __( 'شماره موبایل معتبر نیست.', 'bornado-auth-modal' ) ), 422 );
+			}
+
+			$user_id = $this->find_user_id_by_phone( $phone );
+			$mode    = 'login';
+
+			if ( ! $user_id ) {
+				if ( ! get_option( 'users_can_register' ) ) {
+					wp_send_json_error( array( 'message' => __( 'برای این شماره حسابی پیدا نشد و ثبت‌نام نیز غیرفعال است.', 'bornado-auth-modal' ) ), 403 );
+				}
+
+				$mode = 'register';
+			}
+
+			$redirect_url = isset( $payload['redirect_url'] ) ? esc_url_raw( (string) $payload['redirect_url'] ) : '';
+			if ( '' === $redirect_url ) {
+				$redirect_url = $this->get_profile_url();
+			}
+
+			$display_name = isset( $payload['display_name'] ) ? sanitize_text_field( (string) $payload['display_name'] ) : '';
+			if ( '' === $display_name ) {
+				$display_name = __( 'کاربر برنادو', 'bornado-auth-modal' );
+			}
+
+			wp_send_json_success(
+				array(
+					'mode'         => $mode,
+					'phone_number' => $phone,
+					'redirect_url' => $redirect_url,
+					'remember'     => '1',
+					'display_name' => $display_name,
+				)
+			);
+		}
+
 		public function ajax_firebase_login() {
 			$this->verify_ajax_nonce( 'bornado_auth_firebase_login', 'security' );
 
@@ -822,6 +872,62 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 			}
 
 			return home_url( '/profile/' );
+		}
+
+		private function parse_continue_token( $token ) {
+			$token = trim( (string) $token );
+			if ( '' === $token || false === strpos( $token, '.' ) ) {
+				return new WP_Error( 'invalid_token', __( 'لینک ورود معتبر نیست.', 'bornado-auth-modal' ) );
+			}
+
+			list( $encoded_payload, $provided_signature ) = explode( '.', $token, 2 );
+			$secret = $this->get_notification_shared_secret();
+			if ( '' === $secret ) {
+				return new WP_Error( 'missing_secret', __( 'تنظیمات امنیتی کامل نیست.', 'bornado-auth-modal' ) );
+			}
+
+			$expected_signature = hash_hmac( 'sha256', $encoded_payload, $secret );
+			if ( ! hash_equals( $expected_signature, (string) $provided_signature ) ) {
+				return new WP_Error( 'invalid_signature', __( 'لینک ورود معتبر نیست.', 'bornado-auth-modal' ) );
+			}
+
+			$decoded_payload = $this->base64_url_decode( $encoded_payload );
+			$payload         = json_decode( $decoded_payload, true );
+
+			if ( ! is_array( $payload ) ) {
+				return new WP_Error( 'invalid_payload', __( 'اطلاعات لینک معتبر نیست.', 'bornado-auth-modal' ) );
+			}
+
+			if ( empty( $payload['purpose'] ) || 'listing_manage_continue' !== $payload['purpose'] ) {
+				return new WP_Error( 'invalid_purpose', __( 'این لینک برای این عملیات معتبر نیست.', 'bornado-auth-modal' ) );
+			}
+
+			if ( empty( $payload['exp'] ) || (int) $payload['exp'] < time() ) {
+				return new WP_Error( 'expired_link', __( 'زمان استفاده از این لینک به پایان رسیده است.', 'bornado-auth-modal' ) );
+			}
+
+			return $payload;
+		}
+
+		private function get_notification_shared_secret() {
+			if ( defined( 'BORNADO_NOTIFICATION_SHARED_SECRET' ) ) {
+				return trim( (string) BORNADO_NOTIFICATION_SHARED_SECRET );
+			}
+
+			return '';
+		}
+
+		private function base64_url_decode( $value ) {
+			$value = strtr( (string) $value, '-_', '+/' );
+			$pad   = strlen( $value ) % 4;
+
+			if ( $pad > 0 ) {
+				$value .= str_repeat( '=', 4 - $pad );
+			}
+
+			$decoded = base64_decode( $value, true );
+
+			return false !== $decoded ? $decoded : '';
 		}
 
 		private function translate_auth_error_message( $message ) {

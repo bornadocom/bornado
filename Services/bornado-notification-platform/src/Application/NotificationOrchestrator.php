@@ -6,6 +6,7 @@ namespace Bornado\NotificationPlatform\Application;
 use Bornado\NotificationPlatform\Contracts\EventCatalog;
 use Bornado\NotificationPlatform\Infrastructure\FileDeliveryLog;
 use Bornado\NotificationPlatform\Infrastructure\ProviderAdapterInterface;
+use Bornado\NotificationPlatform\Infrastructure\WhatsAppStateStore;
 
 final class NotificationOrchestrator
 {
@@ -30,18 +31,25 @@ final class NotificationOrchestrator
     private $providers;
 
     /**
+     * @var WhatsAppStateStore|null
+     */
+    private $whatsAppStateStore;
+
+    /**
      * @param array<string,ProviderAdapterInterface> $providers
      */
     public function __construct(
         PolicyEngine $policyEngine,
         TemplateEngine $templateEngine,
         FileDeliveryLog $deliveryLog,
-        array $providers
+        array $providers,
+        ?WhatsAppStateStore $whatsAppStateStore = null
     ) {
-        $this->policyEngine   = $policyEngine;
-        $this->templateEngine = $templateEngine;
-        $this->deliveryLog    = $deliveryLog;
-        $this->providers      = $providers;
+        $this->policyEngine       = $policyEngine;
+        $this->templateEngine     = $templateEngine;
+        $this->deliveryLog        = $deliveryLog;
+        $this->providers          = $providers;
+        $this->whatsAppStateStore = $whatsAppStateStore;
     }
 
     /**
@@ -159,6 +167,14 @@ final class NotificationOrchestrator
                         'status'      => !empty($result['success']) ? 'sent' : 'failed',
                         'result'      => $result,
                     );
+
+                    if (
+                        !empty($result['success'])
+                        && 'whatsapp-cloud-api' === $provider->getName()
+                        && $this->whatsAppStateStore instanceof WhatsAppStateStore
+                    ) {
+                        $this->whatsAppStateStore->recordOutboundDispatch($event, (array) $contact, $result);
+                    }
 
                     if (!empty($result['success'])) {
                         $this->deliveryLog->markEvent(

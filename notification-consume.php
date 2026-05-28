@@ -1,12 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use Bornado\NotificationPlatform\Application\NotificationOrchestrator;
-use Bornado\NotificationPlatform\Application\PolicyEngine;
-use Bornado\NotificationPlatform\Application\TemplateEngine;
-use Bornado\NotificationPlatform\Infrastructure\FileDeliveryLog;
-use Bornado\NotificationPlatform\Infrastructure\FileEventQueue;
-use Bornado\NotificationPlatform\Infrastructure\ProviderFactory;
+use Bornado\NotificationPlatform\Application\QueueConsumer;
 
 require __DIR__ . '/Services/bornado-notification-platform/bootstrap.php';
 
@@ -14,7 +9,7 @@ require __DIR__ . '/Services/bornado-notification-platform/bootstrap.php';
 $config = require __DIR__ . '/Services/bornado-notification-platform/config/notification-platform.php';
 
 $providedKey = isset($_GET['key']) ? trim((string) $_GET['key']) : '';
-$expectedKey = trim((string) ($config['service']['shared_secret'] ?? ''));
+$expectedKey = trim((string) ($config['service']['ops_key'] ?? $config['service']['shared_secret'] ?? ''));
 
 if ('' === $expectedKey || !hash_equals($expectedKey, $providedKey)) {
     http_response_code(403);
@@ -24,34 +19,10 @@ if ('' === $expectedKey || !hash_equals($expectedKey, $providedKey)) {
 }
 
 $limit = isset($_GET['limit']) ? max(1, (int) $_GET['limit']) : 20;
+$debug = !empty($_GET['debug']);
 
-$queue          = new FileEventQueue($config['queue']);
-$deliveryLog    = new FileDeliveryLog($config['logging']['delivery_log'], $config['logging']['state_dir']);
-$policyEngine   = new PolicyEngine($config);
-$templateEngine = new TemplateEngine($config);
-$providers      = ProviderFactory::buildAll($config);
-$orchestrator   = new NotificationOrchestrator($policyEngine, $templateEngine, $deliveryLog, $providers);
-$claims         = $queue->claimBatch($limit);
-$results        = array();
-
-foreach ($claims as $claim) {
-    $event  = is_array($claim['event'] ?? null) ? $claim['event'] : array();
-    $result = $orchestrator->handle($event);
-    $results[] = $result;
-
-    if (in_array($result['status'] ?? '', array('sent', 'no_route', 'duplicate', 'invalid'), true)) {
-        $queue->acknowledge((string) $claim['path'], $result);
-        continue;
-    }
-
-    $queue->fail((string) $claim['path'], $result);
-}
+$consumer = new QueueConsumer($config);
+$result   = $consumer->run($limit, $debug);
 
 header('Content-Type: application/json; charset=utf-8');
-echo json_encode(
-    array(
-        'processed' => count($claims),
-        'results'   => $results,
-    ),
-    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-);
+echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);

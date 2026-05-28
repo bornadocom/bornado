@@ -85,6 +85,42 @@ final class FileEventQueue
         $this->finalize($processingPath, $this->config['failed_dir'], $metadata);
     }
 
+    public function countFiles(string $bucket): int
+    {
+        $map = array(
+            'pending'    => $this->config['pending_dir'] ?? '',
+            'processing' => $this->config['processing_dir'] ?? '',
+            'processed'  => $this->config['processed_dir'] ?? '',
+            'failed'     => $this->config['failed_dir'] ?? '',
+        );
+
+        $directory = isset($map[$bucket]) ? (string) $map[$bucket] : '';
+        if ('' === $directory) {
+            return 0;
+        }
+
+        $files = glob($directory . DIRECTORY_SEPARATOR . '*.json') ?: array();
+
+        return count($files);
+    }
+
+    public function requeueFailed(int $limit = 20): int
+    {
+        $failedFiles = glob($this->config['failed_dir'] . DIRECTORY_SEPARATOR . '*.json') ?: array();
+        sort($failedFiles);
+
+        $moved = 0;
+
+        foreach (array_slice($failedFiles, 0, $limit) as $failedFile) {
+            $pendingFile = $this->config['pending_dir'] . DIRECTORY_SEPARATOR . basename($failedFile);
+            if (@rename($failedFile, $pendingFile)) {
+                $moved++;
+            }
+        }
+
+        return $moved;
+    }
+
     private function ensureDirectories(): void
     {
         foreach ($this->config as $directory) {

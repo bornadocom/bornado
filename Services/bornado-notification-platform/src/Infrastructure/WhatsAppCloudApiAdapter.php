@@ -78,6 +78,7 @@ final class WhatsAppCloudApiAdapter implements ProviderAdapterInterface
             'provider'       => $this->getName(),
             'httpStatus'     => (int) ($response['status'] ?? 0),
             'response'       => $response['body'] ?? null,
+            'messageId'      => $this->extractMessageId($response['body'] ?? array()),
             'requestPayload' => $payload,
         );
     }
@@ -137,23 +138,29 @@ final class WhatsAppCloudApiAdapter implements ProviderAdapterInterface
     private function buildTemplatePayload(string $destination, array $templateSpec, array $event): array
     {
         $languageCode  = trim((string) ($templateSpec['language_code'] ?? $this->config['default_language_code'] ?? 'fa'));
+        $headerPaths   = isset($templateSpec['header_parameters']) && is_array($templateSpec['header_parameters']) ? $templateSpec['header_parameters'] : array();
         $bodyPaths     = isset($templateSpec['body_parameters']) && is_array($templateSpec['body_parameters']) ? $templateSpec['body_parameters'] : array();
-        $bodyParams    = array();
+        $headerParams  = $this->buildTextParameters($headerPaths, $event);
+        $bodyParams    = $this->buildTextParameters($bodyPaths, $event);
 
-        foreach ($bodyPaths as $path) {
-            $value = EventCatalog::getByPath($event, (string) $path);
-            $bodyParams[] = array(
-                'type' => 'text',
-                'text' => is_scalar($value) ? (string) $value : '',
+        $components = array();
+        if (!empty($headerParams)) {
+            $components[] = array(
+                'type'       => 'header',
+                'parameters' => $headerParams,
             );
         }
 
-        $components = array();
         if (!empty($bodyParams)) {
             $components[] = array(
                 'type'       => 'body',
                 'parameters' => $bodyParams,
             );
+        }
+
+        $buttonComponents = $this->buildButtonComponents($templateSpec, $event);
+        if (!empty($buttonComponents)) {
+            $components = array_merge($components, $buttonComponents);
         }
 
         $template = array(
@@ -174,6 +181,71 @@ final class WhatsAppCloudApiAdapter implements ProviderAdapterInterface
             'type'              => 'template',
             'template'          => $template,
         );
+    }
+
+    /**
+     * @param array<string,mixed> $templateSpec
+     * @param array<string,mixed> $event
+     * @return array<int,array<string,mixed>>
+     */
+    private function buildButtonComponents(array $templateSpec, array $event): array
+    {
+        $buttonSpecs = isset($templateSpec['button_parameters']) && is_array($templateSpec['button_parameters'])
+            ? $templateSpec['button_parameters']
+            : array();
+        $components = array();
+
+        foreach ($buttonSpecs as $buttonSpec) {
+            if (!is_array($buttonSpec)) {
+                continue;
+            }
+
+            $paths = isset($buttonSpec['parameters']) && is_array($buttonSpec['parameters'])
+                ? $buttonSpec['parameters']
+                : array();
+            $parameters = array();
+
+            foreach ($paths as $path) {
+                $value = EventCatalog::getByPath($event, (string) $path);
+                $parameters[] = array(
+                    'type' => 'text',
+                    'text' => is_scalar($value) ? (string) $value : '',
+                );
+            }
+
+            if (empty($parameters)) {
+                continue;
+            }
+
+            $components[] = array(
+                'type'       => 'button',
+                'sub_type'   => (string) ($buttonSpec['sub_type'] ?? 'url'),
+                'index'      => (string) ($buttonSpec['index'] ?? '0'),
+                'parameters' => $parameters,
+            );
+        }
+
+        return $components;
+    }
+
+    /**
+     * @param array<int,mixed> $paths
+     * @param array<string,mixed> $event
+     * @return array<int,array<string,string>>
+     */
+    private function buildTextParameters(array $paths, array $event): array
+    {
+        $parameters = array();
+
+        foreach ($paths as $path) {
+            $value = EventCatalog::getByPath($event, (string) $path);
+            $parameters[] = array(
+                'type' => 'text',
+                'text' => is_scalar($value) ? (string) $value : '',
+            );
+        }
+
+        return $parameters;
     }
 
     /**
@@ -328,5 +400,22 @@ final class WhatsAppCloudApiAdapter implements ProviderAdapterInterface
         }
 
         return ltrim($address, '+');
+    }
+
+    /**
+     * @param mixed $responseBody
+     */
+    private function extractMessageId($responseBody): string
+    {
+        if (!is_array($responseBody)) {
+            return '';
+        }
+
+        $messages = $responseBody['messages'] ?? null;
+        if (!is_array($messages) || !isset($messages[0]) || !is_array($messages[0])) {
+            return '';
+        }
+
+        return trim((string) ($messages[0]['id'] ?? ''));
     }
 }

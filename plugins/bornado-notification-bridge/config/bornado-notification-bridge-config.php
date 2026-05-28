@@ -1,13 +1,21 @@
 <?php
 
-if (!defined('BORNADO_NOTIFICATION_INGEST_URL')) {
-    define('BORNADO_NOTIFICATION_INGEST_URL', 'https://bornado.com/notification-events.php');
+if (!defined('BORNADO_NOTIFICATION_SHARED_SECRET')) {
+    define('BORNADO_NOTIFICATION_SHARED_SECRET', getenv('BORNADO_NOTIFICATION_SHARED_SECRET') ?: 'be67d9eef04f5f9cffbbbcf811e5bd02');
 }
 
-if (!defined('BORNADO_NOTIFICATION_SHARED_SECRET')) {
-    define('BORNADO_NOTIFICATION_SHARED_SECRET', 'W6MgZximyrmt/CbO9djHA12cCPrbdlEy');
+if (!defined('BORNADO_NOTIFICATION_INGEST_URL')) {
+    define('BORNADO_NOTIFICATION_INGEST_URL', getenv('BORNADO_NOTIFICATION_INGEST_URL') ?: 'https://bornado.com/notification-events.php');
 }
 
 if (!defined('BORNADO_NOTIFICATION_SOURCE_SYSTEM')) {
-    define('BORNADO_NOTIFICATION_SOURCE_SYSTEM', 'bornado-wordpress');
+    define('BORNADO_NOTIFICATION_SOURCE_SYSTEM', getenv('BORNADO_NOTIFICATION_SOURCE_SYSTEM') ?: 'bornado-wordpress');
+}
+
+if (!defined('BORNADO_NOTIFICATION_OPS_URL')) {
+    define('BORNADO_NOTIFICATION_OPS_URL', getenv('BORNADO_NOTIFICATION_OPS_URL') ?: 'https://bornado.com/notification-admin.php');
+}
+
+if (!defined('BORNADO_NOTIFICATION_OPS_KEY')) {
+    define('BORNADO_NOTIFICATION_OPS_KEY', getenv('BORNADO_NOTIFICATION_OPS_KEY') ?: BORNADO_NOTIFICATION_SHARED_SECRET);
 }

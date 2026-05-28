@@ -15,6 +15,7 @@
         method: config.phoneEnabled ? 'phone' : 'email',
         otpFlow: null,
         redirectUrl: config.afterLoginUrl || window.location.href,
+        continueTokenHandled: false,
         resendCountdown: 0,
         resendInterval: null,
         sendingCode: false,
@@ -88,6 +89,7 @@
         bindModalLifecycle();
         enhancePhoneFields();
         syncView();
+        maybeStartContinueTokenFlow();
     }
 
     function bindModeButtons() {
@@ -139,6 +141,58 @@
                 redirectUrl: parsed.searchParams.get('u') || window.location.href
             });
         });
+    }
+
+    async function maybeStartContinueTokenFlow() {
+        const parsed = safeUrl(window.location.href);
+        const continueToken = parsed.searchParams.get('bornado_continue_token');
+
+        if (!continueToken || state.continueTokenHandled) {
+            return;
+        }
+
+        state.continueTokenHandled = true;
+        parsed.searchParams.delete('bornado_continue_token');
+        if (window.history && window.history.replaceState) {
+            window.history.replaceState({}, document.title, parsed.toString());
+        }
+
+        try {
+            const response = await postAjax({
+                action: 'bornado_auth_resolve_continue_token',
+                security: config.continueTokenNonce,
+                continue_token: continueToken
+            });
+
+            const data = response && response.data ? response.data : {};
+            const phoneNumber = String(data.phone_number || '').trim();
+            const mode = data.mode === 'register' ? 'register' : 'login';
+            if (!phoneNumber) {
+                throw new Error(getI18n('genericError'));
+            }
+
+            state.redirectUrl = data.redirect_url || config.profileUrl || window.location.href;
+            primePhoneFields(phoneNumber);
+            openModal({
+                mode: mode,
+                method: 'phone',
+                redirectUrl: state.redirectUrl
+            });
+            await startResolvedPhoneFlow({
+                mode: mode,
+                phoneNumber: phoneNumber,
+                phoneDialCode: '',
+                remember: data.remember || '1',
+                displayName: String(data.display_name || '').trim()
+            });
+        } catch (error) {
+            openModal({
+                mode: 'login',
+                method: 'phone',
+                redirectUrl: config.profileUrl || window.location.href
+            });
+            showNotice('error', extractMessage(error));
+        }
     }
 
     function bindForms() {
@@ -585,6 +639,57 @@
             setPhoneRequestState(false);
             toggleSubmitState(form, false);
         }
+    }
+
+    async function startResolvedPhoneFlow(flow) {
+        if (state.sendingCode || state.verifyingCode) {
+            return;
+        }
+
+        showNotice('info', getI18n('loading'));
+        setPhoneRequestState(true);
+
+        try {
+            state.otpFlow = null;
+            stopResendCountdown();
+            await postAjax({
+                action: 'bornado_auth_phone_preflight',
+                security: config.phonePreflightNonce,
+                mode: flow.mode || 'login',
+                phone_number: flow.phoneNumber,
+                phone_dial_code: flow.phoneDialCode || ''
+            });
+
+            await sendPhoneCode({
+                mode: flow.mode || 'login',
+                phoneNumber: flow.phoneNumber,
+                phoneDialCode: flow.phoneDialCode || '',
+                remember: flow.remember || '1',
+                displayName: flow.displayName || ''
+            }, false);
+        } finally {
+            setPhoneRequestState(false);
+        }
+    }
+
+    function primePhoneFields(phoneNumber) {
+        [forms.phoneLogin, forms.phoneRegister].forEach(function (form) {
+            if (!form) {
+                return;
+            }
+
+            const input = form.querySelector('input[name="phone_number"]');
+            if (input) {
+                input.value = phoneNumber;
+            }
+
+            const country = inferCountryFromPhone(phoneNumber);
+            const select = form.querySelector('select[name="phone_dial_code"]');
+            if (country && select && country.dialCode) {
+                select.value = country.dialCode;
+                $(select).trigger('change');
+            }
+        });
     }
 
     async function resendPhoneCode() {
