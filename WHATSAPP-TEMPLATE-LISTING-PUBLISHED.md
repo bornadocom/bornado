@@ -2,7 +2,7 @@
 
 ## نام پیشنهادی
 
-`listing_published_manage_fa_v1`
+`listing_published_manage_fa_v2`
 
 ## دسته‌بندی
 
@@ -16,13 +16,19 @@
 
 ## هدر پیشنهادی
 
+Header type: `Image`
+
+Image URL:
+
 ```text
-آگهی شما با عنوان «{{1}}» در Bornado منتشر شد.
+https://bornado.com/wp-content/uploads/2026/05/Bornado.png
 ```
 
 ## بادی پیشنهادی
 
 ```text
+آگهی شما با عنوان «{{listing_title}}» منتشر شد.
+
 شما می‌توانید کاملا رایگان آگهی خود را ویرایش یا حذف کنید و یا تصاویر مورد نظر خود را به آن اضافه کنید. همچنین می‌توانید در صورت تمایل آگهی‌های دیگر خود را کاملا رایگان در Bornado درج کنید.
 ```
 
@@ -46,9 +52,9 @@ https://bornado.com/notification-continue.php?t=
 
 ## پارامترها
 
-- Header `{{1}}` = `payload.listing.title`
-- برای Body هیچ پارامتری ارسال نمی‌شود
-- دکمه URL parameter = `payload.listing.continueToken`
+- Header image ثابت = `https://bornado.com/wp-content/uploads/2026/05/Bornado.png`
+- Body `{{listing_title}}` = `payload.listing.title`
+- Button URL `{{1}}` = `payload.listing.continueToken`
 
 ## تنظیم config بعد از approval
 
@@ -56,12 +62,18 @@ https://bornado.com/notification-continue.php?t=
 
 ```php
 'listing.published' => array(
-    'name'            => 'listing_published_manage_fa_v1',
+    'name'            => 'listing_published_manage_fa_v2',
     'language_code'   => 'fa',
-    'header_parameters' => array(
-        'payload.listing.title',
+    'header_media'    => array(
+        'type' => 'image',
+        'link' => 'https://bornado.com/wp-content/uploads/2026/05/Bornado.png',
     ),
-    'body_parameters' => array(),
+    'body_parameters' => array(
+        array(
+            'name' => 'listing_title',
+            'path' => 'payload.listing.title',
+        ),
+    ),
     'button_parameters' => array(
         array(
             'sub_type'   => 'url',
@@ -73,3 +85,5 @@ https://bornado.com/notification-continue.php?t=
     ),
 ),
 ```
+
+در این نسخه، header از نوع image ثابت است، متغیر body به‌صورت named (`{{listing_title}}`) و متغیر دکمه URL به‌صورت positional (`{{1}}`) تعریف شده است.

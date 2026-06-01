@@ -60,7 +60,7 @@ final class WhatsAppCloudApiAdapter implements ProviderAdapterInterface
 
         $event     = isset($context['event']) && is_array($context['event']) ? $context['event'] : array();
         $eventType = (string) ($event['eventType'] ?? ($context['eventType'] ?? ''));
-        $payload   = $this->buildPayload($destination, $eventType, $event, $message);
+        $payload   = $this->buildPayload($destination, $eventType, $event, $message, $context);
 
         if (isset($payload['_error'])) {
             return array(
@@ -102,26 +102,28 @@ final class WhatsAppCloudApiAdapter implements ProviderAdapterInterface
     /**
      * @param array<string,mixed> $event
      * @param array<string,string> $message
+     * @param array<string,mixed> $context
      * @return array<string,mixed>
      */
-    private function buildPayload(string $destination, string $eventType, array $event, array $message): array
+    private function buildPayload(string $destination, string $eventType, array $event, array $message, array $context = array()): array
     {
         $mode          = trim((string) ($this->config['message_mode'] ?? 'template'));
         $templateMap   = isset($this->config['template_map']) && is_array($this->config['template_map']) ? $this->config['template_map'] : array();
         $templateSpec  = isset($templateMap[$eventType]) && is_array($templateMap[$eventType]) ? $templateMap[$eventType] : array();
         $textFallback  = !empty($this->config['text_fallback_enabled']);
         $body          = trim((string) ($message['body'] ?? ''));
+        $replyToMessageId = trim((string) ($context['replyToMessageId'] ?? ''));
 
         if ('template' === $mode && !empty($templateSpec['name'])) {
             return $this->buildTemplatePayload($destination, $templateSpec, $event);
         }
 
         if ('text' === $mode && '' !== $body) {
-            return $this->buildTextPayload($destination, $body);
+            return $this->buildTextPayload($destination, $body, $replyToMessageId);
         }
 
         if ($textFallback && '' !== $body) {
-            return $this->buildTextPayload($destination, $body);
+            return $this->buildTextPayload($destination, $body, $replyToMessageId);
         }
 
         return array(
@@ -144,11 +146,9 @@ final class WhatsAppCloudApiAdapter implements ProviderAdapterInterface
         $bodyParams    = $this->buildTextParameters($bodyPaths, $event);
 
         $components = array();
-        if (!empty($headerParams)) {
-            $components[] = array(
-                'type'       => 'header',
-                'parameters' => $headerParams,
-            );
+        $headerComponent = $this->buildHeaderComponent($templateSpec, $event, $headerParams);
+        if (!empty($headerComponent)) {
+            $components[] = $headerComponent;
         }
 
         if (!empty($bodyParams)) {
@@ -186,6 +186,53 @@ final class WhatsAppCloudApiAdapter implements ProviderAdapterInterface
     /**
      * @param array<string,mixed> $templateSpec
      * @param array<string,mixed> $event
+     * @param array<int,array<string,string>> $headerParams
+     * @return array<string,mixed>
+     */
+    private function buildHeaderComponent(array $templateSpec, array $event, array $headerParams): array
+    {
+        $headerMedia = isset($templateSpec['header_media']) && is_array($templateSpec['header_media'])
+            ? $templateSpec['header_media']
+            : array();
+
+        $mediaType = strtolower(trim((string) ($headerMedia['type'] ?? '')));
+        if ('' !== $mediaType) {
+            $mediaLink = trim((string) ($headerMedia['link'] ?? ''));
+            $mediaPath = trim((string) ($headerMedia['path'] ?? ''));
+
+            if ('' === $mediaLink && '' !== $mediaPath) {
+                $mediaValue = EventCatalog::getByPath($event, $mediaPath);
+                $mediaLink = is_scalar($mediaValue) ? trim((string) $mediaValue) : '';
+            }
+
+            if ('' !== $mediaLink && in_array($mediaType, array('image', 'video', 'document'), true)) {
+                return array(
+                    'type'       => 'header',
+                    'parameters' => array(
+                        array(
+                            'type'  => $mediaType,
+                            $mediaType => array(
+                                'link' => $mediaLink,
+                            ),
+                        ),
+                    ),
+                );
+            }
+        }
+
+        if (!empty($headerParams)) {
+            return array(
+                'type'       => 'header',
+                'parameters' => $headerParams,
+            );
+        }
+
+        return array();
+    }
+
+    /**
+     * @param array<string,mixed> $templateSpec
+     * @param array<string,mixed> $event
      * @return array<int,array<string,mixed>>
      */
     private function buildButtonComponents(array $templateSpec, array $event): array
@@ -203,15 +250,7 @@ final class WhatsAppCloudApiAdapter implements ProviderAdapterInterface
             $paths = isset($buttonSpec['parameters']) && is_array($buttonSpec['parameters'])
                 ? $buttonSpec['parameters']
                 : array();
-            $parameters = array();
-
-            foreach ($paths as $path) {
-                $value = EventCatalog::getByPath($event, (string) $path);
-                $parameters[] = array(
-                    'type' => 'text',
-                    'text' => is_scalar($value) ? (string) $value : '',
-                );
-            }
+            $parameters = $this->buildTextParameters($paths, $event);
 
             if (empty($parameters)) {
                 continue;
@@ -237,23 +276,60 @@ final class WhatsAppCloudApiAdapter implements ProviderAdapterInterface
     {
         $parameters = array();
 
-        foreach ($paths as $path) {
-            $value = EventCatalog::getByPath($event, (string) $path);
-            $parameters[] = array(
+        foreach ($paths as $parameterSpec) {
+            $resolvedSpec = $this->resolveParameterSpec($parameterSpec);
+            if ('' === $resolvedSpec['path']) {
+                continue;
+            }
+
+            $value = EventCatalog::getByPath($event, $resolvedSpec['path']);
+            $parameter = array(
                 'type' => 'text',
                 'text' => is_scalar($value) ? (string) $value : '',
             );
+
+            if ('' !== $resolvedSpec['name']) {
+                $parameter['parameter_name'] = $resolvedSpec['name'];
+            }
+
+            $parameters[] = $parameter;
         }
 
         return $parameters;
     }
 
     /**
+     * @param mixed $parameterSpec
+     * @return array{name:string,path:string}
+     */
+    private function resolveParameterSpec($parameterSpec): array
+    {
+        if (is_string($parameterSpec)) {
+            return array(
+                'name' => '',
+                'path' => trim($parameterSpec),
+            );
+        }
+
+        if (!is_array($parameterSpec)) {
+            return array(
+                'name' => '',
+                'path' => '',
+            );
+        }
+
+        return array(
+            'name' => trim((string) ($parameterSpec['name'] ?? $parameterSpec['parameter_name'] ?? '')),
+            'path' => trim((string) ($parameterSpec['path'] ?? '')),
+        );
+    }
+
+    /**
      * @return array<string,mixed>
      */
-    private function buildTextPayload(string $destination, string $body): array
+    private function buildTextPayload(string $destination, string $body, string $replyToMessageId = ''): array
     {
-        return array(
+        $payload = array(
             'messaging_product' => 'whatsapp',
             'recipient_type'    => 'individual',
             'to'                => $destination,
@@ -262,6 +338,50 @@ final class WhatsAppCloudApiAdapter implements ProviderAdapterInterface
                 'preview_url' => true,
                 'body'        => $body,
             ),
+        );
+
+        if ('' !== $replyToMessageId) {
+            $payload['context'] = array(
+                'message_id' => $replyToMessageId,
+            );
+        }
+
+        return $payload;
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    public function sendTextMessage(string $destination, string $body, string $replyToMessageId = ''): array
+    {
+        $destination = $this->normalizeDestination($destination);
+        if ('' === $destination) {
+            return array(
+                'success' => false,
+                'code'    => 'invalid_destination',
+                'message' => 'A valid WhatsApp destination is required.',
+            );
+        }
+
+        if (!$this->isEnabled()) {
+            return array(
+                'success' => false,
+                'code'    => 'provider_disabled',
+                'message' => 'WhatsApp Cloud API provider is disabled.',
+            );
+        }
+
+        $payload = $this->buildTextPayload($destination, trim($body), $replyToMessageId);
+        $response = $this->postJson($this->buildEndpoint(), $payload);
+
+        return array(
+            'success'        => !empty($response['ok']),
+            'code'           => !empty($response['ok']) ? 'provider_accepted' : 'provider_rejected',
+            'provider'       => $this->getName(),
+            'httpStatus'     => (int) ($response['status'] ?? 0),
+            'response'       => $response['body'] ?? null,
+            'messageId'      => $this->extractMessageId($response['body'] ?? array()),
+            'requestPayload' => $payload,
         );
     }
 

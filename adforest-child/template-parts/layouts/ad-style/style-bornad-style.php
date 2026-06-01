@@ -151,7 +151,10 @@ $contact_num   = get_post_meta($pid, '_adforest_poster_contact', true);
 $ad_status     = get_post_meta($pid, '_adforest_ad_status_', true);
 $ad_website    = get_post_meta($pid, '_adforest_ad_website', true);
 $ad_tagline    = get_post_meta($pid, '_adforest_ad_tagline', true) ?? '';
-$ad_type       = get_post_meta($pid, '_adforest_ad_type', true) ?? '';
+$ad_type_terms = wp_get_post_terms($pid, 'ad_type');
+$ad_type       = (!is_wp_error($ad_type_terms) && !empty($ad_type_terms) && isset($ad_type_terms[0]->name))
+    ? (string) $ad_type_terms[0]->name
+    : (get_post_meta($pid, '_adforest_ad_type', true) ?? '');
 $ad_location   = get_post_meta($pid, '_adforest_ad_location', true);
 $show_ad_id    = isset($adforest_theme['sb_show_ad_id']) ? $adforest_theme['sb_show_ad_id'] : '';
 $allow_whatsapp = $adforest_theme['sb_ad_whatsapp_chat'] ?? false;
@@ -207,10 +210,21 @@ $claim_existing_id     = ($claim_is_logged_in && function_exists('bornado_get_ex
     : 0;
 $claim_login_page      = apply_filters('adforest_language_page_id', $adforest_theme['sb_sign_in_page'] ?? '');
 $claim_login_url       = '';
+$current_page_url      = function_exists('adforest_get_current_url')
+    ? (string) adforest_get_current_url()
+    : (string) get_permalink($pid);
+$guest_login_url       = bornado_get_safe_login_redirect_url($current_page_url);
+$phone_login_required  = function_exists('adforest_showPhone_to_users')
+    ? (bool) adforest_showPhone_to_users()
+    : false;
 $claim_contact_value   = $claim_is_logged_in ? (string) get_user_meta($current_user_id, '_sb_contact', true) : '';
+$smart_claim_context   = function_exists('bornado_get_ad_ownership_claim_context')
+    ? (array) bornado_get_ad_ownership_claim_context($pid)
+    : array();
+$claim_uses_phone_flow = !empty($smart_claim_context['has_phone']);
 
 if (!$claim_is_logged_in && !empty($claim_login_page)) {
-    $claim_login_url = adforest_login_with_redirect_url_param(adforest_get_current_url());
+    $claim_login_url = $guest_login_url;
 }
 
 if (isset($adforest_theme['sb_show_recently_viewed_on_ad_detail']) && 1 == $adforest_theme['sb_show_recently_viewed_on_ad_detail']) {
@@ -397,14 +411,10 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
                         <?php
                         if (($communication_mode == 'both' || $communication_mode == 'phone') && '' !== $contact_num) {
                             $masked_num = substr($contact_num, 0, -5) . str_repeat('x', 5);
-                            $requires_login = adforest_showPhone_to_users();
+                            $requires_login = $phone_login_required;
                             $call_now = '#';
                             if ($requires_login) {
-                                $adforest_login_page = isset($adforest_theme['sb_sign_in_page']) ? $adforest_theme['sb_sign_in_page'] : '';
-                                $adforest_login_page = apply_filters('adforest_language_page_id', $adforest_login_page);
-                                if ('' !== $adforest_login_page) {
-                                    $call_now = adforest_login_with_redirect_url_param(adforest_get_current_url());
-                                }
+                                $call_now = $guest_login_url;
                             }
                             ?>
                             <div class="bornad-contact-list">
@@ -456,13 +466,9 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
                             $redirect_url = "https://api.whatsapp.com/send?phone={$whatsapp_number}&text=" . urlencode($ad_message);
                             $whatsapp_text = esc_html__('Message on WhatsApp', 'adforest');
 
-                            if (adforest_showPhone_to_users()) {
-                                $adforest_login_page = isset($adforest_theme['sb_sign_in_page']) ? $adforest_theme['sb_sign_in_page'] : '';
-                                $adforest_login_page = apply_filters('adforest_language_page_id', $adforest_login_page);
-                                if ('' !== $adforest_login_page) {
-                                    $redirect_url = adforest_login_with_redirect_url_param(adforest_get_current_url());
-                                    $whatsapp_text = esc_html__('Login to Chat', 'adforest');
-                                }
+                            if ($phone_login_required) {
+                                $redirect_url = $guest_login_url;
+                                $whatsapp_text = esc_html__('Login to Chat', 'adforest');
                             }
                             ?>
                             <div class="bornad-whatsapp-cta">
@@ -580,10 +586,10 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
                                     data-bs-target=".bornad-claim-modal"
                                     data-bs-toggle="modal"
                                     href="javascript:void(0);"
-                                    title="<?php echo esc_attr__('احراز مالکیت آگهی', 'adforest'); ?>"
+                                    title="<?php echo esc_attr($claim_uses_phone_flow ? 'احراز مالکیت با شماره تاییدشده' : __('احراز مالکیت آگهی', 'adforest')); ?>"
                                 >
                                     <i class="far fa-id-card" aria-hidden="true"></i>
-                                    <span>احراز مالکیت آگهی</span>
+                                    <span><?php echo esc_html($claim_uses_phone_flow ? 'احراز مالکیت با شماره' : 'احراز مالکیت آگهی'); ?></span>
                                 </a>
                             <?php } ?>
 
@@ -952,14 +958,10 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
                 <?php
                 if (($communication_mode == 'both' || $communication_mode == 'phone') && '' !== $contact_num) {
                     $masked_num = substr($contact_num, 0, -5) . str_repeat('x', 5);
-                    $requires_login = adforest_showPhone_to_users();
+                    $requires_login = $phone_login_required;
                     $call_now = '#';
                     if ($requires_login) {
-                        $adforest_login_page = isset($adforest_theme['sb_sign_in_page']) ? $adforest_theme['sb_sign_in_page'] : '';
-                        $adforest_login_page = apply_filters('adforest_language_page_id', $adforest_login_page);
-                        if ('' !== $adforest_login_page) {
-                            $call_now = adforest_login_with_redirect_url_param(adforest_get_current_url());
-                        }
+                        $call_now = $guest_login_url;
                     }
                     ?>
                     <div class="bornad-contact-list">
@@ -1011,13 +1013,9 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
                     $redirect_url = "https://api.whatsapp.com/send?phone={$whatsapp_number}&text=" . urlencode($ad_message);
                     $whatsapp_text = esc_html__('Message on WhatsApp', 'adforest');
 
-                    if (adforest_showPhone_to_users()) {
-                        $adforest_login_page = isset($adforest_theme['sb_sign_in_page']) ? $adforest_theme['sb_sign_in_page'] : '';
-                        $adforest_login_page = apply_filters('adforest_language_page_id', $adforest_login_page);
-                        if ('' !== $adforest_login_page) {
-                            $redirect_url = adforest_login_with_redirect_url_param(adforest_get_current_url());
-                            $whatsapp_text = esc_html__('Login to Chat', 'adforest');
-                        }
+                    if ($phone_login_required) {
+                        $redirect_url = $guest_login_url;
+                        $whatsapp_text = esc_html__('Login to Chat', 'adforest');
                     }
                     ?>
                     <div class="bornad-whatsapp-cta">
@@ -1045,15 +1043,71 @@ if ($claim_enabled) {
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="btn close" data-bs-dismiss="modal"><span aria-hidden="true">&#10005;</span><span class="sr-only"><?php echo __('Close', 'adforest'); ?></span></button>
                     <div class="modal-title">احراز مالکیت آگهی</div>
+                    <button type="button" class="btn close" data-bs-dismiss="modal"><span aria-hidden="true">&#10005;</span><span class="sr-only"><?php echo __('Close', 'adforest'); ?></span></button>
                 </div>
                 <div class="modal-body">
                     <div class="bornad-claim-feedback" style="display:none;"></div>
-                    <?php if (!$claim_is_logged_in) { ?>
+                    <?php if ($claim_uses_phone_flow) { ?>
+                        <p class="bornad-claim-note">
+                            <?php
+                            echo wp_kses(
+                                $smart_claim_context['note'] ?? 'برای احراز مالکیت این آگهی باید با شماره ثبت‌شده روی آگهی وارد شوید.',
+                                array(
+                                    'bdi' => array(
+                                        'dir' => true,
+                                        'class' => true,
+                                    ),
+                                )
+                            );
+                            ?>
+                        </p>
+                        <div class="form-group col-md-12 col-sm-12">
+                            <label>شماره ثبت‌شده روی آگهی</label>
+                            <input type="text" class="form-control" value="<?php echo esc_attr($smart_claim_context['display_phone'] ?? ''); ?>" readonly>
+                        </div>
+                        <?php if ('ajax-transfer' === ($smart_claim_context['action_type'] ?? '')) { ?>
+                            <div class="col-md-12 col-sm-12 margin-bottom-20 margin-top-20">
+                                <button
+                                    type="button"
+                                    class="adt-button-dark btn-block"
+                                    id="bornad-smart-claim-transfer"
+                                    data-adid="<?php echo esc_attr($pid); ?>"
+                                    data-default-text="<?php echo esc_attr($smart_claim_context['action_label'] ?? 'انتقال آگهی‌ها'); ?>"
+                                >
+                                    <?php echo esc_html($smart_claim_context['action_label'] ?? 'انتقال آگهی‌ها'); ?>
+                                </button>
+                            </div>
+                        <?php } elseif (!empty($smart_claim_context['action_url'])) {
+                            $claim_action_url = (string) $smart_claim_context['action_url'];
+                            $claim_continue_token = '';
+                            $claim_action_query = wp_parse_url($claim_action_url, PHP_URL_QUERY);
+                            if (is_string($claim_action_query) && '' !== $claim_action_query) {
+                                $claim_action_params = array();
+                                parse_str($claim_action_query, $claim_action_params);
+                                if (!empty($claim_action_params['bornado_continue_token'])) {
+                                    $claim_continue_token = (string) $claim_action_params['bornado_continue_token'];
+                                }
+                            }
+                            ?>
+                            <a
+                                class="adt-button-dark btn-block bornad-claim-action-link"
+                                href="<?php echo esc_url($claim_action_url); ?>"
+                                data-action-url="<?php echo esc_url($claim_action_url); ?>"
+                                <?php if ('' !== $claim_continue_token) { ?>
+                                    data-bornado-auth-open="1"
+                                    data-mode="login"
+                                    data-method="phone"
+                                    data-continue-token="<?php echo esc_attr($claim_continue_token); ?>"
+                                <?php } ?>
+                            >
+                                <?php echo esc_html($smart_claim_context['action_label'] ?? 'ادامه'); ?>
+                            </a>
+                        <?php } ?>
+                    <?php } elseif (!$claim_is_logged_in) { ?>
                         <p class="bornad-claim-note">برای ثبت درخواست احراز مالکیت ابتدا وارد حساب کاربری خود شوید.</p>
                         <?php if ('' !== $claim_login_url) { ?>
-                            <a class="adt-button-dark btn-block" href="<?php echo esc_url($claim_login_url); ?>">
+                            <a class="adt-button-dark btn-block" href="<?php echo esc_url($claim_login_url); ?>" data-bs-dismiss="modal">
                                 ورود و ادامه
                             </a>
                         <?php } ?>

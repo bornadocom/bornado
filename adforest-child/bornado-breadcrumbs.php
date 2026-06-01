@@ -3,6 +3,20 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+if (!function_exists('bornado_breadcrumb_show_current_page_title')) {
+    /**
+     * Whether the visible breadcrumb should repeat the current page title.
+     *
+     * Default false: the page H1 already states the current page; breadcrumbs show the path only.
+     *
+     * @return bool
+     */
+    function bornado_breadcrumb_show_current_page_title()
+    {
+        return (bool) apply_filters('bornado_breadcrumb_show_current_page_title', false);
+    }
+}
+
 if (!function_exists('bornado_semantic_breadcrumb_get_route_context')) {
     /**
      * Return the current semantic route context when available.
@@ -49,36 +63,30 @@ if (!function_exists('bornado_semantic_breadcrumb_get_items')) {
         if ($country_term instanceof WP_Term) {
             $items[] = array(
                 'label'  => $country_term->name,
-                'url'    => !($city_term instanceof WP_Term) && empty($category_terms) && $paged < 2
-                    ? ''
-                    : bornado_semantic_breadcrumb_get_semantic_archive_url((int) $country_term->term_id, 0, 0),
-                'active' => !($city_term instanceof WP_Term) && empty($category_terms) && $paged < 2,
+                'url'    => bornado_semantic_breadcrumb_get_semantic_archive_url((int) $country_term->term_id, 0, 0),
+                'active' => false,
             );
         }
 
         if ($city_term instanceof WP_Term) {
             $items[] = array(
                 'label'  => $city_term->name,
-                'url'    => empty($category_terms) && $paged < 2
-                    ? ''
-                    : bornado_semantic_breadcrumb_get_semantic_archive_url(
-                        $country_term instanceof WP_Term ? (int) $country_term->term_id : 0,
-                        (int) $city_term->term_id,
-                        0
-                    ),
-                'active' => empty($category_terms) && $paged < 2,
+                'url'    => bornado_semantic_breadcrumb_get_semantic_archive_url(
+                    $country_term instanceof WP_Term ? (int) $country_term->term_id : 0,
+                    (int) $city_term->term_id,
+                    0
+                ),
+                'active' => false,
             );
         }
 
-        $last_category_index = count($category_terms) - 1;
-        foreach ($category_terms as $index => $term) {
-            $term_url  = get_term_link($term);
-            $is_active = $index === $last_category_index && $paged < 2;
+        foreach ($category_terms as $term) {
+            $term_url = get_term_link($term);
 
             $items[] = array(
                 'label'  => $term->name,
-                'url'    => $is_active || is_wp_error($term_url) ? '' : (string) $term_url,
-                'active' => $is_active,
+                'url'    => is_wp_error($term_url) ? '' : (string) $term_url,
+                'active' => false,
             );
         }
 
@@ -112,17 +120,17 @@ if (!function_exists('bornado_semantic_breadcrumb_output_current_route_items')) 
             $url   = isset($item['url']) ? (string) $item['url'] : '';
             $active = !empty($item['active']);
 
-            if ($active || '' === $url) {
+            if ('' !== $url) {
                 printf(
-                    '<li class="breadcrumb-item active" aria-current="page">%s</li>',
+                    '<li class="breadcrumb-item"><a href="%1$s">%2$s</a></li>',
+                    esc_url($url),
                     esc_html($label)
                 );
                 continue;
             }
 
             printf(
-                '<li class="breadcrumb-item"><a href="%1$s">%2$s</a></li>',
-                esc_url($url),
+                '<li class="breadcrumb-item active" aria-current="page">%s</li>',
                 esc_html($label)
             );
         }
@@ -245,9 +253,10 @@ if (!function_exists('bornado_semantic_breadcrumb_get_single_ad_items')) {
      * @param int|null $post_id Optional post ID.
      * @return array<int,array<string,string|bool>>
      */
-    function bornado_semantic_breadcrumb_get_single_ad_items($post_id = null)
+    function bornado_semantic_breadcrumb_get_single_ad_items($post_id = null, $for_schema = false)
     {
         $post = $post_id ? get_post((int) $post_id) : get_queried_object();
+        $show_current_title = $for_schema || bornado_breadcrumb_show_current_page_title();
         if (!$post instanceof WP_Post || $post->post_type !== 'ad_post') {
             return array();
         }
@@ -312,11 +321,13 @@ if (!function_exists('bornado_semantic_breadcrumb_get_single_ad_items')) {
             );
         }
 
-        $items[] = array(
-            'label'  => get_the_title($post),
-            'url'    => '',
-            'active' => true,
-        );
+        if ($show_current_title) {
+            $items[] = array(
+                'label'  => get_the_title($post),
+                'url'    => '',
+                'active' => true,
+            );
+        }
 
         return $items;
     }
@@ -340,17 +351,17 @@ if (!function_exists('bornado_semantic_breadcrumb_output_single_ad_items')) {
             $url    = isset($item['url']) ? (string) $item['url'] : '';
             $active = !empty($item['active']);
 
-            if ($active || '' === $url) {
+            if ('' !== $url) {
                 printf(
-                    '<li class="breadcrumb-item active" aria-current="page">%s</li>',
+                    '<li class="breadcrumb-item"><a href="%1$s">%2$s</a></li>',
+                    esc_url($url),
                     esc_html($label)
                 );
                 continue;
             }
 
             printf(
-                '<li class="breadcrumb-item"><a href="%1$s">%2$s</a></li>',
-                esc_url($url),
+                '<li class="breadcrumb-item active" aria-current="page">%s</li>',
                 esc_html($label)
             );
         }
@@ -411,7 +422,7 @@ if (!function_exists('bornado_print_semantic_breadcrumb_schema')) {
             $items         = bornado_semantic_breadcrumb_get_items();
             $canonical_url = !empty($context['canonical_url']) ? (string) $context['canonical_url'] : '';
         } elseif (is_singular('ad_post')) {
-            $items         = bornado_semantic_breadcrumb_get_single_ad_items();
+            $items         = bornado_semantic_breadcrumb_get_single_ad_items(null, true);
             $canonical_url = (string) get_permalink(get_queried_object_id());
         }
 
@@ -463,10 +474,44 @@ if (!function_exists('bornado_print_semantic_breadcrumb_schema')) {
 }
 add_action('wp_head', 'bornado_print_semantic_breadcrumb_schema', 25);
 
+if (!function_exists('bornado_is_ad_post_page')) {
+    /**
+     * Whether the current request is the AdForest post-ad page.
+     *
+     * @return bool
+     */
+    function bornado_is_ad_post_page()
+    {
+        if (is_page_template('page-add-new.php')) {
+            return true;
+        }
+
+        global $adforest_theme;
+
+        $page_id = isset($adforest_theme['sb_post_ad_page'])
+            ? (int) apply_filters('adforest_language_page_id', $adforest_theme['sb_post_ad_page'])
+            : 0;
+
+        if ($page_id > 0) {
+            $page_id = (int) apply_filters('adforest_ad_post_verified_id', $page_id);
+        }
+
+        if ($page_id > 0 && is_page($page_id)) {
+            return true;
+        }
+
+        return is_page('ad-post');
+    }
+}
+
 if (!function_exists('adforest_custom_breadcrumbs')) {
     function adforest_custom_breadcrumbs($page_class = '')
     {
         global $adforest_theme, $post, $author;
+
+        if (bornado_is_ad_post_page()) {
+            return;
+        }
 
         $homepage_id = get_option('page_on_front');
         if (is_front_page() && $homepage_id) {
@@ -582,7 +627,7 @@ if (!function_exists('adforest_custom_breadcrumbs')) {
                 );
             }
 
-            if (!$single_title_rendered) {
+            if (!$single_title_rendered && bornado_breadcrumb_show_current_page_title()) {
                 printf(
                     '<li class="breadcrumb-item active" aria-current="page">%s</li>',
                     esc_html(get_the_title())
@@ -614,10 +659,13 @@ if (!function_exists('adforest_custom_breadcrumbs')) {
                     );
                 }
             }
-            printf(
-                '<li class="breadcrumb-item active" aria-current="page">%s</li>',
-                esc_html(get_the_title())
-            );
+
+            if (bornado_breadcrumb_show_current_page_title()) {
+                printf(
+                    '<li class="breadcrumb-item active" aria-current="page">%s</li>',
+                    esc_html(get_the_title())
+                );
+            }
         } elseif (is_tag()) {
             printf(
                 '<li class="breadcrumb-item active" aria-current="page">%s</li>',

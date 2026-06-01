@@ -651,6 +651,18 @@ if (!function_exists('bornado_enqueue_single_ad_style_assets')) {
                         \$button.prop('disabled', false).removeClass('is-loading').text(defaultText);
                     });
                 });
+
+                $(document).on('click', '.bornad-claim-action-link', function(event){
+                    var actionUrl = $(this).attr('data-action-url') || $(this).attr('href') || '';
+                    var usesAuthModal = $(this).is('[data-bornado-auth-open]') || !!$(this).attr('data-continue-token');
+
+                    if (!actionUrl || usesAuthModal) {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    window.location.assign(actionUrl);
+                });
             })(jQuery);",
             'after'
         );

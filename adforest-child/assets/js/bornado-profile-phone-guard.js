@@ -97,6 +97,17 @@
         return match;
     }
 
+    function formatCountryOptionLabel(country) {
+        var name = String(country && country.name ? country.name : "").trim();
+        var dialCode = String(country && country.dialCode ? country.dialCode : "").trim();
+
+        if (!dialCode) {
+            return name;
+        }
+
+        return name + " (\u2066" + dialCode + "\u2069)";
+    }
+
     function buildCountrySelect(selectedCountry) {
         var select = document.createElement("select");
 
@@ -106,7 +117,7 @@
         phoneCountries.forEach(function (country) {
             var option = document.createElement("option");
             option.value = String(country.dialCode || "");
-            option.textContent = String(country.name || "") + " (" + String(country.dialCode || "") + ")";
+            option.textContent = formatCountryOptionLabel(country);
 
             if (selectedCountry && String(selectedCountry.dialCode || "") === String(country.dialCode || "")) {
                 option.selected = true;

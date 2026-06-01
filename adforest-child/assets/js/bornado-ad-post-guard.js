@@ -261,6 +261,10 @@
         return "9121234567";
     }
 
+    function isolateInlineText(value) {
+        return "\u2066" + String(value || "") + "\u2069";
+    }
+
     function enhanceAdPostPhoneField(form) {
         var phoneInput = form.querySelector('input[name="ad_contact_number"]');
         var rootCountry = form.querySelector('select[name="ad_country"]');
@@ -271,6 +275,7 @@
         }
 
         phoneHint = ensurePhoneHint(phoneInput);
+        phoneInput.setAttribute("dir", "ltr");
 
         function currentCountry() {
             if (!rootCountry) {
@@ -292,13 +297,13 @@
 
             if (!phoneInput.value.trim()) {
                 phoneHint.textContent = country && country.dialCode
-                    ? getI18n("countryApplied") + " " + getI18n("localPhoneExample") + ": " + getLocalPhoneExample() + " | " + getI18n("phoneExample") + ": " + country.dialCode + getLocalPhoneExample()
+                    ? getI18n("countryApplied") + " " + getI18n("localPhoneExample") + ": " + isolateInlineText(getLocalPhoneExample()) + " | " + getI18n("phoneExample") + ": " + isolateInlineText(String(country.dialCode || "") + getLocalPhoneExample())
                     : getI18n("selectCountry");
                 return;
             }
 
             phoneHint.textContent = normalized
-                ? getI18n("phoneExample") + ": " + normalized
+                ? getI18n("phoneExample") + ": " + isolateInlineText(normalized)
                 : getI18n("invalidPhone");
         }
 

@@ -9,6 +9,19 @@
     box-shadow: 0 28px 80px rgba(15, 23, 42, 0.24);
 }
 
+.bornado-auth-inline {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.bornado-auth-inline .bornado-auth-modal__shell {
+    border: 1px solid #e2e8f0;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
+}
+
 .bornado-auth-modal__shell {
     background: linear-gradient(180deg, #ffffff 0%, #f7faff 100%);
 }
@@ -18,12 +31,6 @@
     display: block;
     padding: 26px 28px 8px;
     border-bottom: 0;
-}
-
-.bornado-auth-modal__topbar {
-    display: flex;
-    justify-content: flex-start;
-    padding-inline-end: 64px;
 }
 
 .bornado-auth-modal__hero {
@@ -44,11 +51,22 @@
 }
 
 .bornado-auth-modal__header .modal-title {
-    margin: 12px 0 0;
+    margin: 0;
     color: #0f172a;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 800;
     line-height: 1.35;
+}
+
+.bornado-auth-modal__subtitle {
+    margin: 10px 0 0;
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.bornado-auth-modal__subtitle[hidden] {
+    display: none !important;
 }
 
 .bornado-auth-modal__body {
@@ -78,78 +96,6 @@
     color: #b91c1c;
 }
 
-.bornado-auth-modal__mode-switch,
-.bornado-auth-modal__method-switch {
-    display: flex;
-    gap: 10px;
-}
-
-.bornado-auth-modal__mode-switch {
-    justify-content: flex-end;
-    margin-bottom: 6px;
-}
-
-.bornado-auth-modal__method-switch {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    margin-bottom: 22px;
-}
-
-.bornado-auth-pill,
-.bornado-auth-method {
-    border: 1px solid rgba(148, 163, 184, 0.28);
-    background: #ffffff;
-    color: #334155;
-    border-radius: 16px;
-    min-height: 48px;
-    font-size: 15px;
-    font-weight: 700;
-    transition: all 0.18s ease;
-}
-
-.bornado-auth-pill.is-active,
-.bornado-auth-method.is-active {
-    border-color: transparent;
-    background: #1479f6;
-    color: #ffffff;
-    box-shadow: 0 10px 24px rgba(20, 121, 246, 0.22);
-}
-
-.bornado-auth-pill {
-    min-height: auto;
-    padding: 0 0 6px;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    color: #64748b;
-    font-size: 15px;
-    font-weight: 800;
-    box-shadow: none;
-    position: relative;
-}
-
-.bornado-auth-pill::after {
-    content: "";
-    position: absolute;
-    inset-inline-start: 0;
-    inset-inline-end: 0;
-    bottom: 0;
-    height: 2px;
-    border-radius: 999px;
-    background: transparent;
-    transition: background-color 0.18s ease;
-}
-
-.bornado-auth-pill.is-active {
-    background: transparent;
-    color: #1479f6;
-    box-shadow: none;
-}
-
-.bornado-auth-pill.is-active::after {
-    background: #1479f6;
-}
-
 .bornado-auth-views {
     position: relative;
 }
@@ -160,6 +106,23 @@
 
 .bornado-auth-view.is-active {
     display: block;
+}
+
+.bornado-auth-panel-copy {
+    margin-bottom: 18px;
+}
+
+.bornado-auth-panel-copy h3 {
+    margin: 0 0 8px;
+    color: #0f172a;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.bornado-auth-panel-copy p {
+    margin: 0;
+    color: #475569;
+    line-height: 1.8;
 }
 
 .bornado-auth-field {
@@ -235,8 +198,7 @@
 }
 
 .bornado-auth-check a,
-.bornado-auth-link,
-.bornado-auth-link-button {
+.bornado-auth-link {
     color: #1479f6;
     font-weight: 700;
     text-decoration: none;
@@ -245,13 +207,13 @@
     padding: 0;
 }
 
-.bornado-auth-inline-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    align-items: center;
-    margin-bottom: 18px;
-    flex-wrap: wrap;
+.bornado-auth-notice__link {
+    display: inline;
+    margin-inline-start: 6px;
+}
+
+.bornado-auth-link--muted {
+    color: #64748b;
 }
 
 .bornado-auth-actions {
@@ -268,27 +230,13 @@
     font-weight: 800;
 }
 
-.bornado-auth-actions--split {
-    gap: 14px;
+.bornado-auth-secondary-links {
+    display: flex;
     align-items: center;
     justify-content: space-between;
-}
-
-.bornado-auth-otp-intro {
-    margin-bottom: 18px;
-}
-
-.bornado-auth-otp-intro h3 {
-    margin: 0 0 8px;
-    color: #0f172a;
-    font-size: 20px;
-    font-weight: 800;
-}
-
-.bornado-auth-otp-intro p {
-    margin: 0;
-    color: #475569;
-    line-height: 1.8;
+    gap: 14px;
+    margin-top: 18px;
+    flex-wrap: wrap;
 }
 
 .bornado-auth-otp-meta {
@@ -340,11 +288,6 @@
         padding: 20px 18px 6px;
     }
 
-    .bornado-auth-modal__header .modal-title {
-        font-size: 18px;
-    }
-
-    .bornado-auth-modal__topbar,
     .bornado-auth-modal__hero {
         padding-inline-end: 50px;
     }
@@ -352,6 +295,10 @@
     .bornado-auth-modal__close {
         top: 20px;
         left: 18px;
+    }
+
+    .bornado-auth-modal__header .modal-title {
+        font-size: 20px;
     }
 
     .bornado-auth-modal__body {
@@ -362,11 +309,19 @@
         grid-template-columns: 1fr;
     }
 
-    .bornado-auth-modal__method-switch {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .bornado-auth-secondary-links,
+    .bornado-auth-otp-meta {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
-    .bornado-auth-modal__mode-switch {
-        gap: 14px;
+    .bornado-auth-phone-row {
+        flex-direction: column;
+    }
+
+    .bornado-auth-phone-row .bornado-auth-country-select {
+        width: 100%;
+        min-width: 0;
+        flex: 1 1 auto;
     }
 }

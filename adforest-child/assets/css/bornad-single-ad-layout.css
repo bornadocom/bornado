@@ -535,6 +535,8 @@ body.bornado-single-ad-style-bornad .bornad-claim-modal .modal-title {
     color: #23262b;
     font-size: 1rem;
     font-weight: 700;
+    margin: 0;
+    text-align: right;
 }
 
 body.bornado-single-ad-style-bornad .bornad-claim-modal .modal-body {
@@ -566,6 +568,25 @@ body.bornado-single-ad-style-bornad .bornad-claim-note {
     font-size: 0.93rem;
     line-height: 2;
     margin: 0 0 14px;
+}
+
+body.bornado-single-ad-style-bornad .bornad-claim-note .bornado-inline-phone {
+    direction: ltr;
+    display: inline-block;
+    unicode-bidi: isolate;
+}
+
+body.bornado-single-ad-style-bornad .bornad-claim-modal .close {
+    margin: 0;
+    padding: 0;
+}
+
+body.bornado-single-ad-style-bornad .bornad-claim-modal .adt-button-dark.btn-block,
+body.bornado-single-ad-style-bornad .bornad-claim-modal .bornad-claim-action-link {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    text-align: center;
 }
 
 body.bornado-single-ad-style-bornad .bornad-claim-feedback {

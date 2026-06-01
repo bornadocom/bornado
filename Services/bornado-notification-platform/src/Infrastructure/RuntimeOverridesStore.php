@@ -47,6 +47,13 @@ final class RuntimeOverridesStore
         $overrides = $this->load();
         $providers = isset($overrides['providers']) && is_array($overrides['providers']) ? $overrides['providers'] : array();
         $events    = isset($overrides['events']) && is_array($overrides['events']) ? $overrides['events'] : array();
+        $service   = isset($overrides['service']) && is_array($overrides['service']) ? $overrides['service'] : array();
+
+        if (!isset($config['service']) || !is_array($config['service'])) {
+            $config['service'] = array();
+        }
+
+        $config['service']['paused'] = !empty($service['paused']);
 
         foreach ($providers as $providerName => $isEnabled) {
             if (!isset($config['providers'][$providerName]) || !is_array($config['providers'][$providerName])) {
@@ -83,6 +90,13 @@ final class RuntimeOverridesStore
     {
         $overrides = $this->load();
         $overrides['events'][$eventType] = $isEnabled;
+        $this->persist($overrides);
+    }
+
+    public function setServicePaused(bool $isPaused): void
+    {
+        $overrides = $this->load();
+        $overrides['service']['paused'] = $isPaused;
         $this->persist($overrides);
     }
 
@@ -128,6 +142,9 @@ final class RuntimeOverridesStore
 
         return array(
             'updatedAt' => (string) ($overrides['updatedAt'] ?? ''),
+            'service'   => array(
+                'paused' => !empty($overrides['service']['paused']),
+            ),
             'providers' => $providers,
             'events'    => $events,
         );
@@ -140,6 +157,9 @@ final class RuntimeOverridesStore
     {
         return array(
             'updatedAt' => '',
+            'service'   => array(
+                'paused' => false,
+            ),
             'providers' => array(),
             'events'    => array(),
         );

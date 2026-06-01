@@ -27,6 +27,21 @@ final class QueueConsumer
     public function run(int $limit = 20, bool $debug = false): array
     {
         $effectiveConfig = $this->loadEffectiveConfig();
+
+        if (!empty($effectiveConfig['service']['paused'])) {
+            $payload = array(
+                'processed'   => 0,
+                'results'     => array(),
+                'processedAt' => gmdate('c'),
+                'status'      => 'paused',
+                'message'     => 'Service is paused. Consumer did not process the queue.',
+            );
+
+            $this->recordHeartbeat($payload);
+
+            return $payload;
+        }
+
         $queue           = new FileEventQueue($effectiveConfig['queue']);
         $deliveryLog     = new FileDeliveryLog($effectiveConfig['logging']['delivery_log'], $effectiveConfig['logging']['state_dir']);
         $whatsAppState   = new WhatsAppStateStore(

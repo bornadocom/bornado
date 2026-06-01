@@ -648,6 +648,10 @@
 			closeActiveSheet();
 			return;
 		}
+		if (event.key === "Escape" && isFiltersDrawerOpen()) {
+			setFiltersDrawerState(false);
+			return;
+		}
 		if (event.key === "Tab" && isAnySheetOpen()) {
 			var focusable = getFocusableInSheet();
 			if (!focusable.length) {
@@ -732,21 +736,29 @@
 		if (!isMobileViewport() && isAnySheetOpen()) {
 			closeActiveSheet();
 		}
+		if (!isMobileViewport()) {
+			setFiltersDrawerState(false);
+			teardownFiltersDrawerEnhancements();
+		}
 		handleScroll();
 	});
 
 	var favoritesToastTimer = null;
+	var lastFocusedFilterElement = null;
+	var mobileFiltersCountTimer = null;
+	var mobileFiltersCountRequest = null;
+	var mobileFiltersFooter = null;
+	var mobileFiltersApplyButton = null;
+	var mobileFiltersHint = null;
+	var mobileFiltersCount = null;
+	var mobileFiltersLastQuery = "";
 
 	function getFilterNavLink() {
 		return nav ? nav.querySelector("[data-adf-mbn-filters]") : null;
 	}
 
-	function handleFilterNavClick(event) {
-		if (event) {
-			event.preventDefault();
-			event.stopPropagation();
-		}
-		setFiltersDrawerState(!isFiltersDrawerOpen());
+	function getJQuery() {
+		return window.jQuery || null;
 	}
 
 	function getSearchFilterSidebar() {
@@ -758,11 +770,623 @@
 		return document.body.classList.contains("adf-mobile-filters-open") || !!(sidebar && sidebar.classList.contains("active"));
 	}
 
-	function setFiltersDrawerState(isOpen) {
+	function isMobileFiltersDraftMode() {
 		var sidebar = getSearchFilterSidebar();
+		return isMobileViewport() && !!(sidebar && sidebar.classList.contains("mobile-filters")) && isFiltersDrawerOpen();
+	}
+
+	function isIgnoredMobileFilterForm(form) {
+		if (!form) {
+			return false;
+		}
+		return (
+			form.id === "search_cats_w" ||
+			!!form.querySelector("#adforest-category-select, #adforest-category-selected")
+		);
+	}
+
+	function isIgnoredMobileFilterField(field) {
+		return !!(field && field.form && isIgnoredMobileFilterForm(field.form));
+	}
+
+	function splitQueryPairs(queryString) {
+		var source = String(queryString || "").replace(/^\?/, "");
+		if (!source) {
+			return [];
+		}
+		return source
+			.split("&")
+			.map(function (piece) {
+				var safePiece = String(piece || "");
+				if (!safePiece) {
+					return null;
+				}
+				var separatorIndex = safePiece.indexOf("=");
+				var rawKey = separatorIndex > -1 ? safePiece.slice(0, separatorIndex) : safePiece;
+				var rawValue = separatorIndex > -1 ? safePiece.slice(separatorIndex + 1) : "";
+				var key = rawKey;
+				var value = rawValue;
+				try {
+					key = decodeURIComponent(rawKey.replace(/\+/g, " "));
+				} catch (e) {}
+				try {
+					value = decodeURIComponent(rawValue.replace(/\+/g, " "));
+				} catch (e) {}
+				return { key: key, value: value };
+			})
+			.filter(Boolean);
+	}
+
+	function appendQueryPair(bag, seenScalars, key, value) {
+		var safeKey = String(key || "").trim();
+		var safeValue = value == null ? "" : String(value).trim();
+		if (!safeKey || safeValue === "") {
+			return;
+		}
+		if (
+			safeKey === "security" ||
+			safeKey === "action" ||
+			safeKey === "_wpnonce" ||
+			safeKey === "_wp_http_referer" ||
+			safeKey === "paged" ||
+			safeKey === "page-number"
+		) {
+			return;
+		}
+		if (safeKey.indexOf("[]") !== -1) {
+			bag.push({ key: safeKey, value: safeValue });
+			return;
+		}
+		if (seenScalars[safeKey]) {
+			return;
+		}
+		seenScalars[safeKey] = true;
+		bag.push({ key: safeKey, value: safeValue });
+	}
+
+	function shouldSkipFieldValue(field, value) {
+		if (!field) {
+			return true;
+		}
+		var name = field.getAttribute("name") || "";
+		var safeValue = value == null ? "" : String(value).trim();
+		if (!name || safeValue === "") {
+			return true;
+		}
+		if (safeValue === "0") {
+			if (
+				name === "cat_id" ||
+				name === "country_id" ||
+				name === "ad_currency" ||
+				name === "condition" ||
+				name === "warranty" ||
+				name === "ad_type" ||
+				name === "adtype" ||
+				name === "sort" ||
+				name === "c" ||
+				name.indexOf("custom[") === 0
+			) {
+				return true;
+			}
+		}
+		if (field.hasAttribute("data-adforest-default") && safeValue === String(field.getAttribute("data-adforest-default"))) {
+			return true;
+		}
+		if ((name === "min_price" || name === "max_price") && field.form) {
+			var defaultAttr = name === "min_price" ? "data-adforest-default-min" : "data-adforest-default-max";
+			var defaultValue = field.form.getAttribute(defaultAttr);
+			if (defaultValue != null && safeValue === String(defaultValue)) {
+				return true;
+			}
+		}
+		if (name === "sort" && field.tagName === "SELECT") {
+			var firstOption = field.options && field.options.length ? field.options[0].value : "";
+			if (safeValue === String(firstOption || "")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	function collectFormFieldValues(field) {
+		if (!field || field.disabled || !field.name) {
+			return [];
+		}
+		var type = (field.type || "").toLowerCase();
+		if (type === "submit" || type === "button" || type === "reset" || type === "file") {
+			return [];
+		}
+		if ((type === "checkbox" || type === "radio") && !field.checked) {
+			return [];
+		}
+		if (field.tagName === "SELECT" && field.multiple) {
+			return Array.prototype.slice
+				.call(field.options || [])
+				.filter(function (option) {
+					return option.selected;
+				})
+				.map(function (option) {
+					return option.value;
+				})
+				.filter(function (value) {
+					return !shouldSkipFieldValue(field, value);
+				});
+		}
+		var fieldValue = field.value == null ? "" : field.value;
+		return shouldSkipFieldValue(field, fieldValue) ? [] : [fieldValue];
+	}
+
+	function getManagedFilterForms() {
+		var sidebar = getSearchFilterSidebar();
+		var forms = [];
+		if (sidebar) {
+			Array.prototype.forEach.call(sidebar.querySelectorAll("form"), function (form) {
+				if (!isIgnoredMobileFilterForm(form)) {
+					forms.push(form);
+				}
+			});
+		}
+		var sortForm = document.getElementById("sort-form");
+		if (sortForm) {
+			forms.push(sortForm);
+		}
+		return forms;
+	}
+
+	function buildMobileFiltersQuery() {
+		var managedForms = getManagedFilterForms();
+		var queryPairs = [];
+		var seenScalars = {};
+		var controlledRoots = {};
+
+		managedForms.forEach(function (form) {
+			Array.prototype.forEach.call(form.querySelectorAll("input[name], select[name], textarea[name]"), function (field) {
+				if (field.disabled || isIgnoredMobileFilterField(field)) {
+					return;
+				}
+				var name = field.getAttribute("name") || "";
+				if (!name) {
+					return;
+				}
+				controlledRoots[name] = true;
+				controlledRoots[name.split("[")[0]] = true;
+			});
+		});
+
+		splitQueryPairs(window.location.search).forEach(function (pair) {
+			var root = String(pair.key || "").split("[")[0];
+			if (controlledRoots[pair.key] || controlledRoots[root]) {
+				return;
+			}
+			appendQueryPair(queryPairs, seenScalars, pair.key, pair.value);
+		});
+
+		managedForms.forEach(function (form) {
+			Array.prototype.forEach.call(form.querySelectorAll("input[name], select[name], textarea[name]"), function (field) {
+				var values = collectFormFieldValues(field);
+				if (!values.length) {
+					return;
+				}
+				values.forEach(function (value) {
+					appendQueryPair(queryPairs, seenScalars, field.name, value);
+				});
+			});
+		});
+
+		return queryPairs
+			.map(function (pair) {
+				return encodeURIComponent(pair.key) + "=" + encodeURIComponent(pair.value);
+			})
+			.join("&");
+	}
+
+	function formatMobileFiltersApplyLabel(count) {
+		var template = config.mobileFiltersApplyTemplate || "نمایش {{count}} آگهی";
+		return template.replace("{{count}}", String(Math.max(0, parseInt(count, 10) || 0)));
+	}
+
+	function updateMobileFiltersApplyState(state, count) {
+		if (!mobileFiltersApplyButton) {
+			return;
+		}
+		mobileFiltersApplyButton.classList.remove("is-loading", "is-disabled", "is-error");
+		mobileFiltersApplyButton.disabled = false;
+
+		if (state === "loading") {
+			mobileFiltersApplyButton.classList.add("is-loading");
+			mobileFiltersApplyButton.disabled = true;
+			mobileFiltersApplyButton.textContent = config.mobileFiltersApplyLoading || "در حال محاسبه...";
+			return;
+		}
+
+		if (state === "error") {
+			mobileFiltersApplyButton.classList.add("is-error");
+			mobileFiltersApplyButton.textContent = config.mobileFiltersApplyError || "خطا در محاسبه آگهی‌ها";
+			return;
+		}
+
+		if (state === "zero") {
+			mobileFiltersApplyButton.classList.add("is-disabled");
+			mobileFiltersApplyButton.disabled = true;
+			mobileFiltersApplyButton.textContent = config.mobileFiltersApplyZero || "آگهی‌ای یافت نشد";
+			return;
+		}
+
+		mobileFiltersApplyButton.textContent = formatMobileFiltersApplyLabel(count);
+	}
+
+	function getCountFromDom() {
+		var countNode = document.getElementById("adforest-ajax-count");
+		if (!countNode) {
+			return null;
+		}
+		var match = String(countNode.textContent || "").match(/\d+/);
+		return match ? parseInt(match[0], 10) : null;
+	}
+
+	function syncMobileFiltersCountFromDom() {
+		var countValue = getCountFromDom();
+		if (countValue == null || isNaN(countValue)) {
+			return;
+		}
+		mobileFiltersCount = countValue;
+		updateMobileFiltersApplyState(countValue > 0 ? "ready" : "zero", countValue);
+	}
+
+	function teardownFiltersDrawerEnhancements() {
+		var sidebar = getSearchFilterSidebar();
+		var $ = getJQuery();
+
+		if (mobileFiltersCountTimer) {
+			window.clearTimeout(mobileFiltersCountTimer);
+			mobileFiltersCountTimer = null;
+		}
+		abortMobileFiltersCountRequest();
+
+		if (mobileFiltersFooter && mobileFiltersFooter.parentNode) {
+			mobileFiltersFooter.parentNode.removeChild(mobileFiltersFooter);
+		}
+		mobileFiltersFooter = null;
+		mobileFiltersApplyButton = null;
+		mobileFiltersHint = null;
+		mobileFiltersLastQuery = "";
+
+		if (!sidebar) {
+			return;
+		}
+
+		sidebar.classList.remove("adf-mbn-filters-sheet");
+		sidebar.removeAttribute("dir");
+
+		Array.prototype.forEach.call(sidebar.querySelectorAll(".adf-mbn-hidden-mobile-filter"), function (node) {
+			node.classList.remove("adf-mbn-hidden-mobile-filter");
+		});
+
+		var handle = sidebar.querySelector(".adf-mbn-filters-sheet__handle");
+		if (handle && handle.parentNode) {
+			handle.parentNode.removeChild(handle);
+		}
+
+		var closeButton = sidebar.querySelector(".adf-mobile-filters-close");
+		if (closeButton && closeButton.parentNode) {
+			closeButton.parentNode.removeChild(closeButton);
+		}
+
+		if ($) {
+			getManagedFilterForms().forEach(function (form) {
+				$(form).off(".adfMbnDraft").removeData("adfMbnDraftSubmitBound");
+			});
+			Array.prototype.forEach.call(sidebar.querySelectorAll("input[name], select[name], textarea[name]"), function (field) {
+				$(field)
+					.off(".adfMbnDraft")
+					.removeData("adfMbnDraftChangeBound")
+					.removeData("adfMbnDraftInputBound");
+			});
+		}
+	}
+
+	function ensureFiltersFooter(sidebar) {
+		if (!sidebar) {
+			return null;
+		}
+		if (!isMobileViewport() || !sidebar.classList.contains("mobile-filters")) {
+			return null;
+		}
+		if (!mobileFiltersFooter || !sidebar.contains(mobileFiltersFooter)) {
+			mobileFiltersFooter = sidebar.querySelector(".adf-mbn-filters-sheet__footer");
+		}
+		if (!mobileFiltersFooter) {
+			mobileFiltersFooter = document.createElement("div");
+			mobileFiltersFooter.className = "adf-mbn-filters-sheet__footer";
+			mobileFiltersFooter.innerHTML =
+				'<p class="adf-mbn-filters-sheet__hint"></p><button type="button" class="adf-mbn-filters-sheet__apply"></button>';
+			sidebar.appendChild(mobileFiltersFooter);
+		}
+		mobileFiltersHint = mobileFiltersFooter.querySelector(".adf-mbn-filters-sheet__hint");
+		mobileFiltersApplyButton = mobileFiltersFooter.querySelector(".adf-mbn-filters-sheet__apply");
+		if (mobileFiltersHint) {
+			mobileFiltersHint.textContent =
+				config.mobileFiltersApplyHint || "فیلترهای دلخواه را انتخاب کنید و در پایان نتایج را نمایش دهید.";
+		}
+		if (mobileFiltersApplyButton && !mobileFiltersApplyButton.hasAttribute("data-adf-mbn-bound")) {
+			mobileFiltersApplyButton.setAttribute("data-adf-mbn-bound", "1");
+			mobileFiltersApplyButton.addEventListener("click", function (event) {
+				event.preventDefault();
+				handleMobileFiltersApply();
+			});
+		}
+		syncMobileFiltersCountFromDom();
+		if (mobileFiltersCount == null) {
+			updateMobileFiltersApplyState("loading");
+		}
+		return mobileFiltersFooter;
+	}
+
+	function bindMobileDraftHandlers(sidebar) {
+		var $ = getJQuery();
+		if (!$ || !sidebar || !isMobileViewport() || !sidebar.classList.contains("mobile-filters")) {
+			return;
+		}
+
+		getManagedFilterForms().forEach(function (form) {
+			var $form = $(form);
+			if ($form.data("adfMbnDraftSubmitBound")) {
+				return;
+			}
+			$form.data("adfMbnDraftSubmitBound", true);
+			$form.on("submit.adfMbnDraft", function (event) {
+				if (!isMobileFiltersDraftMode()) {
+					return;
+				}
+				event.preventDefault();
+				event.stopImmediatePropagation();
+				scheduleMobileFiltersCountRefresh(true);
+				return false;
+			});
+		});
+
+		Array.prototype.forEach.call(sidebar.querySelectorAll("input[name], select[name], textarea[name]"), function (field) {
+			if (field.disabled || isIgnoredMobileFilterField(field)) {
+				return;
+			}
+			var $field = $(field);
+			if (!$field.data("adfMbnDraftChangeBound")) {
+				$field.data("adfMbnDraftChangeBound", true);
+				$field.on("change.adfMbnDraft", function (event) {
+					if (!isMobileFiltersDraftMode()) {
+						return;
+					}
+					event.stopImmediatePropagation();
+					scheduleMobileFiltersCountRefresh(true);
+				});
+			}
+			if (
+				!$field.data("adfMbnDraftInputBound") &&
+				(field.matches('input[type="text"]') ||
+					field.matches('input[type="search"]') ||
+					field.matches('input[type="number"]') ||
+					field.matches("textarea"))
+			) {
+				$field.data("adfMbnDraftInputBound", true);
+				$field.on("input.adfMbnDraft", function (event) {
+					if (!isMobileFiltersDraftMode()) {
+						return;
+					}
+					event.stopImmediatePropagation();
+					scheduleMobileFiltersCountRefresh(false);
+				});
+			}
+		});
+
+		if (!sidebar._adfMbnDraftObserver && typeof MutationObserver !== "undefined") {
+			sidebar._adfMbnDraftObserver = new MutationObserver(function () {
+				if (!sidebar.classList.contains("adf-mbn-filters-sheet")) {
+					return;
+				}
+				bindMobileDraftHandlers(sidebar);
+			});
+			sidebar._adfMbnDraftObserver.observe(sidebar, { childList: true, subtree: true });
+		}
+	}
+
+	function abortMobileFiltersCountRequest() {
+		if (mobileFiltersCountRequest && typeof mobileFiltersCountRequest.abort === "function") {
+			try {
+				mobileFiltersCountRequest.abort();
+			} catch (e) {}
+		}
+		mobileFiltersCountRequest = null;
+	}
+
+	function requestMobileFiltersCount() {
+		if (!isMobileFiltersDraftMode()) {
+			return;
+		}
+		var $ = getJQuery();
+		if (!$ || !config.ajaxUrl || !config.mobileCountNonce) {
+			return;
+		}
+		var queryString = buildMobileFiltersQuery();
+		if (queryString === mobileFiltersLastQuery && mobileFiltersCount != null) {
+			updateMobileFiltersApplyState(mobileFiltersCount > 0 ? "ready" : "zero", mobileFiltersCount);
+			return;
+		}
+
+		mobileFiltersLastQuery = queryString;
+		updateMobileFiltersApplyState("loading");
+		abortMobileFiltersCountRequest();
+
+		mobileFiltersCountRequest = $.ajax({
+			url: config.ajaxUrl,
+			method: "POST",
+			dataType: "json",
+			data: {
+				action: "adf_mobile_filter_count",
+				security: config.mobileCountNonce,
+				filters_raw: queryString
+			}
+		})
+			.done(function (response) {
+				if (!response || !response.success || !response.data) {
+					updateMobileFiltersApplyState("error");
+					return;
+				}
+				mobileFiltersCount = parseInt(response.data.total, 10) || 0;
+				updateMobileFiltersApplyState(mobileFiltersCount > 0 ? "ready" : "zero", mobileFiltersCount);
+			})
+			.fail(function (_xhr, status) {
+				if (status === "abort") {
+					return;
+				}
+				updateMobileFiltersApplyState("error");
+			})
+			.always(function () {
+				mobileFiltersCountRequest = null;
+			});
+	}
+
+	function scheduleMobileFiltersCountRefresh(immediate) {
+		if (mobileFiltersCountTimer) {
+			window.clearTimeout(mobileFiltersCountTimer);
+		}
+		mobileFiltersCountTimer = window.setTimeout(
+			requestMobileFiltersCount,
+			immediate ? 30 : parseInt(config.mobileFiltersCountDebounce, 10) || 260
+		);
+	}
+
+	function resolveMobileFiltersActionUrl() {
+		var forms = getManagedFilterForms();
+		for (var i = 0; i < forms.length; i++) {
+			var action = forms[i].getAttribute("action");
+			if (action) {
+				return action;
+			}
+		}
+		return window.location.pathname || window.location.href;
+	}
+
+	function handleMobileFiltersApply() {
+		var queryString = buildMobileFiltersQuery();
+		if (mobileFiltersCount === 0) {
+			return;
+		}
+		if (
+			window.adforestAjaxSearchApi &&
+			typeof window.adforestAjaxSearchApi.run === "function" &&
+			document.getElementById("adforest-ajax-results")
+		) {
+			window.adforestAjaxSearchApi.run(queryString);
+			setFiltersDrawerState(false);
+			return;
+		}
+
+		var targetUrl = resolveMobileFiltersActionUrl();
+		window.location.href = queryString ? targetUrl.replace(/\?.*$/, "") + "?" + queryString : targetUrl.replace(/\?.*$/, "");
+	}
+
+	function ensureFiltersDrawerEnhancements() {
+		var sidebar = getSearchFilterSidebar();
+		if (!sidebar) {
+			return null;
+		}
+		if (!isMobileViewport() || !sidebar.classList.contains("mobile-filters")) {
+			teardownFiltersDrawerEnhancements();
+			return sidebar;
+		}
+
+		sidebar.classList.add("adf-mbn-filters-sheet");
+		sidebar.setAttribute("dir", "rtl");
+
+		var heading = sidebar.querySelector(".mobile-filter-heading");
+		if (heading) {
+			heading.classList.add("adf-mbn-filters-sheet__header");
+
+			if (!heading.querySelector(".adf-mbn-filters-sheet__handle")) {
+				var handle = document.createElement("span");
+				handle.className = "adf-mbn-filters-sheet__handle";
+				handle.setAttribute("aria-hidden", "true");
+				heading.insertBefore(handle, heading.firstChild);
+			}
+
+			if (!heading.querySelector(".adf-mobile-filters-close")) {
+				var closeButton = document.createElement("button");
+				closeButton.type = "button";
+				closeButton.className = "adf-mobile-filters-close";
+				closeButton.setAttribute("aria-label", "بستن فیلترها");
+				closeButton.innerHTML =
+					'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 5l.7.7L12 10.59l4.9-4.89.7-.7 1.4 1.41-.7.7L13.41 12l4.89 4.9.7.7-1.41 1.4-.7-.7L12 13.41l-4.9 4.89-.7.7-1.4-1.41.7-.7L10.59 12 5.7 7.1l-.7-.7L6.4 5z"/></svg>';
+				heading.appendChild(closeButton);
+			}
+		}
+
+		var backdrop = document.querySelector(".adf-mbn-filters-backdrop");
+		if (!backdrop) {
+			backdrop = document.createElement("button");
+			backdrop.type = "button";
+			backdrop.className = "adf-mbn-filters-backdrop";
+			backdrop.setAttribute("aria-label", "بستن پنل فیلترها");
+			document.body.appendChild(backdrop);
+		}
+
+		Array.prototype.forEach.call(sidebar.querySelectorAll("form"), function (form) {
+			if (!isIgnoredMobileFilterForm(form)) {
+				return;
+			}
+			form.classList.add("adf-mbn-hidden-mobile-filter");
+			var filterCard = form.closest(".accordion-item");
+			if (filterCard) {
+				filterCard.classList.add("adf-mbn-hidden-mobile-filter");
+			}
+		});
+
+		ensureFiltersFooter(sidebar);
+		bindMobileDraftHandlers(sidebar);
+		return sidebar;
+	}
+
+	function handleFilterNavClick(event) {
+		if (event) {
+			event.preventDefault();
+			event.stopPropagation();
+			lastFocusedFilterElement = document.activeElement instanceof HTMLElement ? document.activeElement : getFilterNavLink();
+		}
+		ensureFiltersDrawerEnhancements();
+		setFiltersDrawerState(!isFiltersDrawerOpen());
+	}
+
+	function setFiltersDrawerState(isOpen) {
+		var sidebar = ensureFiltersDrawerEnhancements();
 		document.body.classList.toggle("adf-mobile-filters-open", !!isOpen);
 		if (sidebar && sidebar.classList.contains("mobile-filters")) {
 			sidebar.classList.toggle("active", !!isOpen);
+			sidebar.setAttribute("aria-hidden", isOpen ? "false" : "true");
+		}
+		if (isOpen) {
+			mobileFiltersLastQuery = "";
+			syncMobileFiltersCountFromDom();
+			scheduleMobileFiltersCountRefresh(false);
+			window.setTimeout(function () {
+				var focusTarget =
+					(sidebar &&
+						sidebar.querySelector(
+							".adf-mobile-filters-close, .adf-mbn-filters-sheet__apply, input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled])"
+						)) ||
+					sidebar;
+				if (focusTarget && typeof focusTarget.focus === "function") {
+					focusTarget.focus();
+				}
+			}, 70);
+		} else {
+			if (mobileFiltersCountTimer) {
+				window.clearTimeout(mobileFiltersCountTimer);
+			}
+			abortMobileFiltersCountRequest();
+			if (lastFocusedFilterElement && typeof lastFocusedFilterElement.focus === "function") {
+				window.setTimeout(function () {
+					lastFocusedFilterElement.focus();
+				}, 20);
+			}
 		}
 		syncFilterNavState();
 	}
@@ -827,6 +1451,18 @@
 					});
 				}
 			}
+
+			var $ = getJQuery();
+			if ($) {
+				$(document).on("adforest:search:rendered", function (_event, data) {
+					if (data && typeof data.total !== "undefined") {
+						mobileFiltersCount = parseInt(data.total, 10) || 0;
+						if (isFiltersDrawerOpen()) {
+							updateMobileFiltersApplyState(mobileFiltersCount > 0 ? "ready" : "zero", mobileFiltersCount);
+						}
+					}
+				});
+			}
 		}
 
 		nav.addEventListener("click", function (event) {
@@ -844,4 +1480,15 @@
 			showFavoritesLoginMessage();
 		});
 	}
+
+	document.addEventListener("click", function (event) {
+		var closeTrigger = event.target.closest(
+			".adf-mbn-filters-backdrop, .adf-mobile-filters-close, .adf-filters-backdrop, .filter-close-btn, .close-sidebar"
+		);
+		if (!closeTrigger || !isFiltersDrawerOpen()) {
+			return;
+		}
+		event.preventDefault();
+		setFiltersDrawerState(false);
+	});
 })();

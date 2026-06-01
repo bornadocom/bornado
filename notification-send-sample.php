@@ -4,6 +4,7 @@ declare(strict_types=1);
 use Bornado\NotificationPlatform\Contracts\EventCatalog;
 use Bornado\NotificationPlatform\Infrastructure\FileDeliveryLog;
 use Bornado\NotificationPlatform\Infrastructure\FileEventQueue;
+use Bornado\NotificationPlatform\Infrastructure\ServiceOperations;
 
 require __DIR__ . '/Services/bornado-notification-platform/bootstrap.php';
 
@@ -17,6 +18,20 @@ if ('' === $expectedKey || !hash_equals($expectedKey, $providedKey)) {
     http_response_code(403);
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode(array('message' => 'Forbidden'));
+    exit;
+}
+
+$serviceOps = new ServiceOperations($config);
+if ($serviceOps->isServicePaused()) {
+    http_response_code(503);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(
+        array(
+            'message' => 'Service is paused. Sample enqueue is disabled.',
+            'code'    => 'service_paused',
+        ),
+        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+    );
     exit;
 }
 

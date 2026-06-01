@@ -160,6 +160,14 @@ if (file_exists($bornado_ad_phone_sync_bootstrap)) {
 }
 
 /**
+ * Keep legacy AdForest taxonomy-backed meta aligned for API/admin edits.
+ */
+$bornado_ad_taxonomy_meta_sync_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-ad-taxonomy-meta-sync.php';
+if (file_exists($bornado_ad_taxonomy_meta_sync_bootstrap)) {
+    require_once $bornado_ad_taxonomy_meta_sync_bootstrap;
+}
+
+/**
  * Load custom header clone integration from child theme directory.
  */
 $bornado_header_clone_bootstrap = trailingslashit(get_stylesheet_directory()) . 'adforest-header-search-4-clone/adforest-header-search-4-clone.php';
@@ -184,11 +192,75 @@ if (file_exists($bornado_profile_phone_guard_bootstrap)) {
 }
 
 /**
+ * Allow search filters to be cleared with a second click from the child theme.
+ */
+$bornado_search_filter_toggle_fix_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-search-filter-toggle-fix.php';
+if (file_exists($bornado_search_filter_toggle_fix_bootstrap)) {
+    require_once $bornado_search_filter_toggle_fix_bootstrap;
+}
+
+/**
+ * Fix Modern My Listings "Active" filter without touching parent theme files.
+ */
+$bornado_my_listings_fix_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-my-listings-fix.php';
+if (file_exists($bornado_my_listings_fix_bootstrap)) {
+    require_once $bornado_my_listings_fix_bootstrap;
+}
+
+/**
+ * Keep RTL phone numbers visually stable across frontend views.
+ */
+$bornado_phone_display_fix_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-phone-display-fix.php';
+if (file_exists($bornado_phone_display_fix_bootstrap)) {
+    require_once $bornado_phone_display_fix_bootstrap;
+}
+
+/**
  * Add a third single-ad layout from the child theme layer.
  */
 $bornado_single_ad_style_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornad-single-ad-style.php';
 if (file_exists($bornado_single_ad_style_bootstrap)) {
     require_once $bornado_single_ad_style_bootstrap;
+}
+
+if (!function_exists('bornado_get_safe_login_redirect_url')) {
+    /**
+     * Build a resilient login URL with a safe post-login redirect target.
+     *
+     * Some single-ad templates call this helper directly for guests. Keep the
+     * function available in the child theme so public ad pages never fatally
+     * error when an auxiliary auth helper is unavailable.
+     *
+     * @param string $redirect_url Target URL after login.
+     * @return string
+     */
+    function bornado_get_safe_login_redirect_url($redirect_url = '')
+    {
+        $fallback_url = home_url('/');
+        $redirect_url = is_string($redirect_url) ? trim($redirect_url) : '';
+
+        if ('' === $redirect_url && function_exists('adforest_get_current_url')) {
+            $redirect_url = (string) adforest_get_current_url();
+        }
+
+        $redirect_url = wp_validate_redirect($redirect_url, $fallback_url);
+
+        if (function_exists('adforest_login_with_redirect_url_param')) {
+            $login_url = (string) adforest_login_with_redirect_url_param(rawurlencode($redirect_url));
+            if ('' !== $login_url) {
+                return $login_url;
+            }
+        }
+
+        if (function_exists('bornado_auth_modal_fallback_url')) {
+            $login_url = (string) bornado_auth_modal_fallback_url('login');
+            if ('' !== $login_url && '#' !== $login_url) {
+                return add_query_arg('redirect_to', $redirect_url, $login_url);
+            }
+        }
+
+        return wp_login_url($redirect_url);
+    }
 }
 
 if (!function_exists('bornado_flag_ad_search_template')) {
@@ -235,9 +307,295 @@ if (!function_exists('bornado_is_ad_search_view')) {
             }
         }
 
+        if (function_exists('bornado_is_query_only_ad_search_bridge_active') && bornado_is_query_only_ad_search_bridge_active()) {
+            return true;
+        }
+
         return false;
     }
 }
+
+if (!function_exists('bornado_get_search_page_id')) {
+    /**
+     * Resolve the configured AdForest search page ID.
+     *
+     * @return int
+     */
+    function bornado_get_search_page_id()
+    {
+        global $adforest_theme;
+
+        $page_id = isset($adforest_theme['sb_search_page']) ? (int) $adforest_theme['sb_search_page'] : 0;
+        if ($page_id < 1) {
+            $theme_opts = get_option('adforest_theme', array());
+            if (is_array($theme_opts) && !empty($theme_opts['sb_search_page'])) {
+                $page_id = (int) $theme_opts['sb_search_page'];
+            }
+        }
+
+        return max(0, $page_id);
+    }
+}
+
+if (!function_exists('bornado_get_public_ad_search_filter_keys')) {
+    /**
+     * Query-string keys that should activate the root-URL search bridge.
+     *
+     * @return array<int,string>
+     */
+    function bornado_get_public_ad_search_filter_keys()
+    {
+        $keys = array(
+            'ad_title',
+            'cat_id',
+            'country_id',
+            'ad_currency',
+            'condition',
+            'ad_type',
+            'adtype',
+            'warranty',
+            'ad',
+            'sort',
+            'c',
+            'min_price',
+            'max_price',
+            'location',
+            'rd',
+            'lat',
+            'long',
+            'view-type',
+            'page-number',
+            'paged',
+            'custom',
+            'min_custom',
+            'max_custom',
+        );
+
+        return apply_filters('bornado_public_ad_search_filter_keys', $keys);
+    }
+}
+
+if (!function_exists('bornado_has_non_empty_query_value')) {
+    /**
+     * Determine whether a query value contains meaningful filter data.
+     *
+     * @param mixed $value Raw query value.
+     * @return bool
+     */
+    function bornado_has_non_empty_query_value($value)
+    {
+        if (is_array($value)) {
+            foreach ($value as $child) {
+                if (bornado_has_non_empty_query_value($child)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        if (is_bool($value)) {
+            return $value;
+        }
+
+        if (null === $value) {
+            return false;
+        }
+
+        return trim((string) $value) !== '';
+    }
+}
+
+if (!function_exists('bornado_normalize_request_path_for_search_bridge')) {
+    /**
+     * Normalize a request path relative to the site's home path.
+     *
+     * @param string $path Absolute request path.
+     * @return string
+     */
+    function bornado_normalize_request_path_for_search_bridge($path)
+    {
+        $path = trim((string) $path, '/');
+
+        $home_path = wp_parse_url(home_url('/'), PHP_URL_PATH);
+        $home_path = trim((string) $home_path, '/');
+
+        if ($home_path !== '') {
+            if ($path === $home_path) {
+                return '';
+            }
+
+            $prefix = $home_path . '/';
+            if (strpos($path, $prefix) === 0) {
+                $path = substr($path, strlen($prefix));
+            }
+        }
+
+        return trim((string) $path, '/');
+    }
+}
+
+if (!function_exists('bornado_is_query_only_ad_search_request')) {
+    /**
+     * True when a root URL like `/?max_price=...` should render the Ad Search page.
+     *
+     * @return bool
+     */
+    function bornado_is_query_only_ad_search_request()
+    {
+        if (
+            is_admin()
+            || wp_doing_ajax()
+            || wp_doing_cron()
+            || (defined('REST_REQUEST') && REST_REQUEST)
+            || wp_is_json_request()
+        ) {
+            return false;
+        }
+
+        if (empty($_GET) || !is_array($_GET)) {
+            return false;
+        }
+
+        if (bornado_get_search_page_id() < 1) {
+            return false;
+        }
+
+        $request_uri = isset($_SERVER['REQUEST_URI']) ? wp_unslash($_SERVER['REQUEST_URI']) : '';
+        $request_path = is_string($request_uri) ? wp_parse_url($request_uri, PHP_URL_PATH) : '';
+        $request_path = bornado_normalize_request_path_for_search_bridge((string) $request_path);
+        if ($request_path !== '') {
+            return false;
+        }
+
+        $search_keys = bornado_get_public_ad_search_filter_keys();
+        foreach ($search_keys as $key) {
+            if (!is_string($key) || $key === '') {
+                continue;
+            }
+
+            if (isset($_GET[$key]) && bornado_has_non_empty_query_value(wp_unslash($_GET[$key]))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+if (!function_exists('bornado_set_query_only_ad_search_bridge')) {
+    /**
+     * Store bridge state for the current request.
+     *
+     * @param int $page_id Search page ID.
+     * @return void
+     */
+    function bornado_set_query_only_ad_search_bridge($page_id)
+    {
+        $page_id = (int) $page_id;
+        if ($page_id < 1) {
+            return;
+        }
+
+        $GLOBALS['bornado_query_only_ad_search_bridge'] = array(
+            'active'  => true,
+            'page_id' => $page_id,
+        );
+    }
+}
+
+if (!function_exists('bornado_is_query_only_ad_search_bridge_active')) {
+    /**
+     * Whether the current request is using the root-query search bridge.
+     *
+     * @return bool
+     */
+    function bornado_is_query_only_ad_search_bridge_active()
+    {
+        return !empty($GLOBALS['bornado_query_only_ad_search_bridge']['active']);
+    }
+}
+
+add_filter('request', function ($query_vars) {
+    if (!bornado_is_query_only_ad_search_request()) {
+        return $query_vars;
+    }
+
+    $search_page_id = bornado_get_search_page_id();
+    if ($search_page_id < 1) {
+        return $query_vars;
+    }
+
+    $search_page = get_post($search_page_id);
+    if (!($search_page instanceof WP_Post)) {
+        return $query_vars;
+    }
+
+    bornado_set_query_only_ad_search_bridge($search_page_id);
+
+    $query_vars['page_id'] = $search_page_id;
+    unset(
+        $query_vars['error'],
+        $query_vars['pagename'],
+        $query_vars['name'],
+        $query_vars['attachment'],
+        $query_vars['attachment_id']
+    );
+
+    return $query_vars;
+}, 20);
+
+add_action('template_redirect', function () {
+    if (!bornado_is_query_only_ad_search_bridge_active()) {
+        return;
+    }
+
+    $search_page_id = !empty($GLOBALS['bornado_query_only_ad_search_bridge']['page_id'])
+        ? (int) $GLOBALS['bornado_query_only_ad_search_bridge']['page_id']
+        : bornado_get_search_page_id();
+
+    $search_page = get_post($search_page_id);
+    if (!($search_page instanceof WP_Post)) {
+        return;
+    }
+
+    global $wp_query;
+
+    if (!($wp_query instanceof WP_Query)) {
+        return;
+    }
+
+    $wp_query->queried_object_id = $search_page->ID;
+    $wp_query->queried_object = $search_page;
+    $wp_query->posts = array($search_page);
+    $wp_query->post = $search_page;
+    $wp_query->found_posts = 1;
+    $wp_query->post_count = 1;
+    $wp_query->max_num_pages = 1;
+    $wp_query->is_404 = false;
+    $wp_query->is_home = false;
+    $wp_query->is_front_page = false;
+    $wp_query->is_page = true;
+    $wp_query->is_singular = true;
+    $wp_query->is_single = false;
+    $wp_query->is_archive = false;
+    $wp_query->is_search = false;
+
+    status_header(200);
+}, 0);
+
+add_filter('template_include', function ($template) {
+    if (!bornado_is_query_only_ad_search_bridge_active()) {
+        return $template;
+    }
+
+    $search_template = locate_template(array('page-search.php'));
+    return $search_template ? $search_template : $template;
+}, 95);
+
+add_filter('adforest_ajax_search_should_enqueue', function ($should) {
+    return $should || bornado_is_query_only_ad_search_bridge_active();
+});
 
 if (!function_exists('bornado_get_search_card_deepest_location_name')) {
     /**
@@ -1192,3 +1550,92 @@ if (!function_exists('bornado_sync_price_requirement_with_category_template')) {
     }
 }
 add_action('wp_enqueue_scripts', 'bornado_sync_price_requirement_with_category_template', 131);
+
+if (!function_exists('bornado_enforce_price_slider_step')) {
+    /**
+     * Force AdForest price/range sliders to move in 10-unit steps from the child theme.
+     */
+    function bornado_enforce_price_slider_step()
+    {
+        if (is_admin()) {
+            return;
+        }
+
+        $js = <<<'JS'
+        document.addEventListener('DOMContentLoaded', function () {
+            var STEP = 10;
+
+            function getJQuery() {
+                return window.jQuery || null;
+            }
+
+            function enhanceSlider(sliderNode) {
+                var $ = getJQuery();
+                if (!$ || !sliderNode) {
+                    return;
+                }
+
+                var $slider = $(sliderNode);
+                var instance = $slider.data('ionRangeSlider');
+                if (!instance || !instance.result) {
+                    return;
+                }
+
+                instance.update({ step: STEP });
+                $slider.attr('data-step', String(STEP)).data('step', STEP);
+            }
+
+            function enhanceAllSliders(scope) {
+                var $ = getJQuery();
+                if (!$) {
+                    return;
+                }
+
+                var $scope = scope ? $(scope) : $(document);
+                var $sliders = $scope.find('.adt-ads-range-slider, #price-slider-topbar-search');
+                if ($scope.is('.adt-ads-range-slider, #price-slider-topbar-search')) {
+                    $sliders = $sliders.add($scope);
+                }
+
+                $sliders.each(function () {
+                    enhanceSlider(this);
+                });
+            }
+
+            function scheduleEnhance(scope, delay) {
+                window.setTimeout(function () {
+                    enhanceAllSliders(scope || document);
+                }, delay || 0);
+            }
+
+            scheduleEnhance(document, 0);
+            scheduleEnhance(document, 300);
+            scheduleEnhance(document, 1000);
+
+            var $ = getJQuery();
+            if ($) {
+                $(window).on('load', function () {
+                    scheduleEnhance(document, 0);
+                });
+
+                $(document).on('adforest:search:rendered', function () {
+                    scheduleEnhance(document, 0);
+                });
+
+                $(document).ajaxComplete(function () {
+                    scheduleEnhance(document, 0);
+                });
+            }
+
+            document.addEventListener('adforestCategoryTemplateLoaded', function () {
+                scheduleEnhance(document, 0);
+            });
+        });
+        JS;
+
+        wp_register_script('bornado-price-slider-step', '', array('adforest-custom'), null, true);
+        wp_enqueue_script('bornado-price-slider-step');
+        wp_add_inline_script('bornado-price-slider-step', $js);
+    }
+}
+add_action('wp_enqueue_scripts', 'bornado_enforce_price_slider_step', 132);

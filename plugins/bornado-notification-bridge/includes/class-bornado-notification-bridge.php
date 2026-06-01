@@ -66,6 +66,9 @@ if (!class_exists('Bornado_Notification_Bridge')) {
             $dispatch_status = get_option('bornado_notification_bridge_last_dispatch', array());
             $fallback_status = get_option('bornado_notification_bridge_last_fallback', array());
             $service_snapshot = $this->fetch_service_snapshot();
+            $service_body = isset($service_snapshot['body']) && is_array($service_snapshot['body']) ? $service_snapshot['body'] : array();
+            $service_mode = !empty($service_body['service']['paused']) ? 'Paused' : 'Running';
+            $queue_counts = isset($service_body['queue']) && is_array($service_body['queue']) ? $service_body['queue'] : array();
 
             echo '<div class="wrap">';
             echo '<h1>Bornado Notification Bridge</h1>';
@@ -82,6 +85,8 @@ if (!class_exists('Bornado_Notification_Bridge')) {
             echo '<tr><td>Source system</td><td><code>' . esc_html($this->get_source_system()) . '</code></td></tr>';
             echo '<tr><td>Shared secret</td><td>' . esc_html('' !== $this->get_shared_secret() ? 'Configured' : 'Missing') . '</td></tr>';
             echo '<tr><td>Ops key</td><td>' . esc_html('' !== $this->get_ops_key() ? 'Configured' : 'Missing') . '</td></tr>';
+            echo '<tr><td>Remote service mode</td><td><strong>' . esc_html($service_mode) . '</strong></td></tr>';
+            echo '<tr><td>Remote queue</td><td><code>pending=' . esc_html((string) ($queue_counts['pending'] ?? 0)) . ', processing=' . esc_html((string) ($queue_counts['processing'] ?? 0)) . ', failed=' . esc_html((string) ($queue_counts['failed'] ?? 0)) . '</code></td></tr>';
             echo '</tbody></table>';
 
             echo '<h2 style="margin-top:24px;">Connectivity</h2>';
@@ -342,6 +347,26 @@ if (!class_exists('Bornado_Notification_Bridge')) {
 
             $statusCode = (int) wp_remote_retrieve_response_code($response);
             if ($statusCode < 200 || $statusCode >= 300) {
+                $responseBody = wp_remote_retrieve_body($response);
+                $decodedBody  = json_decode((string) $responseBody, true);
+
+                if (
+                    503 === $statusCode
+                    && is_array($decodedBody)
+                    && 'service_paused' === (string) ($decodedBody['code'] ?? '')
+                ) {
+                    $this->record_dispatch_snapshot(
+                        'service_paused',
+                        array(
+                            'eventId'     => isset($event['eventId']) ? (string) $event['eventId'] : '',
+                            'status_code' => $statusCode,
+                            'body'        => $decodedBody,
+                        )
+                    );
+
+                    return;
+                }
+
                 $this->record_dispatch_snapshot(
                     'fallback',
                     array(
@@ -355,7 +380,7 @@ if (!class_exists('Bornado_Notification_Bridge')) {
                     array(
                         'reason'      => 'wp_remote_post_rejected',
                         'status_code' => $statusCode,
-                        'body'        => wp_remote_retrieve_body($response),
+                        'body'        => $responseBody,
                     )
                 );
 
@@ -397,6 +422,23 @@ if (!class_exists('Bornado_Notification_Bridge')) {
             $platformConfig = require $config;
             if (!is_array($platformConfig)) {
                 return;
+            }
+
+            if (
+                class_exists('Bornado\\NotificationPlatform\\Infrastructure\\ServiceOperations')
+            ) {
+                $service_ops = new \Bornado\NotificationPlatform\Infrastructure\ServiceOperations($platformConfig);
+                if ($service_ops->isServicePaused()) {
+                    $this->record_dispatch_snapshot(
+                        'service_paused',
+                        array(
+                            'eventId' => isset($event['eventId']) ? (string) $event['eventId'] : '',
+                            'reason'  => 'local_fallback_blocked_while_paused',
+                        )
+                    );
+
+                    return;
+                }
             }
 
             $errors = \Bornado\NotificationPlatform\Contracts\EventCatalog::validate($event);

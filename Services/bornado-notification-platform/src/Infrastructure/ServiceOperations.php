@@ -48,20 +48,27 @@ final class ServiceOperations
                 'baseUrl'     => (string) ($effectiveConfig['service']['base_url'] ?? ''),
                 'sourceSystem'=> (string) ($effectiveConfig['service']['source_system'] ?? ''),
                 'defaultLocale' => (string) ($effectiveConfig['service']['default_locale'] ?? ''),
+                'paused'      => !empty($effectiveConfig['service']['paused']),
             ),
             'queue' => array(
                 'pending'    => $queue->countFiles('pending'),
                 'processing' => $queue->countFiles('processing'),
                 'processed'  => $queue->countFiles('processed'),
                 'failed'     => $queue->countFiles('failed'),
+                'items'      => array(
+                    'pending'    => $queue->listItems('pending', $limit),
+                    'processing' => $queue->listItems('processing', $limit),
+                    'failed'     => $queue->listItems('failed', $limit),
+                ),
             ),
             'health' => $this->buildHealth($effectiveConfig),
             'runtime' => $this->runtimeOverrides->snapshot($effectiveConfig),
             'deliveries' => $this->recentDeliveries($limit),
             'whatsapp' => array(
-                'inboundMode'    => (string) ($effectiveConfig['webhooks']['whatsapp']['inbound_mode'] ?? 'log_only'),
-                'recentStatuses' => $this->whatsAppState->recentLogEntries($limit, 'status'),
-                'recentInbound'  => $this->whatsAppState->recentLogEntries($limit, 'inbound'),
+                'inboundMode'     => (string) ($effectiveConfig['webhooks']['whatsapp']['inbound_mode'] ?? 'log_only'),
+                'recentStatuses'  => $this->whatsAppState->recentLogEntries($limit, 'status'),
+                'recentInbound'   => $this->whatsAppState->recentInboundMessages($limit),
+                'trackedOutbound' => $this->whatsAppState->recentTrackedMessages($limit),
             ),
         );
     }
@@ -97,6 +104,106 @@ final class ServiceOperations
     public function setEventEnabled(string $eventType, bool $isEnabled): void
     {
         $this->runtimeOverrides->setEventEnabled($eventType, $isEnabled);
+    }
+
+    public function setServicePaused(bool $isPaused): void
+    {
+        $this->runtimeOverrides->setServicePaused($isPaused);
+    }
+
+    public function isServicePaused(): bool
+    {
+        $effectiveConfig = $this->runtimeOverrides->apply($this->config);
+
+        return !empty($effectiveConfig['service']['paused']);
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    public function clearQueueBucket(string $bucket, int $limit = 1000): array
+    {
+        $queue = new FileEventQueue($this->config['queue']);
+
+        return $queue->clearBucket($bucket, $limit);
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    public function replyToInboundMessage(string $messageId, string $body): array
+    {
+        if ($this->isServicePaused()) {
+            return array(
+                'success' => false,
+                'message' => 'Service is paused. Reply sending is disabled.',
+            );
+        }
+
+        $body = trim($body);
+        if ('' === $body) {
+            return array(
+                'success' => false,
+                'message' => 'Reply text is required.',
+            );
+        }
+
+        $inbound = $this->whatsAppState->findInboundMessage($messageId);
+        if (empty($inbound)) {
+            return array(
+                'success' => false,
+                'message' => 'Inbound message was not found.',
+            );
+        }
+
+        $effectiveConfig = $this->runtimeOverrides->apply($this->config);
+        $providerConfig = isset($effectiveConfig['providers']['whatsapp-cloud-api']) && is_array($effectiveConfig['providers']['whatsapp-cloud-api'])
+            ? $effectiveConfig['providers']['whatsapp-cloud-api']
+            : array();
+        $adapter = new WhatsAppCloudApiAdapter($providerConfig);
+        $destination = (string) ($inbound['from'] ?? '');
+        $result = $adapter->sendTextMessage($destination, $body, $messageId);
+
+        $deliveryLog = new FileDeliveryLog(
+            (string) ($effectiveConfig['logging']['delivery_log'] ?? ''),
+            (string) ($effectiveConfig['logging']['state_dir'] ?? '')
+        );
+        $event = array(
+            'eventId'      => sprintf('inbound.reply.%s.%s', preg_replace('/[^A-Za-z0-9._-]/', '_', $messageId), gmdate('YmdHis')),
+            'eventType'    => 'inbound.reply',
+            'occurredAt'   => gmdate('c'),
+            'sourceSystem' => (string) ($effectiveConfig['service']['source_system'] ?? 'bornado-wordpress'),
+        );
+        $deliveryLog->appendAttempt(
+            array(
+                'eventId'     => $event['eventId'],
+                'eventType'   => $event['eventType'],
+                'channel'     => 'whatsapp',
+                'provider'    => 'whatsapp-cloud-api',
+                'destination' => $destination,
+                'status'      => !empty($result['success']) ? 'sent' : 'failed',
+                'result'      => $result,
+            )
+        );
+
+        if (!empty($result['success'])) {
+            $this->whatsAppState->recordOutboundDispatch(
+                $event,
+                array(
+                    'address' => $destination,
+                ),
+                $result
+            );
+        }
+
+        return array(
+            'success'      => !empty($result['success']),
+            'inReplyTo'    => $messageId,
+            'destination'  => $destination,
+            'provider'     => 'whatsapp-cloud-api',
+            'replyText'    => $body,
+            'providerResult' => $result,
+        );
     }
 
     /**
@@ -159,6 +266,11 @@ final class ServiceOperations
             'label'  => 'Last consumer heartbeat',
             'status' => !empty($heartbeat['processedAt']) ? 'ok' : 'warning',
             'value'  => (string) ($heartbeat['processedAt'] ?? 'never'),
+        );
+        $health[] = array(
+            'label'  => 'Service paused',
+            'status' => !empty($effectiveConfig['service']['paused']) ? 'warning' : 'ok',
+            'value'  => !empty($effectiveConfig['service']['paused']) ? 'paused' : 'running',
         );
 
         return $health;

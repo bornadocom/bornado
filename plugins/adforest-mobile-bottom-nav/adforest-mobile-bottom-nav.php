@@ -2,7 +2,7 @@
 /**
  * Plugin Name: AdForest Mobile Bottom Navigation
  * Description: Dynamic mobile bottom navigation for AdForest + Elementor without Elementor Pro.
- * Version: 1.3.4
+ * Version: 1.3.5
  * Author: Bornado
  * Text Domain: adf-mobile-bottom-nav
  */
@@ -39,6 +39,8 @@ final class ADF_Mobile_Bottom_Nav {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_action( 'wp_body_open', array( $this, 'render_top_search_bar' ) );
 		add_action( 'wp_footer', array( $this, 'render_global_nav' ) );
+		add_action( 'wp_ajax_adf_mobile_filter_count', array( $this, 'handle_mobile_filter_count_ajax' ) );
+		add_action( 'wp_ajax_nopriv_adf_mobile_filter_count', array( $this, 'handle_mobile_filter_count_ajax' ) );
 
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
@@ -55,18 +57,21 @@ final class ADF_Mobile_Bottom_Nav {
 		}
 
 		$plugin_url = plugin_dir_url( __FILE__ );
+		$plugin_dir = plugin_dir_path( __FILE__ );
+		$style_ver  = file_exists( $plugin_dir . 'assets/css/adf-mobile-bottom-nav.css' ) ? (string) filemtime( $plugin_dir . 'assets/css/adf-mobile-bottom-nav.css' ) : '1.3.5';
+		$script_ver = file_exists( $plugin_dir . 'assets/js/adf-mobile-bottom-nav.js' ) ? (string) filemtime( $plugin_dir . 'assets/js/adf-mobile-bottom-nav.js' ) : '1.3.5';
 		wp_enqueue_style(
 			'adf-mobile-bottom-nav',
 			$plugin_url . 'assets/css/adf-mobile-bottom-nav.css',
 			array(),
-			'1.3.4'
+			$style_ver
 		);
 
 		wp_enqueue_script(
 			'adf-mobile-bottom-nav',
 			$plugin_url . 'assets/js/adf-mobile-bottom-nav.js',
 			array( 'bornado-search-core' ),
-			'1.3.4',
+			$script_ver,
 			true
 		);
 
@@ -94,16 +99,62 @@ final class ADF_Mobile_Bottom_Nav {
 			'adf-mobile-bottom-nav',
 			'ADFMobileBottomNav',
 			array(
-				'hideOnScroll'  => $vars['hideOnScroll'],
-				'cities'        => $this->get_city_options( $settings ),
-				'selectedCity'  => $this->get_selected_city( $settings ),
-				'categories'    => $this->get_category_options(),
+				'hideOnScroll'     => $vars['hideOnScroll'],
+				'cities'           => $this->get_city_options( $settings ),
+				'selectedCity'     => $this->get_selected_city( $settings ),
+				'categories'       => $this->get_category_options(),
 				'selectedCategory' => $this->get_selected_category(),
-				'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
-				'countriesNonce' => wp_create_nonce( 'adforest_get_countries_nonce' ),
-				'isLoggedIn'    => is_user_logged_in(),
-				'favoritesUrl'  => is_user_logged_in() ? $this->get_favorites_url() : '',
+				'ajaxUrl'          => admin_url( 'admin-ajax.php' ),
+				'countriesNonce'   => wp_create_nonce( 'adforest_get_countries_nonce' ),
+				'mobileCountNonce' => wp_create_nonce( 'adf_mobile_filter_count' ),
+				'isLoggedIn'       => is_user_logged_in(),
+				'favoritesUrl'     => is_user_logged_in() ? $this->get_favorites_url() : '',
 				'favoritesLoginMessage' => __( 'برای مشاهده علاقه‌مندی‌ها ابتدا وارد حساب کاربری شوید.', 'adf-mobile-bottom-nav' ),
+				'mobileFiltersApplyTemplate' => __( 'نمایش {{count}} آگهی', 'adf-mobile-bottom-nav' ),
+				'mobileFiltersApplyZero'     => __( 'آگهی‌ای یافت نشد', 'adf-mobile-bottom-nav' ),
+				'mobileFiltersApplyLoading'  => __( 'در حال محاسبه...', 'adf-mobile-bottom-nav' ),
+				'mobileFiltersApplyError'    => __( 'خطا در محاسبه آگهی‌ها', 'adf-mobile-bottom-nav' ),
+				'mobileFiltersApplyHint'     => __( 'فیلترهای دلخواه را انتخاب کنید و در پایان نتایج را نمایش دهید.', 'adf-mobile-bottom-nav' ),
+				'mobileFiltersCountDebounce' => 260,
+			)
+		);
+	}
+
+	public function handle_mobile_filter_count_ajax() {
+		check_ajax_referer( 'adf_mobile_filter_count', 'security' );
+
+		if ( ! function_exists( 'adforest_sanitize_search_params' ) || ! function_exists( 'adforest_build_search_query_args' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Search filters are unavailable.', 'adf-mobile-bottom-nav' ),
+				),
+				500
+			);
+		}
+
+		$raw = array();
+		if ( isset( $_POST['filters_raw'] ) && is_string( $_POST['filters_raw'] ) ) {
+			parse_str( wp_unslash( $_POST['filters_raw'] ), $raw );
+		} elseif ( isset( $_POST['filters'] ) && is_array( $_POST['filters'] ) ) {
+			$raw = wp_unslash( $_POST['filters'] );
+		}
+
+		$params = adforest_sanitize_search_params( $raw );
+		$args   = adforest_build_search_query_args( $params );
+
+		$args['posts_per_page']         = 1;
+		$args['fields']                 = 'ids';
+		$args['no_found_rows']          = false;
+		$args['update_post_meta_cache'] = false;
+		$args['update_post_term_cache'] = false;
+		$args['cache_results']          = false;
+
+		$query = new WP_Query( $args );
+
+		wp_send_json_success(
+			array(
+				'total'         => (int) $query->found_posts,
+				'max_num_pages' => (int) $query->max_num_pages,
 			)
 		);
 	}
@@ -144,7 +195,15 @@ final class ADF_Mobile_Bottom_Nav {
 	private function get_nav_markup( $items, $from_shortcode = false ) {
 		$current_url = home_url( add_query_arg( array(), $GLOBALS['wp']->request ) );
 		$rendered    = array();
-		$items       = $this->maybe_append_filters_item( $this->filter_nav_items( $this->maybe_append_auth_item( $items ) ) );
+		$items       = $this->sort_nav_items(
+			$this->maybe_swap_profile_nav_items(
+				$this->maybe_append_filters_item(
+					$this->filter_nav_items(
+						$this->maybe_append_auth_item( $items )
+					)
+				)
+			)
+		);
 
 		foreach ( $items as $item ) {
 			$url = $this->resolve_item_link( $item );
@@ -220,10 +279,30 @@ final class ADF_Mobile_Bottom_Nav {
 			return false;
 		}
 
+		if ( ! empty( $item['dynamic'] ) && 'my_ads' === $item['dynamic'] ) {
+			return $this->is_profile_page()
+				&& isset( $_GET['page_type'] )
+				&& 'my_ads' === sanitize_key( wp_unslash( $_GET['page_type'] ) );
+		}
+
+		if ( ! empty( $item['dynamic'] ) && 'messages' === $item['dynamic'] ) {
+			return $this->is_profile_page()
+				&& isset( $_GET['page_type'] )
+				&& 'msg' === sanitize_key( wp_unslash( $_GET['page_type'] ) );
+		}
+
 		if ( ! empty( $item['dynamic'] ) && 'favorites' === $item['dynamic'] ) {
 			return is_user_logged_in()
 				&& isset( $_GET['page_type'] )
 				&& 'fav_ads' === sanitize_key( wp_unslash( $_GET['page_type'] ) );
+		}
+
+		if ( ! empty( $item['dynamic'] ) && in_array( $item['dynamic'], array( 'auth', 'dashboard' ), true ) && is_user_logged_in() ) {
+			if ( $this->is_profile_page() ) {
+				$page_type = isset( $_GET['page_type'] ) ? sanitize_key( wp_unslash( $_GET['page_type'] ) ) : '';
+
+				return '' === $page_type || 'my_profile' === $page_type;
+			}
 		}
 
 		if ( ! empty( $item['dynamic'] ) && 'post-ad' === $item['dynamic'] ) {
@@ -275,11 +354,37 @@ final class ADF_Mobile_Bottom_Nav {
 	}
 
 	private function get_favorites_url() {
-		$profile = function_exists( 'bornado_auth_modal_profile_url' )
+		return add_query_arg( 'page_type', 'fav_ads', $this->get_profile_page_url() );
+	}
+
+	private function get_profile_page_url() {
+		return function_exists( 'bornado_auth_modal_profile_url' )
 			? bornado_auth_modal_profile_url()
 			: home_url( '/profile/' );
+	}
 
-		return add_query_arg( 'page_type', 'fav_ads', $profile );
+	private function get_my_ads_url() {
+		return add_query_arg( 'page_type', 'my_ads', $this->get_profile_page_url() );
+	}
+
+	private function get_messages_url() {
+		return add_query_arg( 'page_type', 'msg', $this->get_profile_page_url() );
+	}
+
+	private function is_profile_page() {
+		global $adforest_theme;
+
+		$page_id = isset( $adforest_theme['sb_profile_page'] )
+			? (int) apply_filters( 'adforest_language_page_id', $adforest_theme['sb_profile_page'] )
+			: 0;
+
+		if ( $page_id && is_page( $page_id ) ) {
+			return true;
+		}
+
+		$current_url = home_url( add_query_arg( array(), $GLOBALS['wp']->request ) );
+
+		return $this->urls_match( $this->get_profile_page_url(), $current_url );
 	}
 
 	private function get_post_ad_url() {
@@ -358,6 +463,14 @@ final class ADF_Mobile_Bottom_Nav {
 			return $items;
 		}
 
+		$filter_index = null;
+		foreach ( $items as $index => $item ) {
+			if ( ! empty( $item['dynamic'] ) && 'filters' === $item['dynamic'] ) {
+				$filter_index = (int) $index;
+				break;
+			}
+		}
+
 		$items = array_values(
 			array_filter(
 				(array) $items,
@@ -375,22 +488,97 @@ final class ADF_Mobile_Bottom_Nav {
 			'badge'   => '',
 		);
 
-		$auth_index = null;
-		foreach ( $items as $index => $item ) {
-			if ( ! empty( $item['dynamic'] ) && 'auth' === $item['dynamic'] ) {
-				$auth_index = (int) $index;
-				break;
-			}
-		}
+		$insert_at = null !== $filter_index ? $filter_index : 1;
+		array_splice( $items, min( $insert_at, count( $items ) ), 0, array( $filter_item ) );
 
-		if ( null !== $auth_index ) {
-			array_splice( $items, $auth_index, 0, array( $filter_item ) );
+		return $items;
+	}
+
+	private function maybe_swap_profile_nav_items( $items ) {
+		if ( ! $this->is_profile_page() || ! is_array( $items ) ) {
 			return $items;
 		}
 
-		$items[] = $filter_item;
+		$swapped = array();
+		foreach ( $items as $item ) {
+			$dynamic = ! empty( $item['dynamic'] ) ? (string) $item['dynamic'] : '';
 
-		return $items;
+			if ( 'filters' === $dynamic ) {
+				$item = array(
+					'label'   => 'آگهی های من',
+					'icon'    => 'category',
+					'url'     => $this->get_my_ads_url(),
+					'dynamic' => 'my_ads',
+					'badge'   => '',
+				);
+			} elseif ( 'favorites' === $dynamic ) {
+				$item = array(
+					'label'   => 'پیام های من',
+					'icon'    => 'chat',
+					'url'     => $this->get_messages_url(),
+					'dynamic' => 'messages',
+					'badge'   => '',
+				);
+			}
+
+			$swapped[] = $item;
+		}
+
+		return $swapped;
+	}
+
+	private function get_nav_item_order_weight( $item ) {
+		$dynamic = ! empty( $item['dynamic'] ) ? (string) $item['dynamic'] : '';
+		$weights = array(
+			'home'      => 10,
+			'filters'   => 20,
+			'my_ads'    => 20,
+			'post-ad'   => 30,
+			'favorites' => 40,
+			'messages'  => 40,
+			'auth'      => 50,
+			'dashboard' => 50,
+		);
+
+		if ( isset( $weights[ $dynamic ] ) ) {
+			return $weights[ $dynamic ];
+		}
+
+		$icon = isset( $item['icon'] ) ? (string) $item['icon'] : '';
+		$icon_weights = array(
+			'home'     => 10,
+			'filters'  => 20,
+			'category' => 20,
+			'plus'     => 30,
+			'heart'    => 40,
+			'chat'     => 40,
+			'user'     => 50,
+		);
+
+		return isset( $icon_weights[ $icon ] ) ? $icon_weights[ $icon ] : 999;
+	}
+
+	private function sort_nav_items( $items ) {
+		if ( ! is_array( $items ) || count( $items ) < 2 ) {
+			return is_array( $items ) ? $items : array();
+		}
+
+		$indexed = array_values( $items );
+		usort(
+			$indexed,
+			function ( $left, $right ) {
+				$left_weight  = $this->get_nav_item_order_weight( $left );
+				$right_weight = $this->get_nav_item_order_weight( $right );
+
+				if ( $left_weight === $right_weight ) {
+					return 0;
+				}
+
+				return $left_weight < $right_weight ? -1 : 1;
+			}
+		);
+
+		return $indexed;
 	}
 
 	private function get_item_label( $item ) {
@@ -837,6 +1025,10 @@ final class ADF_Mobile_Bottom_Nav {
 					return '#';
 				}
 				return $this->get_favorites_url();
+			case 'my_ads':
+				return $this->get_my_ads_url();
+			case 'messages':
+				return $this->get_messages_url();
 			case 'post-ad':
 				if ( ! is_user_logged_in() ) {
 					return $this->get_post_ad_guest_href();
@@ -963,6 +1155,13 @@ final class ADF_Mobile_Bottom_Nav {
 					'badge'   => '',
 				),
 				array(
+					'label'   => 'فیلتر',
+					'icon'    => 'filters',
+					'url'     => '#',
+					'dynamic' => 'filters',
+					'badge'   => '',
+				),
+				array(
 					'label'   => 'ثبت آگهی',
 					'icon'    => 'plus',
 					'url'     => $this->get_post_ad_url(),
@@ -970,7 +1169,7 @@ final class ADF_Mobile_Bottom_Nav {
 					'badge'   => '',
 				),
 				array(
-					'label'   => 'علاقه‌مندی',
+					'label'   => 'علاقه‌مندی‌ها',
 					'icon'    => 'heart',
 					'url'     => $this->get_favorites_url(),
 					'dynamic' => 'favorites',
@@ -981,13 +1180,6 @@ final class ADF_Mobile_Bottom_Nav {
 					'icon'    => 'user',
 					'url'     => function_exists( 'bornado_auth_modal_fallback_url' ) ? bornado_auth_modal_fallback_url( 'login' ) : home_url( '/' ),
 					'dynamic' => 'auth',
-					'badge'   => '',
-				),
-				array(
-					'label'   => 'فیلتر',
-					'icon'    => 'filters',
-					'url'     => '#',
-					'dynamic' => 'filters',
 					'badge'   => '',
 				),
 			),

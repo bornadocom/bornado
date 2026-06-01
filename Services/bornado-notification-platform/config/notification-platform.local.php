@@ -44,15 +44,33 @@ return array(
             'phone_number_id'       => $phoneNumberId,
             'access_token'          => $accessToken,
             'message_mode'          => 'template',
-            'default_language_code' => 'en_US',
+            'default_language_code' => 'fa',
             'text_fallback_enabled' => false,
             'timeout_seconds'       => 10,
             'verify_ssl'            => true,
             'template_map'          => array(
                 'listing.published' => array(
-                    'name'            => 'hello_world',
-                    'language_code'   => 'en_US',
-                    'body_parameters' => array(),
+                    'name'            => 'listing_published_manage_fa_v2',
+                    'language_code'   => 'fa',
+                    'header_media'    => array(
+                        'type' => 'image',
+                        'link' => 'https://bornado.com/wp-content/uploads/2026/05/Bornado.png',
+                    ),
+                    'body_parameters' => array(
+                        array(
+                            'name' => 'listing_title',
+                            'path' => 'payload.listing.title',
+                        ),
+                    ),
+                    'button_parameters' => array(
+                        array(
+                            'sub_type'   => 'url',
+                            'index'      => 0,
+                            'parameters' => array(
+                                'payload.listing.continueToken',
+                            ),
+                        ),
+                    ),
                 ),
                 'user.registered' => array(
                     'name'            => 'hello_world',

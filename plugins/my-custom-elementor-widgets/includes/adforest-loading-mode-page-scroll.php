@@ -479,7 +479,18 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 		}
 
 		function buildFiltersRaw(config) {
-			var params = new URLSearchParams(window.location.search || '');
+			var currentQs = '';
+			if (window.adforestAjaxSearchApi && typeof window.adforestAjaxSearchApi.collect === 'function') {
+				try {
+					currentQs = String(window.adforestAjaxSearchApi.collect() || '');
+				} catch (e) {
+					currentQs = '';
+				}
+			}
+			if (!currentQs) {
+				currentQs = String(window.location.search || '').replace(/^\?/, '');
+			}
+			var params = new URLSearchParams(currentQs);
 			params.delete('paged');
 			params.delete('page-number');
 			if (config && config.viewType) {
@@ -516,6 +527,21 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 				added++;
 			}
 			return added;
+		}
+
+		function responseHasEmptyState(source) {
+			if (!source || !source.querySelector) return false;
+			if (source.classList && (source.classList.contains('no_ads_found') || source.classList.contains('adforest-ajax-empty'))) {
+				return true;
+			}
+			return !!source.querySelector('.no_ads_found, .adforest-ajax-empty');
+		}
+
+		function disableLoadButton(button) {
+			if (!button) return;
+			button.disabled = true;
+			button.textContent = 'No More Ads';
+			button.style.display = 'none';
 		}
 
 		function getMobileFilterSidebar() {
@@ -734,10 +760,14 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 				var normalized = (html || '').trim();
 				if (!normalized || normalized === '0') {
 					showNoMoreAds();
-					if (button) {
-						button.disabled = true;
-						button.textContent = 'No More Ads';
-					}
+					disableLoadButton(button);
+					triggerLock = false;
+					return;
+				}
+
+				if (useSearchAjax && maxPages > 0 && config.paged > maxPages) {
+					showNoMoreAds();
+					disableLoadButton(button);
 					triggerLock = false;
 					return;
 				}
@@ -747,14 +777,18 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 					temp.innerHTML = html;
 					return temp;
 				})();
+
+				if (responseHasEmptyState(source)) {
+					showNoMoreAds();
+					disableLoadButton(button);
+					triggerLock = false;
+					return;
+				}
 				var addedItems = appendResponseItems(appendTarget, source);
 
 				if (!addedItems) {
 					showNoMoreAds();
-					if (button) {
-						button.disabled = true;
-						button.textContent = 'No More Ads';
-					}
+					disableLoadButton(button);
 					triggerLock = false;
 					return;
 				}
@@ -766,8 +800,8 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 				hideLoadingUi();
 
 				if (useSearchAjax && maxPages > 0 && config.paged >= maxPages) {
-					button.disabled = true;
-					button.textContent = 'No More Ads';
+					showNoMoreAds();
+					disableLoadButton(button);
 				} else {
 					setTimeout(maybeLoadNextPage, 80);
 				}
