@@ -16,7 +16,7 @@
     const state = {
         intent: defaultMode,
         currentView: 'phone-entry',
-        redirectUrl: config.afterLoginUrl || window.location.href,
+        redirectUrl: getDefaultRedirectTarget(),
         continueTokenHandled: false,
         claimAdId: 0,
         claimPhoneNumber: '',
@@ -201,7 +201,7 @@
     function openModal(options) {
         resetJourney(true);
         state.intent = options.mode === 'register' ? 'register' : 'login';
-        state.redirectUrl = options.redirectUrl || window.location.href;
+        state.redirectUrl = options.redirectUrl || getDefaultRedirectTarget();
         switchView('phone-entry');
         showNotice('info', '');
 
@@ -274,7 +274,7 @@
             state.phoneDialCode = '';
             state.existingUser = existingUser || state.intent === 'login';
             primePhoneInput(phoneNumber);
-            showNotice('info', buildContinueFlowMessage(phoneNumber, state.existingUser));
+            showNoticeHtml('info', buildContinueFlowMessage(phoneNumber, state.existingUser));
 
             if ('password' === nextStep || state.existingUser) {
                 switchView('password-login');
@@ -612,11 +612,6 @@
             subtitle = getI18n('setupSubtitle');
         }
 
-        const continueSubtitle = buildContinueFlowSubtitle();
-        if (continueSubtitle) {
-            subtitle = continueSubtitle;
-        }
-
         elements.modalTitle.textContent = title;
         if (subtitle.indexOf('bornado-inline-phone') > -1) {
             elements.modalSubtitle.innerHTML = subtitle;
@@ -840,14 +835,6 @@
             existingUser ? getI18n('claimLoginSubtitle') : getI18n('claimRegisterSubtitle'),
             phoneNumber
         );
-    }
-
-    function buildContinueFlowSubtitle() {
-        if (!state.claimPhoneNumber) {
-            return '';
-        }
-
-        return buildContinueFlowMessage(state.claimPhoneNumber, state.existingUser);
     }
 
     function sanitizeDialCode(value) {
@@ -1121,14 +1108,16 @@
     }
 
     function resolveRedirectUrl(fallbackHref) {
-        const currentUrl = window.location.href;
-
         if (!fallbackHref) {
-            return currentUrl;
+            return getDefaultRedirectTarget();
         }
 
         const parsed = safeUrl(fallbackHref);
-        return parsed.searchParams.get('u') || currentUrl;
+        return parsed.searchParams.get('u') || getDefaultRedirectTarget();
+    }
+
+    function getDefaultRedirectTarget() {
+        return config.afterLoginUrl || config.profileUrl || window.location.href;
     }
 
     function redirectAfterSuccess(flowType) {

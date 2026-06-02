@@ -302,9 +302,7 @@
                 return;
             }
 
-            phoneHint.textContent = normalized
-                ? getI18n("phoneExample") + ": " + isolateInlineText(normalized)
-                : getI18n("invalidPhone");
+            phoneHint.textContent = normalized ? "" : getI18n("invalidPhone");
         }
 
         function applyNormalization() {

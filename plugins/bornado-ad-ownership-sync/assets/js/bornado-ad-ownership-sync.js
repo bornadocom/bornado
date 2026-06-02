@@ -11,10 +11,15 @@
             return;
         }
 
+        if (!message) {
+            $box.hide().text('').removeClass('is-success is-error');
+            return;
+        }
+
         $box
             .removeClass('is-success is-error')
             .addClass(isSuccess ? 'is-success' : 'is-error')
-            .text(message || config.genericError || '')
+            .text(message)
             .show();
     }
 

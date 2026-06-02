@@ -183,8 +183,49 @@ if ('' === $contact_num) {
 $communication_mode    = $adforest_theme['communication_mode'] ?? 'both';
 $adforest_post_ad_page = apply_filters('adforest_language_page_id', $adforest_theme['sb_post_ad_page'] ?? '');
 $ad_update_url         = '';
+$ad_update_source      = 'legacy-post-page';
 if (!empty($adforest_post_ad_page)) {
-    $ad_update_url = adforest_set_url_param(get_the_permalink($adforest_post_ad_page), 'id', $pid);
+    $legacy_post_ad_page_url = get_permalink($adforest_post_ad_page);
+    if (is_string($legacy_post_ad_page_url) && '' !== $legacy_post_ad_page_url) {
+        $ad_update_url = add_query_arg('id', $pid, $legacy_post_ad_page_url);
+    }
+}
+$modern_post_ad_page_id = isset($adforest_theme['sb_modern_post_ad_page']) ? (int) $adforest_theme['sb_modern_post_ad_page'] : 0;
+if ($modern_post_ad_page_id > 0) {
+    $translated_modern_post_ad_page_id = (int) apply_filters('adforest_language_page_id', $modern_post_ad_page_id);
+    if ($translated_modern_post_ad_page_id > 0) {
+        $modern_post_ad_page_id = $translated_modern_post_ad_page_id;
+        $ad_update_source = 'modern-option-translated';
+    } else {
+        $ad_update_source = 'modern-option';
+    }
+}
+if ($modern_post_ad_page_id < 1) {
+    $bornado_modern_post_pages = get_posts(array(
+        'post_type'              => 'page',
+        'post_status'            => array('publish', 'private'),
+        'posts_per_page'         => 1,
+        'fields'                 => 'ids',
+        'meta_key'               => '_wp_page_template',
+        'meta_value'             => 'page-add-new.php',
+        'orderby'                => 'menu_order title',
+        'order'                  => 'ASC',
+        'suppress_filters'       => false,
+        'update_post_meta_cache' => false,
+        'update_post_term_cache' => false,
+        'no_found_rows'          => true,
+    ));
+    if (!empty($bornado_modern_post_pages)) {
+        $modern_post_ad_page_id = (int) $bornado_modern_post_pages[0];
+        $ad_update_source       = 'modern-template-fallback';
+    }
+}
+if ($modern_post_ad_page_id > 0) {
+    $modern_post_ad_page_url = get_permalink($modern_post_ad_page_id);
+    if (is_string($modern_post_ad_page_url) && '' !== $modern_post_ad_page_url) {
+        $ad_update_url = add_query_arg('id', $pid, $modern_post_ad_page_url);
+        $ad_update_source = 'modern-url-active';
+    }
 }
 $posted_time           = get_the_time('U', $pid);
 $ad_posted_date        = adforest_get_ad_posted_date($posted_time);
@@ -662,7 +703,13 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
                         <?php } ?>
 
                         <?php if ((current_user_can('administrator') || get_current_user_id() == $poster_id) && '' !== $ad_update_url) { ?>
-                            <a class="bornad-edit-link" href="<?php echo esc_url($ad_update_url); ?>">
+                            <a
+                                class="bornad-edit-link"
+                                href="<?php echo esc_url($ad_update_url); ?>"
+                                data-bornado-edit-marker="bornado-edit-v2"
+                                data-bornado-edit-source="<?php echo esc_attr($ad_update_source); ?>"
+                                data-bornado-edit-ad-id="<?php echo esc_attr($pid); ?>"
+                            >
                                 <?php echo esc_html__('ویرایش آگهی', 'adforest'); ?>
                             </a>
                         <?php } ?>

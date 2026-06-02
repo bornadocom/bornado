@@ -762,26 +762,37 @@ function adforest_load_more_dashboard_ads()
     if ($query->have_posts()):
         while ($query->have_posts()):
             $query->the_post();
-            $ad_details = get_ad_post_details(get_the_ID());
+            $ad_id = get_the_ID();
+            $ad_details = get_ad_post_details($ad_id);
             $first_img = $ad_details['img'];
             $title = $ad_details['ad_title'];
-            $price = $ad_details['price'];
-            $ad_permalink = $ad_details['ad_link'];
-            $post_status = get_post_status(get_the_ID());
+            $post_status = get_post_status($ad_id);
             $status_label = ucfirst($post_status);
+            $posted_time = get_the_time('U', $ad_id);
+            $tr_class = ($ad_type == 'fav_ads') ? 'holder-' . $ad_id : '';
             ?>
-            <tr>
+            <tr<?php echo $tr_class ? ' class="' . esc_attr($tr_class) . '"' : ''; ?>>
                 <td>
                     <div class="product">
                         <div class="image">
                             <img src="<?php echo esc_url($first_img); ?>" alt="<?php echo esc_attr($title); ?>" />
                         </div>
-                        <p class="text-sm"><?php echo esc_html($title); ?></p>
+                        <a href="<?php echo esc_url(get_permalink($ad_id)); ?>">
+                            <p class="text-sm"><?php echo esc_html($title); ?></p>
+                            <p class="ad-date"><?php echo esc_html(adforest_get_ad_posted_date($posted_time)); ?></p>
+                        </a>
                     </div>
                 </td>
                 <td>
                     <div class="table-price-dash">
-                        <?php echo adforest_adPrice(get_the_ID(), 'negotiable', 'p'); ?>
+                        <?php
+                        $price_output = adforest_adPrice($ad_id, 'negotiable', 'p');
+                        if (!empty($price_output)) {
+                            echo $price_output;
+                        } else {
+                            echo esc_html__('No Price', 'adforest');
+                        }
+                        ?>
                     </div>
                 </td>
                 <td>
@@ -807,73 +818,21 @@ function adforest_load_more_dashboard_ads()
                         <?php echo esc_html($status_label); ?>
                     </span>
                 </td>
-                <td>
-                    <div class="action justify-content-end">
-                        <?php
-                        global $adforest_theme;
-                        $sb_post_ad_page = apply_filters('adforest_language_page_id', $adforest_theme['sb_post_ad_page']);
-                        $ad_update_url = adforest_set_url_param(get_the_permalink($sb_post_ad_page), 'id', get_the_ID());
-                        $bump_ads = get_user_meta(get_current_user_id(), '_sb_bump_ads', true);
-                        $bump_up_ads_class = '';
-                        if ($bump_ads > 0 || $bump_ads == '-1' || (isset($adforest_theme['sb_allow_free_bump_up']) && $adforest_theme['sb_allow_free_bump_up'])) {
-                            $bump_up_ads_class = 'bump_it_up_new_pkg';
-                        } else {
-                            $bump_up_ads_class = 'bump_it_up_new_pkg';
-                        }
-
-                        $featured_ads = get_user_meta(get_current_user_id(), '_sb_featured_ads', true);
-                        $sb_expire_ads = get_user_meta(get_current_user_id(), '_sb_expire_ads', true);
-                        if ($featured_ads != 0 && $featured_ads != "" && ($sb_expire_ads != '-1' || $sb_expire_ads < current_time('Y-m-d'))) {
-                            $ad_featured = 'sb_make_feature_ad_new_pkg';
-                        } else {
-                            $ad_featured = 'sb_make_feature_ad_new_pkg';
-                        }
-                        $is_featured = get_post_meta(get_the_ID(), '_adforest_is_feature', true) == '1';
-                        $star_class = $is_featured ? 'lni lni-star-filled' : 'lni lni-star';
-                        $link_class = $ad_featured;
-                        $inline_style = $is_featured ? 'style="pointer-events: none;"' : '';
-                        ?>
-                        <div class="ad_action_container d-flex justify-content-center align-items-center gap-4">
-                            <a href="javascript:void(0)" class="<?php echo esc_attr($ad_featured); ?>" title="Make Featured"
-                                data-aaa-id="<?php echo esc_attr(get_the_ID()); ?>" <?php echo esc_attr($inline_style); ?>>
-                                <i class="<?php echo esc_attr($star_class) ?>"></i>
-                            </a>
-                            <a href="javascript:void(0)" class="<?php echo esc_attr($bump_up_ads_class); ?>" title="Bump Up Ad"
-                                data-aaa-id="<?php echo esc_attr(get_the_ID()); ?>">
-                                <i class="lni lni-arrow-up-circle"></i>
-                            </a>
-                            <a href="<?php echo esc_url($ad_update_url); ?>" class="edit" title="Edit Ad">
-                                <i class="lni lni-pencil"></i>
-                            </a>
-                        </div>
-                        <button class="more-btn ml-10 dropdown-toggle" id="moreAction<?php echo get_the_ID(); ?>"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="lni lni-more-alt"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="moreAction<?php echo get_the_ID(); ?>">
-                            <li class="dropdown-item">
-                                <a href="javascript:void(0)" class="text-gray ad_package_info" data-nonce="<?php echo wp_create_nonce('adforest_ad_package_info'); ?>"
-                                    data-adid='<?php echo get_the_ID(); ?>'><?php echo esc_html__("Info", "adforest"); ?></a>
-                            </li>
-                            <li class="dropdown-item">
-                                <a href="javascript:void(0)" class="text-gray ad_status" data-adid='<?php echo get_the_ID(); ?>'
-                                    data-value="active" data-security="<?php echo esc_attr(wp_create_nonce('sb_update_ad_status_nonce')); ?>"><?php echo esc_html__("Active", "adforest"); ?></a>
-                            </li>
-                            <li class="dropdown-item">
-                                <a href="javascript:void(0)" class="text-gray ad_status" data-adid='<?php echo get_the_ID(); ?>'
-                                    data-value="expired" data-security="<?php echo esc_attr(wp_create_nonce('sb_update_ad_status_nonce')); ?>"><?php echo esc_html__("Expire", "adforest"); ?></a>
-                            </li>
-                            <li class="dropdown-item">
-                                <a href="javascript:void(0)" class="text-gray ad_status" data-adid='<?php echo get_the_ID(); ?>'
-                                    data-value="sold" data-security="<?php echo esc_attr(wp_create_nonce('sb_update_ad_status_nonce')); ?>"><?php echo esc_html__("Sold", "adforest"); ?></a>
-                            </li>
-                            <li class="dropdown-item">
-                                <a href="javascript:void(0)" class="text-gray remove_ad" data-adid='<?php echo get_the_ID(); ?>'
-                                    data-value="expired"><?php echo esc_html__("Delete", "adforest"); ?></a>
-                            </li>
-                        </ul>
-                    </div>
-                </td>
+                <?php if ($ad_type == 'fav_ads') { ?>
+                    <td>
+                        <a href="javascript:void(0)" class="remove_fav_ad" data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="<?php echo esc_attr__("Remove Favorite", "adforest"); ?>"
+                            data-aaa-id="<?php echo esc_attr($ad_id); ?>"
+                            data-nonce="<?php echo esc_attr(wp_create_nonce('sb_fav_remove_ad_nonce')); ?>">
+                            <i class="mdi mdi-tag-remove-outline"></i>
+                        </a>
+                    </td>
+                <?php } else { ?>
+                    <td>
+                        <?php echo adforest_get_ad_actions($ad_id, $ad_type); ?>
+                    </td>
+                <?php } ?>
             </tr>
             <?php
         endwhile;

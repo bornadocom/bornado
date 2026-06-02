@@ -216,6 +216,14 @@ if (file_exists($bornado_phone_display_fix_bootstrap)) {
 }
 
 /**
+ * Force legacy edit-ad links onto the modern Add New page.
+ */
+$bornado_edit_ad_link_fix_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-edit-ad-link-fix.php';
+if (file_exists($bornado_edit_ad_link_fix_bootstrap)) {
+    require_once $bornado_edit_ad_link_fix_bootstrap;
+}
+
+/**
  * Add a third single-ad layout from the child theme layer.
  */
 $bornado_single_ad_style_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornad-single-ad-style.php';
@@ -1639,3 +1647,133 @@ if (!function_exists('bornado_enforce_price_slider_step')) {
     }
 }
 add_action('wp_enqueue_scripts', 'bornado_enforce_price_slider_step', 132);
+
+if (!function_exists('bornado_enqueue_dashboard_mobile_menu_assets')) {
+    /**
+     * Turn the dashboard mobile menus into app-like bottom sheets.
+     */
+    function bornado_enqueue_dashboard_mobile_menu_assets()
+    {
+        if (is_admin() || !is_page_template('page-theme-dashboard.php')) {
+            return;
+        }
+
+        $style_path = get_stylesheet_directory() . '/assets/css/bornado-dashboard-mobile-menu.css';
+        $script_path = get_stylesheet_directory() . '/assets/js/bornado-dashboard-mobile-menu.js';
+
+        if (file_exists($style_path)) {
+            wp_enqueue_style(
+                'bornado-dashboard-mobile-menu',
+                get_stylesheet_directory_uri() . '/assets/css/bornado-dashboard-mobile-menu.css',
+                array('dashboard-main', 'dashboard-dash', 'dashboard-dash-rtl'),
+                (string) filemtime($style_path)
+            );
+        }
+
+        if (file_exists($script_path)) {
+            wp_enqueue_script(
+                'bornado-dashboard-mobile-menu',
+                get_stylesheet_directory_uri() . '/assets/js/bornado-dashboard-mobile-menu.js',
+                array('dashboard-bootstrap-bundle', 'dashboard-mainjs'),
+                (string) filemtime($script_path),
+                true
+            );
+
+            wp_localize_script(
+                'bornado-dashboard-mobile-menu',
+                'BornadoDashboardMenu',
+                array(
+                    'breakpoint'   => 991,
+                    'closeLabel'   => __('بستن', 'adforest'),
+                    'sidebarTitle' => __('منوی پروفایل', 'adforest'),
+                    'profileTitle' => __('حساب کاربری', 'adforest'),
+                )
+            );
+        }
+    }
+}
+add_action('wp_enqueue_scripts', 'bornado_enqueue_dashboard_mobile_menu_assets', 220);
+
+if (!function_exists('bornado_get_temporarily_disabled_dashboard_page_types')) {
+    /**
+     * Dashboard sections temporarily disabled for all devices.
+     *
+     * @return array<int,string>
+     */
+    function bornado_get_temporarily_disabled_dashboard_page_types()
+    {
+        return array(
+            'ad_bids',
+            'my_packages',
+            'invoices',
+        );
+    }
+}
+
+add_filter('adforest_dashboard_allowed_page_types', function ($page_types) {
+    if (!is_array($page_types)) {
+        return $page_types;
+    }
+
+    return array_values(array_diff($page_types, bornado_get_temporarily_disabled_dashboard_page_types()));
+}, 20);
+
+add_action('template_redirect', function () {
+    if (is_admin() || !is_page_template('page-theme-dashboard.php')) {
+        return;
+    }
+
+    $page_type = isset($_GET['page_type']) ? sanitize_key(wp_unslash($_GET['page_type'])) : '';
+    if ($page_type === '' || !in_array($page_type, bornado_get_temporarily_disabled_dashboard_page_types(), true)) {
+        return;
+    }
+
+    wp_safe_redirect(remove_query_arg('page_type'));
+    exit;
+}, 20);
+
+add_action('wp_enqueue_scripts', function () {
+    if (is_admin() || !is_page_template('page-theme-dashboard.php')) {
+        return;
+    }
+
+    $disabled_types = bornado_get_temporarily_disabled_dashboard_page_types();
+    if (empty($disabled_types)) {
+        return;
+    }
+
+    $selectors = array();
+    foreach ($disabled_types as $type) {
+        $selectors[] = '.sidebar-nav-wrapper .sidebar-nav a[href*="page_type=' . esc_attr($type) . '"]';
+    }
+
+    $js = <<<'JS'
+    document.addEventListener('DOMContentLoaded', function () {
+        var selectors = %s;
+        selectors.forEach(function (selector) {
+            document.querySelectorAll(selector).forEach(function (link) {
+                var item = link.closest('.nav-item');
+                if (item) {
+                    item.style.display = 'none';
+                    return;
+                }
+
+                var listItem = link.closest('li');
+                if (listItem) {
+                    listItem.style.display = 'none';
+                    return;
+                }
+
+                link.style.display = 'none';
+            });
+        });
+    });
+    JS;
+
+    wp_register_script('bornado-dashboard-hidden-menu-items', '', array(), null, true);
+    wp_enqueue_script('bornado-dashboard-hidden-menu-items');
+    wp_add_inline_script(
+        'bornado-dashboard-hidden-menu-items',
+        sprintf($js, wp_json_encode($selectors))
+    );
+}, 230);

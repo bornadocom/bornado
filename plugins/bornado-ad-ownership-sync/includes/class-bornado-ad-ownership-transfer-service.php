@@ -527,7 +527,7 @@ final class Bornado_Ad_Ownership_Transfer_Service {
 		}
 
 		if ( $already_owned > 0 && $matched === $already_owned ) {
-			return 'این آگهی‌ها از قبل روی حساب شما قرار داشتند و انتقال تازه‌ای لازم نبود.';
+			return '';
 		}
 
 		if ( $matched > 0 ) {
