@@ -18,6 +18,7 @@
         var overlay = document.querySelector(".overlay");
         var menuToggle = document.getElementById("menu-toggle");
         var mainWrapper = document.querySelector(".main-wrapper");
+        var closeButton = null;
 
         if (!body || !sidebar || !overlay || !menuToggle) {
             return;
@@ -25,13 +26,46 @@
 
         sidebar.setAttribute("dir", "rtl");
 
-        if (!sidebar.querySelector(".bornado-dashboard-sheet__top")) {
+        function populateSidebarSheetBrand(top) {
+            var brandHost = top ? top.querySelector(".bornado-dashboard-sheet__brand") : null;
+            var logoLink = sidebar.querySelector(".navbar-logo a");
+
+            if (!brandHost) {
+                return;
+            }
+
+            brandHost.innerHTML = "";
+            if (!logoLink) {
+                return;
+            }
+
+            brandHost.appendChild(logoLink.cloneNode(true));
+        }
+
+        function ensureSidebarSheetTop() {
+            var existingTop = sidebar.querySelector(".bornado-dashboard-sheet__top");
+
+            if (!isMobileViewport()) {
+                if (existingTop) {
+                    existingTop.remove();
+                }
+                return null;
+            }
+
+            if (existingTop) {
+                populateSidebarSheetBrand(existingTop);
+                return existingTop;
+            }
+
             var top = document.createElement("div");
             top.className = "bornado-dashboard-sheet__top";
             top.innerHTML =
                 '<span class="bornado-dashboard-sheet__handle" aria-hidden="true"></span>' +
-                '<strong class="bornado-dashboard-sheet__title"></strong>' +
-                '<button type="button" class="bornado-dashboard-sheet__close" aria-label=""></button>';
+                '<div class="bornado-dashboard-sheet__bar">' +
+                    '<strong class="bornado-dashboard-sheet__title"></strong>' +
+                    '<span class="bornado-dashboard-sheet__brand"></span>' +
+                    '<button type="button" class="bornado-dashboard-sheet__close" aria-label=""></button>' +
+                '</div>';
 
             top.querySelector(".bornado-dashboard-sheet__title").textContent =
                 config.sidebarTitle || "منوی پروفایل";
@@ -40,10 +74,23 @@
                 config.closeLabel || "بستن"
             );
             top.querySelector(".bornado-dashboard-sheet__close").innerHTML = getCloseIconMarkup();
+            populateSidebarSheetBrand(top);
             sidebar.insertBefore(top, sidebar.firstChild);
+
+            return top;
         }
 
-        var closeButton = sidebar.querySelector(".bornado-dashboard-sheet__close");
+        function bindSidebarCloseButton() {
+            closeButton = sidebar.querySelector(".bornado-dashboard-sheet__close");
+
+            if (closeButton && !closeButton.hasAttribute("data-bornado-bound")) {
+                closeButton.setAttribute("data-bornado-bound", "1");
+                closeButton.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    closeSidebar();
+                });
+            }
+        }
 
         function syncSidebarState() {
             var isOpen = isMobileViewport() && sidebar.classList.contains("active");
@@ -61,13 +108,8 @@
             syncSidebarState();
         }
 
-        if (closeButton && !closeButton.hasAttribute("data-bornado-bound")) {
-            closeButton.setAttribute("data-bornado-bound", "1");
-            closeButton.addEventListener("click", function (event) {
-                event.preventDefault();
-                closeSidebar();
-            });
-        }
+        ensureSidebarSheetTop();
+        bindSidebarCloseButton();
 
         if (!menuToggle.hasAttribute("data-bornado-bound")) {
             menuToggle.setAttribute("data-bornado-bound", "1");
@@ -95,6 +137,8 @@
                     mainWrapper.classList.remove("active");
                 }
             }
+            ensureSidebarSheetTop();
+            bindSidebarCloseButton();
             syncSidebarState();
         });
 
@@ -112,6 +156,7 @@
         var trigger = document.getElementById("profile");
         var profileBox = trigger ? trigger.closest(".profile-box") : null;
         var menu = profileBox ? profileBox.querySelector(".dropdown-menu") : null;
+        var closeButton = null;
 
         if (!body || !trigger || !profileBox || !menu) {
             return;
@@ -126,7 +171,20 @@
             document.body.appendChild(backdrop);
         }
 
-        if (!menu.querySelector(".bornado-profile-sheet__top")) {
+        function ensureProfileSheetTop() {
+            var existingTopItem = menu.querySelector(".bornado-profile-sheet__top");
+
+            if (!isMobileViewport()) {
+                if (existingTopItem) {
+                    existingTopItem.remove();
+                }
+                return null;
+            }
+
+            if (existingTopItem) {
+                return existingTopItem;
+            }
+
             var topItem = document.createElement("li");
             topItem.className = "bornado-profile-sheet__top";
             topItem.innerHTML =
@@ -142,9 +200,21 @@
             );
             topItem.querySelector(".bornado-profile-sheet__close").innerHTML = getCloseIconMarkup();
             menu.insertBefore(topItem, menu.firstChild);
+
+            return topItem;
         }
 
-        var closeButton = menu.querySelector(".bornado-profile-sheet__close");
+        function bindProfileCloseButton() {
+            closeButton = menu.querySelector(".bornado-profile-sheet__close");
+
+            if (closeButton && !closeButton.hasAttribute("data-bornado-bound")) {
+                closeButton.setAttribute("data-bornado-bound", "1");
+                closeButton.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    hideProfileMenu();
+                });
+            }
+        }
 
         function syncProfileState() {
             var isOpen = isMobileViewport() && menu.classList.contains("show");
@@ -163,13 +233,8 @@
             syncProfileState();
         }
 
-        if (closeButton && !closeButton.hasAttribute("data-bornado-bound")) {
-            closeButton.setAttribute("data-bornado-bound", "1");
-            closeButton.addEventListener("click", function (event) {
-                event.preventDefault();
-                hideProfileMenu();
-            });
-        }
+        ensureProfileSheetTop();
+        bindProfileCloseButton();
 
         if (!backdrop.hasAttribute("data-bornado-bound")) {
             backdrop.setAttribute("data-bornado-bound", "1");
@@ -210,11 +275,14 @@
 
         window.addEventListener("resize", function () {
             if (!isMobileViewport()) {
+                ensureProfileSheetTop();
                 body.classList.remove("bornado-profile-menu-open");
                 backdrop.classList.remove("is-visible");
                 return;
             }
 
+            ensureProfileSheetTop();
+            bindProfileCloseButton();
             syncProfileState();
         });
 
@@ -518,6 +586,9 @@
         var switcher = document.createElement("section");
         switcher.className = "bornado-ads-mobile-switcher";
 
+        var currentPageType = getCurrentPageType();
+        var currentLabel = "بخش موردنظر را انتخاب کنید";
+        var sheetId = "bornado-ads-mobile-switcher-sheet";
         var header = document.createElement("div");
         header.className = "bornado-ads-mobile-switcher__header";
         header.innerHTML =
@@ -525,12 +596,63 @@
             '<strong class="bornado-ads-mobile-switcher__title">دسترسی سریع به همه بخش‌ها</strong>';
         switcher.appendChild(header);
 
-        var grid = document.createElement("div");
-        grid.className = "bornado-ads-mobile-switcher__grid";
+        var trigger = document.createElement("button");
+        trigger.type = "button";
+        trigger.className = "bornado-mobile-choice__trigger bornado-ads-mobile-switcher__trigger";
+        trigger.setAttribute("aria-expanded", "false");
+        trigger.setAttribute("aria-controls", sheetId);
+        trigger.innerHTML =
+            '<span class="bornado-mobile-choice__trigger-copy">' +
+                '<span class="bornado-mobile-choice__trigger-label">بخش انتخاب شده</span>' +
+                '<span class="bornado-mobile-choice__summary">بخش موردنظر را انتخاب کنید</span>' +
+            "</span>" +
+            '<span class="bornado-mobile-choice__trigger-icon" aria-hidden="true">' +
+                '<svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>' +
+            "</span>";
+
+        var sheet = document.createElement("div");
+        sheet.className = "bornado-mobile-choice__sheet bornado-ads-mobile-switcher__sheet";
+        sheet.id = sheetId;
+        sheet.hidden = true;
+        sheet.innerHTML =
+            '<button type="button" class="bornado-mobile-choice__backdrop" aria-label="بستن"></button>' +
+            '<div class="bornado-mobile-choice__panel" role="dialog" aria-modal="true" aria-label="بخش مدیریت آگهی‌ها">' +
+                '<div class="bornado-mobile-choice__handle" aria-hidden="true"></div>' +
+                '<div class="bornado-mobile-choice__panel-head">' +
+                    '<h4 class="bornado-mobile-choice__panel-title">انتخاب بخش</h4>' +
+                    '<button type="button" class="bornado-mobile-choice__close" aria-label="بستن">' + getCloseIconMarkup() + "</button>" +
+                "</div>" +
+                '<div class="bornado-mobile-choice__list" role="listbox"></div>' +
+            "</div>";
+
+        var list = sheet.querySelector(".bornado-mobile-choice__list");
+        var backdrop = sheet.querySelector(".bornado-mobile-choice__backdrop");
+        var closeButton = sheet.querySelector(".bornado-mobile-choice__close");
+        var summary = trigger.querySelector(".bornado-mobile-choice__summary");
+        var redirectTimer = null;
+
+        function setSheetState(isOpen) {
+            switcher.classList.toggle("is-open", !!isOpen);
+            trigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+            sheet.hidden = !isOpen;
+            document.body.classList.toggle("bornado-mobile-choice-open", !!isOpen);
+        }
+
+        function markSelectedManageAdsItem(activeItem, label) {
+            Array.prototype.forEach.call(list.querySelectorAll(".bornado-mobile-choice__item"), function (item) {
+                var isActive = item === activeItem;
+                item.classList.toggle("is-selected", isActive);
+                item.setAttribute("aria-selected", isActive ? "true" : "false");
+            });
+            if (label) {
+                summary.textContent = label;
+            }
+        }
 
         links.forEach(function (link) {
-            var clone = document.createElement("a");
+            var item = document.createElement("button");
             var pageType = "";
+            var label = normalizeText(link.textContent);
 
             try {
                 pageType = new window.URL(link.href, window.location.origin).searchParams.get("page_type") || "";
@@ -538,17 +660,62 @@
                 pageType = "";
             }
 
-            clone.className = "bornado-ads-mobile-switcher__link";
-            if (pageType && pageType === getCurrentPageType()) {
-                clone.classList.add("is-active");
-            }
+            item.type = "button";
+            item.className = "bornado-mobile-choice__item";
+            item.setAttribute("role", "option");
+            item.setAttribute("data-href", link.href);
+            item.innerHTML =
+                '<span class="bornado-mobile-choice__item-copy">' +
+                    '<span class="bornado-mobile-choice__item-label"></span>' +
+                "</span>" +
+                '<span class="bornado-mobile-choice__check" aria-hidden="true"></span>';
+            item.querySelector(".bornado-mobile-choice__item-label").textContent = label;
 
-            clone.href = link.href;
-            clone.textContent = normalizeText(link.textContent);
-            grid.appendChild(clone);
+            if (pageType && pageType === currentPageType) {
+                item.classList.add("is-selected");
+                item.setAttribute("aria-selected", "true");
+                currentLabel = label;
+            } else {
+                item.setAttribute("aria-selected", "false");
+            }
+            item.addEventListener("click", function () {
+                var targetHref = item.getAttribute("data-href");
+                if (!targetHref) {
+                    return;
+                }
+                if (redirectTimer) {
+                    window.clearTimeout(redirectTimer);
+                }
+                markSelectedManageAdsItem(item, label);
+                redirectTimer = window.setTimeout(function () {
+                    setSheetState(false);
+                    window.setTimeout(function () {
+                        window.location.href = targetHref;
+                    }, 80);
+                }, 120);
+            });
+            list.appendChild(item);
         });
 
-        switcher.appendChild(grid);
+        summary.textContent = currentLabel;
+        trigger.addEventListener("click", function () {
+            setSheetState(sheet.hidden);
+        });
+
+        if (backdrop) {
+            backdrop.addEventListener("click", function () {
+                setSheetState(false);
+            });
+        }
+
+        if (closeButton) {
+            closeButton.addEventListener("click", function () {
+                setSheetState(false);
+            });
+        }
+
+        switcher.appendChild(trigger);
+        switcher.appendChild(sheet);
         hostCard.parentNode.insertBefore(switcher, hostCard);
     }
 

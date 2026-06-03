@@ -1,0 +1,319 @@
+/* Child-theme-only SB Chat bubble overrides.
+   Goals:
+   1. Show the current user's bubbles in WhatsApp-like green.
+   2. Swap sender/receiver sides versus the current default UI.
+   Applies to both:
+   - classic dashboard chat (`/profile/?page_type=msg`)
+   - modern messages template (`page-messages.php`)
+*/
+
+/* -------------------------------------------------------------------------- */
+/* Classic dashboard chat                                                     */
+/* -------------------------------------------------------------------------- */
+html[dir="rtl"] .msg-body ul li.reply,
+body.rtl .msg-body ul li.reply,
+.msg-body ul li.reply {
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: flex-end !important;
+    text-align: right !important;
+    width: 100% !important;
+    position: relative !important;
+}
+
+html[dir="rtl"] .msg-body ul li.sender,
+body.rtl .msg-body ul li.sender,
+.msg-body ul li.sender {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    width: 100% !important;
+    position: relative !important;
+}
+
+.msg-body ul li.reply::before,
+.msg-body ul li.reply:before {
+    display: block !important;
+    clear: both;
+    content: '' !important;
+    position: absolute !important;
+    top: -6px !important;
+    right: -8px !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-style: solid !important;
+    border-width: 0 12px 15px 12px !important;
+    border-color: transparent transparent #d8fdd2 transparent !important;
+    -webkit-transform: rotate(37deg) !important;
+    -ms-transform: rotate(37deg) !important;
+    transform: rotate(37deg) !important;
+    z-index: 1;
+}
+
+.msg-body ul li.sender::before,
+.msg-body ul li.sender:before {
+    display: block !important;
+    clear: both;
+    content: '' !important;
+    position: absolute !important;
+    top: -6px !important;
+    left: -7px !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-style: solid !important;
+    border-width: 0 12px 15px 12px !important;
+    border-color: transparent transparent #f1f3f6 transparent !important;
+    -webkit-transform: rotate(-37deg) !important;
+    -ms-transform: rotate(-37deg) !important;
+    transform: rotate(-37deg) !important;
+    z-index: 1;
+}
+
+.msg-body ul li.reply .message-post-card::before,
+.msg-body ul li.reply .message-post-card:before {
+    display: none !important;
+    content: none !important;
+}
+
+.msg-body ul li.sender .message-post-card::before,
+.msg-body ul li.sender .message-post-card:before {
+    display: none !important;
+    content: none !important;
+}
+
+.msg-body ul li.message-bubble.bornado-card-bubble::before,
+.msg-body ul li.message-bubble.bornado-card-bubble:before,
+.adf-msg-page li.message-bubble.bornado-card-bubble::before,
+.adf-msg-page li.message-bubble.bornado-card-bubble:before {
+    display: none !important;
+    content: none !important;
+}
+
+.msg-body .message-post-card .post-card-content .post-card-info .post-card-link::before,
+.msg-body .message-post-card .post-card-content .post-card-info .post-card-link:before,
+.adf-msg-page .message-post-card .post-card-content .post-card-info .post-card-link::before,
+.adf-msg-page .message-post-card .post-card-content .post-card-info .post-card-link:before {
+    display: none !important;
+    content: none !important;
+}
+
+html[dir="rtl"] .msg-body ul li.reply p,
+html[dir="rtl"] .msg-body .messages-list .message-bubble.reply .message-text a,
+body.rtl .msg-body ul li.reply p,
+body.rtl .msg-body .messages-list .message-bubble.reply .message-text a,
+.msg-body ul li.reply p,
+.msg-body .messages-list .message-bubble.reply .message-text a {
+    background: #d8fdd2 !important;
+    color: #111827 !important;
+    border-top-left-radius: 10px !important;
+    border-top-right-radius: 4px !important;
+    border-bottom-left-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+    text-align: right !important;
+    direction: rtl !important;
+    position: relative !important;
+    z-index: 2;
+}
+
+html[dir="rtl"] .msg-body ul li.sender p,
+html[dir="rtl"] .msg-body .messages-list .message-bubble.sender .message-text a,
+body.rtl .msg-body ul li.sender p,
+body.rtl .msg-body .messages-list .message-bubble.sender .message-text a,
+.msg-body ul li.sender p,
+.msg-body .messages-list .message-bubble.sender .message-text a {
+    background: #f1f3f6 !important;
+    color: #1f2937 !important;
+    border-top-left-radius: 4px !important;
+    border-top-right-radius: 10px !important;
+    border-bottom-left-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+    text-align: right !important;
+    direction: rtl !important;
+    position: relative !important;
+    z-index: 2;
+}
+
+.messages-list .message-bubble.related-to-card .message-text p {
+    border-left: 0 !important;
+    border-right: 3px solid rgba(31, 41, 55, 0.14) !important;
+}
+
+.messages-list li.reply.message-bubble.related-to-card .message-text p {
+    border-right: 0 !important;
+    border-left: 3px solid rgba(17, 24, 39, 0.16) !important;
+}
+
+.msg-body li.reply .time {
+    margin-right: 0 !important;
+    margin-left: 20px !important;
+    text-align: right !important;
+}
+
+.msg-body li.sender .time {
+    margin-left: 0 !important;
+    margin-right: 20px !important;
+    text-align: right !important;
+}
+
+.msg-body .message-bubble > .message-text,
+.msg-body .message-bubble > .message-media,
+.msg-body .message-bubble > .message-file-main,
+.msg-body .message-bubble > .message-post-card,
+.adf-msg-page .message-bubble > .message-text,
+.adf-msg-page .message-bubble > .message-media,
+.adf-msg-page .message-bubble > .message-file-main,
+.adf-msg-page .message-bubble > .message-post-card {
+    position: relative !important;
+}
+
+.msg-body .message-bubble .message-text p,
+.msg-body .message-bubble > p,
+.adf-msg-page .message-bubble .message-text p,
+.adf-msg-page .message-bubble > p {
+    position: relative !important;
+    min-width: 88px !important;
+    padding-bottom: 28px !important;
+    padding-right: 34px !important;
+    box-sizing: border-box !important;
+}
+
+.msg-body .message-bubble > .message-post-card,
+.adf-msg-page .message-bubble > .message-post-card {
+    padding-bottom: 26px !important;
+}
+
+.msg-body .message-bubble > .message-file-main,
+.adf-msg-page .message-bubble > .message-file-main {
+    padding-bottom: 28px !important;
+}
+
+.bornado-bubble-time {
+    position: absolute;
+    right: 10px;
+    bottom: 8px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    line-height: 1;
+    font-weight: 500;
+    color: #8a8f98 !important;
+    direction: ltr;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.bornado-bubble-time--overlay {
+    color: #8a8f98 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    bottom: 8px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Modern messages template                                                   */
+/* -------------------------------------------------------------------------- */
+html[dir="rtl"] body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply,
+body.rtl .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply,
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply {
+    justify-content: flex-end !important;
+    padding-right: 4px !important;
+    padding-left: 0 !important;
+}
+
+html[dir="rtl"] body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender,
+body.rtl .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender,
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender {
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+}
+
+html[dir="rtl"] body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply .message-text,
+html[dir="rtl"] body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply > p,
+body.rtl .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply .message-text,
+body.rtl .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply > p,
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply .message-text,
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply > p {
+    background: #d8fdd2 !important;
+    color: #111827 !important;
+    box-shadow: 0 2px 8px rgba(16, 24, 40, 0.08) !important;
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply .message-text:hover,
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply > p:hover {
+    background: #cdefc7 !important;
+}
+
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply .message-text *,
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply > p * {
+    color: #111827 !important;
+}
+
+html[dir="rtl"] body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender .message-text,
+html[dir="rtl"] body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender > p,
+body.rtl .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender .message-text,
+body.rtl .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender > p,
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender .message-text,
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender > p {
+    background: #f1f3f6 !important;
+    color: #1f2937 !important;
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply:not(:last-child) .message-text,
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply:not(:last-child) > p {
+    border-bottom-left-radius: 6px !important;
+    border-bottom-right-radius: 14px !important;
+}
+
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply + li.message-bubble.reply .message-text,
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply + li.message-bubble.reply > p {
+    border-top-left-radius: 6px !important;
+    border-top-right-radius: 14px !important;
+}
+
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender:not(:last-child) .message-text,
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender:not(:last-child) > p {
+    border-bottom-right-radius: 6px !important;
+    border-bottom-left-radius: 14px !important;
+}
+
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender + li.message-bubble.sender .message-text,
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender + li.message-bubble.sender > p {
+    border-top-right-radius: 6px !important;
+    border-top-left-radius: 14px !important;
+}
+
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender .adf-bubble-avatar {
+    order: -1 !important;
+    margin-right: 8px !important;
+    margin-left: 0 !important;
+}
+
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender:not(.is-with-avatar) {
+    padding-right: 0 !important;
+    padding-left: 36px !important;
+}
+
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply .adf-receipt {
+    margin-left: 6px !important;
+    margin-right: 0 !important;
+    padding-right: 6px !important;
+    padding-left: 0 !important;
+}
+
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender .message-post-card {
+    background: #f3f4f6 !important;
+}
+
+body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply .message-post-card {
+    background: rgba(255, 255, 255, 0.96) !important;
+}

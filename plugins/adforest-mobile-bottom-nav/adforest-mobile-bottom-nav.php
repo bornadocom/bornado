@@ -56,6 +56,8 @@ final class ADF_Mobile_Bottom_Nav {
 			return;
 		}
 
+		$hide_top_search = $this->should_hide_top_search_bar();
+
 		$plugin_url = plugin_dir_url( __FILE__ );
 		$plugin_dir = plugin_dir_path( __FILE__ );
 		$style_ver  = file_exists( $plugin_dir . 'assets/css/adf-mobile-bottom-nav.css' ) ? (string) filemtime( $plugin_dir . 'assets/css/adf-mobile-bottom-nav.css' ) : '1.3.5';
@@ -81,12 +83,12 @@ final class ADF_Mobile_Bottom_Nav {
 			'icon'         => sanitize_hex_color( $settings['icon_color'] ) ?: '#6f7785',
 			'text'         => sanitize_hex_color( $settings['text_color'] ) ?: '#6f7785',
 			'height'       => $settings['enabled'] ? absint( $settings['bar_height'] ) : 0,
-			'topHeight'    => $settings['top_search_enabled'] ? absint( $settings['top_search_height'] ) : 0,
+			'topHeight'    => ( $settings['top_search_enabled'] && ! $hide_top_search ) ? absint( $settings['top_search_height'] ) : 0,
 			'topBg'        => sanitize_hex_color( $settings['top_search_bg'] ) ?: '#ffffff',
 			'topBorder'    => sanitize_hex_color( $settings['top_search_border'] ) ?: '#dfe3eb',
 			'topText'      => sanitize_hex_color( $settings['top_search_text'] ) ?: '#6f7785',
 			'topIcon'      => sanitize_hex_color( $settings['top_search_icon'] ) ?: '#1f6fff',
-			'topOffset'    => $settings['top_search_enabled'] ? 'max(' . absint( $settings['top_search_height'] ) . 'px, 88px)' : '0px',
+			'topOffset'    => ( $settings['top_search_enabled'] && ! $hide_top_search ) ? 'max(' . absint( $settings['top_search_height'] ) . 'px, 88px)' : '0px',
 			'hideOnScroll' => (bool) $settings['hide_on_scroll'],
 		);
 
@@ -164,7 +166,7 @@ final class ADF_Mobile_Bottom_Nav {
 			return;
 		}
 		$settings = $this->get_settings();
-		if ( ! $settings['top_search_enabled'] ) {
+		if ( ! $settings['top_search_enabled'] || $this->should_hide_top_search_bar() ) {
 			return;
 		}
 
@@ -310,17 +312,7 @@ final class ADF_Mobile_Bottom_Nav {
 				return false;
 			}
 
-			global $adforest_theme;
-
-			$page_id = isset( $adforest_theme['sb_post_ad_page'] )
-				? (int) apply_filters( 'adforest_language_page_id', $adforest_theme['sb_post_ad_page'] )
-				: 0;
-
-			if ( $page_id ) {
-				return is_page( $page_id );
-			}
-
-			return $this->urls_match( $this->get_post_ad_url(), $current_url );
+			return $this->is_post_ad_page();
 		}
 
 		return $this->urls_match( $url, $current_url );
@@ -385,6 +377,30 @@ final class ADF_Mobile_Bottom_Nav {
 		$current_url = home_url( add_query_arg( array(), $GLOBALS['wp']->request ) );
 
 		return $this->urls_match( $this->get_profile_page_url(), $current_url );
+	}
+
+	private function is_post_ad_page() {
+		global $adforest_theme;
+
+		$page_id = isset( $adforest_theme['sb_post_ad_page'] )
+			? (int) apply_filters( 'adforest_language_page_id', $adforest_theme['sb_post_ad_page'] )
+			: 0;
+
+		if ( $page_id && is_page( $page_id ) ) {
+			return true;
+		}
+
+		$current_url = home_url( add_query_arg( array(), $GLOBALS['wp']->request ) );
+
+		return $this->urls_match( $this->get_post_ad_url(), $current_url );
+	}
+
+	private function is_profile_nav_context() {
+		return $this->is_profile_page() || $this->is_post_ad_page();
+	}
+
+	private function should_hide_top_search_bar() {
+		return $this->is_profile_nav_context();
 	}
 
 	private function get_post_ad_url() {
@@ -495,7 +511,7 @@ final class ADF_Mobile_Bottom_Nav {
 	}
 
 	private function maybe_swap_profile_nav_items( $items ) {
-		if ( ! $this->is_profile_page() || ! is_array( $items ) ) {
+		if ( ! $this->is_profile_nav_context() || ! is_array( $items ) ) {
 			return $items;
 		}
 
@@ -679,22 +695,29 @@ final class ADF_Mobile_Bottom_Nav {
 					); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
 				?>
-				<button type="button" class="adf-mobile-top-search__filter-strip adf-mobile-top-search__category-strip" aria-haspopup="dialog" aria-expanded="false">
-					<span class="adf-mobile-top-search__filter-left">
-						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8v8H3V3zm10 0h8v5h-8V3zM3 13h5v8H3v-8zm7 0h11v8H10v-8z"/></svg>
-						<span class="adf-mobile-top-search__filter-text"><strong class="adf-mobile-top-search__category-label"><?php echo esc_html( $selected_category['label'] ); ?></strong></span>
+				<button type="button" class="adf-mobile-top-search__filter-strip adf-mobile-top-search__category-strip bornado-mobile-choice__trigger bornado-mobile-choice__trigger--compact" aria-haspopup="dialog" aria-expanded="false">
+					<span class="bornado-mobile-choice__trigger-copy bornado-mobile-choice__trigger-copy--compact">
+						<span class="bornado-mobile-choice__trigger-label"><?php esc_html_e( 'دسته‌بندی', 'adf-mobile-bottom-nav' ); ?></span>
+						<span class="bornado-mobile-choice__summary adf-mobile-top-search__category-label"><?php echo esc_html( $selected_category['label'] ); ?></span>
 					</span>
-					<svg class="adf-mobile-top-search__filter-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+					<span class="bornado-mobile-choice__trigger-icon bornado-mobile-choice__trigger-icon--compact" aria-hidden="true">
+						<svg viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm10 0h8v5h-8V3zM3 13h5v8H3v-8zm7 0h11v8H10v-8z"/></svg>
+					</span>
 				</button>
 			</div>
 		</div>
-		<div class="adf-mobile-category-sheet" aria-hidden="true">
-			<div class="adf-mobile-category-sheet__backdrop" data-filter-close></div>
-			<div class="adf-mobile-category-sheet__panel" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Select category', 'adf-mobile-bottom-nav' ); ?>">
-				<div class="adf-mobile-category-sheet__handle"></div>
-				<h4 class="adf-mobile-category-sheet__title"><?php esc_html_e( 'انتخاب دسته‌بندی', 'adf-mobile-bottom-nav' ); ?></h4>
-				<input type="text" class="adf-mobile-category-sheet__search" placeholder="<?php esc_attr_e( 'جستجوی دسته‌بندی...', 'adf-mobile-bottom-nav' ); ?>">
-				<ul class="adf-mobile-category-sheet__list"></ul>
+		<div class="adf-mobile-category-sheet bornado-mobile-choice__sheet" aria-hidden="true">
+			<button type="button" class="adf-mobile-category-sheet__backdrop bornado-mobile-choice__backdrop" data-filter-close aria-label="<?php esc_attr_e( 'Close category picker', 'adf-mobile-bottom-nav' ); ?>"></button>
+			<div class="adf-mobile-category-sheet__panel bornado-mobile-choice__panel" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Select category', 'adf-mobile-bottom-nav' ); ?>">
+				<div class="adf-mobile-category-sheet__handle bornado-mobile-choice__handle"></div>
+				<div class="adf-mobile-category-sheet__panel-head bornado-mobile-choice__panel-head">
+					<h4 class="adf-mobile-category-sheet__title bornado-mobile-choice__panel-title"><?php esc_html_e( 'انتخاب دسته‌بندی', 'adf-mobile-bottom-nav' ); ?></h4>
+					<button type="button" class="adf-mobile-category-sheet__close bornado-mobile-choice__close" data-filter-close aria-label="<?php esc_attr_e( 'بستن', 'adf-mobile-bottom-nav' ); ?>">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 5l.7.7L12 10.59l4.9-4.89.7-.7 1.4 1.41-.7.7L13.41 12l4.89 4.9.7.7-1.41 1.4-.7-.7L12 13.41l-4.9 4.89-.7.7-1.4-1.41.7-.7L10.59 12 5.7 7.1l-.7-.7L6.4 5z"/></svg>
+					</button>
+				</div>
+				<input type="text" class="adf-mobile-category-sheet__search bornado-mobile-choice__search" placeholder="<?php esc_attr_e( 'جستجوی دسته‌بندی...', 'adf-mobile-bottom-nav' ); ?>">
+				<ul class="adf-mobile-category-sheet__list bornado-mobile-choice__list"></ul>
 			</div>
 		</div>
 		<?php

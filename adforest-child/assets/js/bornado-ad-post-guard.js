@@ -499,12 +499,30 @@
             });
     }
 
+    function bindTermsAgreementCheckbox(form) {
+        var checkbox = form.querySelector(".skin-minimal.check-detail .pretty input#minimal-checkbox-1");
+        var pretty;
+        var label;
+
+        if (!checkbox) {
+            return;
+        }
+
+        pretty = checkbox.closest(".pretty");
+        label = pretty ? pretty.querySelector(".state label") : null;
+
+        if (label && !label.getAttribute("for")) {
+            label.setAttribute("for", "minimal-checkbox-1");
+        }
+    }
+
     function init() {
         var form = document.getElementById("adforest-ad-post-form");
         if (!form) {
             return;
         }
 
+        bindTermsAgreementCheckbox(form);
         bindSubmitGuard(form);
         bindDraftPersistence(form);
         bindAjaxSuccessCleanup();

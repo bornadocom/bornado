@@ -64,7 +64,7 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 		public function enqueue_assets() {
 			global $adforest_theme;
 
-			if ( is_admin() || is_user_logged_in() ) {
+			if ( is_admin() ) {
 				return;
 			}
 
@@ -74,18 +74,22 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 			$js_path     = $plugin_path . 'assets/js/bornado-auth-modal.js';
 			$script_deps = array( 'jquery' );
 
-			$this->enqueue_firebase_assets();
-
-			if ( ! empty( $adforest_theme['sb_register_with_phone'] ) && ( wp_script_is( 'firebase-auth', 'registered' ) || wp_script_is( 'firebase-auth', 'enqueued' ) ) ) {
-				$script_deps[] = 'firebase-auth';
-			}
-
 			wp_enqueue_style(
 				'bornado-auth-modal',
 				$plugin_url . 'assets/css/bornado-auth-modal.css',
 				array(),
 				file_exists( $css_path ) ? (string) filemtime( $css_path ) : self::VERSION
 			);
+
+			if ( is_user_logged_in() ) {
+				return;
+			}
+
+			$this->enqueue_firebase_assets();
+
+			if ( ! empty( $adforest_theme['sb_register_with_phone'] ) && ( wp_script_is( 'firebase-auth', 'registered' ) || wp_script_is( 'firebase-auth', 'enqueued' ) ) ) {
+				$script_deps[] = 'firebase-auth';
+			}
 
 			wp_enqueue_script(
 				'bornado-auth-modal',
@@ -200,10 +204,6 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 		}
 
 		public function render_trigger_shortcode( $atts = array() ) {
-			if ( is_user_logged_in() ) {
-				return '';
-			}
-
 			$atts = shortcode_atts(
 				array(
 					'label'  => '',
@@ -215,6 +215,10 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 				$atts,
 				'bornado_auth_modal'
 			);
+
+			if ( is_user_logged_in() ) {
+				return $this->render_logged_in_shortcode_state( $atts );
+			}
 
 			$mode     = 'register' === strtolower( $atts['mode'] ) ? 'register' : 'login';
 			$method   = 'email' === strtolower( $atts['method'] ) ? 'email' : 'phone';
@@ -251,6 +255,64 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 			);
 		}
 
+		private function render_logged_in_shortcode_state( $atts = array() ) {
+			$user = wp_get_current_user();
+			if ( ! ( $user instanceof WP_User ) || ! $user->exists() ) {
+				return '';
+			}
+
+			$display_name = trim( (string) $user->display_name );
+			if ( '' === $display_name ) {
+				$display_name = trim( (string) $user->user_login );
+			}
+
+			$card_class = trim( 'bornado-auth-member-card ' . (string) $atts['class'] );
+			$links      = $this->get_logged_in_shortcode_links();
+
+			ob_start();
+			?>
+			<div class="<?php echo esc_attr( $card_class ); ?>">
+				<div class="bornado-auth-member-card__hero">
+					<a class="bornado-auth-member-card__avatar" href="<?php echo esc_url( $links['dashboard']['url'] ); ?>" aria-label="<?php echo esc_attr__( 'رفتن به حساب کاربری', 'bornado-auth-modal' ); ?>">
+						<?php echo $this->get_user_avatar_markup( $user->ID, 72, $display_name ); ?>
+					</a>
+					<div class="bornado-auth-member-card__copy">
+						<span class="bornado-auth-member-card__eyebrow"><?php esc_html_e( 'حساب کاربری فعال', 'bornado-auth-modal' ); ?></span>
+						<h3><?php echo esc_html( sprintf( __( 'سلام %s', 'bornado-auth-modal' ), $display_name ) ); ?></h3>
+						<p><?php esc_html_e( 'شما همین حالا وارد حساب کاربری خود هستید. از اینجا می‌توانید سریع به بخش‌های مهم حساب، آگهی‌ها و پیام‌ها دسترسی داشته باشید.', 'bornado-auth-modal' ); ?></p>
+					</div>
+				</div>
+
+				<div class="bornado-auth-member-card__actions">
+					<?php if ( ! empty( $links['dashboard']['url'] ) ) : ?>
+						<a class="bornado-auth-member-card__button bornado-auth-member-card__button--primary" href="<?php echo esc_url( $links['dashboard']['url'] ); ?>">
+							<?php echo esc_html( $links['dashboard']['label'] ); ?>
+						</a>
+					<?php endif; ?>
+					<?php if ( ! empty( $links['post_ad']['url'] ) ) : ?>
+						<a class="bornado-auth-member-card__button bornado-auth-member-card__button--secondary" href="<?php echo esc_url( $links['post_ad']['url'] ); ?>">
+							<?php echo esc_html( $links['post_ad']['label'] ); ?>
+						</a>
+					<?php endif; ?>
+				</div>
+
+				<div class="bornado-auth-member-card__grid">
+					<?php foreach ( $links as $key => $link ) : ?>
+						<?php if ( in_array( $key, array( 'dashboard', 'post_ad' ), true ) || empty( $link['url'] ) ) : ?>
+							<?php continue; ?>
+						<?php endif; ?>
+						<a class="bornado-auth-member-card__tile" href="<?php echo esc_url( $link['url'] ); ?>">
+							<strong><?php echo esc_html( $link['label'] ); ?></strong>
+							<span><?php echo esc_html( $link['description'] ); ?></span>
+						</a>
+					<?php endforeach; ?>
+				</div>
+			</div>
+			<?php
+
+			return (string) ob_get_clean();
+		}
+
 		public function render_modal() {
 			if ( is_admin() || is_user_logged_in() || $this->modal_rendered || $this->inline_rendered ) {
 				return;
@@ -267,10 +329,6 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 		}
 
 		public function render_inline_shortcode( $atts = array() ) {
-			if ( is_user_logged_in() || $this->inline_rendered ) {
-				return '';
-			}
-
 			$atts = shortcode_atts(
 				array(
 					'mode'  => 'login',
@@ -279,6 +337,14 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 				$atts,
 				'bornado_auth_inline'
 			);
+
+			if ( is_user_logged_in() ) {
+				return $this->render_logged_in_shortcode_state( $atts );
+			}
+
+			if ( $this->inline_rendered ) {
+				return '';
+			}
 
 			$this->inline_rendered = true;
 
@@ -900,6 +966,139 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 			$page_id = isset( $adforest_theme['sb_sign_up_page'] ) ? apply_filters( 'adforest_language_page_id', $adforest_theme['sb_sign_up_page'] ) : 0;
 
 			return $page_id ? (string) get_permalink( $page_id ) : '';
+		}
+
+		private function get_logged_in_shortcode_links() {
+			return array(
+				'dashboard' => array(
+					'label'       => __( 'داشبورد من', 'bornado-auth-modal' ),
+					'description' => __( 'مدیریت حساب و آگهی‌ها', 'bornado-auth-modal' ),
+					'url'         => $this->get_profile_url(),
+				),
+				'post_ad'   => array(
+					'label'       => __( 'ثبت آگهی جدید', 'bornado-auth-modal' ),
+					'description' => __( 'آگهی تازه ثبت کنید', 'bornado-auth-modal' ),
+					'url'         => $this->get_post_ad_url(),
+				),
+				'messages'  => array(
+					'label'       => __( 'پیام‌ها', 'bornado-auth-modal' ),
+					'description' => __( 'گفتگوها و پیام‌های دریافتی', 'bornado-auth-modal' ),
+					'url'         => $this->get_dashboard_page_url( 'sb_modern_messages_page', 'msg' ),
+				),
+				'favorites' => array(
+					'label'       => __( 'علاقه‌مندی‌ها', 'bornado-auth-modal' ),
+					'description' => __( 'آگهی‌های ذخیره‌شده شما', 'bornado-auth-modal' ),
+					'url'         => $this->get_dashboard_page_url( 'sb_modern_favorites_page', 'fav_ads' ),
+				),
+				'settings'  => array(
+					'label'       => __( 'تنظیمات حساب', 'bornado-auth-modal' ),
+					'description' => __( 'ویرایش پروفایل و اطلاعات شخصی', 'bornado-auth-modal' ),
+					'url'         => $this->get_dashboard_page_url( 'sb_modern_settings_page', 'my_profile' ),
+				),
+			);
+		}
+
+		private function get_dashboard_page_url( $page_option_key, $fallback_page_type = '' ) {
+			global $adforest_theme;
+
+			$page_id = isset( $adforest_theme[ $page_option_key ] ) ? apply_filters( 'adforest_language_page_id', $adforest_theme[ $page_option_key ] ) : 0;
+			if ( $page_id ) {
+				$url = get_permalink( $page_id );
+				if ( $url ) {
+					return (string) $url;
+				}
+			}
+
+			$profile_url = $this->get_profile_url();
+			if ( '' !== $profile_url && '' !== $fallback_page_type ) {
+				return (string) add_query_arg( 'page_type', $fallback_page_type, $profile_url );
+			}
+
+			return $profile_url;
+		}
+
+		private function get_post_ad_url() {
+			global $adforest_theme;
+
+			$modern_page_id = isset( $adforest_theme['sb_modern_post_ad_page'] ) ? apply_filters( 'adforest_language_page_id', $adforest_theme['sb_modern_post_ad_page'] ) : 0;
+			if ( $modern_page_id ) {
+				$url = get_permalink( $modern_page_id );
+				if ( $url ) {
+					return (string) $url;
+				}
+			}
+
+			$page_id = isset( $adforest_theme['sb_post_ad_page'] ) ? $adforest_theme['sb_post_ad_page'] : 0;
+			$page_id = apply_filters( 'adforest_ad_post_verified_id', $page_id );
+			$page_id = apply_filters( 'adforest_language_page_id', $page_id );
+
+			if ( $page_id ) {
+				$url = get_permalink( $page_id );
+				if ( $url ) {
+					return (string) $url;
+				}
+			}
+
+			return home_url( '/' );
+		}
+
+		private function get_user_avatar_markup( $user_id, $size = 72, $alt = '' ) {
+			$user_id = absint( $user_id );
+			$size    = max( 24, absint( $size ) );
+			$alt     = trim( (string) $alt );
+
+			if ( $user_id <= 0 ) {
+				return get_avatar( 0, $size, '', $alt );
+			}
+
+			if ( function_exists( 'sbchat_get_user_avatar' ) ) {
+				return wp_kses(
+					sbchat_get_user_avatar( $user_id, $size ),
+					array(
+						'img' => array(
+							'alt'    => true,
+							'src'    => true,
+							'class'  => true,
+							'height' => true,
+							'width'  => true,
+							'loading'=> true,
+							'decoding' => true,
+							'srcset' => true,
+							'sizes'  => true,
+						),
+					)
+				);
+			}
+
+			$custom_avatar_url = $this->get_user_custom_avatar_url( $user_id, $size );
+			if ( '' !== $custom_avatar_url ) {
+				return sprintf(
+					'<img alt="%1$s" src="%2$s" class="avatar avatar-%3$d photo" height="%3$d" width="%3$d" />',
+					esc_attr( $alt ),
+					esc_url( $custom_avatar_url ),
+					(int) $size
+				);
+			}
+
+			return get_avatar( $user_id, $size, '', $alt );
+		}
+
+		private function get_user_custom_avatar_url( $user_id, $size = 72 ) {
+			global $adforest_theme;
+
+			$attach_id = absint( get_user_meta( $user_id, '_sb_user_pic', true ) );
+			if ( $attach_id > 0 ) {
+				$image_link = wp_get_attachment_image_src( $attach_id, array( $size, $size ) );
+				if ( is_array( $image_link ) && ! empty( $image_link[0] ) ) {
+					return (string) $image_link[0];
+				}
+			}
+
+			if ( isset( $adforest_theme['sb_user_dp']['url'] ) && '' !== trim( (string) $adforest_theme['sb_user_dp']['url'] ) ) {
+				return (string) $adforest_theme['sb_user_dp']['url'];
+			}
+
+			return trailingslashit( get_template_directory_uri() ) . 'images/users/9.jpg';
 		}
 
 		/**

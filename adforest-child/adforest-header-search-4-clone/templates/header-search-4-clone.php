@@ -262,8 +262,9 @@ rams.toString()}`;
         <div class="tabs-container">
             <div class="logo" data-mobile-logo="<?php echo esc_url($responsive_logo) ?>"
                  data-sticky-logo="<?php echo esc_url($responsive_logo) ?>" <?php echo is_user_logged_in() ? 'style="margin-right: 0px !important"' : ""; ?> >
-                <a href="<?php echo esc_url($brand_home_url); ?>"><img src="<?php echo esc_url($site_logo); ?>"
-                <a href="<?php echo esc_url(home_url('/')); ?>"><img src="<?php echo esc_url($site_logo); ?>"
+                <a href="<?php echo esc_url($brand_home_url); ?>">
+                    <img src="<?php echo esc_url($site_logo); ?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?>">
+                </a>
             </div>
             <div class="tabs-wrapper">
                 <?php if (!empty($topbar_cats)) : ?>
@@ -472,8 +473,7 @@ rams.toString()}`;
                             content: none;
                         }
 
-                        .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar .filter-box label,
-                        .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-location-filter .blp__trigger-label {
+                        .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar .filter-box label {
                             position: absolute !important;
                             width: 1px;
                             height: 1px;
@@ -485,7 +485,7 @@ rams.toString()}`;
                             border: 0;
                         }
 
-                        .adt-hero-search-tabs .search-filters-bar .filter-box input,
+                        .adt-hero-search-tabs .search-filters-bar .filter-box input:not([type="hidden"]),
                         .adt-hero-search-tabs .search-filters-bar .filter-box select.default-select {
                             width: 100%;
                             height: 40px;
@@ -502,11 +502,11 @@ rams.toString()}`;
                             transition: background-color 0.2s ease;
                         }
 
-                        .adt-hero-search-tabs .search-filters-bar .filter-box input::placeholder {
+                        .adt-hero-search-tabs .search-filters-bar .filter-box input:not([type="hidden"])::placeholder {
                             color: #94a3b8;
                         }
 
-                        .adt-hero-search-tabs .search-filters-bar .filter-box input:focus,
+                        .adt-hero-search-tabs .search-filters-bar .filter-box input:not([type="hidden"]):focus,
                         .adt-hero-search-tabs .search-filters-bar .filter-box select.default-select:focus {
                             outline: none;
                             background: #f8fafc;
@@ -572,7 +572,7 @@ rams.toString()}`;
                             background-size: 10px 6px;
                         }
 
-                        html[dir="rtl"] .adt-hero-search-tabs .search-filters-bar .filter-box input,
+                        html[dir="rtl"] .adt-hero-search-tabs .search-filters-bar .filter-box input:not([type="hidden"]),
                         html[dir="rtl"] .adt-hero-search-tabs .search-filters-bar .filter-box select.default-select {
                             padding: 0 8px 0 34px;
                         }
@@ -592,43 +592,6 @@ rams.toString()}`;
 
                         .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-keyword-submit {
                             flex: 0.95 1 180px;
-                        }
-
-                        .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-location-filter .blp__trigger {
-                            width: 100%;
-                            min-height: 40px;
-                            padding: 0 8px;
-                            display: flex;
-                            align-items: center;
-                            justify-content: space-between;
-                            border: 0;
-                            border-radius: 10px;
-                            background: #f8fafc;
-                            box-shadow: none;
-                        }
-
-                        .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-location-filter .blp__trigger:hover,
-                        .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-location-filter .blp__trigger:focus-within {
-                            background: #f8fafc;
-                        }
-
-                        .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-location-filter .blp__summary {
-                            font-size: 13px;
-                            color: #0f172a;
-                            white-space: nowrap;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                        }
-
-                        .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-location-filter .blp__trigger-icon {
-                            width: 26px;
-                            height: 26px;
-                            background: transparent;
-                            border: 0;
-                        }
-
-                        .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-location-filter .blp__panel {
-                            width: min(840px, 92vw);
                         }
 
                         .adt-hero-search-tabs .search-filters-bar .bornado-keyword-submit__row {
@@ -665,16 +628,6 @@ rams.toString()}`;
                             background: #e5e7eb;
                             border-color: #0f172a;
                             color: #0f172a;
-                        }
-
-                        .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-location-filter .blp__panel {
-                            position: fixed;
-                            top: 92px;
-                            left: 50% !important;
-                            right: auto !important;
-                            width: min(840px, calc(100vw - 32px));
-                            max-width: none;
-                            transform: translateX(-50%) !important;
                         }
 
                         .adt-top-tabs-header .buttons-box {
@@ -978,35 +931,94 @@ rams.toString()}`;
                                         $field_name = 'cat_id';
                                         $current_value = $selected_category_value;
                                         $form_field_names[] = $field_name;
-                                        ?>
-                                        <div class="<?php echo esc_attr($wrapper_classes); ?>">
-                                            <label for="<?php echo esc_attr($field_id); ?>"><?php echo esc_html($label_text); ?></label>
-                                            <select class="default-select"
-                                                    id="<?php echo esc_attr($field_id); ?>"
-                                                    name="<?php echo esc_attr($field_name); ?>"
-                                                    data-search-role="category">
-                                                <option value=""><?php echo esc_html($label_text); ?></option>
-                                                <?php
-                                    if (!empty($category_terms)) :
-                                        foreach ($category_terms as $entry) :
-                                            $category_term = $entry['term'];
-                                            if (!is_object($category_term)) {
-                                                continue;
+                                        $all_categories_label = esc_html__('تمام دسته‌بندی‌ها', 'adforest');
+                                        $current_category_label = $all_categories_label;
+                                        $category_sheet_id = $field_id . '-sheet';
+                                        if (!empty($category_terms)) {
+                                            foreach ($category_terms as $entry) {
+                                                if (empty($entry['term']) || !is_object($entry['term'])) {
+                                                    continue;
+                                                }
+                                                if ((int) $current_value === (int) $entry['term']->term_id) {
+                                                    $current_category_label = $entry['label'];
+                                                    break;
+                                                }
                                             }
-                                            $option_label = $entry['label'];
-                                            $selected = ($current_value && $current_value === (int) $category_term->term_id) ? 'selected' : '';
-                                            $option_target_url = function_exists('bornado_seo_routing_get_contextual_url')
-                                                ? bornado_seo_routing_get_contextual_url(array('cat_id' => (int) $category_term->term_id))
-                                                : '';
-                                            ?>
-                                            <option value="<?php echo esc_attr($category_term->term_id); ?>" data-target-url="<?php echo esc_url($option_target_url); ?>" <?php echo esc_attr($selected); ?>>
-                                                <?php echo esc_html($option_label); ?>
-                                            </option>
-                                        <?php
-                                        endforeach;
-                                    endif;
-                                    ?>
-                                            </select>
+                                        }
+                                        ?>
+                                        <div class="<?php echo esc_attr(trim($wrapper_classes . ' bornado-category-filter')); ?>">
+                                            <label for="<?php echo esc_attr($field_id); ?>"><?php echo esc_html($label_text); ?></label>
+                                            <div class="adt-header-category-picker">
+                                                <input type="hidden"
+                                                       id="<?php echo esc_attr($field_id); ?>"
+                                                       name="<?php echo esc_attr($field_name); ?>"
+                                                       value="<?php echo esc_attr($current_value); ?>"
+                                                       data-search-role="category">
+                                                <button type="button"
+                                                        class="bornado-mobile-choice__trigger adt-header-category-picker__trigger"
+                                                        aria-expanded="false"
+                                                        aria-controls="<?php echo esc_attr($category_sheet_id); ?>">
+                                                    <span class="bornado-mobile-choice__trigger-copy">
+                                                        <span class="bornado-mobile-choice__trigger-label"><?php echo esc_html($label_text); ?></span>
+                                                        <span class="bornado-mobile-choice__summary"><?php echo esc_html($current_category_label); ?></span>
+                                                    </span>
+                                                    <span class="bornado-mobile-choice__trigger-icon" aria-hidden="true">
+                                                        <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm10 0h8v5h-8V3zM3 13h5v8H3v-8zm7 0h11v8H10v-8z"/></svg>
+                                                    </span>
+                                                </button>
+                                                <div id="<?php echo esc_attr($category_sheet_id); ?>" class="bornado-mobile-choice__sheet adt-header-category-picker__sheet" hidden>
+                                                    <button type="button" class="bornado-mobile-choice__backdrop adt-header-category-picker__backdrop" aria-label="<?php echo esc_attr__('Close category picker', 'adforest'); ?>"></button>
+                                                    <div class="bornado-mobile-choice__panel adt-header-category-picker__panel" role="dialog" aria-modal="true" aria-label="<?php echo esc_attr($label_text); ?>">
+                                                        <div class="bornado-mobile-choice__panel-head">
+                                                            <h4 class="bornado-mobile-choice__panel-title"><?php echo esc_html($label_text); ?></h4>
+                                                            <button type="button" class="bornado-mobile-choice__close blp__close adt-header-category-picker__close" aria-label="<?php echo esc_attr__('Close', 'adforest'); ?>">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <input type="search" class="bornado-mobile-choice__search adt-header-category-picker__search" placeholder="<?php echo esc_attr__('جستجو در دسته‌بندی‌ها', 'adforest'); ?>">
+                                                        <div class="bornado-mobile-choice__list adt-header-category-picker__list" role="listbox">
+                                                            <li>
+                                                                <button type="button"
+                                                                        class="bornado-mobile-choice__item<?php echo $current_value ? '' : ' is-selected'; ?>"
+                                                                        data-header-category-option
+                                                                        data-value=""
+                                                                        data-label="<?php echo esc_attr($all_categories_label); ?>"
+                                                                        aria-selected="<?php echo $current_value ? 'false' : 'true'; ?>">
+                                                                    <span class="bornado-mobile-choice__item-copy">
+                                                                        <span class="bornado-mobile-choice__item-label"><?php echo esc_html($all_categories_label); ?></span>
+                                                                    </span>
+                                                                    <span class="bornado-mobile-choice__check" aria-hidden="true"></span>
+                                                                </button>
+                                                            </li>
+                                                            <?php if (!empty($category_terms)) : ?>
+                                                                <?php foreach ($category_terms as $entry) : ?>
+                                                                    <?php
+                                                                    $category_term = $entry['term'];
+                                                                    if (!is_object($category_term)) {
+                                                                        continue;
+                                                                    }
+                                                                    $option_label = $entry['label'];
+                                                                    $is_selected = ($current_value && $current_value === (int) $category_term->term_id);
+                                                                    ?>
+                                                                    <li>
+                                                                        <button type="button"
+                                                                                class="bornado-mobile-choice__item<?php echo $is_selected ? ' is-selected' : ''; ?>"
+                                                                                data-header-category-option
+                                                                                data-value="<?php echo esc_attr($category_term->term_id); ?>"
+                                                                                data-label="<?php echo esc_attr($option_label); ?>"
+                                                                                aria-selected="<?php echo $is_selected ? 'true' : 'false'; ?>">
+                                                                            <span class="bornado-mobile-choice__item-copy">
+                                                                                <span class="bornado-mobile-choice__item-label"><?php echo esc_html($option_label); ?></span>
+                                                                            </span>
+                                                                            <span class="bornado-mobile-choice__check" aria-hidden="true"></span>
+                                                                        </button>
+                                                                    </li>
+                                                                <?php endforeach; ?>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                         <?php
                                         break;
@@ -1036,14 +1048,22 @@ rams.toString()}`;
             </div>
 
             <script>
-                function setCategory(catId) {
-                    const sharedSearchCore = window.BornadoSearchCore || null;
-                    const urlParams = sharedSearchCore && typeof sharedSearchCore.getCleanCurrentSearchParams === "function"
-                        ? sharedSearchCore.getCleanCurrentSearchParams()
-                        : new URLSearchParams(window.location.search);
-                    const targetButton = document.querySelector('#pills-tab [onclick="setCategory(' + String(catId) + ')"]');
-n;
+                document.addEventListener("DOMContentLoaded", function () {
+                    const searchForm = document.querySelector(".adt-hero-search-tabs");
+                    const searchCore = window.BornadoSearchCore || null;
+
+                    if (!searchForm) {
+                        return;
                     }
+
+                    window.setCategory = function (catId) {
+                        const categoryInput = searchForm.querySelector('[data-search-role="category"]');
+                        if (!categoryInput) {
+                            return;
+                        }
+                        categoryInput.value = String(catId || "");
+                        categoryInput.dispatchEvent(new Event("change", { bubbles: true }));
+                    };
 
                     function submitSearchFormState() {
                         let selectedAction = searchForm.getAttribute("data-default-action") || searchForm.getAttribute("action");
@@ -1151,6 +1171,114 @@ n;
                             submitSearchFormState();
                         });
                     }
+                });
+            </script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const picker = document.querySelector(".adt-header-category-picker");
+                    if (!picker) {
+                        return;
+                    }
+
+                    const hiddenInput = picker.querySelector('[data-search-role="category"]');
+                    const trigger = picker.querySelector(".bornado-mobile-choice__trigger");
+                    const summary = picker.querySelector(".bornado-mobile-choice__summary");
+                    const sheet = picker.querySelector(".bornado-mobile-choice__sheet");
+                    const backdrop = picker.querySelector(".bornado-mobile-choice__backdrop");
+                    const panel = picker.querySelector(".bornado-mobile-choice__panel");
+                    const closeButton = picker.querySelector(".bornado-mobile-choice__close");
+                    const searchInput = picker.querySelector(".bornado-mobile-choice__search");
+                    const options = Array.prototype.slice.call(picker.querySelectorAll("[data-header-category-option]"));
+                    let redirectTimer = null;
+
+                    if (!hiddenInput || !trigger || !summary || !sheet || !panel || !options.length) {
+                        return;
+                    }
+
+                    function setOpenState(isOpen) {
+                        trigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+                        sheet.hidden = !isOpen;
+                    }
+
+                    function filterOptions(query) {
+                        const normalized = String(query || "").trim().toLowerCase();
+                        options.forEach(function (option) {
+                            const label = String(option.getAttribute("data-label") || "").toLowerCase();
+                            const item = option.closest("li");
+                            const isVisible = normalized === "" || label.indexOf(normalized) !== -1;
+                            if (item) {
+                                item.hidden = !isVisible;
+                            }
+                        });
+                    }
+
+                    function setSelectedOption(activeOption) {
+                        options.forEach(function (option) {
+                            const isActive = option === activeOption;
+                            option.classList.toggle("is-selected", isActive);
+                            option.setAttribute("aria-selected", isActive ? "true" : "false");
+                        });
+                    }
+
+                    trigger.addEventListener("click", function () {
+                        const nextState = sheet.hidden;
+                        setOpenState(nextState);
+                        if (nextState && searchInput) {
+                            searchInput.value = "";
+                            filterOptions("");
+                        }
+                    });
+
+                    if (backdrop) {
+                        backdrop.addEventListener("click", function () {
+                            setOpenState(false);
+                        });
+                    }
+
+                    if (closeButton) {
+                        closeButton.addEventListener("click", function () {
+                            setOpenState(false);
+                        });
+                    }
+
+                    if (searchInput) {
+                        searchInput.addEventListener("input", function () {
+                            filterOptions(searchInput.value);
+                        });
+                    }
+
+                    options.forEach(function (option) {
+                        option.addEventListener("click", function () {
+                            const nextValue = String(option.getAttribute("data-value") || "");
+                            const nextLabel = String(option.getAttribute("data-label") || "");
+
+                            if (redirectTimer) {
+                                window.clearTimeout(redirectTimer);
+                            }
+
+                            hiddenInput.value = nextValue;
+                            summary.textContent = nextLabel;
+                            setSelectedOption(option);
+
+                            redirectTimer = window.setTimeout(function () {
+                                setOpenState(false);
+                                hiddenInput.dispatchEvent(new Event("change", { bubbles: true }));
+                            }, 120);
+                        });
+                    });
+
+                    document.addEventListener("click", function (event) {
+                        if (sheet.hidden || picker.contains(event.target)) {
+                            return;
+                        }
+                        setOpenState(false);
+                    });
+
+                    document.addEventListener("keydown", function (event) {
+                        if (event.key === "Escape" && !sheet.hidden) {
+                            setOpenState(false);
+                        }
+                    });
                 });
             </script>
             <div class="buttons-box">

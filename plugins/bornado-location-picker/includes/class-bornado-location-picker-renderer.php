@@ -40,30 +40,6 @@ final class Bornado_Location_Picker_Renderer {
 			$classes[] = sanitize_html_class( (string) $view['args']['class_name'] );
 		}
 
-		$raw_class_name        = ! empty( $view['args']['class_name'] ) ? (string) $view['args']['class_name'] : '';
-		$trigger_inline_style  = 'display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;min-height:56px;padding:14px 16px;border:1px solid rgba(20,28,45,.12);border-radius:18px;background:#fff;color:inherit;text-align:start;box-sizing:border-box;';
-		$copy_inline_style     = 'display:flex;flex-direction:column;gap:4px;min-width:0;flex:1 1 auto;';
-		$label_inline_style    = 'font-size:13px;color:#667085;';
-		$summary_inline_style  = 'font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:inherit;';
-		$icon_wrap_inline_style = 'display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 40px;border-radius:999px;background:#f7f8fa;color:#1f6fff;';
-		$icon_svg_inline_style = 'display:block;width:20px;height:20px;fill:currentColor;';
-
-		if ( false !== strpos( $raw_class_name, 'adf-mobile-top-search__location-picker' ) ) {
-			$trigger_inline_style   = 'display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;height:34px;min-height:34px;padding:0 10px;border:0;border-top:1px solid #eef2f6;border-radius:0 0 12px 12px;background:#fff;color:#202531;box-shadow:none;box-sizing:border-box;';
-			$copy_inline_style      = 'display:flex;flex-direction:row;align-items:center;gap:6px;min-width:0;flex:1 1 auto;';
-			$label_inline_style     = 'display:none;';
-			$summary_inline_style   = 'font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#1f2633;';
-			$icon_wrap_inline_style = 'display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;flex:0 0 18px;border-radius:0;background:transparent;color:#7d8797;';
-			$icon_svg_inline_style  = 'display:block;width:16px;height:16px;fill:currentColor;';
-		} elseif ( false !== strpos( $raw_class_name, 'adt-header-location-picker' ) ) {
-			$trigger_inline_style   = 'display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:40px;padding:0 8px;border:0;border-radius:10px;background:transparent;color:#0f172a;box-shadow:none;box-sizing:border-box;';
-			$copy_inline_style      = 'display:flex;align-items:center;min-width:0;flex:1 1 auto;';
-			$label_inline_style     = 'display:none;';
-			$summary_inline_style   = 'font-size:13px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#0f172a;';
-			$icon_wrap_inline_style = 'display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;flex:0 0 26px;border-radius:999px;background:#f8fafc;border:1px solid #eef2f7;color:#64748b;';
-			$icon_svg_inline_style  = 'display:block;width:15px;height:15px;fill:currentColor;';
-		}
-
 		$uses_external_form = ! empty( $view['config']['externalFormSelector'] );
 		$render_hidden_input = ! empty( $view['config']['renderHiddenInput'] );
 		$input_data_role = ! empty( $view['args']['input_data_role'] ) ? sanitize_key( (string) $view['args']['input_data_role'] ) : '';
@@ -98,14 +74,13 @@ final class Bornado_Location_Picker_Renderer {
 						data-blp-trigger
 						aria-expanded="false"
 						aria-controls="<?php echo esc_attr( $view['id'] ); ?>"
-						style="<?php echo esc_attr( $trigger_inline_style ); ?>"
 					>
-						<span class="blp__trigger-copy" style="<?php echo esc_attr( $copy_inline_style ); ?>">
-							<span class="blp__trigger-label" style="<?php echo esc_attr( $label_inline_style ); ?>"><?php echo esc_html( $view['args']['button_label'] ); ?></span>
-							<span class="blp__summary" data-blp-summary style="<?php echo esc_attr( $summary_inline_style ); ?>"><?php echo esc_html( $view['summary'] ); ?></span>
+						<span class="blp__trigger-copy">
+							<span class="blp__trigger-label"><?php echo esc_html( $view['args']['button_label'] ); ?></span>
+							<span class="blp__summary" data-blp-summary><?php echo esc_html( $view['summary'] ); ?></span>
 						</span>
-						<span class="blp__trigger-icon" aria-hidden="true" style="<?php echo esc_attr( $icon_wrap_inline_style ); ?>">
-							<svg width="20" height="20" viewBox="0 0 24 24" focusable="false" style="<?php echo esc_attr( $icon_svg_inline_style ); ?>"><path d="M12 2a7 7 0 00-7 7c0 5.14 7 13 7 13s7-7.86 7-13a7 7 0 00-7-7zm0 9.5A2.5 2.5 0 1112 6a2.5 2.5 0 010 5.5z"/></svg>
+						<span class="blp__trigger-icon" aria-hidden="true">
+							<svg width="20" height="20" viewBox="0 0 24 24" focusable="false"><path d="M12 2a7 7 0 00-7 7c0 5.14 7 13 7 13s7-7.86 7-13a7 7 0 00-7-7zm0 9.5A2.5 2.5 0 1112 6a2.5 2.5 0 010 5.5z"/></svg>
 						</span>
 					</button>
 				<?php endif; ?>

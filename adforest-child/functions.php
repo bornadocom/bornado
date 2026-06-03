@@ -112,6 +112,14 @@ if (file_exists($bornado_search_compat_bootstrap)) {
 }
 
 /**
+ * Keep full page refresh search queries in sync with Search 2.0 defaults.
+ */
+$bornado_public_search_query_fix_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-public-search-query-fix.php';
+if (file_exists($bornado_public_search_query_fix_bootstrap)) {
+    require_once $bornado_public_search_query_fix_bootstrap;
+}
+
+/**
  * Load semantic breadcrumb override before the parent theme defines its pluggable function.
  */
 $bornado_breadcrumb_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-breadcrumbs.php';
@@ -133,6 +141,14 @@ if (file_exists($bornado_category_search_sidebar_bootstrap)) {
 $bornado_recent_ads_sidebar_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-recent-ads-sidebar.php';
 if (file_exists($bornado_recent_ads_sidebar_bootstrap)) {
     require_once $bornado_recent_ads_sidebar_bootstrap;
+}
+
+/**
+ * Register a reusable AdForest sort dropdown widget without touching parent files.
+ */
+$bornado_sort_filters_widget_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-sort-filters-widget.php';
+if (file_exists($bornado_sort_filters_widget_bootstrap)) {
+    require_once $bornado_sort_filters_widget_bootstrap;
 }
 
 /**
@@ -229,6 +245,14 @@ if (file_exists($bornado_edit_ad_link_fix_bootstrap)) {
 $bornado_single_ad_style_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornad-single-ad-style.php';
 if (file_exists($bornado_single_ad_style_bootstrap)) {
     require_once $bornado_single_ad_style_bootstrap;
+}
+
+/**
+ * Load SB Chat message bubble/timestamp customizations from the child theme.
+ */
+$bornado_sb_chat_profile_bubbles_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-sb-chat-profile-bubbles.php';
+if (file_exists($bornado_sb_chat_profile_bubbles_bootstrap)) {
+    require_once $bornado_sb_chat_profile_bubbles_bootstrap;
 }
 
 if (!function_exists('bornado_get_safe_login_redirect_url')) {
@@ -757,6 +781,14 @@ add_action('wp_enqueue_scripts', function () {
     }
 
     $deps = bornado_get_theme_style_handles();
+    $current_header_style = function_exists('bornado_header_clone_get_page_header_style')
+        ? (string) bornado_header_clone_get_page_header_style()
+        : '';
+    $needs_mobile_choice_ui = bornado_is_ad_search_view()
+        || (
+            defined('BORNADO_HEADER_SEARCH_4_CLONE_KEY')
+            && $current_header_style === (string) BORNADO_HEADER_SEARCH_4_CLONE_KEY
+        );
 
     $header_css = get_stylesheet_directory() . '/assets/css/bornado-header-layout.css';
     if (file_exists($header_css)) {
@@ -767,6 +799,17 @@ add_action('wp_enqueue_scripts', function () {
             (string) filemtime($header_css)
         );
         $deps = array('bornado-header-layout');
+    }
+
+    $mobile_choice_ui_css = get_stylesheet_directory() . '/assets/css/bornado-mobile-choice-ui.css';
+    if ($needs_mobile_choice_ui && file_exists($mobile_choice_ui_css)) {
+        wp_enqueue_style(
+            'bornado-mobile-choice-ui',
+            get_stylesheet_directory_uri() . '/assets/css/bornado-mobile-choice-ui.css',
+            $deps,
+            (string) filemtime($mobile_choice_ui_css)
+        );
+        $deps = array('bornado-mobile-choice-ui');
     }
 
     if (!bornado_is_ad_search_view()) {
@@ -784,6 +827,18 @@ add_action('wp_enqueue_scripts', function () {
         $deps,
         (string) filemtime($search_css)
     );
+
+    $search_chip_labels_js = get_stylesheet_directory() . '/assets/js/bornado-search-chip-labels.js';
+    if (file_exists($search_chip_labels_js)) {
+        wp_enqueue_script(
+            'bornado-search-chip-labels',
+            get_stylesheet_directory_uri() . '/assets/js/bornado-search-chip-labels.js',
+            array('adforest-search-ux'),
+            (string) filemtime($search_chip_labels_js),
+            true
+        );
+    }
+
 }, 200);
 
 /**
@@ -1186,152 +1241,6 @@ if (!function_exists('bornado_print_hreflang_links')) {
     }
 }
 add_action('wp_head', 'bornado_print_hreflang_links', 6);
-
-/**
- * Convert AdForest sort field to a compact icon trigger.
- *
- * Keep parent templates untouched by handling it with child theme assets only.
- */
-add_action('wp_enqueue_scripts', function () {
-    if (is_admin()) {
-        return;
-    }
-
-    $css = '
-    .adt-ads-sort-box .adt-sort-filters {
-        position: relative;
-    }
-    .adt-ads-sort-box .adt-sort-filters form {
-        display: none;
-        position: absolute;
-        top: calc(100% + 8px);
-        inset-inline-end: 0;
-        z-index: 20;
-        min-width: 210px;
-        padding: 8px;
-        background: #fff;
-        border: 1px solid rgba(0, 0, 0, 0.12);
-        border-radius: 10px;
-        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
-    }
-    .adt-ads-sort-box .adt-sort-filters.bornado-sort-open form {
-        display: block;
-    }
-    .adt-ads-sort-box .adt-sort-filters .bornado-sort-toggle,
-    .adt-ads-sort-box .adt-sort-filters .adt-sort-toggle,
-    .adt-ads-sort-box .adt-sort-filters .bornado-sort-trigger {
-        width: 38px;
-        height: 38px;
-        border: 1px solid rgba(0, 0, 0, 0.14);
-        border-radius: 10px;
-        background: #fff;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-    .adt-ads-sort-box .adt-sort-filters .bornado-sort-toggle:hover,
-    .adt-ads-sort-box .adt-sort-filters .adt-sort-toggle:hover,
-    .adt-ads-sort-box .adt-sort-filters .bornado-sort-trigger:hover,
-    .adt-ads-sort-box .adt-sort-filters .bornado-sort-toggle:focus-visible,
-    .adt-ads-sort-box .adt-sort-filters .adt-sort-toggle:focus-visible,
-    .adt-ads-sort-box .adt-sort-filters .bornado-sort-trigger:focus-visible {
-        border-color: #1479f6;
-        color: #1479f6;
-        box-shadow: 0 0 0 3px rgba(20, 121, 246, 0.14);
-        outline: none;
-    }
-    .adt-ads-sort-box .adt-sort-filters .bornado-sort-toggle-icon {
-        font-size: 18px;
-        line-height: 1;
-    }
-    @media (max-width: 991.98px) {
-        .adt-ads-sort-box {
-            flex-direction: row !important;
-            align-items: center !important;
-            flex-wrap: nowrap !important;
-            gap: 10px !important;
-        }
-        .adt-ads-sort-box h3 {
-            margin: 0;
-            flex: 1 1 auto;
-            min-width: 0;
-        }
-        .adt-ads-sort-box .adt-sort-filters {
-            width: auto !important;
-            margin-inline-start: auto;
-            flex: 0 0 auto;
-        }
-    }';
-
-    wp_register_style('bornado-sort-icon-toggle', false);
-    wp_enqueue_style('bornado-sort-icon-toggle');
-    wp_add_inline_style('bornado-sort-icon-toggle', $css);
-
-    $js = "
-    document.addEventListener('DOMContentLoaded', function () {
-        var wrappers = document.querySelectorAll('.adt-sort-filters');
-        if (!wrappers.length) {
-            return;
-        }
-
-        wrappers.forEach(function (wrapper) {
-            if (wrapper.classList.contains('bornado-sort-ready')) {
-                return;
-            }
-
-            var form = wrapper.querySelector('form');
-            if (!form) {
-                return;
-            }
-
-            wrapper.classList.add('bornado-sort-ready');
-
-            var button = wrapper.querySelector('.bornado-sort-toggle, .adt-sort-toggle, .bornado-sort-trigger');
-            if (!button) {
-                button = document.createElement('button');
-                button.type = 'button';
-                button.className = 'bornado-sort-toggle bornado-sort-trigger';
-                button.setAttribute('aria-label', 'مرتب سازی');
-                button.innerHTML = '<span class=\"bornado-sort-toggle-icon\" aria-hidden=\"true\">⇅</span>';
-                wrapper.insertBefore(button, form);
-            } else {
-                button.classList.add('bornado-sort-trigger');
-                if (!button.getAttribute('aria-label')) {
-                    button.setAttribute('aria-label', 'مرتب سازی');
-                }
-            }
-            button.setAttribute('aria-expanded', 'false');
-
-            button.addEventListener('click', function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                var isOpen = wrapper.classList.toggle('bornado-sort-open');
-                button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-            });
-
-            form.addEventListener('click', function (event) {
-                event.stopPropagation();
-            });
-        });
-
-        document.addEventListener('click', function () {
-            document.querySelectorAll('.adt-sort-filters.bornado-sort-open').forEach(function (wrapper) {
-                wrapper.classList.remove('bornado-sort-open');
-                var toggle = wrapper.querySelector('.bornado-sort-toggle, .adt-sort-toggle, .bornado-sort-trigger');
-                if (toggle) {
-                    toggle.setAttribute('aria-expanded', 'false');
-                }
-            });
-        });
-    });
-    ";
-
-    wp_register_script('bornado-sort-icon-toggle', '', array(), null, true);
-    wp_enqueue_script('bornado-sort-icon-toggle');
-    wp_add_inline_script('bornado-sort-icon-toggle', $js);
-}, 120);
 
 add_action('init', function() {
     $taxonomies = ['ad_cats', 'ad_country', 'ad_condition', 'ad_type', 'ad_warranty', 'ad_currency'];
@@ -1777,3 +1686,26 @@ add_action('wp_enqueue_scripts', function () {
         sprintf($js, wp_json_encode($selectors))
     );
 }, 230);
+
+if (!function_exists('bornado_hide_adt_ads_sort_box_everywhere')) {
+    /**
+     * Hide AdForest sort box globally from the child theme layer.
+     */
+    function bornado_hide_adt_ads_sort_box_everywhere()
+    {
+        if (is_admin()) {
+            return;
+        }
+
+        $css = <<<'CSS'
+        .adt-ads-sort-box {
+            display: none !important;
+        }
+        CSS;
+
+        wp_register_style('bornado-hide-adt-ads-sort-box', false, array(), null);
+        wp_enqueue_style('bornado-hide-adt-ads-sort-box');
+        wp_add_inline_style('bornado-hide-adt-ads-sort-box', $css);
+    }
+}
+add_action('wp_enqueue_scripts', 'bornado_hide_adt_ads_sort_box_everywhere', 240);

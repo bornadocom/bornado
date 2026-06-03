@@ -12,7 +12,7 @@ body.bornado-ad-search-view:not(:has(.adt-breadcrumb)) .adt-ads-with-filters,
 body.bornado-ad-search-view:not(:has(.adt-breadcrumb)) .adt-ads-topbar-section,
 body.bornado-ad-search-view:not(:has(.adt-breadcrumb)) .adt-ads-filter-map-wrapper,
 body.bornado-ad-search-view:not(:has(.adt-breadcrumb)) .bornado-seo-landing-entry {
-	padding-top: 50px !important;
+	padding-top: 10px !important;
 }
 
 /* —— Content container: 1200px (override Bootstrap .container breakpoints) —— */
@@ -47,6 +47,9 @@ body.bornado-ad-search-view .bornado-seo-landing-entry > .container {
 		flex: 0 0 calc(33.3333% - 7px) !important;
 		width: calc(33.3333% - 7px) !important;
 		max-width: calc(33.3333% - 7px) !important;
+		position: sticky;
+		top: 96px;
+		align-self: flex-start;
 	}
 
 	body.bornado-ad-search-view .adt-ads-filter-content-wrapper .adt-ads-filter-content {
@@ -54,6 +57,18 @@ body.bornado-ad-search-view .bornado-seo-landing-entry > .container {
 		width: calc(66.6666% - 14px) !important;
 		max-width: calc(66.6666% - 14px) !important;
 		min-width: 0 !important;
+	}
+
+	body.bornado-ad-search-view .adt-ads-filter-content-wrapper .adt-ads-filter-sidebar #adforest-ajax-sidebar {
+		position: static !important;
+		top: auto !important;
+		max-height: calc(100vh - 116px);
+		overflow-y: auto;
+		direction: ltr;
+	}
+
+	body.bornado-ad-search-view .adt-ads-filter-content-wrapper .adt-ads-filter-sidebar #adforest-ajax-sidebar > * {
+		direction: rtl;
 	}
 }
 
@@ -138,7 +153,61 @@ body.bornado-ad-search-view .mcew-theme-list-style-3 .adf-card-list.mcew-style3-
 	color: inherit !important;
 }
 
+@media (min-width: 769px) {
+	body.bornado-ad-search-view #adforest-ajax-sidebar .adforest-ajax-toolbar[data-adforest-toolbar] {
+		display: none !important;
+	}
+}
+
 @media (max-width: 767px) {
+	body.bornado-ad-search-view .adf-active-filters,
+	body.bornado-ad-search-view .adt-ads-filter-content .tag-search {
+		display: flex;
+		flex-wrap: nowrap !important;
+		gap: 8px;
+		align-items: center;
+		overflow-x: auto;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+		white-space: nowrap;
+		width: 100%;
+		max-width: 100%;
+		touch-action: pan-x;
+	}
+
+	body.bornado-ad-search-view .adf-active-filters.is-visible {
+		display: flex;
+	}
+
+	body.bornado-ad-search-view .adf-active-filters::-webkit-scrollbar,
+	body.bornado-ad-search-view .adt-ads-filter-content .tag-search::-webkit-scrollbar {
+		display: none;
+		width: 0;
+		height: 0;
+	}
+
+	body.bornado-ad-search-view .adf-active-filters > *,
+	body.bornado-ad-search-view .adt-ads-filter-content .tag-search form {
+		flex: 0 0 auto;
+		margin: 0;
+	}
+
+	body.bornado-ad-search-view .adf-active-filters .adf-chip,
+	body.bornado-ad-search-view .adf-active-filters .adf-clear-all,
+	body.bornado-ad-search-view .adt-ads-filter-content .tag-search .sb_tag {
+		display: inline-flex;
+		align-items: center;
+		flex-wrap: nowrap;
+		white-space: nowrap;
+		max-width: none;
+	}
+
+	body.bornado-ad-search-view .adf-active-filters .adf-chip__value {
+		white-space: nowrap;
+	}
+
 	body.bornado-ad-search-view .adf-card-modern__price,
 	body.bornado-ad-search-view .adf-card-list__price,
 	body.bornado-ad-search-view .mcew-theme-list-style-3 .adf-card-list.mcew-style3-search20-card .adf-card-list__price,

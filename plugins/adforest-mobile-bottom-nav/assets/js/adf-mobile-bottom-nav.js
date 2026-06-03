@@ -258,6 +258,7 @@
 		if (!category || !categoryLabel || !categoryInput) {
 			return;
 		}
+		selectedCategory = category;
 		categoryLabel.textContent = category.label;
 		categoryInput.value = category.value;
 	}
@@ -383,6 +384,16 @@
 		submitCurrentSearch();
 	}
 
+	function markSelectedCategoryItem(activeButton) {
+		if (!categoryList || !activeButton) {
+			return;
+		}
+
+		Array.prototype.forEach.call(categoryList.querySelectorAll(".adf-mobile-category-sheet__item"), function (button) {
+			button.classList.toggle("is-selected", button === activeButton);
+		});
+	}
+
 	function parseRelatedCitiesResponse(responseHtml) {
 		var parser = new DOMParser();
 		var doc = parser.parseFromString(responseHtml, "text/html");
@@ -503,12 +514,21 @@
 		categoryOptions.forEach(function (category) {
 			var item = document.createElement("li");
 			var btn = document.createElement("button");
+			var isSelected =
+				selectedCategory &&
+				String(selectedCategory.value || "") !== "" &&
+				String(selectedCategory.value || "") === String(category.value || "");
 			btn.type = "button";
-			btn.className = "adf-mobile-category-sheet__item";
-			btn.textContent = category.label;
+			btn.className = "adf-mobile-category-sheet__item bornado-mobile-choice__item" + (isSelected ? " is-selected" : "");
 			btn.setAttribute("data-value", category.value);
 			btn.setAttribute("data-label", category.label);
 			btn.setAttribute("data-url", category.url || "");
+			btn.innerHTML =
+				'<span class="bornado-mobile-choice__item-copy">' +
+					'<span class="bornado-mobile-choice__item-label"></span>' +
+				"</span>" +
+				'<span class="bornado-mobile-choice__check" aria-hidden="true"></span>';
+			btn.querySelector(".bornado-mobile-choice__item-label").textContent = category.label;
 			item.appendChild(btn);
 			categoryList.appendChild(item);
 		});
@@ -631,11 +651,14 @@
 			if (!btn) {
 				return;
 			}
-			navigateToCategory({
-				value: btn.getAttribute("data-value") || "",
-				label: btn.getAttribute("data-label") || btn.textContent || "",
-				url: btn.getAttribute("data-url") || ""
-			});
+			markSelectedCategoryItem(btn);
+			window.setTimeout(function () {
+				navigateToCategory({
+					value: btn.getAttribute("data-value") || "",
+					label: btn.getAttribute("data-label") || btn.textContent || "",
+					url: btn.getAttribute("data-url") || ""
+				});
+			}, 120);
 		});
 	}
 	closeNodes.forEach(function (node) {

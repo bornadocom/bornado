@@ -266,6 +266,149 @@
     cursor: pointer;
 }
 
+.bornado-auth-member-card {
+    position: relative;
+    width: 100%;
+    padding: 26px;
+    border: 1px solid #dbe5f1;
+    border-radius: 28px;
+    background:
+        radial-gradient(circle at top right, rgba(20, 121, 246, 0.12), transparent 34%),
+        linear-gradient(180deg, #ffffff 0%, #f7faff 100%);
+    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
+}
+
+.bornado-auth-member-card__hero {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.bornado-auth-member-card__avatar {
+    display: inline-flex;
+    text-decoration: none;
+    transition: transform 0.18s ease;
+}
+
+.bornado-auth-member-card__avatar:hover {
+    transform: translateY(-1px);
+}
+
+.bornado-auth-member-card__avatar img {
+    display: block;
+    width: 72px;
+    height: 72px;
+    border: 3px solid #ffffff;
+    border-radius: 22px;
+    box-shadow: 0 12px 28px rgba(20, 121, 246, 0.18);
+}
+
+.bornado-auth-member-card__copy {
+    min-width: 0;
+}
+
+.bornado-auth-member-card__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(22, 163, 74, 0.1);
+    color: #166534;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.bornado-auth-member-card__copy h3 {
+    margin: 12px 0 8px;
+    color: #0f172a;
+    font-size: 24px;
+    font-weight: 900;
+    line-height: 1.35;
+}
+
+.bornado-auth-member-card__copy p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.9;
+}
+
+.bornado-auth-member-card__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.bornado-auth-member-card__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    padding: 12px 18px;
+    border-radius: 18px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 800;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.bornado-auth-member-card__button:hover {
+    transform: translateY(-1px);
+}
+
+.bornado-auth-member-card__button--primary {
+    background: linear-gradient(135deg, #1479f6 0%, #0f5ddf 100%);
+    color: #ffffff;
+    box-shadow: 0 16px 28px rgba(20, 121, 246, 0.24);
+}
+
+.bornado-auth-member-card__button--secondary {
+    border: 1px solid #cfe0f5;
+    background: rgba(255, 255, 255, 0.8);
+    color: #0f172a;
+}
+
+.bornado-auth-member-card__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.bornado-auth-member-card__tile {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 108px;
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.86);
+    text-decoration: none;
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.bornado-auth-member-card__tile:hover {
+    transform: translateY(-2px);
+    border-color: rgba(20, 121, 246, 0.28);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
+.bornado-auth-member-card__tile strong {
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.6;
+}
+
+.bornado-auth-member-card__tile span {
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
 @media (max-width: 767.98px) {
     .bornado-auth-modal {
         padding: 0 !important;
@@ -323,5 +466,28 @@
         width: 100%;
         min-width: 0;
         flex: 1 1 auto;
+    }
+
+    .bornado-auth-member-card {
+        padding: 20px 18px;
+        border-radius: 24px;
+    }
+
+    .bornado-auth-member-card__hero {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .bornado-auth-member-card__copy h3 {
+        font-size: 20px;
+    }
+
+    .bornado-auth-member-card__actions,
+    .bornado-auth-member-card__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bornado-auth-member-card__tile {
+        min-height: 0;
     }
 }
