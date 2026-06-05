@@ -44,10 +44,11 @@ if ( ! function_exists( 'bornado_search_get_selected_context' ) ) {
 	/**
 	 * Return normalized search context from query vars.
 	 *
+	 * @param bool $include_persisted Whether persisted location context should be considered.
 	 * @return array<string,string>
 	 */
-	function bornado_search_get_selected_context() {
-		return Bornado_Search_Core::get_selected_context();
+	function bornado_search_get_selected_context( $include_persisted = true ) {
+		return Bornado_Search_Core::get_selected_context( (bool) $include_persisted );
 	}
 }
 

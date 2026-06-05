@@ -43,6 +43,7 @@ final class Bornado_Location_Picker_Service {
 				'button_label'   => __( 'انتخاب کشور و شهر', 'bornado-location-picker' ),
 				'submit_label'   => __( 'اعمال موقعیت', 'bornado-location-picker' ),
 				'reset_label'    => __( 'همه کشورها', 'bornado-location-picker' ),
+				'show_footer_reset' => true,
 				'search_label'   => __( 'جستجو در کشورها', 'bornado-location-picker' ),
 				'city_label'     => __( 'جستجو در شهرها', 'bornado-location-picker' ),
 				'widget_action'  => '',
@@ -63,7 +64,7 @@ final class Bornado_Location_Picker_Service {
 		$args = is_array( $args ) ? $args : array();
 		$args = wp_parse_args( $args, $defaults );
 
-		$selected       = self::normalize_selected_location( self::get_selected_location() );
+		$selected       = self::normalize_selected_location( self::get_selected_location( false ) );
 		$country        = self::normalize_term_payload( isset( $selected['country'] ) ? $selected['country'] : array() );
 		$city           = self::normalize_term_payload( isset( $selected['city'] ) ? $selected['city'] : array() );
 		$country_id     = ! empty( $country['id'] ) ? absint( $country['id'] ) : 0;
@@ -291,13 +292,13 @@ final class Bornado_Location_Picker_Service {
 	 *
 	 * @return array<string,mixed>
 	 */
-	public static function get_selected_location() {
+	public static function get_selected_location( $include_persisted = false ) {
 		$route_context = function_exists( 'bornado_seo_routing_get_context' ) ? bornado_seo_routing_get_context() : array();
 		$country_term  = ! empty( $route_context['country_term'] ) && $route_context['country_term'] instanceof WP_Term ? $route_context['country_term'] : null;
 		$city_term     = ! empty( $route_context['city_term'] ) && $route_context['city_term'] instanceof WP_Term ? $route_context['city_term'] : null;
 
 		if ( ! $country_term instanceof WP_Term ) {
-			$context      = function_exists( 'bornado_search_get_selected_context' ) ? bornado_search_get_selected_context() : array();
+			$context      = function_exists( 'bornado_search_get_selected_context' ) ? bornado_search_get_selected_context( (bool) $include_persisted ) : array();
 			$location_ids = array();
 
 			if ( ! empty( $context['city'] ) ) {

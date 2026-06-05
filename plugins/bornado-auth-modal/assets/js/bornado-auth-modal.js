@@ -18,6 +18,7 @@
         currentView: 'phone-entry',
         redirectUrl: getDefaultRedirectTarget(),
         continueTokenHandled: false,
+        continueFlowSource: '',
         claimAdId: 0,
         claimPhoneNumber: '',
         phoneNumber: '',
@@ -261,12 +262,15 @@
             const phoneNumber = String(data.phone_number || '').trim();
             const nextStep = String(data.next_step || '').trim();
             const existingUser = Boolean(data.existing_user);
+            const flowSource = normalizeContinueFlowSource(data.flow_source, data.claim_ad_id);
+            const isClaimFlow = flowSource === 'claim';
 
             if (!phoneNumber) {
                 throw new Error(getI18n('genericError'));
             }
 
             state.redirectUrl = data.redirect_url || config.profileUrl || window.location.href;
+            state.continueFlowSource = flowSource;
             state.claimAdId = parseInt(data.claim_ad_id, 10) || 0;
             state.intent = data.mode === 'register' ? 'register' : 'login';
             state.claimPhoneNumber = phoneNumber;
@@ -274,9 +278,13 @@
             state.phoneDialCode = '';
             state.existingUser = existingUser || state.intent === 'login';
             primePhoneInput(phoneNumber);
-            showNoticeHtml('info', buildContinueFlowMessage(phoneNumber, state.existingUser));
+            if (isClaimFlow) {
+                showNoticeHtml('info', buildContinueFlowMessage(phoneNumber, state.existingUser));
+            } else {
+                showNotice('info', '');
+            }
 
-            if ('password' === nextStep || state.existingUser) {
+            if (isClaimFlow && ('password' === nextStep || state.existingUser)) {
                 switchView('password-login');
                 focusPasswordInput();
                 return;
@@ -289,6 +297,14 @@
                 remember: data.remember || '1'
             }, false);
         } catch (error) {
+            if (shouldFallbackToDefaultLogin(error)) {
+                openModal({
+                    mode: 'login',
+                    redirectUrl: getDefaultRedirectTarget()
+                });
+                return;
+            }
+
             switchView('phone-entry');
             showNotice('error', extractMessage(error));
         } finally {
@@ -648,6 +664,7 @@
 
     function resetJourney(clearInput) {
         state.currentView = 'phone-entry';
+        state.continueFlowSource = '';
         state.claimPhoneNumber = '';
         state.phoneNumber = '';
         state.phoneDialCode = '';
@@ -835,6 +852,16 @@
             existingUser ? getI18n('claimLoginSubtitle') : getI18n('claimRegisterSubtitle'),
             phoneNumber
         );
+    }
+
+    function normalizeContinueFlowSource(flowSource, claimAdId) {
+        const normalized = String(flowSource || '').trim().toLowerCase();
+
+        if (normalized) {
+            return normalized;
+        }
+
+        return parseInt(claimAdId, 10) > 0 ? 'claim' : 'notification';
     }
 
     function sanitizeDialCode(value) {
@@ -1187,6 +1214,28 @@
         }
 
         return getI18n('genericError');
+    }
+
+    function extractServerErrorCode(error) {
+        if (!error) {
+            return '';
+        }
+
+        if (typeof error.code === 'string' && error.code.trim()) {
+            return error.code.trim();
+        }
+
+        if (error.data && typeof error.data.code === 'string' && error.data.code.trim()) {
+            return error.data.code.trim();
+        }
+
+        return '';
+    }
+
+    function shouldFallbackToDefaultLogin(error) {
+        const code = extractServerErrorCode(error);
+
+        return code === 'expired_link' || code === 'invalid_token' || code === 'invalid_signature';
     }
 
     function isValidPhone(value) {

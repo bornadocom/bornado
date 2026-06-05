@@ -511,7 +511,13 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 			$payload = $this->parse_continue_token( $token );
 
 			if ( is_wp_error( $payload ) ) {
-				wp_send_json_error( array( 'message' => $payload->get_error_message() ), 422 );
+				wp_send_json_error(
+					array(
+						'message' => $payload->get_error_message(),
+						'code'    => $payload->get_error_code(),
+					),
+					422
+				);
 			}
 
 			$phone = $this->normalize_phone_number( isset( $payload['phone'] ) ? (string) $payload['phone'] : '' );
@@ -529,6 +535,8 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 				$redirect_url = $this->get_profile_url();
 			}
 
+			$flow_source = $this->resolve_continue_flow_source( $payload );
+
 			wp_send_json_success(
 				array(
 					'mode'          => isset( $resolution['mode'] ) ? (string) $resolution['mode'] : 'login',
@@ -537,6 +545,7 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 					'phone_number'  => isset( $resolution['phone_number'] ) ? (string) $resolution['phone_number'] : $phone,
 					'redirect_url'  => $redirect_url,
 					'claim_ad_id'   => ! empty( $payload['claim_ad_id'] ) ? absint( $payload['claim_ad_id'] ) : 0,
+					'flow_source'   => $flow_source,
 					'remember'      => '1',
 				)
 			);
@@ -1194,6 +1203,20 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 			}
 
 			return $payload;
+		}
+
+		private function resolve_continue_flow_source( array $payload ) {
+			$flow_source = ! empty( $payload['flow_source'] ) ? sanitize_key( (string) $payload['flow_source'] ) : '';
+
+			if ( '' !== $flow_source ) {
+				return $flow_source;
+			}
+
+			if ( ! empty( $payload['claim_ad_id'] ) ) {
+				return 'claim';
+			}
+
+			return 'notification';
 		}
 
 		private function get_notification_shared_secret() {

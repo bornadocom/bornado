@@ -25,8 +25,11 @@ if ($is_sticky_header == '1') {
 
 $sb_profile_page = isset($adforest_theme['sb_profile_page']) ? $adforest_theme['sb_profile_page'] : '';
 $selected_search_context = function_exists('bornado_search_get_selected_context')
-    ? bornado_search_get_selected_context()
+    ? bornado_search_get_selected_context(false)
     : array();
+$brand_home_url = function_exists('bornado_search_get_brand_home_url')
+    ? bornado_search_get_brand_home_url()
+    : home_url('/');
 $selected_location_value = '';
 if (!empty($selected_search_context['city'])) {
     $selected_location_value = (string) $selected_search_context['city'];
@@ -590,6 +593,10 @@ rams.toString()}`;
                             left: 8px;
                         }
 
+                        html[dir="rtl"] .adt-header-location-picker .blp__footer {
+                            justify-content: flex-end;
+                        }
+
                         .adt-hero-search-tabs .search-filters-bar .filter-box.bornado-keyword-submit {
                             flex: 0.95 1 180px;
                         }
@@ -900,6 +907,7 @@ rams.toString()}`;
                                                         'summary_fallback' => $label_text,
                                                         'submit_label' => esc_html__('اعمال', 'adforest'),
                                                         'reset_label' => esc_html__('همه کشورها', 'adforest'),
+                                                        'show_footer_reset' => false,
                                                         'panel_heading' => esc_html__('Select location', 'adforest'),
                                                         'country_heading' => esc_html__('کشورها', 'adforest'),
                                                         'city_heading' => esc_html__('شهرها', 'adforest'),
@@ -929,7 +937,7 @@ rams.toString()}`;
 
                                     case 'category':
                                         $field_name = 'cat_id';
-                                        $current_value = $selected_category_value;
+                                        $current_value = $selected_category_value > 0 ? (string) $selected_category_value : '';
                                         $form_field_names[] = $field_name;
                                         $all_categories_label = esc_html__('تمام دسته‌بندی‌ها', 'adforest');
                                         $current_category_label = $all_categories_label;
@@ -939,7 +947,7 @@ rams.toString()}`;
                                                 if (empty($entry['term']) || !is_object($entry['term'])) {
                                                     continue;
                                                 }
-                                                if ((int) $current_value === (int) $entry['term']->term_id) {
+                                                if ((int) $selected_category_value === (int) $entry['term']->term_id) {
                                                     $current_category_label = $entry['label'];
                                                     break;
                                                 }
@@ -998,7 +1006,7 @@ rams.toString()}`;
                                                                         continue;
                                                                     }
                                                                     $option_label = $entry['label'];
-                                                                    $is_selected = ($current_value && $current_value === (int) $category_term->term_id);
+                                                                    $is_selected = ((int) $selected_category_value === (int) $category_term->term_id);
                                                                     ?>
                                                                     <li>
                                                                         <button type="button"

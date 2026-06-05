@@ -556,13 +556,14 @@ if (!class_exists('Bornado_Notification_Bridge')) {
                 return '';
             }
 
-            $ttl = (int) apply_filters('bornado_notification_bridge_continue_token_ttl', 900);
+            $ttl = (int) apply_filters('bornado_notification_bridge_continue_token_ttl', 72 * HOUR_IN_SECONDS);
             if ($ttl <= 0) {
-                $ttl = 900;
+                $ttl = 72 * HOUR_IN_SECONDS;
             }
 
             $payload = array(
                 'purpose'      => 'listing_manage_continue',
+                'flow_source'  => 'notification',
                 'phone'        => $phone,
                 'redirect_url' => is_array($context) ? (string) ($context['redirect_url'] ?? '') : '',
                 'listing_id'   => is_array($context) ? (int) ($context['listing_id'] ?? 0) : 0,

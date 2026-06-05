@@ -134,12 +134,12 @@ final class Bornado_Search_Core {
 	 *
 	 * @return array<string,string>
 	 */
-	public static function get_selected_context() {
+	public static function get_selected_context( $include_persisted = true ) {
 		$route_context = function_exists( 'bornado_seo_routing_get_context' ) ? bornado_seo_routing_get_context() : array();
 		$route_country = ! empty( $route_context['country_term'] ) && $route_context['country_term'] instanceof WP_Term ? (string) $route_context['country_term']->term_id : '';
 		$route_city    = ! empty( $route_context['city_term'] ) && $route_context['city_term'] instanceof WP_Term ? (string) $route_context['city_term']->term_id : '';
 		$route_cat     = ! empty( $route_context['deepest_term'] ) && $route_context['deepest_term'] instanceof WP_Term ? (string) $route_context['deepest_term']->term_id : '';
-		$persisted     = self::get_persisted_context();
+		$persisted     = $include_persisted ? self::get_persisted_context() : array();
 
 		return array(
 			'ad_title' => self::get_query_value( array( 'ad_title', 'title' ) ),
@@ -249,6 +249,10 @@ final class Bornado_Search_Core {
 		$query_args = isset( $_REQUEST['query_args'] ) && is_array( $_REQUEST['query_args'] )
 			? self::build_clean_query_args( wp_unslash( $_REQUEST['query_args'] ) )
 			: array();
+		$location_terms = self::normalize_location_route_terms( $country_id, $city_id );
+
+		$country_id = $location_terms['country_term'] instanceof WP_Term ? (int) $location_terms['country_term']->term_id : 0;
+		$city_id    = $location_terms['city_term'] instanceof WP_Term ? (int) $location_terms['city_term']->term_id : 0;
 
 		$category_urls = array();
 		if ( function_exists( 'bornado_seo_routing_get_contextual_url' ) ) {
@@ -573,7 +577,7 @@ final class Bornado_Search_Core {
 	 */
 	private static function resolve_selected_location_terms() {
 		if ( class_exists( 'Bornado_Location_Picker_Service' ) && method_exists( 'Bornado_Location_Picker_Service', 'get_selected_location' ) ) {
-			$selected = Bornado_Location_Picker_Service::get_selected_location();
+			$selected = Bornado_Location_Picker_Service::get_selected_location( true );
 			$country_id = ! empty( $selected['country']['id'] ) ? (int) $selected['country']['id'] : 0;
 			$city_id    = ! empty( $selected['city']['id'] ) ? (int) $selected['city']['id'] : 0;
 
@@ -624,6 +628,50 @@ final class Bornado_Search_Core {
 				'country_term' => self::get_root_country_term( $term ),
 				'city_term'    => $term,
 			);
+		}
+
+		return array(
+			'country_term' => null,
+			'city_term'    => null,
+		);
+	}
+
+	/**
+	 * Normalize raw location ids into the route's root-country + city pair.
+	 *
+	 * @param int $country_id Raw location id that may actually be a city.
+	 * @param int $city_id    Explicit city id when available.
+	 * @return array{country_term:WP_Term|null,city_term:WP_Term|null}
+	 */
+	private static function normalize_location_route_terms( $country_id, $city_id ) {
+		$country_id = max( 0, (int) $country_id );
+		$city_id    = max( 0, (int) $city_id );
+
+		if ( $city_id > 0 ) {
+			$city_term = get_term( $city_id, 'ad_country' );
+			if ( $city_term instanceof WP_Term ) {
+				return array(
+					'country_term' => self::get_root_country_term( $city_term ),
+					'city_term'    => $city_term,
+				);
+			}
+		}
+
+		if ( $country_id > 0 ) {
+			$location_term = get_term( $country_id, 'ad_country' );
+			if ( $location_term instanceof WP_Term ) {
+				if ( 0 === (int) $location_term->parent ) {
+					return array(
+						'country_term' => $location_term,
+						'city_term'    => null,
+					);
+				}
+
+				return array(
+					'country_term' => self::get_root_country_term( $location_term ),
+					'city_term'    => $location_term,
+				);
+			}
 		}
 
 		return array(

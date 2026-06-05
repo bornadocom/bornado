@@ -31,13 +31,18 @@
 
 در current-state:
 
-- routing فعلی هنوز بیشتر `city_only`, `category_only`, `city_category` را می شناسد
-- و برای حمل کامل `country/city/category` در یک site نیاز به توسعه دارد
+- `country_only` و `country_city` اکنون به صورت archive-native برای taxonomy `ad_country` پیاده سازی شده اند
+- routeهای category-based مثل `category_only`, `country_category`, `country_city_category` هنوز روی flow سفارشی semantic + search/landing هستند
+- بنابراین current-state هنوز fully unified نیست و همه route familyها از یک ownership model استفاده نمی کنند
 
 بنابراین این سند:
 
 - policy نهایی مورد نظر را مشخص می کند
 - اما لزوماً به این معنی نیست که همین الان تمام routeهای آن بدون توسعه routing قابل اجرا هستند
+
+برای جلوگیری از ابهام بین **policy هدف** و **رفتار واقعی فعلی کد**، مرجع current-state اجرایی در فایل زیر ثبت می شود:
+
+- `plugins/bornado-routing/CURRENT-INDEXATION-RULES-05june2026.md`
 
 ## ساختار URL هدف
 اگر Bornado روی single-site country segmentation بماند، ساختار target باید این باشد:

@@ -106,15 +106,37 @@ final class Bornado_SEO_Landing_Manager {
 			<div class="notice notice-warning inline"><p><?php echo esc_html( $duplicate_notice ); ?></p></div>
 			<?php
 		endif;
+
+		$selectable_types = self::get_selectable_route_types();
+		$deprecated_types = self::get_deprecated_route_types();
+		$is_deprecated    = isset( $deprecated_types[ $route_type ] );
+		if ( $is_deprecated ) :
+			?>
+			<div class="notice notice-warning inline">
+				<p>
+					<?php
+					printf(
+						/* translators: %s: deprecated route label. */
+						esc_html__( 'The legacy landing route "%s" is deprecated. Country and Country + City pages are now archive-native and should no longer be managed from SEO Landing Pages.', 'bornado-routing' ),
+						esc_html( $deprecated_types[ $route_type ] )
+					);
+					?>
+				</p>
+			</div>
+			<?php
+		endif;
 		?>
 		<p>
 			<label for="bornado_landing_route_type"><strong><?php esc_html_e( 'Route Type', 'bornado-routing' ); ?></strong></label>
 			<select id="bornado_landing_route_type" name="bornado_landing_route_type" class="widefat">
-				<option value="category_only" <?php selected( $route_type, 'category_only' ); ?>><?php esc_html_e( 'Category only', 'bornado-routing' ); ?></option>
-				<option value="country_only" <?php selected( $route_type, 'country_only' ); ?>><?php esc_html_e( 'Country only', 'bornado-routing' ); ?></option>
-				<option value="country_city" <?php selected( $route_type, 'country_city' ); ?>><?php esc_html_e( 'Country + City', 'bornado-routing' ); ?></option>
-				<option value="country_category" <?php selected( $route_type, 'country_category' ); ?>><?php esc_html_e( 'Country + Category', 'bornado-routing' ); ?></option>
-				<option value="country_city_category" <?php selected( $route_type, 'country_city_category' ); ?>><?php esc_html_e( 'Country + City + Category', 'bornado-routing' ); ?></option>
+				<?php if ( $is_deprecated ) : ?>
+					<option value="<?php echo esc_attr( $route_type ); ?>" selected="selected" hidden="hidden">
+						<?php echo esc_html( $deprecated_types[ $route_type ] . ' (' . __( 'deprecated', 'bornado-routing' ) . ')' ); ?>
+					</option>
+				<?php endif; ?>
+				<?php foreach ( $selectable_types as $type_key => $type_label ) : ?>
+					<option value="<?php echo esc_attr( $type_key ); ?>" <?php selected( $route_type, $type_key ); ?>><?php echo esc_html( $type_label ); ?></option>
+				<?php endforeach; ?>
 			</select>
 		</p>
 		<p>
@@ -213,9 +235,10 @@ final class Bornado_SEO_Landing_Manager {
 			return;
 		}
 
-		$route_type       = isset( $_POST['bornado_landing_route_type'] ) ? sanitize_key( wp_unslash( $_POST['bornado_landing_route_type'] ) ) : 'country_city_category';
-		$allowed_types    = array( 'category_only', 'country_only', 'country_city', 'country_category', 'country_city_category' );
-		$route_type       = in_array( $route_type, $allowed_types, true ) ? $route_type : 'country_city_category';
+		$current_route_type = self::get_meta( $post_id, self::META_ROUTE_TYPE, 'country_city_category' );
+		$route_type         = isset( $_POST['bornado_landing_route_type'] ) ? sanitize_key( wp_unslash( $_POST['bornado_landing_route_type'] ) ) : $current_route_type;
+		$allowed_types      = array_merge( array_keys( self::get_selectable_route_types() ), array_keys( self::get_deprecated_route_types() ) );
+		$route_type         = in_array( $route_type, $allowed_types, true ) ? $route_type : 'country_city_category';
 		$country_term_id  = isset( $_POST['bornado_landing_country_term_id'] ) ? max( 0, (int) wp_unslash( $_POST['bornado_landing_country_term_id'] ) ) : 0;
 		$city_term_id     = isset( $_POST['bornado_landing_city_term_id'] ) ? max( 0, (int) wp_unslash( $_POST['bornado_landing_city_term_id'] ) ) : 0;
 		$category_term_id = isset( $_POST['bornado_landing_category_term_id'] ) ? max( 0, (int) wp_unslash( $_POST['bornado_landing_category_term_id'] ) ) : 0;
@@ -264,6 +287,10 @@ final class Bornado_SEO_Landing_Manager {
 	public static function find_matching_landing( array $route_context ) {
 		$route_type = self::determine_route_type( $route_context );
 		if ( ! $route_type ) {
+			return null;
+		}
+
+		if ( self::is_archive_native_route_type( $route_type ) ) {
 			return null;
 		}
 
@@ -504,6 +531,41 @@ final class Bornado_SEO_Landing_Manager {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Route types that should still be manageable from the landing UI.
+	 *
+	 * @return array<string,string>
+	 */
+	private static function get_selectable_route_types() {
+		return array(
+			'category_only'          => __( 'Category only', 'bornado-routing' ),
+			'country_category'       => __( 'Country + Category', 'bornado-routing' ),
+			'country_city_category'  => __( 'Country + City + Category', 'bornado-routing' ),
+		);
+	}
+
+	/**
+	 * Deprecated landing route types kept only for backwards-safe admin rendering.
+	 *
+	 * @return array<string,string>
+	 */
+	private static function get_deprecated_route_types() {
+		return array(
+			'country_only' => __( 'Country only', 'bornado-routing' ),
+			'country_city' => __( 'Country + City', 'bornado-routing' ),
+		);
+	}
+
+	/**
+	 * Whether the supplied route type now belongs to archive-native taxonomy flow.
+	 *
+	 * @param string $route_type Route type slug.
+	 * @return bool
+	 */
+	private static function is_archive_native_route_type( $route_type ) {
+		return in_array( sanitize_key( (string) $route_type ), array( 'country_only', 'country_city' ), true );
 	}
 
 	/**

@@ -169,10 +169,10 @@ if (!function_exists('bornado_sort_filters_enqueue_assets')) {
         wp_enqueue_style('bornado-sort-filters-widget');
         wp_add_inline_style('bornado-sort-filters-widget', $css);
 
-        $js = "
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('form[data-bornado-sort-widget=\"1\"] select[name=\"sort\"]').forEach(function (select) {
-                select.addEventListener('change', function () {
+        $js = '
+        document.addEventListener(\'DOMContentLoaded\', function () {
+            document.querySelectorAll(\'form[data-bornado-sort-widget="1"] select[name="sort"]\').forEach(function (select) {
+                select.addEventListener(\'change\', function () {
                     if (select.form) {
                         select.form.submit();
                     }
@@ -180,17 +180,17 @@ if (!function_exists('bornado_sort_filters_enqueue_assets')) {
             });
 
             if (window.jQuery && window.jQuery.fn && window.jQuery.fn.select2) {
-                window.jQuery('form[data-bornado-sort-widget=\"1\"] select[name=\"sort\"]').each(function () {
+                window.jQuery(\'form[data-bornado-sort-widget="1"] select[name="sort"]\').each(function () {
                     var $select = window.jQuery(this);
-                    if ($select.hasClass('select2-hidden-accessible')) {
+                    if ($select.hasClass(\'select2-hidden-accessible\')) {
                         return;
                     }
 
                     $select.select2({
-                        width: '100%'
+                        width: \'100%\'
                     });
 
-                    $select.on('select2:select', function () {
+                    $select.on(\'select2:select\', function () {
                         if (this.form) {
                             this.form.submit();
                         }
@@ -198,7 +198,7 @@ if (!function_exists('bornado_sort_filters_enqueue_assets')) {
                 });
             }
         });
-        ";
+        ';
 
         wp_register_script('bornado-sort-filters-widget', '', array(), null, true);
         wp_enqueue_script('bornado-sort-filters-widget');

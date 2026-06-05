@@ -84,14 +84,18 @@
 این بخش بسیار مهم است چون فرم ها و hidden input های AdForest به query string خام وابسته هستند.
 
 ### 4) استفاده از template فعلی AdForest
-برای route های semantic معتبر، به جای ساخت template جدید، از `page-search.php` خود قالب استفاده شد.
+در current implementation این بخش دو شاخه دارد:
+
+- route های `country_only` و `country_city` با وجود semantic بودن، از نظر query و SEO archive-native هستند، اما برای حفظ UI یکدست روی `page-search.php` رندر می شوند
+- route های category-based هنوز از `page-search.php` یا `seo-landing.php` استفاده می کنند
 
 نتیجه:
 
-- از rendering فعلی AdForest استفاده می شود
+- برای country/city hubها، وردپرس و SEO plugin آن ها را archive واقعی taxonomy می بینند
+- برای routeهای category-based، از rendering فعلی AdForest استفاده می شود
 - منطق core قالب دست نخورده باقی می ماند
 - نگهداری بعدی ساده تر می شود
-- route معتبر مستقیما به search page تنظیم شده در AdForest bind می شود تا main query وردپرس آن را صفحه معتبر بداند
+- routeهای category-based مستقیما به search page تنظیم شده در AdForest bind می شوند تا main query وردپرس آن ها را صفحه معتبر بداند
 
 ### 5) 301 redirect برای URL های legacy
 لایه redirect اضافه شد تا URL های قدیمی قابل تبدیل، به canonical جدید هدایت شوند.
@@ -118,10 +122,20 @@
 - در صورت نبود plugin SEO، تگ canonical مستقیم در `wp_head` چاپ می شود
 - در نسخه نهایی، چاپ canonical دستی طوری harden شد که در صورت حضور providerهای رایج SEO، canonical تکراری چاپ نشود
 
+برای routeهای archive-native:
+
+- ownership عنوان و canonical تمیز به منطق طبیعی taxonomy archive و SEO plugin واگذار می شود
+- overrideهای سفارشی bornado-routing فقط برای routeهای non-archive یا stateهای non-canonical باقی می مانند
+- در admin مربوط به `SEO Landing Pages`، route typeهای `country_only` و `country_city` دیگر برای ساخت landing جدید قابل انتخاب نیستند و فقط به عنوان legacy state شناخته می شوند
+
 ### 7) noindex برای URL های غیرcanonical
 منطق `wp_robots` اضافه شد تا URL های filter-based و query-heavy که canonical SEO نیستند، در صورت نیاز `noindex,follow` بگیرند.
 
 این بخش برای جلوگیری از index شدن URL های تکراری بسیار مهم است.
+
+برای این که بعدا بین «policy هدف» و «رفتار واقعی فعلی» ابهام ایجاد نشود، مرجع اجرایی current-state در فایل زیر ثبت شده است:
+
+- `plugins/bornado-routing/CURRENT-INDEXATION-RULES-05june2026.md`
 
 ### 8) بازنویسی term link ها
 برای لینک taxonomy ها:

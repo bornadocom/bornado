@@ -53,6 +53,7 @@ if (!function_exists('bornado_semantic_breadcrumb_get_items')) {
 
         $items          = array();
         $paged          = !empty($context['paged']) ? max(1, (int) $context['paged']) : 1;
+        $is_archive_native = !empty($context['is_archive_native']);
         $country_term   = !empty($context['country_term']) && $context['country_term'] instanceof WP_Term ? $context['country_term'] : null;
         $city_term      = !empty($context['city_term']) && $context['city_term'] instanceof WP_Term ? $context['city_term'] : null;
         $category_terms = !empty($context['category_terms']) && is_array($context['category_terms']) ? $context['category_terms'] : array();
@@ -61,22 +62,24 @@ if (!function_exists('bornado_semantic_breadcrumb_get_items')) {
         }));
 
         if ($country_term instanceof WP_Term) {
+            $country_is_current = $is_archive_native && !($city_term instanceof WP_Term) && empty($category_terms) && $paged < 2;
             $items[] = array(
                 'label'  => $country_term->name,
-                'url'    => bornado_semantic_breadcrumb_get_semantic_archive_url((int) $country_term->term_id, 0, 0),
-                'active' => false,
+                'url'    => $country_is_current ? '' : bornado_semantic_breadcrumb_get_semantic_archive_url((int) $country_term->term_id, 0, 0),
+                'active' => $country_is_current,
             );
         }
 
         if ($city_term instanceof WP_Term) {
+            $city_is_current = $is_archive_native && empty($category_terms) && $paged < 2;
             $items[] = array(
                 'label'  => $city_term->name,
-                'url'    => bornado_semantic_breadcrumb_get_semantic_archive_url(
+                'url'    => $city_is_current ? '' : bornado_semantic_breadcrumb_get_semantic_archive_url(
                     $country_term instanceof WP_Term ? (int) $country_term->term_id : 0,
                     (int) $city_term->term_id,
                     0
                 ),
-                'active' => false,
+                'active' => $city_is_current,
             );
         }
 

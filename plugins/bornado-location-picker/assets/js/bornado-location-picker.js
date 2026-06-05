@@ -138,6 +138,37 @@
 		}
 	}
 
+	function hasCurrentLocationContext() {
+		var searchCore = window.BornadoSearchCore || null;
+		var params = searchCore && typeof searchCore.getEffectiveCurrentSearchParams === "function"
+			? searchCore.getEffectiveCurrentSearchParams()
+			: new URLSearchParams(window.location.search);
+		var routeContext = window.BornadoSearchCoreConfig && window.BornadoSearchCoreConfig.routeContext
+			? window.BornadoSearchCoreConfig.routeContext
+			: {};
+		var locationKeys = ["country_id", "ad_country", "location", "city_id", "bornado_country", "bornado_city"];
+
+		for (var index = 0; index < locationKeys.length; index += 1) {
+			var key = locationKeys[index];
+			if (!params.has(key)) {
+				continue;
+			}
+			if (String(params.get(key) || "").trim() !== "") {
+				return true;
+			}
+		}
+
+		return Number(routeContext.cityId || 0) > 0 || Number(routeContext.countryId || 0) > 0;
+	}
+
+	function cloneSelection(selection) {
+		return {
+			countryId: Number(selection && selection.countryId ? selection.countryId : 0),
+			cityId: Number(selection && selection.cityId ? selection.cityId : 0),
+			deepestTermId: Number(selection && selection.deepestTermId ? selection.deepestTermId : 0)
+		};
+	}
+
 	function Picker(root) {
 		this.root = root;
 		this.config = parseConfig(root);
@@ -162,11 +193,8 @@
 
 		this.state = {
 			mode: this.config.mode || "compact",
-			selected: {
-				countryId: Number(this.config.selected && this.config.selected.countryId ? this.config.selected.countryId : 0),
-				cityId: Number(this.config.selected && this.config.selected.cityId ? this.config.selected.cityId : 0),
-				deepestTermId: Number(this.config.selected && this.config.selected.deepestTermId ? this.config.selected.deepestTermId : 0)
-			},
+			selected: cloneSelection(this.config.selected),
+			committed: cloneSelection(this.config.selected),
 			countries: Array.isArray(this.config.countries) ? this.config.countries.slice() : [],
 			citiesCache: {}
 		};
@@ -184,6 +212,7 @@
 
 		this.bindEvents();
 		this.refreshSummary();
+		this.syncSelectionFromCurrentContext();
 	}
 
 	Picker.prototype.bindEvents = function () {
@@ -261,6 +290,16 @@
 			window.addEventListener("resize", this.boundPositionPanel, { passive: true });
 			window.addEventListener("scroll", this.boundPositionPanel, { passive: true });
 		}
+
+		window.addEventListener("pageshow", function () {
+			self.syncSelectionFromCurrentContext();
+		});
+
+		window.addEventListener("popstate", function () {
+			window.setTimeout(function () {
+				self.syncSelectionFromCurrentContext();
+			}, 0);
+		});
 	};
 
 	Picker.prototype.positionPanel = function () {
@@ -287,6 +326,7 @@
 			return;
 		}
 
+		this.syncDraftFromCommitted();
 		this.panel.hidden = false;
 		if (this.backdrop) {
 			this.backdrop.hidden = false;
@@ -303,6 +343,7 @@
 			return;
 		}
 
+		this.syncDraftFromCommitted();
 		this.panel.hidden = true;
 		if (this.backdrop) {
 			this.backdrop.hidden = true;
@@ -355,8 +396,8 @@
 	};
 
 	Picker.prototype.refreshSummary = function () {
-		var country = this.getCountryById(this.state.selected.countryId);
-		var city = this.getCityById(this.state.selected.countryId, this.state.selected.cityId);
+		var country = this.getCountryById(this.state.committed.countryId);
+		var city = this.getCityById(this.state.committed.countryId, this.state.committed.cityId);
 		var summary = this.config.summaryFallback || "";
 
 		if (country && city && Number(city.id || 0) > 0) {
@@ -374,7 +415,7 @@
 		}
 
 		if (this.activeInput) {
-			this.activeInput.value = String(this.state.selected.cityId || this.state.selected.countryId || "");
+			this.activeInput.value = String(this.state.committed.cityId || this.state.committed.countryId || "");
 		}
 
 		if (this.form && !this.externalForm) {
@@ -387,6 +428,15 @@
 			}
 		}
 
+		this.refreshSelectionClasses();
+	};
+
+	Picker.prototype.syncDraftFromCommitted = function () {
+		this.state.selected = cloneSelection(this.state.committed);
+		this.renderCities(
+			this.state.selected.countryId,
+			this.state.selected.countryId ? (this.state.citiesCache[this.state.selected.countryId] || []) : []
+		);
 		this.refreshSelectionClasses();
 	};
 
@@ -431,7 +481,7 @@
 		this.state.selected.countryId = countryId;
 		this.state.selected.cityId = 0;
 		this.state.selected.deepestTermId = countryId;
-		this.refreshSummary();
+		this.refreshSelectionClasses();
 
 		if (this.state.citiesCache[countryId]) {
 			this.renderCities(countryId, this.state.citiesCache[countryId]);
@@ -456,7 +506,7 @@
 
 		this.state.selected.cityId = cityId;
 		this.state.selected.deepestTermId = cityId || this.state.selected.countryId;
-		this.refreshSummary();
+		this.refreshSelectionClasses();
 
 		if (this.config.autoSubmit) {
 			this.applySelection();
@@ -471,8 +521,29 @@
 			this.form.action = this.config.actions.all_countries_action;
 		}
 		this.renderCities(0, []);
+		this.refreshSelectionClasses();
+		if (this.config.autoSubmit && this.config.submitOnApply) {
+			this.applySelection();
+		}
+	};
+
+	Picker.prototype.syncSelectionFromCurrentContext = function () {
+		var hasSelection = this.state.selected.countryId || this.state.selected.cityId || this.state.selected.deepestTermId;
+		var hasInputValue = this.activeInput && String(this.activeInput.value || "").trim() !== "";
+
+		if (hasCurrentLocationContext() || (!hasSelection && !hasInputValue)) {
+			return;
+		}
+
+		this.state.selected.countryId = 0;
+		this.state.selected.cityId = 0;
+		this.state.selected.deepestTermId = 0;
+		this.state.committed.countryId = 0;
+		this.state.committed.cityId = 0;
+		this.state.committed.deepestTermId = 0;
+		this.renderCities(0, []);
 		this.refreshSummary();
-		syncPersistedLocationSelection(this.state.selected);
+		syncPersistedLocationSelection(this.state.committed);
 	};
 
 	Picker.prototype.applySelection = function () {
@@ -480,8 +551,9 @@
 			return;
 		}
 
+		this.state.committed = cloneSelection(this.state.selected);
 		this.refreshSummary();
-		syncPersistedLocationSelection(this.state.selected);
+		syncPersistedLocationSelection(this.state.committed);
 
 		if (!this.config.submitOnApply) {
 			this.closePanel();

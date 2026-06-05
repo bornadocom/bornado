@@ -28,6 +28,9 @@
 - 404 نشوند
 - به attachment/media redirect نشوند
 - canonical به همان URL semantic اشاره کند
+- `/uk/` و `/uk/london/` از نظر WordPress، archive واقعی `ad_country` باشند
+- title و description این دو URL از تنظیمات taxonomy archive در Rank Math یا term meta بیاید
+- ظاهر این دو URL با صفحات `ad search` یکسان بماند
 
 ## 3) بررسی کلیک دسته‌ها
 در صفحات search و landing این موارد را تست کنید:
@@ -88,6 +91,11 @@
 - `X-Bornado-Route-Status: valid`
 - `X-Bornado-Route-Mode` متناسب با route
 - `X-Bornado-Route-Category` یا `X-Bornado-Route-City` در صورت وجود
+
+برای routeهای `country_only` و `country_city` همچنین باید مطمئن شوید که:
+
+- template نهایی عملا `page-search.php` است
+- ولی page type و meta ownership عملا به archive taxonomy `ad_country` رسیده است
 
 ## 8) در صورت fail
 اگر هر موردی دوباره query-based شد:

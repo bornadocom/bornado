@@ -255,6 +255,61 @@ if (file_exists($bornado_sb_chat_profile_bubbles_bootstrap)) {
     require_once $bornado_sb_chat_profile_bubbles_bootstrap;
 }
 
+if (!function_exists('bornado_filter_unpublished_ad_post_permalink')) {
+    /**
+     * Serve a real WordPress preview URL for unpublished ads when the current
+     * user is allowed to edit them.
+     *
+     * AdForest frequently calls get_permalink() for dashboard cards, pending
+     * listings, and post-submit redirects. For draft/pending ads that produces
+     * the public single URL, which naturally 404s. Swapping only those links to
+     * preview URLs keeps published ads unchanged while restoring private author
+     * previews everywhere the theme reuses get_permalink().
+     *
+     * @param string      $post_link Generated permalink.
+     * @param WP_Post     $post      Post object being linked.
+     * @param bool        $leavename Whether to keep the post name.
+     * @param bool        $sample    Whether this is a sample permalink.
+     * @return string
+     */
+    function bornado_filter_unpublished_ad_post_permalink($post_link, $post, $leavename = false, $sample = false)
+    {
+        static $preview_link_in_progress = false;
+
+        if ($preview_link_in_progress || $sample || !($post instanceof WP_Post)) {
+            return $post_link;
+        }
+
+        if ('ad_post' !== $post->post_type) {
+            return $post_link;
+        }
+
+        if (is_admin() && !wp_doing_ajax()) {
+            return $post_link;
+        }
+
+        if ('publish' === $post->post_status || 'trash' === $post->post_status || 'auto-draft' === $post->post_status) {
+            return $post_link;
+        }
+
+        if (!current_user_can('edit_post', $post->ID)) {
+            return $post_link;
+        }
+
+        $preview_link_in_progress = true;
+        $preview_link             = get_preview_post_link($post);
+        $preview_link_in_progress = false;
+
+        if (is_string($preview_link) && $preview_link !== '') {
+            return $preview_link;
+        }
+
+        return $post_link;
+    }
+
+    add_filter('post_type_link', 'bornado_filter_unpublished_ad_post_permalink', 20, 4);
+}
+
 if (!function_exists('bornado_get_safe_login_redirect_url')) {
     /**
      * Build a resilient login URL with a safe post-login redirect target.
@@ -293,6 +348,51 @@ if (!function_exists('bornado_get_safe_login_redirect_url')) {
 
         return wp_login_url($redirect_url);
     }
+}
+
+if (!function_exists('bornado_allow_unpublished_ad_preview_queries')) {
+    /**
+     * Extend single-ad preview queries so draft/private ads can load for users
+     * who are allowed to edit the requested ad.
+     *
+     * The parent theme narrows single `ad_post` queries to `publish|pending`
+     * only. That still leaves WordPress previews of draft/private ads resolving
+     * to 404 even when the hash route is correct. Keep the expansion tightly
+     * scoped to explicit preview requests for the targeted ad ID.
+     *
+     * @param WP_Query $query Query instance.
+     * @return void
+     */
+    function bornado_allow_unpublished_ad_preview_queries($query)
+    {
+        if (!($query instanceof WP_Query) || is_admin() || !$query->is_main_query()) {
+            return;
+        }
+
+        $post_type = $query->get('post_type');
+        if ($post_type !== 'ad_post' && (!is_array($post_type) || !in_array('ad_post', $post_type, true))) {
+            return;
+        }
+
+        $post_id = (int) $query->get('p');
+        if ($post_id < 1) {
+            return;
+        }
+
+        $preview_flag = isset($_GET['preview']) ? strtolower(trim((string) wp_unslash($_GET['preview']))) : '';
+        if (!in_array($preview_flag, array('1', 'true', 'yes'), true)) {
+            return;
+        }
+
+        if (!current_user_can('edit_post', $post_id)) {
+            return;
+        }
+
+        $query->set('post_status', array('publish', 'pending', 'draft', 'private'));
+        $query->set('perm', 'readable');
+    }
+
+    add_action('pre_get_posts', 'bornado_allow_unpublished_ad_preview_queries', 30);
 }
 
 if (!function_exists('bornado_flag_ad_search_template')) {

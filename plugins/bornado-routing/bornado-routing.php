@@ -266,6 +266,10 @@ final class Bornado_SEO_Routing {
 			return $preempt;
 		}
 
+		if ( self::is_archive_native_route_context( self::$context ) ) {
+			return self::apply_archive_native_query_context( $wp_query, self::$context ) ? true : $preempt;
+		}
+
 		// Case 2: context is valid but get_bound_query_vars returned empty earlier
 		// (most likely because get_adforest_search_page_id() returned 0 at request
 		// time).  Try once more now that all plugins are fully loaded.
@@ -432,6 +436,16 @@ final class Bornado_SEO_Routing {
 		if ( empty( self::$context['is_valid'] ) ) {
 			$not_found_template = get_query_template( '404' );
 			return $not_found_template ? $not_found_template : $template;
+		}
+
+		if ( self::is_archive_native_route_context( self::$context ) ) {
+			$search_template = locate_template( array( 'page-search.php' ) );
+			if ( $search_template ) {
+				return $search_template;
+			}
+
+			$taxonomy_template = get_query_template( 'taxonomy' );
+			return $taxonomy_template ? $taxonomy_template : $template;
 		}
 
 		if ( ! empty( self::$context['landing_post'] ) && self::$context['landing_post'] instanceof WP_Post ) {
@@ -668,6 +682,10 @@ final class Bornado_SEO_Routing {
 			return $parts;
 		}
 
+		if ( self::is_archive_native_route_context( self::$context ) ) {
+			return $parts;
+		}
+
 		if ( ! empty( self::$context['landing_post'] ) && self::$context['landing_post'] instanceof WP_Post ) {
 			return $parts;
 		}
@@ -699,6 +717,10 @@ final class Bornado_SEO_Routing {
 	 * @return string
 	 */
 	public static function filter_external_canonical( $canonical ) {
+		if ( self::is_archive_native_route_context( self::$context ) ) {
+			return $canonical;
+		}
+
 		$route_canonical = self::get_canonical_url_for_current_request();
 		return $route_canonical ? $route_canonical : $canonical;
 	}
@@ -848,6 +870,48 @@ final class Bornado_SEO_Routing {
 	}
 
 	/**
+	 * Whether the supplied route mode should behave as a native `ad_country` archive.
+	 *
+	 * @param string $route_mode Resolved route mode.
+	 * @return bool
+	 */
+	private static function is_archive_native_route_mode( $route_mode ) {
+		return in_array( (string) $route_mode, array( 'country_only', 'country_city' ), true );
+	}
+
+	/**
+	 * Whether the supplied route context should behave as a native `ad_country` archive.
+	 *
+	 * @param array<string,mixed> $route_context Hydrated route context.
+	 * @return bool
+	 */
+	private static function is_archive_native_route_context( array $route_context ) {
+		return ! empty( $route_context['is_valid'] ) && self::is_archive_native_route_mode( ! empty( $route_context['route_mode'] ) ? (string) $route_context['route_mode'] : '' );
+	}
+
+	/**
+	 * Resolve the term that owns an archive-native semantic route.
+	 *
+	 * @param array<string,mixed> $route_context Hydrated route context.
+	 * @return WP_Term|null
+	 */
+	private static function get_archive_native_term( array $route_context ) {
+		if ( ! self::is_archive_native_route_context( $route_context ) ) {
+			return null;
+		}
+
+		if ( ! empty( $route_context['city_term'] ) && $route_context['city_term'] instanceof WP_Term ) {
+			return $route_context['city_term'];
+		}
+
+		if ( ! empty( $route_context['country_term'] ) && $route_context['country_term'] instanceof WP_Term ) {
+			return $route_context['country_term'];
+		}
+
+		return null;
+	}
+
+	/**
 	 * Return a readonly snapshot of the current resolved route.
 	 *
 	 * @return array<string,mixed>
@@ -856,6 +920,7 @@ final class Bornado_SEO_Routing {
 		$context = array(
 			'is_seo_route'   => self::is_current_seo_route(),
 			'is_valid'       => ! empty( self::$context['is_valid'] ),
+			'is_archive_native' => false,
 			'route_mode'     => '',
 			'paged'          => 1,
 			'canonical_url'  => '',
@@ -876,6 +941,7 @@ final class Bornado_SEO_Routing {
 		}
 
 		$context['route_mode']    = ! empty( self::$context['route_mode'] ) ? (string) self::$context['route_mode'] : '';
+		$context['is_archive_native'] = self::is_archive_native_route_context( self::$context );
 		$context['paged']         = ! empty( self::$context['paged'] ) ? max( 1, (int) self::$context['paged'] ) : 1;
 		$context['canonical_url'] = ! empty( self::$context['canonical_url'] ) ? (string) self::$context['canonical_url'] : '';
 
@@ -1455,7 +1521,7 @@ final class Bornado_SEO_Routing {
 			);
 		}
 
-		if ( class_exists( 'Bornado_SEO_Landing_Manager' ) && empty( $resolved['landing_post'] ) ) {
+		if ( class_exists( 'Bornado_SEO_Landing_Manager' ) && empty( $resolved['landing_post'] ) && ! self::is_archive_native_route_context( $resolved ) ) {
 			$landing_post = Bornado_SEO_Landing_Manager::find_matching_landing( $resolved );
 			if ( $landing_post instanceof WP_Post ) {
 				$resolved['landing_post'] = $landing_post;
@@ -1472,6 +1538,10 @@ final class Bornado_SEO_Routing {
 	 * @return WP_Post|null
 	 */
 	private static function get_bound_post( array $route_context ) {
+		if ( self::is_archive_native_route_context( $route_context ) ) {
+			return null;
+		}
+
 		if ( ! empty( $route_context['landing_post'] ) && $route_context['landing_post'] instanceof WP_Post ) {
 			return $route_context['landing_post'];
 		}
@@ -1496,11 +1566,6 @@ final class Bornado_SEO_Routing {
 			return array();
 		}
 
-		$bound_post = self::get_bound_post( $route_context );
-		if ( ! ( $bound_post instanceof WP_Post ) ) {
-			return array();
-		}
-
 		$query_vars = array(
 			self::QUERY_ROUTE => 1,
 		);
@@ -1511,6 +1576,24 @@ final class Bornado_SEO_Routing {
 
 		if ( ! empty( $route_context['paged'] ) && (int) $route_context['paged'] > 1 ) {
 			$query_vars['paged'] = (int) $route_context['paged'];
+		}
+
+		if ( self::is_archive_native_route_context( $route_context ) ) {
+			$archive_term = self::get_archive_native_term( $route_context );
+			if ( ! ( $archive_term instanceof WP_Term ) ) {
+				return array();
+			}
+
+			$query_vars['taxonomy']   = 'ad_country';
+			$query_vars['term']       = $archive_term->slug;
+			$query_vars['ad_country'] = $archive_term->slug;
+
+			return $query_vars;
+		}
+
+		$bound_post = self::get_bound_post( $route_context );
+		if ( ! ( $bound_post instanceof WP_Post ) ) {
+			return array();
 		}
 
 		if ( ! empty( $route_context['landing_post'] ) && $route_context['landing_post'] instanceof WP_Post ) {
@@ -1692,9 +1775,23 @@ final class Bornado_SEO_Routing {
 			return;
 		}
 
-		$resolved       = self::hydrate_route_context( $resolved );
-		self::$context  = $resolved;
-		$bound_post     = self::get_bound_post( $resolved );
+		$resolved      = self::hydrate_route_context( $resolved );
+		self::$context = $resolved;
+
+		if ( self::is_archive_native_route_context( $resolved ) ) {
+			$bound_query_vars = self::get_bound_query_vars( $resolved );
+			if ( empty( $bound_query_vars ) ) {
+				return;
+			}
+
+			$wp_query->query_vars = array_merge( $wp_query->query_vars, $bound_query_vars );
+			$wp_query->parse_query( $wp_query->query_vars );
+			$wp_query->get_posts();
+			self::apply_archive_native_query_context( $wp_query, $resolved );
+			return;
+		}
+
+		$bound_post = self::get_bound_post( $resolved );
 		if ( ! ( $bound_post instanceof WP_Post ) ) {
 			return;
 		}
@@ -1713,6 +1810,43 @@ final class Bornado_SEO_Routing {
 		} else {
 			$wp_query->query_vars['page_id'] = $bound_post->ID;
 		}
+	}
+
+	/**
+	 * Project an archive-native semantic route onto the current main query.
+	 *
+	 * @param WP_Query            $wp_query Main query instance.
+	 * @param array<string,mixed> $route_context Hydrated route context.
+	 * @return bool
+	 */
+	private static function apply_archive_native_query_context( $wp_query, array $route_context ) {
+		if ( ! ( $wp_query instanceof WP_Query ) ) {
+			return false;
+		}
+
+		$archive_term = self::get_archive_native_term( $route_context );
+		if ( ! ( $archive_term instanceof WP_Term ) ) {
+			return false;
+		}
+
+		$wp_query->queried_object_id        = (int) $archive_term->term_id;
+		$wp_query->queried_object           = $archive_term;
+		$wp_query->query_vars['taxonomy']   = 'ad_country';
+		$wp_query->query_vars['term']       = $archive_term->slug;
+		$wp_query->query_vars['ad_country'] = $archive_term->slug;
+		$wp_query->is_404                   = false;
+		$wp_query->is_singular              = false;
+		$wp_query->is_page                  = false;
+		$wp_query->is_single                = false;
+		$wp_query->is_archive               = true;
+		$wp_query->is_tax                   = true;
+		$wp_query->is_category              = false;
+		$wp_query->is_tag                   = false;
+		$wp_query->is_home                  = false;
+		$wp_query->is_front_page            = false;
+		status_header( 200 );
+
+		return true;
 	}
 
 	/**
@@ -2196,6 +2330,7 @@ if ( ! function_exists( 'bornado_seo_routing_get_context' ) ) {
 			return array(
 				'is_seo_route'   => false,
 				'is_valid'       => false,
+				'is_archive_native' => false,
 				'route_mode'     => '',
 				'paged'          => 1,
 				'canonical_url'  => '',

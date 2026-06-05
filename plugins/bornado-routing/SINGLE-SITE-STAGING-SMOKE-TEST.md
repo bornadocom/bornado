@@ -40,10 +40,14 @@
 - `/ca/`
 - `/us/`
 
+این URLها باید semantic بمانند و از نظر query/archive یک term واقعی `ad_country` باشند، اما برای UI با `page-search.php` رندر شوند.
+
 ### 2) Country + City
 - `/uk/london/`
 - `/ca/toronto/`
 - `/us/los-angeles/`
+
+این URLها نیز باید semantic بمانند و از دید WordPress و SEO plugin، archive واقعی taxonomy `ad_country` باشند، اما ظاهرشان با ad search یکسان بماند.
 
 ### 3) Country + Category
 - `/uk/property/`
@@ -94,8 +98,9 @@
 - routeهای thin یا query-based `noindex,follow` شوند
 
 ### D. Landing binding
-- اگر route برای آن landing تعریف شده، template landing render شود
-- اگر landing تعریف نشده، page-search fallback درست کار کند
+- برای `country_only` و `country_city`: landing نباید owner template یا meta باشد و route باید archive-native بماند، حتی اگر با `page-search.php` رندر شود
+- برای routeهای category-based: اگر route برای آن landing تعریف شده، template landing render شود
+- برای routeهای category-based بدون landing: page-search fallback درست کار کند
 
 ### E. Breadcrumb
 - country crumb درست باشد
@@ -112,8 +117,8 @@
 
 | URL | Expected route_mode | Expected canonical | Expected page type |
 | --- | --- | --- | --- |
-| `/uk/` | `country_only` | `/uk/` | landing یا search fallback |
-| `/uk/london/` | `country_city` | `/uk/london/` | landing یا search fallback |
+| `/uk/` | `country_only` | `/uk/` | archive-native query + ad-search template |
+| `/uk/london/` | `country_city` | `/uk/london/` | archive-native query + ad-search template |
 | `/jobs/` | `category_only` | `/jobs/` | landing indexable یا search fallback، بسته به route binding |
 | `/uk/property/` | `country_category` | `/uk/property/` | landing یا search fallback |
 | `/uk/london/property/` | `country_city_category` | `/uk/london/property/` | landing یا search fallback |
@@ -132,6 +137,7 @@
 - breadcrumb country > city > category درست دیده شود
 - title صفحه context جغرافیایی درست داشته باشد
 - tag/filter submitها `?` خالی تولید نکنند
+- برای `/uk/` و `/uk/london/`، title و description از تنظیمات archive taxonomy در Rank Math یا term meta بیاید
 
 ## چک لیست Query State
 این URLها باید:

@@ -1035,7 +1035,9 @@ final class ADF_Mobile_Bottom_Nav {
 	private function get_dynamic_link( $dynamic ) {
 		switch ( $dynamic ) {
 			case 'home':
-				return home_url( '/' );
+				return function_exists( 'bornado_search_get_brand_home_url' )
+					? bornado_search_get_brand_home_url()
+					: home_url( '/' );
 			case 'dashboard':
 				return function_exists( 'bornado_auth_modal_profile_url' ) ? bornado_auth_modal_profile_url() : home_url( '/profile/' );
 			case 'auth':

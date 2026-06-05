@@ -485,6 +485,12 @@ final class Bornado_Ad_Permalinks {
 			return true;
 		}
 
+		// Allow authors/admins to open hash-based preview URLs for unpublished ads.
+		$preview_flag = isset( $_GET['preview'] ) ? strtolower( trim( (string) wp_unslash( $_GET['preview'] ) ) ) : '';
+		if ( in_array( $preview_flag, array( '1', 'true', 'yes' ), true ) && current_user_can( 'edit_post', $post->ID ) ) {
+			return true;
+		}
+
 		return current_user_can( 'read_post', $post->ID );
 	}
 

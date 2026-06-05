@@ -102,6 +102,38 @@ body.rtl .msg-body ul li.sender,
     content: none !important;
 }
 
+.msg-body .message-post-card,
+.adf-msg-page .message-post-card {
+    border-left: 0 !important;
+    border-right: 4px solid #5b8def !important;
+}
+
+.msg-body ul li.reply .message-post-card,
+.adf-msg-page li.reply .message-post-card {
+    border-left: 0 !important;
+    border-right: 4px solid #9aa5b1 !important;
+}
+
+.msg-body .message-post-card::after,
+.adf-msg-page .message-post-card::after {
+    left: auto !important;
+    right: 10px !important;
+}
+
+.msg-body ul.messages-list,
+.adf-msg-page .adf-chat__body ul.messages-list {
+    padding-top: 14px !important;
+}
+
+.msg-body ul.messages-list {
+    overflow: visible !important;
+}
+
+.msg-body ul.messages-list > li.message-bubble.bornado-card-bubble:first-child,
+.adf-msg-page .adf-chat__body ul.messages-list > li.message-bubble.bornado-card-bubble:first-child {
+    margin-top: 8px !important;
+}
+
 html[dir="rtl"] .msg-body ul li.reply p,
 html[dir="rtl"] .msg-body .messages-list .message-bubble.reply .message-text a,
 body.rtl .msg-body ul li.reply p,
@@ -316,4 +348,75 @@ body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.sender .me
 
 body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.reply .message-post-card {
     background: rgba(255, 255, 255, 0.96) !important;
+}
+
+@media (max-width: 767px) {
+    .msg-body ul li.message-bubble.bornado-card-bubble,
+    body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble.bornado-card-bubble {
+        width: 100% !important;
+    }
+
+    .msg-body ul li.message-bubble > .message-post-card,
+    body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble > .message-post-card {
+        width: min(100%, calc(100vw - 88px)) !important;
+        max-width: min(100%, calc(100vw - 88px)) !important;
+        box-sizing: border-box !important;
+        overflow: visible !important;
+        padding: 10px 10px 30px !important;
+    }
+
+    .msg-body ul li.message-bubble > .message-post-card .post-card-content,
+    body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble > .message-post-card .post-card-content {
+        width: 100% !important;
+        min-width: 0 !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+        overflow: hidden !important;
+        border-radius: 8px !important;
+    }
+
+    .msg-body ul li.message-bubble > .message-post-card .post-card-image,
+    body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble > .message-post-card .post-card-image {
+        width: 88px !important;
+        height: 66px !important;
+        flex: 0 0 88px !important;
+    }
+
+    .msg-body ul li.message-bubble > .message-post-card .post-card-image img,
+    body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble > .message-post-card .post-card-image img {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .msg-body ul li.message-bubble > .message-post-card .post-card-info,
+    body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble > .message-post-card .post-card-info {
+        width: auto !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+        overflow: hidden !important;
+    }
+
+    .msg-body ul li.message-bubble > .message-post-card .post-card-title,
+    .msg-body ul li.message-bubble > .message-post-card .post-card-title span,
+    body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble > .message-post-card .post-card-title,
+    body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble > .message-post-card .post-card-title span {
+        font-size: 13px !important;
+        line-height: 1.4 !important;
+        word-break: break-word !important;
+    }
+
+    .msg-body ul li.message-bubble > .message-post-card .post-card-link,
+    body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble > .message-post-card .post-card-link {
+        max-width: 100% !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+    }
+
+    .msg-body ul li.message-bubble > .message-post-card::after,
+    body .adf-msg-page .adf-chat__body ul.messages-list li.message-bubble > .message-post-card::after {
+        max-width: calc(100% - 20px) !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        z-index: 4 !important;
+    }
 }

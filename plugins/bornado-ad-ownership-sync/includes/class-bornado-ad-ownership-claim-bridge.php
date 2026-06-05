@@ -188,6 +188,7 @@ final class Bornado_Ad_Ownership_Claim_Bridge {
 
 		$payload = array(
 			'purpose'      => 'listing_manage_continue',
+			'flow_source'  => 'claim',
 			'exp'          => time() + ( 15 * MINUTE_IN_SECONDS ),
 			'phone'        => $canonical_phone,
 			'redirect_url' => $redirect_url,

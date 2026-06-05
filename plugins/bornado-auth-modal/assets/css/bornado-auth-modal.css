@@ -454,8 +454,55 @@
 
     .bornado-auth-secondary-links,
     .bornado-auth-otp-meta {
-        align-items: flex-start;
-        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .bornado-auth-secondary-links .bornado-auth-link,
+    .bornado-auth-otp-meta .bornado-auth-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 40px;
+        padding: 9px 14px;
+        border-radius: 999px;
+        background: #eef5ff;
+        color: #105fbe;
+        font-size: 13px;
+        font-weight: 800;
+        line-height: 1.4;
+        text-align: center;
+    }
+
+    .bornado-auth-secondary-links .bornado-auth-link--muted,
+    .bornado-auth-otp-meta .bornado-auth-link--muted {
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+    .bornado-auth-otp-meta #bornado-auth-back-to-password {
+        order: 1;
+    }
+
+    .bornado-auth-otp-meta [data-auth-reset="1"] {
+        order: 2;
+    }
+
+    .bornado-auth-otp-meta #bornado-auth-resend-code {
+        order: 3;
+    }
+
+    .bornado-auth-otp-meta span {
+        order: 4;
+        flex: 1 1 100%;
+        min-height: 20px;
+        padding-inline: 4px;
+        color: #64748b;
+        font-size: 12px;
+        text-align: right;
     }
 
     .bornado-auth-phone-row {

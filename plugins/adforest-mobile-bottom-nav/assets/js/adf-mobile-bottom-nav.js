@@ -249,9 +249,6 @@
 		}
 		cityLabel.textContent = city.label;
 		cityInput.value = city.value;
-		try {
-			window.localStorage.setItem("adf_mbn_city", JSON.stringify(city));
-		} catch (e) {}
 	}
 
 	function setCategory(category) {
@@ -461,18 +458,6 @@
 			});
 	}
 
-	function getSavedCity() {
-		try {
-			var saved = window.localStorage.getItem("adf_mbn_city");
-			if (!saved) {
-				return null;
-			}
-			return JSON.parse(saved);
-		} catch (e) {
-			return null;
-		}
-	}
-
 	function renderCityList() {
 		if (!cityList) {
 			return;
@@ -613,11 +598,8 @@
 		ticking = false;
 	}
 
-	var storedCity = getSavedCity();
 	if (selectedCity && selectedCity.label) {
 		setCity(selectedCity);
-	} else if (storedCity && storedCity.label) {
-		setCity(storedCity);
 	}
 	if (selectedCategory && selectedCategory.label) {
 		setCategory(selectedCategory);

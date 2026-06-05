@@ -154,7 +154,9 @@ final class Bornado_Location_Picker_Renderer {
 					</div>
 
 					<div class="blp__footer">
+						<?php if ( ! empty( $view['args']['show_footer_reset'] ) ) : ?>
 						<button type="button" class="blp__secondary" data-blp-reset><?php echo esc_html( $view['args']['reset_label'] ); ?></button>
+						<?php endif; ?>
 						<button type="button" class="blp__primary" data-blp-apply><?php echo esc_html( $view['args']['submit_label'] ); ?></button>
 					</div>
 				</div>
