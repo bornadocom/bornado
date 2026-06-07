@@ -8,6 +8,7 @@ final class EventCatalog
     public const SUPPORTED_TYPES = array(
         'listing.published'    => array('payload.listing.title', 'payload.listing.manageUrl'),
         'user.registered'      => array('payload.user.profileUrl'),
+        'user.verification_requested' => array('payload.user.profileUrl', 'payload.verification.channel', 'payload.verification.code'),
         'listing.rejected'     => array('payload.listing.title', 'payload.listing.editUrl'),
         'listing.expiring_soon'=> array('payload.listing.title', 'payload.listing.manageUrl'),
         'payment.completed'    => array('payload.payment.orderId'),

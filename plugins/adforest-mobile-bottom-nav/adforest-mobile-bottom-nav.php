@@ -194,7 +194,231 @@ final class ADF_Mobile_Bottom_Nav {
 		return $this->get_nav_markup( $settings['items'], true );
 	}
 
+	private function is_single_ad_context() {
+		return is_singular( 'ad_post' );
+	}
+
+	private function get_single_ad_contact_nav_markup( $from_shortcode = false ) {
+		$post_id = get_queried_object_id();
+		if ( $post_id < 1 || 'ad_post' !== get_post_type( $post_id ) ) {
+			return '';
+		}
+
+		$actions = $this->get_single_ad_contact_actions( $post_id );
+		if ( empty( $actions ) ) {
+			return '';
+		}
+
+		$rendered = array();
+		foreach ( $actions as $action ) {
+			$classes    = 'adf-mbn__item adf-mbn__item--contact adf-mbn__item--contact-' . sanitize_html_class( $action['type'] );
+			$link_class = 'adf-mbn__link adf-mbn__link--contact';
+			if ( ! empty( $action['class'] ) ) {
+				$link_class .= ' ' . trim( (string) $action['class'] );
+			}
+
+			$target_rel = '';
+			if ( ! empty( $action['new_tab'] ) ) {
+				$target_rel = ' target="_blank" rel="noopener noreferrer"';
+			}
+
+			$rendered[] = sprintf(
+				'<li class="%1$s"><a class="%2$s" href="%3$s" aria-label="%4$s" %5$s%6$s>%7$s<span class="adf-mbn__label">%8$s</span></a></li>',
+				esc_attr( $classes ),
+				esc_attr( $link_class ),
+				esc_url( $action['url'] ),
+				esc_attr( $action['label'] ),
+				$this->implode_html_attributes( $action['attrs'] ),
+				$target_rel,
+				$this->get_icon_svg( $action['icon'], $action['label'] ),
+				esc_html( $action['label'] )
+			);
+		}
+
+		$classes = 'adf-mobile-bottom-nav adf-mobile-bottom-nav--contact';
+		if ( $from_shortcode ) {
+			$classes .= ' adf-mobile-bottom-nav--shortcode';
+		}
+
+		return sprintf(
+			'<nav class="%1$s" role="navigation" aria-label="%2$s"><ul class="adf-mbn__list adf-mbn__list--contact" style="%3$s">%4$s</ul></nav>',
+			esc_attr( $classes ),
+			esc_attr__( 'روش های ارتباطی آگهی', 'adf-mobile-bottom-nav' ),
+			esc_attr( 'grid-template-columns:repeat(' . count( $actions ) . ', minmax(0, 1fr));' ),
+			implode( '', $rendered )
+		);
+	}
+
+	private function get_single_ad_contact_actions( $post_id ) {
+		global $adforest_theme;
+
+		$post_id    = (int) $post_id;
+		$poster_id  = (int) get_post_field( 'post_author', $post_id );
+		$user       = $poster_id > 0 ? get_userdata( $poster_id ) : false;
+		$contact_no = (string) get_post_meta( $post_id, '_adforest_poster_contact', true );
+
+		if ( '' === $contact_no && $poster_id > 0 ) {
+			$contact_no = (string) get_user_meta( $poster_id, '_sb_contact', true );
+		}
+
+		$poster_email = $user instanceof WP_User ? strtolower( trim( (string) $user->user_email ) ) : '';
+		$current_url  = function_exists( 'adforest_get_current_url' )
+			? (string) adforest_get_current_url()
+			: (string) get_permalink( $post_id );
+		$guest_login_url = function_exists( 'bornado_get_safe_login_redirect_url' )
+			? (string) bornado_get_safe_login_redirect_url( $current_url )
+			: (string) wp_login_url( $current_url );
+		$phone_login_required = function_exists( 'adforest_showPhone_to_users' )
+			? (bool) adforest_showPhone_to_users()
+			: false;
+		$allow_sb_chat  = ! empty( $adforest_theme['sb_ad_sbchat_chat'] );
+		$communication_mode = isset( $adforest_theme['communication_mode'] ) ? (string) $adforest_theme['communication_mode'] : 'both';
+		$has_custom_contact_methods = function_exists( 'bornado_has_ad_contact_methods' )
+			? (bool) bornado_has_ad_contact_methods( $post_id )
+			: false;
+		$selected_contact_methods = $has_custom_contact_methods && function_exists( 'bornado_get_ad_contact_methods' )
+			? (array) bornado_get_ad_contact_methods( $post_id )
+			: array();
+		$contact_method_statuses = function_exists( 'bornado_get_user_contact_method_statuses' )
+			? (array) bornado_get_user_contact_method_statuses( $poster_id )
+			: array();
+		$sb_plugin_options = get_option( 'sb_plugin_options', array() );
+		$sb_chat_feature_active = class_exists( 'SB_Chat' )
+			&& $allow_sb_chat
+			&& isset( $sb_plugin_options['sbChat-active'] )
+			&& 1 == $sb_plugin_options['sbChat-active'] // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual
+			&& class_exists( 'SB_Chat_Setting_Page' );
+		$actions         = array();
+		$current_user_id = get_current_user_id();
+		$is_owner        = $current_user_id > 0 && $current_user_id === $poster_id;
+
+		$show_custom_phone = $has_custom_contact_methods
+			&& in_array( 'phone', $selected_contact_methods, true )
+			&& ! empty( $contact_method_statuses['phone']['enabled'] )
+			&& '' !== $contact_no;
+		$show_custom_whatsapp = $has_custom_contact_methods
+			&& in_array( 'whatsapp', $selected_contact_methods, true )
+			&& ! empty( $contact_method_statuses['whatsapp']['enabled'] )
+			&& '' !== $contact_no;
+		$show_custom_email = $has_custom_contact_methods
+			&& in_array( 'email', $selected_contact_methods, true )
+			&& ! empty( $contact_method_statuses['email']['enabled'] )
+			&& '' !== $poster_email;
+		$show_custom_site_message = $has_custom_contact_methods
+			&& in_array( 'site_message', $selected_contact_methods, true )
+			&& $sb_chat_feature_active
+			&& ! $is_owner;
+
+		if ( $show_custom_phone ) {
+			$actions[] = array(
+				'type'    => 'phone',
+				'label'   => 'تماس',
+				'icon'    => 'phone',
+				'url'     => $phone_login_required ? $guest_login_url : 'tel:' . preg_replace( '/[^\d+]/', '', $contact_no ),
+				'attrs'   => array(),
+				'new_tab' => false,
+				'class'   => '',
+			);
+		}
+
+		if ( $show_custom_whatsapp ) {
+			$actions[] = array(
+				'type'    => 'whatsapp',
+				'label'   => 'واتس اپ',
+				'icon'    => 'whatsapp',
+				'url'     => $phone_login_required ? $guest_login_url : $this->get_single_ad_whatsapp_url( $post_id, $contact_no ),
+				'attrs'   => array(),
+				'new_tab' => ! $phone_login_required,
+				'class'   => '',
+			);
+		}
+
+		if ( $show_custom_email ) {
+			$actions[] = array(
+				'type'    => 'email',
+				'label'   => 'ایمیل',
+				'icon'    => 'email',
+				'url'     => $phone_login_required ? $guest_login_url : 'mailto:' . sanitize_email( $poster_email ),
+				'attrs'   => array(),
+				'new_tab' => false,
+				'class'   => '',
+			);
+		}
+
+		if ( $show_custom_site_message ) {
+			$actions[] = array(
+				'type'    => 'site-message',
+				'label'   => 'گفتگو',
+				'icon'    => 'chat',
+				'url'     => '#',
+				'attrs'   => array(
+					'data-user_id' => (string) $poster_id,
+					'data-post_id' => (string) $post_id,
+				),
+				'new_tab' => false,
+				'class'   => 'scroll chat_toggler_popup sbchat-myBtn',
+			);
+		}
+
+		if ( $has_custom_contact_methods ) {
+			return $actions;
+		}
+
+		if ( '' !== $contact_no && in_array( $communication_mode, array( 'both', 'phone' ), true ) ) {
+			$actions[] = array(
+				'type'    => 'phone',
+				'label'   => 'تماس',
+				'icon'    => 'phone',
+				'url'     => $phone_login_required ? $guest_login_url : 'tel:' . preg_replace( '/[^\d+]/', '', $contact_no ),
+				'attrs'   => array(),
+				'new_tab' => false,
+				'class'   => '',
+			);
+		}
+
+		return array_values( $actions );
+	}
+
+	private function get_single_ad_whatsapp_url( $post_id, $contact_no ) {
+		$post_id          = (int) $post_id;
+		$whatsapp_number  = preg_replace( '/[^\d]/', '', (string) $contact_no );
+		$post_link        = get_permalink( $post_id );
+		$post_title       = get_the_title( $post_id );
+		$whatsapp_message = trim( $post_title . ' - ' . $post_link );
+
+		if ( '' === $whatsapp_number ) {
+			return $post_link ? (string) $post_link : home_url( '/' );
+		}
+
+		return 'https://api.whatsapp.com/send?phone=' . rawurlencode( $whatsapp_number ) . '&text=' . rawurlencode( $whatsapp_message );
+	}
+
+	private function implode_html_attributes( $attributes ) {
+		if ( ! is_array( $attributes ) || empty( $attributes ) ) {
+			return '';
+		}
+
+		$compiled = array();
+		foreach ( $attributes as $name => $value ) {
+			$name = trim( (string) $name );
+			if ( '' === $name || null === $value || '' === $value ) {
+				continue;
+			}
+
+			$compiled[] = sprintf( '%1$s="%2$s"', esc_attr( $name ), esc_attr( (string) $value ) );
+		}
+
+		return empty( $compiled ) ? '' : implode( ' ', $compiled ) . ' ';
+	}
+
 	private function get_nav_markup( $items, $from_shortcode = false ) {
+		if ( $this->is_single_ad_context() ) {
+			$single_ad_markup = $this->get_single_ad_contact_nav_markup( $from_shortcode );
+			if ( '' !== $single_ad_markup ) {
+				return $single_ad_markup;
+			}
+		}
+
 		$current_url = home_url( add_query_arg( array(), $GLOBALS['wp']->request ) );
 		$rendered    = array();
 		$items       = $this->sort_nav_items(
@@ -1076,6 +1300,9 @@ final class ADF_Mobile_Bottom_Nav {
 			'user'      => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-4.42 0-8 2.24-8 5v2h16v-2c0-2.76-3.58-5-8-5z"/></svg>',
 			'category'  => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8v8H3V3zm10 0h8v5h-8V3zM3 13h5v8H3v-8zm7 0h11v8H10v-8z"/></svg>',
 			'chat'      => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 012 2v9a2 2 0 01-2 2H8l-5 4v-4H4a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg>',
+			'phone'     => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 01.99-.24c1.08.36 2.24.56 3.43.56a1 1 0 011 1V20a1 1 0 01-1 1C10.3 21 3 13.7 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.19.19 2.35.56 3.43a1 1 0 01-.25 1z"/></svg>',
+			'email'     => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6zm2 .5v.38l7 5.25 7-5.25V6.5H5zm14 2.88l-6.4 4.8a1 1 0 01-1.2 0L5 9.38V18h14V9.38z"/></svg>',
+			'whatsapp'  => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.05 4.94A9.9 9.9 0 0012.02 2a10 10 0 00-8.66 15l-1.3 4.75 4.87-1.28A10 10 0 1019.05 4.94zm-7.03 15.37a8.3 8.3 0 01-4.22-1.15l-.3-.18-2.88.76.77-2.81-.2-.3a8.3 8.3 0 1110.83 2.37 8.23 8.23 0 01-4 1.31zm4.54-6.2c-.25-.13-1.47-.72-1.7-.8-.23-.08-.39-.13-.56.13-.17.25-.64.8-.79.97-.15.17-.29.19-.54.06a6.7 6.7 0 01-1.97-1.21 7.4 7.4 0 01-1.36-1.7c-.14-.25-.02-.38.1-.51.11-.11.25-.29.37-.43.12-.14.16-.24.25-.4.08-.17.04-.31-.02-.44-.06-.13-.56-1.35-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.76 2.68 4.27 3.76.6.26 1.08.42 1.45.53.61.2 1.16.17 1.59.1.49-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.14-1.18-.06-.1-.23-.16-.48-.29z"/></svg>',
 			'custom-svg'=> '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>',
 		);
 

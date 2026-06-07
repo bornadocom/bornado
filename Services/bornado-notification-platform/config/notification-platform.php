@@ -62,6 +62,28 @@ $whatsAppTemplateMap = array(
             'payload.user.profileUrl',
         ),
     ),
+    'user.verification_requested' => array(
+        'name'            => getenv('BORNADO_WA_TEMPLATE_USER_VERIFICATION_REQUESTED') ?: 'bornado_verification_code_fa_v1',
+        'language_code'   => getenv('BORNADO_WA_TEMPLATE_LANGUAGE') ?: 'fa',
+        'body_parameters' => array(
+            array(
+                'name' => 'verification_code',
+                'path' => 'payload.verification.code',
+            ),
+        ),
+        'button_parameters' => array(
+            array(
+                'sub_type'   => 'url',
+                'index'      => 0,
+                'parameters' => array(
+                    array(
+                        'name' => 'verification_code',
+                        'path' => 'payload.verification.code',
+                    ),
+                ),
+            ),
+        ),
+    ),
     'listing.rejected' => array(
         'name'            => getenv('BORNADO_WA_TEMPLATE_LISTING_REJECTED') ?: '',
         'language_code'   => getenv('BORNADO_WA_TEMPLATE_LANGUAGE') ?: 'fa',
@@ -133,6 +155,9 @@ $config = array(
             'user.registered' => array(
                 'channels' => array('whatsapp', 'sms', 'email'),
             ),
+            'user.verification_requested' => array(
+                'channels' => array('whatsapp'),
+            ),
             'listing.rejected' => array(
                 'channels' => array('whatsapp', 'sms', 'email'),
             ),
@@ -193,6 +218,13 @@ $config = array(
                 'email' => array(
                     'subject' => 'عضویت شما تکمیل شد',
                     'body'    => "سلام {{payload.user.displayName}},\n\nحساب شما ایجاد شد.\nپروفایل: {{payload.user.profileUrl}}\n",
+                ),
+            ),
+        ),
+        'user.verification_requested' => array(
+            'fa-IR' => array(
+                'whatsapp' => array(
+                    'body' => 'کد تایید واتس اپ شما {{payload.verification.code}} است. این کد تا {{payload.verification.expiresAt}} معتبر است.',
                 ),
             ),
         ),

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bornado.local/schemas/user.verification_requested.v1.schema.json",
+  "title": "UserVerificationRequestedV1",
+  "allOf": [
+    { "$ref": "./event-envelope.v1.schema.json" },
+    {
+      "type": "object",
+      "properties": {
+        "eventType": { "const": "user.verification_requested" },
+        "payload": {
+          "type": "object",
+          "required": ["user", "verification"],
+          "properties": {
+            "user": {
+              "type": "object",
+              "required": ["id", "profileUrl"],
+              "properties": {
+                "id": { "type": "string" },
+                "displayName": { "type": "string" },
+                "email": { "type": "string" },
+                "phone": { "type": "string" },
+                "profileUrl": { "type": "string" }
+              }
+            },
+            "verification": {
+              "type": "object",
+              "required": ["channel", "code", "expiresAt"],
+              "properties": {
+                "channel": { "const": "whatsapp" },
+                "code": { "type": "string" },
+                "expiresAt": { "type": "string" },
+                "manageUrl": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

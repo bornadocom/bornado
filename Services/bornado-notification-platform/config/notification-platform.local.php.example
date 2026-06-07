@@ -41,6 +41,28 @@ return array(
                         'payload.user.profileUrl',
                     ),
                 ),
+                'user.verification_requested' => array(
+                    'name'            => 'bornado_verification_code_fa_v1',
+                    'language_code'   => 'fa',
+                    'body_parameters' => array(
+                        array(
+                            'name' => 'verification_code',
+                            'path' => 'payload.verification.code',
+                        ),
+                    ),
+                    'button_parameters' => array(
+                        array(
+                            'sub_type'   => 'url',
+                            'index'      => 0,
+                            'parameters' => array(
+                                array(
+                                    'name' => 'verification_code',
+                                    'path' => 'payload.verification.code',
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
             ),
         ),
     ),

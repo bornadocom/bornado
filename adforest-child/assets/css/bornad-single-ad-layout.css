@@ -375,6 +375,11 @@ body.bornado-single-ad-style-bornad .bornad-contact-icon img {
     max-width: 20px;
 }
 
+body.bornado-single-ad-style-bornad .bornad-contact-icon i {
+    color: #374151;
+    font-size: 1rem;
+}
+
 body.bornado-single-ad-style-bornad .bornad-contact-text {
     display: flex;
     flex-direction: column;
@@ -392,6 +397,12 @@ body.bornado-single-ad-style-bornad .bornad-contact-text a.style_2_ph {
     font-size: 0.95rem;
     font-weight: 700;
     text-decoration: none;
+}
+
+body.bornado-single-ad-style-bornad .bornad-contact-item[href^="mailto:"] .style_2_ph {
+    direction: ltr;
+    text-align: left;
+    unicode-bidi: plaintext;
 }
 
 body.bornado-single-ad-style-bornad .bornad-contact-item--reveal {

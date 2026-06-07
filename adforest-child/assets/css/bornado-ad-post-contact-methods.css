@@ -1,0 +1,249 @@
+body #adforest-ad-post-form .bornado-contact-methods-col {
+    margin-bottom: 20px;
+}
+
+body #adforest-ad-post-form .bornado-contact-methods {
+    background: #fff;
+    border: 1px solid #eceff1;
+    border-radius: 18px;
+    overflow: visible;
+    padding: 20px;
+}
+
+body #adforest-ad-post-form .bornado-contact-methods__header {
+    margin-bottom: 16px;
+}
+
+body #adforest-ad-post-form .bornado-contact-methods__header h3 {
+    color: #101828;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 8px;
+}
+
+body #adforest-ad-post-form .bornado-contact-methods__header p {
+    color: #667085;
+    line-height: 1.8;
+    margin: 0;
+}
+
+body #adforest-ad-post-form .bornado-contact-methods__grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: visible;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-card {
+    background: linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    cursor: default;
+    display: flex;
+    min-height: 112px;
+    overflow: visible;
+    padding: 16px;
+    position: relative;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+    z-index: 1;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-card:hover {
+    border-color: #d0d5dd;
+    box-shadow: 0 10px 28px rgba(16, 24, 40, 0.06);
+    transform: translateY(-1px);
+}
+
+body #adforest-ad-post-form .bornado-contact-method-card.is-disabled {
+    background: #f8fafc;
+    cursor: not-allowed;
+    opacity: 0.9;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-card.is-help-open {
+    z-index: 60;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-card input[type="checkbox"] {
+    height: 20px;
+    right: 14px;
+    margin: 0;
+    position: absolute;
+    top: 14px;
+    width: 20px;
+    z-index: 2;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-card__content {
+    cursor: pointer;
+    display: flex;
+    flex: 1;
+    gap: 12px;
+    min-width: 0;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-card__icon {
+    align-items: center;
+    background: #f3f4f6;
+    border-radius: 14px;
+    color: #111827;
+    display: inline-flex;
+    flex: 0 0 46px;
+    font-size: 1.1rem;
+    height: 46px;
+    justify-content: center;
+    margin-top: 10px;
+    width: 46px;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-card__text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    padding-inline-end: 36px;
+    padding-top: 8px;
+}
+
+body.rtl #adforest-ad-post-form .bornado-contact-method-card__text {
+    padding-inline-end: 0;
+    padding-inline-start: 0;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-card__label {
+    color: #111827;
+    font-size: 0.98rem;
+    font-weight: 700;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-card__value {
+    color: #667085;
+    direction: ltr;
+    font-size: 0.86rem;
+    text-align: left;
+    unicode-bidi: plaintext;
+}
+
+body.rtl #adforest-ad-post-form .bornado-contact-method-card__value {
+    text-align: right;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-card__status {
+    align-items: center;
+    display: inline-flex;
+    gap: 8px;
+    margin-top: auto;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-card__badge {
+    background: #eef2ff;
+    border-radius: 999px;
+    color: #4338ca;
+    display: inline-flex;
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 5px 10px;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-card__badge.is-disabled {
+    background: #fff1f2;
+    color: #be123c;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-help {
+    left: 12px;
+    position: absolute;
+    top: 10px;
+    z-index: 70;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-help__trigger {
+    align-items: center;
+    background: #f59e0b;
+    border: 0;
+    border-radius: 999px;
+    box-shadow: 0 10px 20px rgba(245, 158, 11, 0.28);
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 0.95rem;
+    font-weight: 800;
+    height: 30px;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    width: 30px;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-help__trigger:hover,
+body #adforest-ad-post-form .bornado-contact-method-help.is-open .bornado-contact-method-help__trigger {
+    background: #d97706;
+    box-shadow: 0 14px 24px rgba(217, 119, 6, 0.3);
+    transform: scale(1.04);
+}
+
+body #adforest-ad-post-form .bornado-contact-method-help__trigger:focus-visible {
+    outline: 2px solid #111827;
+    outline-offset: 2px;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-tooltip {
+    background: #111827;
+    border-radius: 12px;
+    bottom: calc(100% + 10px);
+    box-shadow: 0 20px 40px rgba(17, 24, 39, 0.2);
+    color: #fff;
+    left: 0;
+    max-width: min(280px, calc(100vw - 48px));
+    opacity: 0;
+    padding: 12px 14px;
+    pointer-events: none;
+    position: absolute;
+    transform: translateY(6px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    visibility: hidden;
+    width: max-content;
+    white-space: normal;
+    word-break: break-word;
+    z-index: 25;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-tooltip a {
+    color: #fcd34d;
+    text-decoration: underline;
+}
+
+body #adforest-ad-post-form .bornado-contact-method-help.is-open .bornado-contact-method-tooltip {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+body #adforest-ad-post-form .bornado-contact-methods__managed-field {
+    display: none !important;
+}
+
+@media (max-width: 767px) {
+    body #adforest-ad-post-form .bornado-contact-methods {
+        border-radius: 14px;
+        padding: 16px;
+    }
+
+    body #adforest-ad-post-form .bornado-contact-methods__grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    body #adforest-ad-post-form .bornado-contact-method-card {
+        min-height: 102px;
+        padding: 14px;
+    }
+
+    body #adforest-ad-post-form .bornado-contact-method-tooltip {
+        left: 0;
+        max-width: calc(100vw - 48px);
+        width: min(280px, calc(100vw - 48px));
+    }
+}

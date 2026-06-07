@@ -14,6 +14,18 @@ if (!class_exists('Bornado_Notification_Bridge')) {
          */
         private static $instance = null;
 
+        /**
+         * Post IDs that transitioned to publish during this request.
+         *
+         * @var array<int,bool>
+         */
+        private $listing_publish_candidates = array();
+
+        /**
+         * @var bool
+         */
+        private $listing_shutdown_scheduled = false;
+
         public static function instance() {
             if (null === self::$instance) {
                 self::$instance = new self();
@@ -121,10 +133,35 @@ if (!class_exists('Bornado_Notification_Bridge')) {
                 return;
             }
 
-            $event = $this->build_listing_published_event($post);
-            if (!empty($event)) {
-                $this->dispatch_event($event);
+            $this->listing_publish_candidates[(int) $post->ID] = true;
+
+            if (!$this->listing_shutdown_scheduled) {
+                $this->listing_shutdown_scheduled = true;
+                add_action('shutdown', array($this, 'dispatch_deferred_listing_published_events'));
             }
+        }
+
+        /**
+         * Dispatch listing.published only after the request finishes and the post is still publish.
+         */
+        public function dispatch_deferred_listing_published_events() {
+            if (empty($this->listing_publish_candidates)) {
+                return;
+            }
+
+            foreach (array_keys($this->listing_publish_candidates) as $post_id) {
+                $post = get_post((int) $post_id);
+                if (!$post instanceof WP_Post || 'ad_post' !== $post->post_type || 'publish' !== $post->post_status) {
+                    continue;
+                }
+
+                $event = $this->build_listing_published_event($post);
+                if (!empty($event)) {
+                    $this->dispatch_event($event);
+                }
+            }
+
+            $this->listing_publish_candidates = array();
         }
 
         /**

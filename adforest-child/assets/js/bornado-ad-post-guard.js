@@ -22,6 +22,9 @@
     var defaultPhoneCountry = config.defaultPhoneCountry && typeof config.defaultPhoneCountry === "object"
         ? config.defaultPhoneCountry
         : null;
+    var contactMethodsConfig = config.contactMethods && typeof config.contactMethods === "object"
+        ? config.contactMethods
+        : null;
 
     function isFormField(element) {
         return !!(
@@ -167,6 +170,212 @@
 
     function getI18n(key) {
         return config.i18n && config.i18n[key] ? String(config.i18n[key]) : key;
+    }
+
+    function escapeHtml(value) {
+        return String(value || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function hasCustomContactMethods() {
+        return !!(contactMethodsConfig && contactMethodsConfig.enabled);
+    }
+
+    function getManagedFieldNames() {
+        return hasCustomContactMethods() ? ["ad_contact_number", "sb_user_name"] : [];
+    }
+
+    function getContactMethodsFieldNames() {
+        return hasCustomContactMethods() ? ["bornado_contact_methods[]", "bornado_contact_methods_version"] : [];
+    }
+
+    function getMethodIconClass(methodKey) {
+        if (methodKey === "phone") {
+            return "fas fa-phone-alt";
+        }
+
+        if (methodKey === "whatsapp") {
+            return "fab fa-whatsapp";
+        }
+
+        if (methodKey === "email") {
+            return "far fa-envelope";
+        }
+
+        return "far fa-comment-alt";
+    }
+
+    function syncManagedProfileFields(form) {
+        var phoneInput;
+        var nameInput;
+
+        if (!hasCustomContactMethods()) {
+            return;
+        }
+
+        phoneInput = form.querySelector('input[name="ad_contact_number"]');
+        nameInput = form.querySelector('input[name="sb_user_name"]');
+
+        if (phoneInput) {
+            phoneInput.value = contactMethodsConfig.profilePhone ? String(contactMethodsConfig.profilePhone) : "";
+        }
+
+        if (nameInput) {
+            nameInput.value = contactMethodsConfig.profileName ? String(contactMethodsConfig.profileName) : "";
+        }
+    }
+
+    function hideManagedContactFields(form) {
+        ["ad_contact_number", "sb_user_name"].forEach(function (fieldName) {
+            var input = form.querySelector('[name="' + fieldName + '"]');
+            var fieldBox;
+            var column;
+
+            if (!input) {
+                return;
+            }
+
+            fieldBox = input.closest(".field-box");
+            column = input.closest(".col-lg-6, .col-md-6, .col-sm-12, .col-12");
+
+            if (fieldBox) {
+                fieldBox.classList.add("bornado-contact-methods__managed-field");
+            }
+
+            if (column) {
+                column.classList.add("bornado-contact-methods__managed-field");
+            }
+        });
+    }
+
+    function buildMethodCard(method) {
+        var isEnabled = !!method.enabled;
+        var checked = Array.isArray(contactMethodsConfig.selectedMethods) && contactMethodsConfig.selectedMethods.indexOf(method.key) !== -1;
+        var statusClass = isEnabled ? "" : " is-disabled";
+        var inputId = "bornado-contact-method-" + String(method.key || "").replace(/[^a-z0-9_-]/gi, "-").toLowerCase();
+        var safeValue = method.value ? '<div class="bornado-contact-method-card__value">' + escapeHtml(method.value) + "</div>" : "";
+        var safeStatusLabel = method.status_label ? escapeHtml(method.status_label) : "";
+        var fallbackBadge = !isEnabled
+            ? '<span class="bornado-contact-method-card__badge' + statusClass + '">' + escapeHtml((contactMethodsConfig.strings && contactMethodsConfig.strings.needVerification) || "نیاز به تایید") + "</span>"
+            : "";
+        var helpButton = "";
+
+        if (!isEnabled && method.help_html) {
+            helpButton = '' +
+                '<div class="bornado-contact-method-help" data-help-wrap>' +
+                    '<button type="button" class="bornado-contact-method-help__trigger" aria-label="' + escapeHtml((contactMethodsConfig.strings && contactMethodsConfig.strings.helpLabel) || "راهنمای فعال‌سازی") + '">' +
+                        "?" +
+                    "</button>" +
+                    '<div class="bornado-contact-method-tooltip">' + method.help_html + "</div>" +
+                "</div>";
+        }
+
+        return '' +
+            '<div class="bornado-contact-method-card' + (!isEnabled ? " is-disabled" : "") + '" data-method-key="' + escapeHtml(method.key) + '">' +
+                helpButton +
+                '<input id="' + escapeHtml(inputId) + '" type="checkbox" name="bornado_contact_methods[]" value="' + escapeHtml(method.key) + '"' + (checked ? " checked" : "") + (isEnabled ? "" : " disabled") + ">" +
+                '<label class="bornado-contact-method-card__content" for="' + escapeHtml(inputId) + '">' +
+                    '<span class="bornado-contact-method-card__icon"><i class="' + escapeHtml(getMethodIconClass(method.key)) + '" aria-hidden="true"></i></span>' +
+                    '<span class="bornado-contact-method-card__text">' +
+                        '<span class="bornado-contact-method-card__label">' + escapeHtml(method.label) + "</span>" +
+                        safeValue +
+                        '<span class="bornado-contact-method-card__status">' +
+                            (safeStatusLabel ? '<span class="bornado-contact-method-card__badge' + statusClass + '">' + safeStatusLabel + "</span>" : "") +
+                            (!safeStatusLabel ? fallbackBadge : "") +
+                        "</span>" +
+                    "</span>" +
+                "</label>" +
+            "</div>";
+    }
+
+    function bindMethodHelpToggles(container) {
+        var wraps = container.querySelectorAll("[data-help-wrap]");
+
+        Array.prototype.forEach.call(wraps, function (wrap) {
+            var trigger = wrap.querySelector(".bornado-contact-method-help__trigger");
+
+            if (!trigger) {
+                return;
+            }
+
+            trigger.addEventListener("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                Array.prototype.forEach.call(wraps, function (otherWrap) {
+                    if (otherWrap !== wrap) {
+                        otherWrap.classList.remove("is-open");
+                        if (otherWrap.parentNode) {
+                            otherWrap.parentNode.classList.remove("is-help-open");
+                        }
+                    }
+                });
+                wrap.classList.toggle("is-open");
+                if (wrap.parentNode) {
+                    wrap.parentNode.classList.toggle("is-help-open", wrap.classList.contains("is-open"));
+                }
+            });
+        });
+
+        document.addEventListener("click", function (event) {
+            Array.prototype.forEach.call(wraps, function (wrap) {
+                if (!wrap.contains(event.target)) {
+                    wrap.classList.remove("is-open");
+                    if (wrap.parentNode) {
+                        wrap.parentNode.classList.remove("is-help-open");
+                    }
+                }
+            });
+        });
+    }
+
+    function renderContactMethodsUi(form) {
+        var contactPane;
+        var contactRow;
+        var methods;
+        var wrapper;
+        var hiddenVersion;
+
+        if (!hasCustomContactMethods()) {
+            return false;
+        }
+
+        contactPane = document.getElementById("v-pills-contact");
+        contactRow = contactPane ? contactPane.querySelector(".row") : null;
+        methods = contactMethodsConfig.statusMap ? Object.keys(contactMethodsConfig.statusMap).map(function (key) {
+            return contactMethodsConfig.statusMap[key];
+        }) : [];
+
+        if (!contactPane || !contactRow || !methods.length) {
+            return false;
+        }
+
+        wrapper = document.createElement("div");
+        wrapper.className = "col-12 bornado-contact-methods-col";
+        wrapper.innerHTML = '' +
+            '<div class="bornado-contact-methods">' +
+                '<div class="bornado-contact-methods__header">' +
+                    '<h3>' + escapeHtml(contactMethodsConfig.strings && contactMethodsConfig.strings.sectionTitle ? contactMethodsConfig.strings.sectionTitle : "روش های ارتباطی برای این آگهی") + "</h3>" +
+                    '<p>' + escapeHtml(contactMethodsConfig.strings && contactMethodsConfig.strings.sectionHint ? contactMethodsConfig.strings.sectionHint : "") + "</p>" +
+                "</div>" +
+                '<div class="bornado-contact-methods__grid">' + methods.map(buildMethodCard).join("") + "</div>" +
+            "</div>";
+
+        contactRow.insertBefore(wrapper, contactRow.firstChild);
+
+        hiddenVersion = document.createElement("input");
+        hiddenVersion.type = "hidden";
+        hiddenVersion.name = "bornado_contact_methods_version";
+        hiddenVersion.value = "1";
+        form.appendChild(hiddenVersion);
+
+        bindMethodHelpToggles(wrapper);
+        hideManagedContactFields(form);
+        syncManagedProfileFields(form);
+        return true;
     }
 
     function sanitizeDialCode(value) {
@@ -472,9 +681,13 @@
 
     function restoreDraft(form) {
         var draft = readStoredDraft();
-        var excludedNames = rootCategoryNames.concat(countryNames);
+        var excludedNames = rootCategoryNames
+            .concat(countryNames)
+            .concat(getManagedFieldNames())
+            .concat(getContactMethodsFieldNames());
 
         if (!draft || typeof draft !== "object") {
+            syncManagedProfileFields(form);
             return;
         }
 
@@ -496,6 +709,8 @@
                 window.setTimeout(function () {
                     saveDraft(form);
                 }, 1800);
+
+                syncManagedProfileFields(form);
             });
     }
 
@@ -523,11 +738,15 @@
         }
 
         bindTermsAgreementCheckbox(form);
+        renderContactMethodsUi(form);
         bindSubmitGuard(form);
         bindDraftPersistence(form);
         bindAjaxSuccessCleanup();
         restoreDraft(form);
-        enhanceAdPostPhoneField(form);
+        if (!hasCustomContactMethods()) {
+            enhanceAdPostPhoneField(form);
+        }
+        syncManagedProfileFields(form);
     }
 
     if (document.readyState === "loading") {

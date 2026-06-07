@@ -16,12 +16,25 @@ if ( ! function_exists( 'bornado_enqueue_ad_post_guard_assets' ) ) {
 			return;
 		}
 
-		$handle    = 'bornado-ad-post-guard';
-		$asset_uri = trailingslashit( get_stylesheet_directory_uri() ) . 'assets/js/bornado-ad-post-guard.js';
-		$asset_path = trailingslashit( get_stylesheet_directory() ) . 'assets/js/bornado-ad-post-guard.js';
+		$handle       = 'bornado-ad-post-guard';
+		$style_handle = 'bornado-ad-post-contact-methods';
+		$asset_uri    = trailingslashit( get_stylesheet_directory_uri() ) . 'assets/js/bornado-ad-post-guard.js';
+		$asset_path   = trailingslashit( get_stylesheet_directory() ) . 'assets/js/bornado-ad-post-guard.js';
+		$style_uri    = trailingslashit( get_stylesheet_directory_uri() ) . 'assets/css/bornado-ad-post-contact-methods.css';
+		$style_path   = trailingslashit( get_stylesheet_directory() ) . 'assets/css/bornado-ad-post-contact-methods.css';
+		$editing_ad_id = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
 
 		if ( ! file_exists( $asset_path ) ) {
 			return;
+		}
+
+		if ( file_exists( $style_path ) ) {
+			wp_enqueue_style(
+				$style_handle,
+				$style_uri,
+				array(),
+				(string) filemtime( $style_path )
+			);
 		}
 
 		wp_enqueue_script(
@@ -37,12 +50,14 @@ if ( ! function_exists( 'bornado_enqueue_ad_post_guard_assets' ) ) {
 			'bornadoAdPostGuard',
 			array(
 				'storageKey' => sprintf(
-					'bornado:ad-post-draft:%d:%d',
+					'bornado:ad-post-draft:%d:%d:%d',
 					(int) get_current_user_id(),
-					(int) get_queried_object_id()
+					(int) get_queried_object_id(),
+					$editing_ad_id
 				),
 				'phoneCountries' => function_exists( 'bornado_get_phone_country_options' ) ? bornado_get_phone_country_options() : array(),
 				'defaultPhoneCountry' => function_exists( 'bornado_get_default_phone_country_option' ) ? bornado_get_default_phone_country_option() : array(),
+				'contactMethods' => function_exists( 'bornado_get_ad_post_contact_methods_context' ) ? bornado_get_ad_post_contact_methods_context( get_current_user_id() ) : array(),
 				'i18n' => array(
 					'phoneExample' => __( 'نمونه نهایی', 'adforest-child' ),
 					'localPhoneExample' => __( 'نمونه شماره بدون کد کشور', 'adforest-child' ),

@@ -5,6 +5,7 @@ $sharedSecret = trim((string) (getenv('BORNADO_NOTIFICATION_SHARED_SECRET') ?: '
 $opsKey       = trim((string) (getenv('BORNADO_NOTIFICATION_OPS_KEY') ?: $sharedSecret));
 $phoneNumberId = trim((string) (getenv('BORNADO_WA_PHONE_NUMBER_ID') ?: '1099127826622214'));
 $accessToken   = trim((string) (getenv('BORNADO_WA_ACCESS_TOKEN') ?: 'EAAWSyHZCFB1kBRjpUNhi73IGPynCZClZAJiG8TxgLLZCDqPi6c3yz2cZAyafwQGpkh9stMalIVMxEqjVqvZCwfPXHpcKzyd5OimElrc5zZBcDbLZBlmbuWhPPahakiyohP4xFA3VaJ48N2cPNlwxNRi6MMShO3wbOg5ymfrxIy9gfePGjgfY2bNZCZCQhZBtKp2Uj7XUgZDZD'));
+$verificationTemplateName = trim((string) (getenv('BORNADO_WA_TEMPLATE_USER_VERIFICATION_REQUESTED') ?: 'bornado_verification_code_fa_v1'));
 
 return array(
     'service' => array(
@@ -19,6 +20,9 @@ return array(
             ),
             'user.registered' => array(
                 'channels' => array(),
+            ),
+            'user.verification_requested' => array(
+                'channels' => array('whatsapp'),
             ),
             'listing.rejected' => array(
                 'channels' => array(),
@@ -76,6 +80,28 @@ return array(
                     'name'            => 'hello_world',
                     'language_code'   => 'en_US',
                     'body_parameters' => array(),
+                ),
+                'user.verification_requested' => array(
+                    'name'            => $verificationTemplateName,
+                    'language_code'   => 'fa',
+                    'body_parameters' => array(
+                        array(
+                            'name' => 'verification_code',
+                            'path' => 'payload.verification.code',
+                        ),
+                    ),
+                    'button_parameters' => array(
+                        array(
+                            'sub_type'   => 'url',
+                            'index'      => 0,
+                            'parameters' => array(
+                                array(
+                                    'name' => 'verification_code',
+                                    'path' => 'payload.verification.code',
+                                ),
+                            ),
+                        ),
+                    ),
                 ),
             ),
         ),

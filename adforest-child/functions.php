@@ -192,6 +192,14 @@ if (file_exists($bornado_header_clone_bootstrap)) {
 }
 
 /**
+ * Manage per-ad contact method selections from the child theme layer.
+ */
+$bornado_ad_contact_methods_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-ad-contact-methods.php';
+if (file_exists($bornado_ad_contact_methods_bootstrap)) {
+    require_once $bornado_ad_contact_methods_bootstrap;
+}
+
+/**
  * Protect the ad-post form UX from the child theme layer.
  */
 $bornado_ad_post_guard_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-ad-post-guard.php';
