@@ -531,6 +531,9 @@ final class Bornado_SEO_Routing {
 		}
 
 		parse_str( $parsed_url['query'], $args );
+		if ( ! self::should_rewrite_adforest_page_lang_url( $parsed_url, $args ) ) {
+			return $url;
+		}
 
 		$location_id = 0;
 		if ( isset( $args['country_id'] ) && '' !== $args['country_id'] ) {
@@ -581,6 +584,108 @@ final class Bornado_SEO_Routing {
 		);
 
 		return $semantic_url ? $semantic_url : $url;
+	}
+
+	/**
+	 * Only rewrite AdForest URLs that actually represent search/archive state.
+	 *
+	 * This filter is applied to many frontend links, including author-profile and
+	 * dashboard/action URLs. Guard it so semantic routing only touches URLs that
+	 * already target the search page or carry known search/filter query args.
+	 *
+	 * @param array<string,mixed> $parsed_url Parsed URL parts from wp_parse_url().
+	 * @param array<string,mixed> $args       Query args extracted from the URL.
+	 * @return bool
+	 */
+	private static function should_rewrite_adforest_page_lang_url( $parsed_url, array $args ) {
+		if ( ! is_array( $parsed_url ) ) {
+			return false;
+		}
+
+		if ( self::is_search_page_base_path( $parsed_url ) ) {
+			return true;
+		}
+
+		foreach ( $args as $key => $value ) {
+			if ( ! is_string( $key ) || ! self::is_search_query_arg_key( $key ) ) {
+				continue;
+			}
+
+			if ( '' !== trim( (string) $value ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check whether a parsed URL points at the configured AdForest search page.
+	 *
+	 * @param array<string,mixed> $parsed_url Parsed URL parts from wp_parse_url().
+	 * @return bool
+	 */
+	private static function is_search_page_base_path( array $parsed_url ) {
+		$search_base_url = self::get_search_page_base_url();
+		$search_parts    = wp_parse_url( $search_base_url );
+		if ( ! is_array( $search_parts ) ) {
+			return false;
+		}
+
+		$target_path = isset( $parsed_url['path'] ) ? untrailingslashit( (string) $parsed_url['path'] ) : '';
+		$search_path = isset( $search_parts['path'] ) ? untrailingslashit( (string) $search_parts['path'] ) : '';
+		if ( $target_path === '' || $search_path === '' || $target_path !== $search_path ) {
+			return false;
+		}
+
+		if ( ! empty( $parsed_url['host'] ) && ! empty( $search_parts['host'] ) ) {
+			return strtolower( (string) $parsed_url['host'] ) === strtolower( (string) $search_parts['host'] );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Query keys that indicate a URL is meant to drive the ad-search UI.
+	 *
+	 * @param string $key Query-string key.
+	 * @return bool
+	 */
+	private static function is_search_query_arg_key( $key ) {
+		$search_keys = array(
+			'country_id',
+			'ad_country',
+			'cat_id',
+			'ad_cats',
+			'ad_cat_sub',
+			'ad_cat_sub_sub',
+			'ad_cat_sub_sub_sub',
+			'ad_cat_sub_sub_sub_sub',
+			'paged',
+			'page',
+			'page-number',
+			'ad_title',
+			'ad_currency',
+			'condition',
+			'ad_type',
+			'adtype',
+			'warranty',
+			'ad',
+			'sort',
+			'c',
+			'min_price',
+			'max_price',
+			'location',
+			'rd',
+			'lat',
+			'long',
+			'view-type',
+			'custom',
+			'min_custom',
+			'max_custom',
+		);
+
+		return in_array( $key, $search_keys, true );
 	}
 
 	/**

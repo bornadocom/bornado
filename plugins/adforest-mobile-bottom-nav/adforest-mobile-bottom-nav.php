@@ -198,13 +198,39 @@ final class ADF_Mobile_Bottom_Nav {
 		return is_singular( 'ad_post' );
 	}
 
-	private function get_single_ad_contact_nav_markup( $from_shortcode = false ) {
-		$post_id = get_queried_object_id();
+	public function render_single_ad_contact_nav( $post_id = 0, $args = array() ) {
+		return $this->get_single_ad_contact_nav_markup( false, $post_id, $args );
+	}
+
+	private function get_single_ad_contact_nav_markup( $from_shortcode = false, $post_id = 0, $args = array() ) {
+		$post_id = $post_id > 0 ? (int) $post_id : get_queried_object_id();
 		if ( $post_id < 1 || 'ad_post' !== get_post_type( $post_id ) ) {
 			return '';
 		}
 
+		$args = wp_parse_args(
+			(array) $args,
+			array(
+				'nav_classes'   => '',
+				'exclude_types' => array(),
+				'phone_reveal'  => false,
+			)
+		);
+
 		$actions = $this->get_single_ad_contact_actions( $post_id );
+		if ( ! empty( $args['exclude_types'] ) ) {
+			$excluded_types = array_map( 'sanitize_key', (array) $args['exclude_types'] );
+			$actions        = array_values(
+				array_filter(
+					$actions,
+					static function ( $action ) use ( $excluded_types ) {
+						$type = isset( $action['type'] ) ? sanitize_key( (string) $action['type'] ) : '';
+						return '' !== $type && ! in_array( $type, $excluded_types, true );
+					}
+				)
+			);
+		}
+
 		if ( empty( $actions ) ) {
 			return '';
 		}
@@ -215,6 +241,19 @@ final class ADF_Mobile_Bottom_Nav {
 			$link_class = 'adf-mbn__link adf-mbn__link--contact';
 			if ( ! empty( $action['class'] ) ) {
 				$link_class .= ' ' . trim( (string) $action['class'] );
+			}
+
+			if ( ! empty( $args['phone_reveal'] ) && 'phone' === $action['type'] && empty( $action['requires_login'] ) ) {
+				$rendered[] = sprintf(
+					'<li class="%1$s"><a class="%2$s bornado-contact-reveal-trigger" href="javascript:void(0)" aria-label="%3$s" data-ad-id="%4$d">%5$s<span class="adf-mbn__label bornado-contact-reveal-label">%6$s</span><span class="adf-mbn__meta style_2_ph"></span></a></li>',
+					esc_attr( $classes ),
+					esc_attr( $link_class ),
+					esc_attr__( 'شماره تماس', 'adf-mobile-bottom-nav' ),
+					absint( $post_id ),
+					$this->get_icon_svg( $action['icon'], $action['label'] ),
+					esc_html__( 'شماره تماس', 'adf-mobile-bottom-nav' )
+				);
+				continue;
 			}
 
 			$target_rel = '';
@@ -238,6 +277,9 @@ final class ADF_Mobile_Bottom_Nav {
 		$classes = 'adf-mobile-bottom-nav adf-mobile-bottom-nav--contact';
 		if ( $from_shortcode ) {
 			$classes .= ' adf-mobile-bottom-nav--shortcode';
+		}
+		if ( ! empty( $args['nav_classes'] ) ) {
+			$classes .= ' ' . trim( (string) $args['nav_classes'] );
 		}
 
 		return sprintf(
@@ -311,52 +353,56 @@ final class ADF_Mobile_Bottom_Nav {
 
 		if ( $show_custom_phone ) {
 			$actions[] = array(
-				'type'    => 'phone',
-				'label'   => 'تماس',
-				'icon'    => 'phone',
-				'url'     => $phone_login_required ? $guest_login_url : 'tel:' . preg_replace( '/[^\d+]/', '', $contact_no ),
-				'attrs'   => array(),
-				'new_tab' => false,
-				'class'   => '',
+				'type'           => 'phone',
+				'label'          => 'تماس',
+				'icon'           => 'phone',
+				'url'            => $phone_login_required ? $guest_login_url : 'tel:' . preg_replace( '/[^\d+]/', '', $contact_no ),
+				'attrs'          => array(),
+				'new_tab'        => false,
+				'class'          => '',
+				'requires_login' => $phone_login_required,
 			);
 		}
 
 		if ( $show_custom_whatsapp ) {
 			$actions[] = array(
-				'type'    => 'whatsapp',
-				'label'   => 'واتس اپ',
-				'icon'    => 'whatsapp',
-				'url'     => $phone_login_required ? $guest_login_url : $this->get_single_ad_whatsapp_url( $post_id, $contact_no ),
-				'attrs'   => array(),
-				'new_tab' => ! $phone_login_required,
-				'class'   => '',
+				'type'           => 'whatsapp',
+				'label'          => 'واتس اپ',
+				'icon'           => 'whatsapp',
+				'url'            => $phone_login_required ? $guest_login_url : $this->get_single_ad_whatsapp_url( $post_id, $contact_no ),
+				'attrs'          => array(),
+				'new_tab'        => ! $phone_login_required,
+				'class'          => '',
+				'requires_login' => $phone_login_required,
 			);
 		}
 
 		if ( $show_custom_email ) {
 			$actions[] = array(
-				'type'    => 'email',
-				'label'   => 'ایمیل',
-				'icon'    => 'email',
-				'url'     => $phone_login_required ? $guest_login_url : 'mailto:' . sanitize_email( $poster_email ),
-				'attrs'   => array(),
-				'new_tab' => false,
-				'class'   => '',
+				'type'           => 'email',
+				'label'          => 'ایمیل',
+				'icon'           => 'email',
+				'url'            => $phone_login_required ? $guest_login_url : 'mailto:' . sanitize_email( $poster_email ),
+				'attrs'          => array(),
+				'new_tab'        => false,
+				'class'          => '',
+				'requires_login' => $phone_login_required,
 			);
 		}
 
 		if ( $show_custom_site_message ) {
 			$actions[] = array(
-				'type'    => 'site-message',
-				'label'   => 'گفتگو',
-				'icon'    => 'chat',
-				'url'     => '#',
-				'attrs'   => array(
+				'type'           => 'site-message',
+				'label'          => 'گفتگو',
+				'icon'           => 'chat',
+				'url'            => '#',
+				'attrs'          => array(
 					'data-user_id' => (string) $poster_id,
 					'data-post_id' => (string) $post_id,
 				),
-				'new_tab' => false,
-				'class'   => 'scroll chat_toggler_popup sbchat-myBtn',
+				'new_tab'        => false,
+				'class'          => 'scroll chat_toggler_popup sbchat-myBtn',
+				'requires_login' => false,
 			);
 		}
 
@@ -366,13 +412,14 @@ final class ADF_Mobile_Bottom_Nav {
 
 		if ( '' !== $contact_no && in_array( $communication_mode, array( 'both', 'phone' ), true ) ) {
 			$actions[] = array(
-				'type'    => 'phone',
-				'label'   => 'تماس',
-				'icon'    => 'phone',
-				'url'     => $phone_login_required ? $guest_login_url : 'tel:' . preg_replace( '/[^\d+]/', '', $contact_no ),
-				'attrs'   => array(),
-				'new_tab' => false,
-				'class'   => '',
+				'type'           => 'phone',
+				'label'          => 'تماس',
+				'icon'           => 'phone',
+				'url'            => $phone_login_required ? $guest_login_url : 'tel:' . preg_replace( '/[^\d+]/', '', $contact_no ),
+				'attrs'          => array(),
+				'new_tab'        => false,
+				'class'          => '',
+				'requires_login' => $phone_login_required,
 			);
 		}
 
@@ -382,7 +429,9 @@ final class ADF_Mobile_Bottom_Nav {
 	private function get_single_ad_whatsapp_url( $post_id, $contact_no ) {
 		$post_id          = (int) $post_id;
 		$whatsapp_number  = preg_replace( '/[^\d]/', '', (string) $contact_no );
-		$post_link        = get_permalink( $post_id );
+		$post_link        = function_exists( 'bornado_get_readable_permalink' )
+			? (string) bornado_get_readable_permalink( $post_id )
+			: (string) get_permalink( $post_id );
 		$post_title       = get_the_title( $post_id );
 		$whatsapp_message = trim( $post_title . ' - ' . $post_link );
 
@@ -1597,3 +1646,13 @@ final class ADF_Mobile_Bottom_Nav {
 }
 
 ADF_Mobile_Bottom_Nav::instance();
+
+if ( ! function_exists( 'bornado_render_shared_ad_contact_methods' ) ) {
+	function bornado_render_shared_ad_contact_methods( $post_id = 0, $args = array() ) {
+		if ( ! class_exists( 'ADF_Mobile_Bottom_Nav' ) ) {
+			return '';
+		}
+
+		return ADF_Mobile_Bottom_Nav::instance()->render_single_ad_contact_nav( (int) $post_id, (array) $args );
+	}
+}

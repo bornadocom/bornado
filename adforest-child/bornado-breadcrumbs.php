@@ -121,7 +121,6 @@ if (!function_exists('bornado_semantic_breadcrumb_output_current_route_items')) 
         foreach ($items as $item) {
             $label = isset($item['label']) ? (string) $item['label'] : '';
             $url   = isset($item['url']) ? (string) $item['url'] : '';
-            $active = !empty($item['active']);
 
             if ('' !== $url) {
                 printf(
@@ -352,7 +351,6 @@ if (!function_exists('bornado_semantic_breadcrumb_output_single_ad_items')) {
         foreach ($items as $item) {
             $label  = isset($item['label']) ? (string) $item['label'] : '';
             $url    = isset($item['url']) ? (string) $item['url'] : '';
-            $active = !empty($item['active']);
 
             if ('' !== $url) {
                 printf(
@@ -507,6 +505,44 @@ if (!function_exists('bornado_is_ad_post_page')) {
     }
 }
 
+if (!function_exists('bornado_should_hide_breadcrumb_on_real_front_page')) {
+    /**
+     * Hide breadcrumbs only on the actual front page request.
+     *
+     * Semantic search routes can still be bound to the front-page object internally,
+     * so `is_front_page()` alone is too broad for Bornado search URLs.
+     *
+     * @return bool
+     */
+    function bornado_should_hide_breadcrumb_on_real_front_page()
+    {
+        $homepage_id = (int) get_option('page_on_front');
+        if ($homepage_id < 1 || !is_front_page()) {
+            return false;
+        }
+
+        $route_context = function_exists('bornado_seo_routing_get_context')
+            ? (array) bornado_seo_routing_get_context()
+            : array();
+        if (!empty($route_context['is_seo_route'])) {
+            return false;
+        }
+
+        $public_query_args = function_exists('bornado_seo_routing_get_public_query_args')
+            ? (array) bornado_seo_routing_get_public_query_args()
+            : array();
+        if (!empty($public_query_args)) {
+            return false;
+        }
+
+        $request_uri  = isset($_SERVER['REQUEST_URI']) ? wp_unslash($_SERVER['REQUEST_URI']) : '';
+        $request_path = is_string($request_uri) ? (string) wp_parse_url($request_uri, PHP_URL_PATH) : '';
+        $home_path    = (string) wp_parse_url(home_url('/'), PHP_URL_PATH);
+
+        return untrailingslashit($request_path) === untrailingslashit($home_path);
+    }
+}
+
 if (!function_exists('adforest_custom_breadcrumbs')) {
     function adforest_custom_breadcrumbs($page_class = '')
     {
@@ -516,8 +552,7 @@ if (!function_exists('adforest_custom_breadcrumbs')) {
             return;
         }
 
-        $homepage_id = get_option('page_on_front');
-        if (is_front_page() && $homepage_id) {
+        if (bornado_should_hide_breadcrumb_on_real_front_page()) {
             return;
         }
 

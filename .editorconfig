@@ -1,0 +1,5 @@
+root = true
+
+[*.{php,phtml,css,scss,sass,js,jsx,ts,tsx,json,md,html,htm,xml,svg,txt}]
+charset = utf-8
+insert_final_newline = true

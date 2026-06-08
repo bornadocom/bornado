@@ -360,6 +360,15 @@ $show_custom_email     = $has_custom_contact_methods
     && !empty($contact_method_statuses['email']['enabled'])
     && '' !== $poster_email;
 $has_custom_contact_list = $show_custom_phone || $show_custom_whatsapp || $show_custom_email;
+$desktop_contact_methods_markup = function_exists('bornado_render_shared_ad_contact_methods')
+    ? (string) bornado_render_shared_ad_contact_methods(
+        $pid,
+        array(
+            'nav_classes' => 'bornad-desktop-contact-nav',
+            'phone_reveal' => true,
+        )
+    )
+    : '';
 $sb_plugin_options     = get_option('sb_plugin_options', array());
 $sb_chat_feature_active = class_exists('SB_Chat')
     && '1' === (string) $allow_sb_chat
@@ -519,6 +528,10 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
                     </div>
                 </div>
 
+                <div class="bornad-single-mobile-breadcrumb">
+                    <?php adforest_custom_breadcrumbs('adt-white-breadcrumb bornado-mobile-breadcrumb'); ?>
+                </div>
+
                 <div class="bornad-card bornad-seller-card bornad-seller-card--desktop" id="bornad-contact-panel">
                     <div class="bornad-card-header">
                         <h3>اطلاعات فروشنده</h3>
@@ -557,78 +570,6 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
                             <div class="bornad-seller-location">
                                 <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
                                 <span><?php echo esc_html($ad_location); ?></span>
-                            </div>
-                        <?php } ?>
-
-                        <?php
-                        if ($has_custom_contact_methods) {
-                            if ($has_custom_contact_list) {
-                                ?>
-                                <div class="bornad-contact-list">
-                                    <?php
-                                    if ($show_custom_phone) {
-                                        echo bornado_render_contact_item(array(
-                                            'icon_image' => $phone_icon_url,
-                                            'icon_alt' => 'phone',
-                                            'small_text' => $phone_login_required ? __('Login to View', 'adforest') : __('Click To Show', 'adforest'),
-                                            'value_text' => $masked_num,
-                                            'href' => $phone_login_required ? $guest_login_url : 'javascript:void(0)',
-                                            'reveal' => !$phone_login_required,
-                                            'post_id' => $pid,
-                                        ));
-                                    }
-
-                                    if ($show_custom_whatsapp) {
-                                        echo bornado_render_contact_item(array(
-                                            'icon_image' => $whatsapp_icon_url,
-                                            'icon_alt' => 'whatsapp',
-                                            'small_text' => $phone_login_required ? __('Login to View', 'adforest') : __('Click To Show', 'adforest'),
-                                            'value_text' => $masked_num,
-                                            'href' => $phone_login_required ? $guest_login_url : 'javascript:void(0)',
-                                            'reveal' => !$phone_login_required,
-                                            'post_id' => $pid,
-                                        ));
-                                    }
-
-                                    if ($show_custom_email) {
-                                        echo bornado_render_contact_item(array(
-                                            'icon_class' => 'far fa-envelope',
-                                            'small_text' => $phone_login_required ? __('Login to View', 'adforest') : 'ایمیل',
-                                            'value_text' => $phone_login_required ? $masked_email : $poster_email,
-                                            'href' => $phone_login_required ? $guest_login_url : 'mailto:' . $poster_email,
-                                            'reveal' => false,
-                                        ));
-                                    }
-                                    ?>
-                                </div>
-                                <?php
-                            }
-                        } elseif (($communication_mode == 'both' || $communication_mode == 'phone') && '' !== $contact_num) {
-                            $requires_login = $phone_login_required;
-                            $call_now = '#';
-                            if ($requires_login) {
-                                $call_now = $guest_login_url;
-                            }
-                            ?>
-                            <div class="bornad-contact-list">
-                                <?php if ($requires_login) { ?>
-                                    <a class="bornad-contact-item" href="<?php echo esc_url($call_now); ?>">
-                                        <span class="bornad-contact-icon"><img src="<?php echo esc_url($phone_icon_url); ?>" alt="phone"></span>
-                                        <span class="bornad-contact-text">
-                                            <small><?php esc_html_e('Login to View', 'adforest'); ?></small>
-                                            <strong class="style_2_ph"><?php echo esc_html($masked_num); ?></strong>
-                                        </span>
-                                    </a>
-                                <?php } else { ?>
-                                    <div class="bornad-contact-item bornad-contact-item--reveal">
-                                        <span class="bornad-contact-icon"><img src="<?php echo esc_url($phone_icon_url); ?>" alt="phone"></span>
-                                        <span class="bornad-contact-text">
-                                            <small class="toggle-contact-number" style="cursor:pointer;" data-ad-id="<?php echo intval($pid); ?>"><?php esc_html_e('Click To Show', 'adforest'); ?></small>
-                                            <a class="style_2_ph" href="javascript:void(0)"><?php echo esc_html($masked_num); ?></a>
-                                        </span>
-                                    </div>
-                                <?php } ?>
-
                             </div>
                         <?php } ?>
                     </div>
@@ -746,20 +687,6 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
                                 </a>
                             <?php } ?>
 
-                            <?php
-                            if ($show_toolbar_chat) {
-                                echo do_shortcode(
-                                    '[sb_chat_shortcode_popup '
-                                        . 'class="bornad-toolbar-button bornad-toolbar-chat" '
-                                        . 'button_title="' . esc_attr__('گفتگو', 'adforest') . '" '
-                                        . 'post_author_id="' . absint($poster_id) . '" '
-                                        . 'post_id="' . absint($pid) . '" '
-                                        . 'icon="far fa-comment-alt"'
-                                        . ']'
-                                );
-                            }
-                            ?>
-
                             <a class="bornad-toolbar-button" href="<?php echo esc_url(adforest_set_url_param(get_author_posts_url($poster_id), 'type', 'ads')); ?>" title="<?php echo esc_attr__('مشاهده همه آگهی‌های این کاربر', 'adforest'); ?>">
                                 <i class="far fa-user" aria-hidden="true"></i>
                             </a>
@@ -839,6 +766,14 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
                                     </li>
                                 <?php } ?>
                             </ul>
+                        </div>
+                    </div>
+                <?php } ?>
+
+                <?php if ('' !== $desktop_contact_methods_markup) { ?>
+                    <div class="bornad-card bornad-contact-methods-card bornad-contact-methods-card--desktop">
+                        <div class="bornad-card-body">
+                            <?php echo $desktop_contact_methods_markup; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                         </div>
                     </div>
                 <?php } ?>
@@ -1108,78 +1043,6 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
                     <div class="bornad-seller-location">
                         <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
                         <span><?php echo esc_html($ad_location); ?></span>
-                    </div>
-                <?php } ?>
-
-                <?php
-                if ($has_custom_contact_methods) {
-                    if ($has_custom_contact_list) {
-                        ?>
-                        <div class="bornad-contact-list">
-                            <?php
-                            if ($show_custom_phone) {
-                                echo bornado_render_contact_item(array(
-                                    'icon_image' => $phone_icon_url,
-                                    'icon_alt' => 'phone',
-                                    'small_text' => $phone_login_required ? __('Login to View', 'adforest') : __('Click To Show', 'adforest'),
-                                    'value_text' => $masked_num,
-                                    'href' => $phone_login_required ? $guest_login_url : 'javascript:void(0)',
-                                    'reveal' => !$phone_login_required,
-                                    'post_id' => $pid,
-                                ));
-                            }
-
-                            if ($show_custom_whatsapp) {
-                                echo bornado_render_contact_item(array(
-                                    'icon_image' => $whatsapp_icon_url,
-                                    'icon_alt' => 'whatsapp',
-                                    'small_text' => $phone_login_required ? __('Login to View', 'adforest') : __('Click To Show', 'adforest'),
-                                    'value_text' => $masked_num,
-                                    'href' => $phone_login_required ? $guest_login_url : 'javascript:void(0)',
-                                    'reveal' => !$phone_login_required,
-                                    'post_id' => $pid,
-                                ));
-                            }
-
-                            if ($show_custom_email) {
-                                echo bornado_render_contact_item(array(
-                                    'icon_class' => 'far fa-envelope',
-                                    'small_text' => $phone_login_required ? __('Login to View', 'adforest') : 'ایمیل',
-                                    'value_text' => $phone_login_required ? $masked_email : $poster_email,
-                                    'href' => $phone_login_required ? $guest_login_url : 'mailto:' . $poster_email,
-                                    'reveal' => false,
-                                ));
-                            }
-                            ?>
-                        </div>
-                        <?php
-                    }
-                } elseif (($communication_mode == 'both' || $communication_mode == 'phone') && '' !== $contact_num) {
-                    $requires_login = $phone_login_required;
-                    $call_now = '#';
-                    if ($requires_login) {
-                        $call_now = $guest_login_url;
-                    }
-                    ?>
-                    <div class="bornad-contact-list">
-                        <?php if ($requires_login) { ?>
-                            <a class="bornad-contact-item" href="<?php echo esc_url($call_now); ?>">
-                                <span class="bornad-contact-icon"><img src="<?php echo esc_url($phone_icon_url); ?>" alt="phone"></span>
-                                <span class="bornad-contact-text">
-                                    <small><?php esc_html_e('Login to View', 'adforest'); ?></small>
-                                    <strong class="style_2_ph"><?php echo esc_html($masked_num); ?></strong>
-                                </span>
-                            </a>
-                        <?php } else { ?>
-                            <div class="bornad-contact-item bornad-contact-item--reveal">
-                                <span class="bornad-contact-icon"><img src="<?php echo esc_url($phone_icon_url); ?>" alt="phone"></span>
-                                <span class="bornad-contact-text">
-                                    <small class="toggle-contact-number" style="cursor:pointer;" data-ad-id="<?php echo intval($pid); ?>"><?php esc_html_e('Click To Show', 'adforest'); ?></small>
-                                    <a class="style_2_ph" href="javascript:void(0)"><?php echo esc_html($masked_num); ?></a>
-                                </span>
-                            </div>
-                        <?php } ?>
-
                     </div>
                 <?php } ?>
             </div>

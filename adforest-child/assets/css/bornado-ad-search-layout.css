@@ -3,16 +3,24 @@
  * Requires body.bornado-ad-search-view (see functions.php).
  */
 
-/* —— 50px gap between header and page content —— */
+/* —— Keep ad-search top spacing consistent with/without breadcrumbs —— */
+body.bornado-ad-search-view {
+	--bornado-search-breadcrumb-gap: 64px;
+}
+
 body.bornado-ad-search-view .adt-breadcrumb {
-	padding-top: 50px !important;
+	padding-top: 20px !important;
+}
+
+body.bornado-ad-search-view .adt-search-ads-grid {
+	margin-top: 0 !important;
 }
 
 body.bornado-ad-search-view:not(:has(.adt-breadcrumb)) .adt-ads-with-filters,
 body.bornado-ad-search-view:not(:has(.adt-breadcrumb)) .adt-ads-topbar-section,
 body.bornado-ad-search-view:not(:has(.adt-breadcrumb)) .adt-ads-filter-map-wrapper,
 body.bornado-ad-search-view:not(:has(.adt-breadcrumb)) .bornado-seo-landing-entry {
-	padding-top: 10px !important;
+	padding-top: var(--bornado-search-breadcrumb-gap) !important;
 }
 
 /* —— Content container: 1200px (override Bootstrap .container breakpoints) —— */
@@ -160,6 +168,15 @@ body.bornado-ad-search-view .mcew-theme-list-style-3 .adf-card-list.mcew-style3-
 }
 
 @media (max-width: 767px) {
+	body.bornado-ad-search-view {
+		--bornado-search-breadcrumb-gap: 34px;
+	}
+
+	body.bornado-ad-search-view .adt-breadcrumb {
+		padding-top: 20px !important;
+		padding-bottom: 0 !important;
+	}
+
 	body.bornado-ad-search-view .adf-active-filters,
 	body.bornado-ad-search-view .adt-ads-filter-content .tag-search {
 		display: flex;

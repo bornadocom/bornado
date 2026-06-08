@@ -232,7 +232,8 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
         const defaultCatId = <?php echo json_encode( (int) $default_cat_id ); ?>;
         const defaultSlug = <?php echo json_encode( sanitize_title( $default_slug ) ); ?>;
         if (!params.has('cat_id') && defaultCatId && defaultSlug) {
-rams.toString()}`;
+            params.set('cat_id', defaultCatId);
+            const newUrl = `${window.location.pathname}?${params.toString()}`;
             window.history.pushState({}, '', newUrl);
 
             const tabTriggerEl = document.querySelector(`#pills-${defaultSlug}-tab`);

@@ -6,7 +6,9 @@
 .adt-header-primary .container,
 .adt-header-primary .container.adt-container,
 .adt-header-secondary .container,
-.adt-header-secondary .container.adt-container {
+.adt-header-secondary .container.adt-container,
+.adt-breadcrumb > .container,
+.adt-breadcrumb > .container.adt-container {
 	max-width: 1200px !important;
 	width: 100% !important;
 	margin-left: auto !important;

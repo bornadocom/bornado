@@ -448,6 +448,10 @@ body.blp-panel-open {
 }
 
 @media (max-width: 768px) {
+    body.blp-panel-open .adf-mobile-top-search {
+        z-index: 1200;
+    }
+
     .adf-mobile-top-search__location-picker .blp__trigger,
     .adf-mobile-top-search__category-strip,
     .bornado-mobile-choice__trigger--compact {
@@ -564,9 +568,7 @@ body.blp-panel-open {
     }
 
     .adf-mobile-top-search__location-picker .blp__footer {
-        padding-top: 12px;
-        padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
-        border-top-color: #eef2f6;
+        display: none;
     }
 
     .adf-mobile-top-search__location-picker .blp__primary,
