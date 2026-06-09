@@ -248,6 +248,14 @@ if (file_exists($bornado_performance_optimizations_bootstrap)) {
 }
 
 /**
+ * Keep listing infinite scroll DOM-bounded without touching parent theme files.
+ */
+$bornado_windowed_infinite_scroll_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-search-windowed-infinite-scroll.php';
+if (file_exists($bornado_windowed_infinite_scroll_bootstrap)) {
+    require_once $bornado_windowed_infinite_scroll_bootstrap;
+}
+
+/**
  * Force legacy edit-ad links onto the modern Add New page.
  */
 $bornado_edit_ad_link_fix_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-edit-ad-link-fix.php';

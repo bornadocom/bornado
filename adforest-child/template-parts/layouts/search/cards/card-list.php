@@ -35,6 +35,10 @@ if ( ! empty( $ad_categories_post ) && is_array( $ad_categories_post ) ) {
     }
 }
 
+if ( count( $category_links ) > 1 ) {
+    $category_links = array( end( $category_links ) );
+}
+
 $is_verified = false;
 if ( function_exists( 'adforest_is_verified_user' ) ) {
     $is_verified = (bool) adforest_is_verified_user( get_post_field( 'post_author', $post_id ) );
@@ -44,7 +48,7 @@ if ( function_exists( 'adforest_is_verified_user' ) ) {
 
 $bornado_style3_active         = function_exists( 'mcew_is_style3_enabled' ) && mcew_is_style3_enabled();
 $bornado_posted_location_text  = function_exists( 'bornado_get_search_card_posted_location_text' ) ? bornado_get_search_card_posted_location_text( $post_id ) : '';
-$bornado_meta_has_top_content  = $bornado_style3_active ? true : ( $truncated_location !== '' || $is_verified );
+$bornado_meta_has_top_content  = ( $truncated_location !== '' || $is_verified );
 $bornado_root_classes          = array( 'adf-card', 'adf-card-list' );
 $bornado_first_image_id        = isset( $first_image_id ) ? (int) $first_image_id : 0;
 $bornado_image_size            = isset( $image_size ) && is_string( $image_size ) && $image_size !== '' ? $image_size : 'adforest-ad-list';
@@ -105,14 +109,16 @@ if ( $bornado_style3_active ) {
         <a href="<?php echo esc_url( $ad_permalink ); ?>" aria-label="<?php echo esc_attr( $ad_title ); ?>">
             <?php echo $bornado_image_markup; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
         </a>
-        <div class="adf-card-list__badges">
-            <?php if ( $is_featured ) : ?>
-                <span class="adf-badge adf-badge--featured"><?php esc_html_e( 'Featured', 'adforest' ); ?></span>
-            <?php endif; ?>
-            <?php if ( $is_urgent ) : ?>
-                <span class="adf-badge adf-badge--urgent"><?php esc_html_e( 'Urgent', 'adforest' ); ?></span>
-            <?php endif; ?>
-        </div>
+        <?php if ( $is_featured || $is_urgent ) : ?>
+            <div class="adf-card-list__badges">
+                <?php if ( $is_featured ) : ?>
+                    <span class="adf-badge adf-badge--featured"><?php esc_html_e( 'Featured', 'adforest' ); ?></span>
+                <?php endif; ?>
+                <?php if ( $is_urgent ) : ?>
+                    <span class="adf-badge adf-badge--urgent"><?php esc_html_e( 'Urgent', 'adforest' ); ?></span>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
     </div>
 
     <div class="adf-card-list__body">
@@ -145,8 +151,6 @@ if ( $bornado_style3_active ) {
             <div class="adf-card-list__meta">
                 <?php if ( $truncated_location !== '' ) : ?>
                     <span class="adf-card-list__meta-item"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> <?php echo esc_html( $truncated_location ); ?></span>
-                <?php else : ?>
-                    <span class="adf-card-list__meta-item adf-card-list__meta-item--placeholder" aria-hidden="true"><i class="fas fa-map-marker-alt" aria-hidden="true"></i></span>
                 <?php endif; ?>
                 <?php if ( $is_verified ) : ?>
                     <span class="adf-card-list__meta-item adf-card-list__meta-item--verified"><i class="fas fa-check-circle" aria-hidden="true"></i> <?php esc_html_e( 'Verified', 'adforest' ); ?></span>

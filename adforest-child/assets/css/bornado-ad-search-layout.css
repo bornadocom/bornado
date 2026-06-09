@@ -16,6 +16,62 @@ body.bornado-ad-search-view .adt-search-ads-grid {
 	margin-top: 0 !important;
 }
 
+body.bornado-ad-search-view.bornado-windowed-infinite-scroll .load-more-btn-box,
+body.bornado-ad-search-view.bornado-windowed-infinite-scroll #load-more-ads-btn,
+body.bornado-ad-search-view.bornado-windowed-infinite-scroll #no_more_ads_p,
+body.bornado-ad-search-view.bornado-windowed-infinite-scroll .bornado-wis-pagination {
+	display: none !important;
+}
+
+body.bornado-ad-search-view.bornado-windowed-infinite-scroll .bornado-wis-container {
+	position: relative;
+	overflow-anchor: auto;
+}
+
+body.bornado-ad-search-view.bornado-windowed-infinite-scroll .bornado-wis-batch {
+	width: 100%;
+}
+
+body.bornado-ad-search-view.bornado-windowed-infinite-scroll .bornado-wis-batch.is-buffered {
+	content-visibility: auto;
+	contain-intrinsic-size: auto 1200px;
+	contain: layout style paint;
+}
+
+body.bornado-ad-search-view.bornado-windowed-infinite-scroll .bornado-wis-spacer {
+	width: 100%;
+	pointer-events: none;
+}
+
+body.bornado-ad-search-view.bornado-windowed-infinite-scroll .bornado-wis-sentinel {
+	width: 100%;
+	height: 1px;
+}
+
+body.bornado-ad-search-view.bornado-windowed-infinite-scroll #adforest-ajax-results.is-loading-more::after {
+	content: "";
+	display: block;
+	width: 100%;
+	height: 24px;
+}
+
+body.bornado-ad-search-view.bornado-windowed-infinite-scroll .bornado-wis-debug {
+	position: sticky;
+	bottom: 12px;
+	z-index: 5;
+	margin-top: 12px;
+	margin-left: auto;
+	width: fit-content;
+	max-width: 100%;
+	padding: 6px 10px;
+	border-radius: 999px;
+	background: rgba(15, 23, 42, 0.88);
+	color: #fff;
+	font-size: 12px;
+	line-height: 1.4;
+	direction: ltr;
+}
+
 body.bornado-ad-search-view:not(:has(.adt-breadcrumb)) .adt-ads-with-filters,
 body.bornado-ad-search-view:not(:has(.adt-breadcrumb)) .adt-ads-topbar-section,
 body.bornado-ad-search-view:not(:has(.adt-breadcrumb)) .adt-ads-filter-map-wrapper,
@@ -168,6 +224,10 @@ body.bornado-ad-search-view .mcew-theme-list-style-3 .adf-card-list.mcew-style3-
 }
 
 @media (max-width: 767px) {
+	body.bornado-ad-search-view.bornado-windowed-infinite-scroll .bornado-wis-batch.is-buffered {
+		contain-intrinsic-size: auto 980px;
+	}
+
 	body.bornado-ad-search-view {
 		--bornado-search-breadcrumb-gap: 34px;
 	}

@@ -23,6 +23,14 @@ Important practical point:
 - infinite scroll / load more are UX layers on top of server-rendered results
 - the new independent API contract now lives in `plugins/bornado-search-core/`
 
+Phase 1.5 outcome:
+
+- AdForest's native result loading remains active
+- child-theme DOM windowing now limits retained search-card DOM during long scroll sessions
+- validation on a real long-scroll session reached roughly `337` tracked cards with only `26` mounted cards left in the live DOM
+- the measured live DOM for the whole page was roughly `1798` nodes, with about `961` nodes inside `#adforest-ajax-results`
+- URL changes on scroll were intentionally not made a hard requirement in this pass; the focus was DOM control first
+
 ## Target State
 The target architecture is:
 

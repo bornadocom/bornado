@@ -65,7 +65,28 @@ Expect:
 - no structural filter chips for city/category from semantic path
 - URL remains clean and shareable
 
-## 6. Documentation checks
+## 6. Windowed infinite-scroll checks
+On a listing page with JavaScript enabled:
+
+- scroll until at least page 2 and page 3 load automatically
+- inspect the URL while page 2 / page 3 becomes the primary visible batch
+- keep scrolling, then scroll back upward
+- inspect the results container after several pages worth of content
+
+Expect:
+- no `Load More` button is required for the next page to appear
+- crawlable pagination still exists in the server HTML, but long-scroll DOM stays bounded
+- retained DOM stays bounded because distant batches are replaced by spacers
+- scrolling back upward rehydrates older batches without obvious jumpiness
+- refresh on the currently visible `/page/{n}/` URL keeps the user on that page family
+- console checks like `document.querySelectorAll('*').length` and `BornadoWindowedInfiniteScroll.debug()` should confirm that mounted cards stay low while total tracked cards grows
+
+Reference validation snapshot from this implementation pass:
+- `document.querySelectorAll('*').length` was about `1798`
+- `document.querySelectorAll('#adforest-ajax-results *').length` was about `961`
+- `BornadoWindowedInfiniteScroll.debug()` showed roughly `337` total cards and `26` mounted cards
+
+## 7. Documentation checks
 Confirm these files exist and match current implementation intent:
 
 - `docs/listing-architecture/url-and-indexing-policy.md`
@@ -73,7 +94,7 @@ Confirm these files exist and match current implementation intent:
 - `docs/listing-architecture/headless-migration-blueprint.md`
 - `docs/listing-architecture/implementation-journal.md`
 
-## 7. If something regresses
+## 8. If something regresses
 Review in this order:
 
 1. `plugins/bornado-routing/bornado-routing.php`
@@ -81,3 +102,5 @@ Review in this order:
 3. `plugins/bornado-search-core/assets/js/bornado-search-core.js`
 4. `adforest-child/functions.php`
 5. `adforest-child/template-parts/layouts/search/cards/card-list.php`
+6. `adforest-child/bornado-search-windowed-infinite-scroll.php`
+7. `adforest-child/assets/js/bornado-search-dom-windowing.js`

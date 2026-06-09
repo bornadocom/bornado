@@ -13,6 +13,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 const MCEW_PAGE_SCROLL_MODE_FLAG_OPTION = 'mcew_adforest_loading_page_scroll_enabled';
 
 /**
+ * Allow child/theme integrations to replace the legacy page-scroll runtime.
+ *
+ * @return bool
+ */
+function mcew_should_skip_page_scroll_runtime() {
+	return (bool) apply_filters( 'bornado_windowed_infinite_scroll_enabled', false );
+}
+
+/**
  * Read current loading mode, honoring dedicated custom flag first.
  *
  * @return string
@@ -173,6 +182,10 @@ function mcew_bridge_loading_mode_option_for_frontend( $option_value ) {
 		return $option_value;
 	}
 
+	if ( mcew_should_skip_page_scroll_runtime() ) {
+		return $option_value;
+	}
+
 	$array_flag  = isset( $option_value['mcew_loading_mode_page_scroll_active'] ) ? (string) $option_value['mcew_loading_mode_page_scroll_active'] : '0';
 	$custom_flag = (string) get_option( MCEW_PAGE_SCROLL_MODE_FLAG_OPTION, '0' );
 
@@ -202,6 +215,10 @@ add_filter( 'option_adforest_theme', 'mcew_bridge_loading_mode_option_for_fronte
  * @return string[]
  */
 function mcew_add_page_scroll_loading_body_class( $classes ) {
+	if ( mcew_should_skip_page_scroll_runtime() ) {
+		return $classes;
+	}
+
 	$custom_flag = (string) get_option( MCEW_PAGE_SCROLL_MODE_FLAG_OPTION, '0' );
 	$theme_opts  = get_option( 'adforest_theme', array() );
 	$array_flag  = ( is_array( $theme_opts ) && isset( $theme_opts['mcew_loading_mode_page_scroll_active'] ) ) ? (string) $theme_opts['mcew_loading_mode_page_scroll_active'] : '0';
@@ -352,6 +369,10 @@ add_action( 'admin_footer', 'mcew_inject_loading_mode_page_scroll_in_options_ui'
  */
 function mcew_page_scroll_loading_frontend_enhancer() {
 	if ( is_admin() ) {
+		return;
+	}
+
+	if ( mcew_should_skip_page_scroll_runtime() ) {
 		return;
 	}
 

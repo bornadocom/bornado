@@ -15,9 +15,14 @@ The current listing surface is hybrid:
 
 ## What Is Client Enhancement Right Now
 - filter interactions
-- load more / infinite scroll
-- URL state sync via History API
+- native theme-driven infinite scroll / AJAX loading plus child-theme DOM windowing
+- URL state sync via History API where already provided by the existing search runtime
 - non-structural UX fixes in child-theme JS
+- HTML batch rehydration for previously removed off-screen result groups
+
+Current practical note:
+- this pass focused on DOM control first, not scroll-driven URL replacement
+- changing the visible URL during scroll is treated as a separate UX decision and should be added only if it improves refresh/share/navigation behavior without becoming distracting
 
 ## Why This Matters
 The current crawl-safe strategy depends on HTML existing without requiring the crawler to scroll.
@@ -33,6 +38,10 @@ The long-term model is:
 - WordPress keeps rendering until the independent frontend is ready.
 - Child theme remains a temporary presentation layer.
 - Listing data contract should move to plugin/runtime-neutral code before markup moves.
+- Infinite-scroll UX is acceptable only while DOM growth is bounded by batch windowing.
+- `content-visibility` is a helper for live off-screen batches, not a substitute for DOM removal.
+- Crawlable pagination links remain the public source of truth for URL ownership.
+- During the WordPress phase, prefer keeping the theme's proven loading engine and layering DOM control on top of it instead of replacing loading logic prematurely.
 
 ## Migration Trigger
 WordPress rendering remains acceptable only while:
