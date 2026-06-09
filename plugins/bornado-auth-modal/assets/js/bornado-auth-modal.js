@@ -31,7 +31,9 @@
         sendingCode: false,
         verifyingCode: false,
         firebase: {
+            assetsReady: false,
             appReady: false,
+            loadPromise: null,
             auth: null,
             verifier: null
         }
@@ -1047,14 +1049,111 @@
         });
     }
 
+    async function ensureFirebaseAssets() {
+        const firebaseConfig = config.firebase && typeof config.firebase === 'object'
+            ? config.firebase
+            : {};
+        const assetConfig = firebaseConfig.assets && typeof firebaseConfig.assets === 'object'
+            ? firebaseConfig.assets
+            : {};
+
+        if (window.firebase && window.firebase.auth) {
+            state.firebase.assetsReady = true;
+            return;
+        }
+
+        if (!firebaseConfig.enabled || !assetConfig.app || !assetConfig.auth) {
+            throw new Error(getI18n('genericError'));
+        }
+
+        if (state.firebase.loadPromise) {
+            return state.firebase.loadPromise;
+        }
+
+        state.firebase.loadPromise = (async function () {
+            await loadExternalScript(assetConfig.app);
+            await loadExternalScript(assetConfig.auth);
+
+            if (!window.firebase || !window.firebase.auth) {
+                throw new Error(getI18n('genericError'));
+            }
+
+            state.firebase.assetsReady = true;
+        })();
+
+        try {
+            await state.firebase.loadPromise;
+        } finally {
+            state.firebase.loadPromise = null;
+        }
+    }
+
+    function loadExternalScript(src) {
+        return new Promise(function (resolve, reject) {
+            if (!src) {
+                resolve();
+                return;
+            }
+
+            const existing = Array.from(document.getElementsByTagName('script')).find(function (node) {
+                return node.src === src;
+            });
+
+            if (existing) {
+                const scriptIsReady = existing.dataset.bornadoLoaded === '1'
+                    || existing.readyState === 'complete'
+                    || existing.readyState === 'loaded'
+                    || (src.indexOf('firebase-app') > -1 && window.firebase)
+                    || (src.indexOf('firebase-auth') > -1 && window.firebase && window.firebase.auth);
+
+                if (scriptIsReady) {
+                    existing.dataset.bornadoLoaded = '1';
+                    resolve();
+                    return;
+                }
+
+                existing.addEventListener('load', function handleLoad() {
+                    existing.dataset.bornadoLoaded = '1';
+                    resolve();
+                }, { once: true });
+                existing.addEventListener('error', function () {
+                    reject(new Error(getI18n('networkError')));
+                }, { once: true });
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = src;
+            script.async = true;
+            script.dataset.bornadoAuthAsset = '1';
+            script.addEventListener('load', function () {
+                script.dataset.bornadoLoaded = '1';
+                resolve();
+            }, { once: true });
+            script.addEventListener('error', function () {
+                reject(new Error(getI18n('networkError')));
+            }, { once: true });
+            document.head.appendChild(script);
+        });
+    }
+
     async function ensureFirebase() {
+        await ensureFirebaseAssets();
+
         if (!window.firebase || !window.firebase.auth) {
             throw new Error(getI18n('genericError'));
         }
 
         if (!state.firebase.appReady) {
+            const firebaseOptions = {
+                apiKey: config.firebase && config.firebase.apiKey ? config.firebase.apiKey : '',
+                projectId: config.firebase && config.firebase.projectId ? config.firebase.projectId : '',
+                messagingSenderId: config.firebase && config.firebase.messagingSenderId ? config.firebase.messagingSenderId : '',
+                appId: config.firebase && config.firebase.appId ? config.firebase.appId : ''
+            };
+
             if (!window.firebase.apps || !window.firebase.apps.length) {
-                window.firebase.initializeApp(config.firebase || {});
+                window.firebase.initializeApp(firebaseOptions);
             } else {
                 window.firebase.app();
             }

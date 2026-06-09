@@ -240,6 +240,14 @@ if (file_exists($bornado_phone_display_fix_bootstrap)) {
 }
 
 /**
+ * Keep performance-oriented asset overrides in the child theme layer.
+ */
+$bornado_performance_optimizations_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-performance-optimizations.php';
+if (file_exists($bornado_performance_optimizations_bootstrap)) {
+    require_once $bornado_performance_optimizations_bootstrap;
+}
+
+/**
  * Force legacy edit-ad links onto the modern Add New page.
  */
 $bornado_edit_ad_link_fix_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-edit-ad-link-fix.php';
@@ -1072,6 +1080,13 @@ add_action('wp_enqueue_scripts', function () {
  */
 add_action('wp_enqueue_scripts', function () {
     if (is_admin()) {
+        return;
+    }
+
+    $should_load_rangeslider = bornado_is_ad_search_view()
+        || ( function_exists( 'is_shop' ) && is_shop() );
+
+    if ( ! $should_load_rangeslider ) {
         return;
     }
 

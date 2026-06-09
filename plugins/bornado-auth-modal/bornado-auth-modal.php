@@ -85,11 +85,7 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 				return;
 			}
 
-			$this->enqueue_firebase_assets();
-
-			if ( ! empty( $adforest_theme['sb_register_with_phone'] ) && ( wp_script_is( 'firebase-auth', 'registered' ) || wp_script_is( 'firebase-auth', 'enqueued' ) ) ) {
-				$script_deps[] = 'firebase-auth';
-			}
+			$this->register_firebase_assets();
 
 			wp_enqueue_script(
 				'bornado-auth-modal',
@@ -103,7 +99,7 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 			$this->cleanup_legacy_guest_auth_assets();
 		}
 
-		private function enqueue_firebase_assets() {
+		private function register_firebase_assets() {
 			global $adforest_theme;
 
 			if ( empty( $adforest_theme['sb_register_with_phone'] ) ) {
@@ -113,16 +109,9 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 			if ( ! wp_script_is( 'firebase-app', 'registered' ) && ! wp_script_is( 'firebase-app', 'enqueued' ) ) {
 				wp_register_script( 'firebase-app', 'https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js', array(), null, true );
 			}
-			if ( ! wp_script_is( 'firebase-analytics', 'registered' ) && ! wp_script_is( 'firebase-analytics', 'enqueued' ) ) {
-				wp_register_script( 'firebase-analytics', 'https://www.gstatic.com/firebasejs/8.3.2/firebase-analytics.js', array( 'firebase-app' ), null, true );
-			}
 			if ( ! wp_script_is( 'firebase-auth', 'registered' ) && ! wp_script_is( 'firebase-auth', 'enqueued' ) ) {
 				wp_register_script( 'firebase-auth', 'https://www.gstatic.com/firebasejs/8.3.2/firebase-auth.js', array( 'firebase-app' ), null, true );
 			}
-
-			wp_enqueue_script( 'firebase-app' );
-			wp_enqueue_script( 'firebase-analytics' );
-			wp_enqueue_script( 'firebase-auth' );
 		}
 
 		private function build_frontend_config() {
@@ -150,10 +139,15 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 				'privacyUrl'             => $this->get_privacy_url(),
 				'isRtl'                  => is_rtl(),
 				'firebase'               => array(
+					'enabled'           => ! empty( $adforest_theme['sb_register_with_phone'] ),
 					'apiKey'            => isset( $adforest_theme['sb_firebase_apikey'] ) ? (string) $adforest_theme['sb_firebase_apikey'] : '',
 					'projectId'         => isset( $adforest_theme['sb_firebase_projectId'] ) ? (string) $adforest_theme['sb_firebase_projectId'] : '',
 					'messagingSenderId' => isset( $adforest_theme['sb_firebase_messagingSenderId'] ) ? (string) $adforest_theme['sb_firebase_messagingSenderId'] : '',
 					'appId'             => isset( $adforest_theme['sb_firebase_appId'] ) ? (string) $adforest_theme['sb_firebase_appId'] : '',
+					'assets'            => array(
+						'app'  => 'https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js',
+						'auth' => 'https://www.gstatic.com/firebasejs/8.3.2/firebase-auth.js',
+					),
 				),
 				'phoneCountries'         => function_exists( 'bornado_get_phone_country_options' ) ? bornado_get_phone_country_options() : array(),
 				'defaultPhoneCountry'    => function_exists( 'bornado_get_default_phone_country_option' ) ? bornado_get_default_phone_country_option() : array(),

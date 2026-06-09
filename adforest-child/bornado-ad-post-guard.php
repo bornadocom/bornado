@@ -12,7 +12,7 @@ if ( ! function_exists( 'bornado_enqueue_ad_post_guard_assets' ) ) {
 	 * @return void
 	 */
 	function bornado_enqueue_ad_post_guard_assets() {
-		if ( is_admin() ) {
+		if ( is_admin() || ! function_exists( 'bornado_is_ad_post_page' ) || ! bornado_is_ad_post_page() ) {
 			return;
 		}
 

@@ -66,6 +66,29 @@
 		return new window.URLSearchParams();
 	}
 
+	function sortSearchParams(source) {
+		var params = toSearchParams(source);
+		var entries = [];
+		var sorted = new window.URLSearchParams();
+
+		params.forEach(function (value, key) {
+			entries.push([key, value]);
+		});
+
+		entries.sort(function (left, right) {
+			if (left[0] === right[0]) {
+				return left[1] < right[1] ? -1 : left[1] > right[1] ? 1 : 0;
+			}
+			return left[0] < right[0] ? -1 : 1;
+		});
+
+		entries.forEach(function (entry) {
+			sorted.append(entry[0], entry[1]);
+		});
+
+		return sorted;
+	}
+
 	function isSemanticRoute() {
 		return !!routeContext.isSemanticRoute;
 	}
@@ -73,14 +96,14 @@
 	function toPublicSearchParams(source) {
 		var params = toSearchParams(source);
 		if (!isSemanticRoute()) {
-			return params;
+			return sortSearchParams(params);
 		}
 
 		STRUCTURAL_KEYS.forEach(function (key) {
 			params.delete(key);
 		});
 
-		return params;
+		return sortSearchParams(params);
 	}
 
 	function toEffectiveSearchParams(source) {
@@ -236,7 +259,7 @@
 			}
 		});
 
-		return searchParams;
+		return sortSearchParams(searchParams);
 	};
 
 	api.buildSearchParamsFromSource = function (source) {
@@ -275,7 +298,7 @@
 		}
 
 		var url = new window.URL(targetUrl || window.location.href, window.location.origin);
-		var params = toPublicSearchParams(source);
+		var params = sortSearchParams(toPublicSearchParams(source));
 		url.search = params.toString();
 		return url;
 	};
@@ -343,7 +366,7 @@
 
 		var searchParams = api.buildSearchParams(form);
 		var url = new window.URL(targetUrl || form.getAttribute("action") || window.location.href, window.location.origin);
-		url.search = searchParams ? searchParams.toString() : "";
+		url.search = searchParams ? sortSearchParams(searchParams).toString() : "";
 		return url;
 	};
 

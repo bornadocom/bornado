@@ -382,7 +382,8 @@ if (!function_exists('get_ad_post_details')) {
         }
 
         $user_pic             = function_exists('adforest_get_user_dp') ? adforest_get_user_dp($poster_id) : '';
-        $image_thumbnail_size = 'adforest-single-post';
+        // Search/list cards never need the heavy single-post image size.
+        $image_thumbnail_size = 'adforest-ad-list';
         $media                = function_exists('adforest_get_ad_images') ? adforest_get_ad_images($post_id) : array();
         $media_ids            = array();
 
@@ -532,6 +533,10 @@ if (!function_exists('get_ad_post_details')) {
         return array(
             'category_names'     => $category_names,
             'img'                => $first_img,
+            'first_image_id'     => !empty($media_ids) ? (int) $media_ids[0] : 0,
+            'image_size'         => $image_thumbnail_size,
+            'img_width'          => isset($img[1]) ? (int) $img[1] : 0,
+            'img_height'         => isset($img[2]) ? (int) $img[2] : 0,
             'all_ad_images'      => $all_ad_images,
             'ad_title'           => $ad_title,
             'truncated_location' => $truncated_location,

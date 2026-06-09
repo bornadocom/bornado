@@ -129,6 +129,7 @@ final class Bornado_SEO_Routing {
 			return $query_vars;
 		}
 
+		$resolved = self::apply_requested_paged_to_route_context( $resolved, $query_vars );
 		$resolved = self::hydrate_route_context( $resolved );
 
 		// Always persist context for valid routes so that filter_pre_handle_404,
@@ -228,6 +229,7 @@ final class Bornado_SEO_Routing {
 			return;
 		}
 
+		$resolved = self::apply_requested_paged_to_route_context( $resolved, $wp->query_vars );
 		$resolved = self::hydrate_route_context( $resolved );
 
 		if ( empty( $wp->query_vars[ self::QUERY_ROUTE ] ) ) {
@@ -548,6 +550,8 @@ final class Bornado_SEO_Routing {
 			$paged = (int) $args['paged'];
 		} elseif ( isset( $args['page'] ) && (int) $args['page'] > 1 ) {
 			$paged = (int) $args['page'];
+		} elseif ( isset( $args['page-number'] ) && (int) $args['page-number'] > 1 ) {
+			$paged = (int) $args['page-number'];
 		}
 
 		$route_terms = self::get_route_terms_from_location_id( $location_id );
@@ -569,6 +573,7 @@ final class Bornado_SEO_Routing {
 			$args['ad_cats'],
 			$args['paged'],
 			$args['page'],
+			$args['page-number'],
 			$args['ad_cat_sub'],
 			$args['ad_cat_sub_sub'],
 			$args['ad_cat_sub_sub_sub'],
@@ -1209,6 +1214,14 @@ final class Bornado_SEO_Routing {
 		$has_seo_args = isset( $current_args['country_id'] ) || isset( $current_args['ad_country'] ) || isset( $current_args['cat_id'] ) || isset( $current_args['ad_cats'] ) || isset( $current_args['ad_cat_sub'] ) || isset( $current_args['ad_cat_sub_sub'] ) || isset( $current_args['ad_cat_sub_sub_sub'] ) || isset( $current_args['ad_cat_sub_sub_sub_sub'] );
 		$paged        = ! empty( self::$context['paged'] ) ? (int) self::$context['paged'] : 1;
 
+		if ( isset( $current_args['paged'] ) && (int) $current_args['paged'] > 1 ) {
+			$paged = (int) $current_args['paged'];
+		} elseif ( isset( $current_args['page'] ) && (int) $current_args['page'] > 1 ) {
+			$paged = (int) $current_args['page'];
+		} elseif ( isset( $current_args['page-number'] ) && (int) $current_args['page-number'] > 1 ) {
+			$paged = (int) $current_args['page-number'];
+		}
+
 		$location_id = 0;
 		if ( isset( $current_args['country_id'] ) && '' !== $current_args['country_id'] ) {
 			$location_id = (int) $current_args['country_id'];
@@ -1234,6 +1247,7 @@ final class Bornado_SEO_Routing {
 			$remaining_args['ad_cats'],
 			$remaining_args['paged'],
 			$remaining_args['page'],
+			$remaining_args['page-number'],
 			$remaining_args['ad_cat_sub'],
 			$remaining_args['ad_cat_sub_sub'],
 			$remaining_args['ad_cat_sub_sub_sub'],
@@ -1272,6 +1286,8 @@ final class Bornado_SEO_Routing {
 			$paged = (int) $_GET['paged'];
 		} elseif ( isset( $_GET['page'] ) && (int) $_GET['page'] > 1 ) {
 			$paged = (int) $_GET['page'];
+		} elseif ( isset( $_GET['page-number'] ) && (int) $_GET['page-number'] > 1 ) {
+			$paged = (int) $_GET['page-number'];
 		}
 
 		if ( isset( $_GET['country_id'] ) && $_GET['country_id'] !== '' ) {
@@ -1301,9 +1317,12 @@ final class Bornado_SEO_Routing {
 		$query_args = self::get_request_query_args();
 		unset(
 			$query_args['country_id'],
+			$query_args['ad_country'],
 			$query_args['cat_id'],
+			$query_args['ad_cats'],
 			$query_args['paged'],
 			$query_args['page'],
+			$query_args['page-number'],
 			$query_args['ad_cat_sub'],
 			$query_args['ad_cat_sub_sub'],
 			$query_args['ad_cat_sub_sub_sub'],
@@ -1411,7 +1430,10 @@ final class Bornado_SEO_Routing {
 		$url  = home_url( user_trailingslashit( $path ) );
 
 		if ( ! empty( $query_args ) && is_array( $query_args ) ) {
-			$url = add_query_arg( $query_args, $url );
+			$query_args = self::sort_public_query_args( self::sanitize_public_query_args( $query_args ) );
+			if ( ! empty( $query_args ) ) {
+				$url = add_query_arg( $query_args, $url );
+			}
 		}
 
 		return $url;
@@ -1631,6 +1653,48 @@ final class Bornado_SEO_Routing {
 			if ( $landing_post instanceof WP_Post ) {
 				$resolved['landing_post'] = $landing_post;
 			}
+		}
+
+		return $resolved;
+	}
+
+	/**
+	 * Preserve requested pagination when the semantic route path was resolved
+	 * from rewrite vars instead of containing `/page/{n}/` directly.
+	 *
+	 * Routes matched by the rewrite rule store the clean semantic path in
+	 * `bornado_seo_path` and the page number separately in `paged`. Without
+	 * copying that value back into the resolved route context before hydration,
+	 * canonical/redirect logic may incorrectly collapse `/page/2/` to page 1.
+	 *
+	 * @param array<string,mixed> $resolved Resolved route data.
+	 * @param array<string,mixed> $query_vars Request/query vars carrying pagination.
+	 * @return array<string,mixed>
+	 */
+	private static function apply_requested_paged_to_route_context( array $resolved, array $query_vars ) {
+		$paged = 1;
+
+		if ( isset( $query_vars['paged'] ) && (int) $query_vars['paged'] > 1 ) {
+			$paged = (int) $query_vars['paged'];
+		} elseif ( isset( $query_vars['page'] ) && (int) $query_vars['page'] > 1 ) {
+			$paged = (int) $query_vars['page'];
+		} elseif ( isset( $query_vars['page-number'] ) && (int) $query_vars['page-number'] > 1 ) {
+			$paged = (int) $query_vars['page-number'];
+		}
+
+		if ( $paged <= 1 ) {
+			return $resolved;
+		}
+
+		$resolved['paged'] = $paged;
+
+		if ( ! empty( $resolved['is_valid'] ) ) {
+			$resolved['canonical_url'] = self::build_semantic_url(
+				! empty( $resolved['country_term'] ) && $resolved['country_term'] instanceof WP_Term ? (int) $resolved['country_term']->term_id : 0,
+				! empty( $resolved['city_term'] ) && $resolved['city_term'] instanceof WP_Term ? (int) $resolved['city_term']->term_id : 0,
+				! empty( $resolved['deepest_term'] ) && $resolved['deepest_term'] instanceof WP_Term ? (int) $resolved['deepest_term']->term_id : 0,
+				$paged
+			);
 		}
 
 		return $resolved;
@@ -2183,7 +2247,12 @@ final class Bornado_SEO_Routing {
 			$route_mode = ! empty( self::$context['route_mode'] ) ? (string) self::$context['route_mode'] : '';
 			unset(
 				$extra_args['country_id'],
+				$extra_args['ad_country'],
 				$extra_args['cat_id'],
+				$extra_args['ad_cats'],
+				$extra_args['paged'],
+				$extra_args['page'],
+				$extra_args['page-number'],
 				$extra_args['ad_cat_sub'],
 				$extra_args['ad_cat_sub_sub'],
 				$extra_args['ad_cat_sub_sub_sub'],
@@ -2245,6 +2314,9 @@ final class Bornado_SEO_Routing {
 			$state['ad_country'],
 			$state['cat_id'],
 			$state['ad_cats'],
+			$state['paged'],
+			$state['page'],
+			$state['page-number'],
 			$state['ad_cat_sub'],
 			$state['ad_cat_sub_sub'],
 			$state['ad_cat_sub_sub_sub'],
@@ -2268,6 +2340,7 @@ final class Bornado_SEO_Routing {
 			$query_args['ad_cats'],
 			$query_args['paged'],
 			$query_args['page'],
+			$query_args['page-number'],
 			$query_args['ad_cat_sub'],
 			$query_args['ad_cat_sub_sub'],
 			$query_args['ad_cat_sub_sub_sub'],
@@ -2290,7 +2363,43 @@ final class Bornado_SEO_Routing {
 			$query_args[ $key ] = $normalized;
 		}
 
+		return self::sort_public_query_args( $query_args );
+	}
+
+	/**
+	 * Sort public query args recursively so canonical URLs stay deterministic.
+	 *
+	 * @param array<string,mixed> $query_args Query args.
+	 * @return array<string,mixed>
+	 */
+	private static function sort_public_query_args( array $query_args ) {
+		foreach ( $query_args as $key => $value ) {
+			if ( is_array( $value ) ) {
+				$query_args[ $key ] = self::sort_nested_public_query_value( $value );
+			}
+		}
+
+		ksort( $query_args );
+
 		return $query_args;
+	}
+
+	/**
+	 * Sort nested public query values recursively.
+	 *
+	 * @param array<mixed> $value Nested query value.
+	 * @return array<mixed>
+	 */
+	private static function sort_nested_public_query_value( array $value ) {
+		foreach ( $value as $child_key => $child_value ) {
+			if ( is_array( $child_value ) ) {
+				$value[ $child_key ] = self::sort_nested_public_query_value( $child_value );
+			}
+		}
+
+		ksort( $value );
+
+		return $value;
 	}
 
 	/**

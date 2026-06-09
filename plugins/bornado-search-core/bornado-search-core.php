@@ -25,8 +25,10 @@ if ( ! defined( 'BORNADO_SEARCH_CORE_URL' ) ) {
 
 require_once BORNADO_SEARCH_CORE_DIR . 'includes/class-bornado-search-context.php';
 require_once BORNADO_SEARCH_CORE_DIR . 'includes/class-bornado-search-core.php';
+require_once BORNADO_SEARCH_CORE_DIR . 'includes/class-bornado-listing-api.php';
 
 Bornado_Search_Core::init();
+Bornado_Listing_API::init();
 
 if ( ! function_exists( 'bornado_search_get_actions' ) ) {
 	/**

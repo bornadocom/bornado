@@ -46,6 +46,51 @@ $bornado_style3_active         = function_exists( 'mcew_is_style3_enabled' ) && 
 $bornado_posted_location_text  = function_exists( 'bornado_get_search_card_posted_location_text' ) ? bornado_get_search_card_posted_location_text( $post_id ) : '';
 $bornado_meta_has_top_content  = $bornado_style3_active ? true : ( $truncated_location !== '' || $is_verified );
 $bornado_root_classes          = array( 'adf-card', 'adf-card-list' );
+$bornado_first_image_id        = isset( $first_image_id ) ? (int) $first_image_id : 0;
+$bornado_image_size            = isset( $image_size ) && is_string( $image_size ) && $image_size !== '' ? $image_size : 'adforest-ad-list';
+$bornado_fallback_width        = isset( $img_width ) && (int) $img_width > 0 ? (int) $img_width : 350;
+$bornado_fallback_height       = isset( $img_height ) && (int) $img_height > 0 ? (int) $img_height : 220;
+$bornado_image_sizes           = $bornado_style3_active ? '(max-width: 767px) 108px, 220px' : '(max-width: 991px) 100vw, 280px';
+$bornado_is_lcp_candidate      = false;
+
+if ( function_exists( 'bornado_is_ad_search_view' ) && bornado_is_ad_search_view() ) {
+	// Claim the LCP slot only once per request so other result cards stay lazy.
+	if ( empty( $GLOBALS['bornado_search_lcp_image_claimed'] ) ) {
+		$GLOBALS['bornado_search_lcp_image_claimed'] = true;
+		$bornado_is_lcp_candidate                    = true;
+	}
+}
+
+$bornado_image_attrs = array(
+	'class'    => 'adf-card-list__img',
+	'alt'      => $ad_title,
+	'loading'  => $bornado_is_lcp_candidate ? 'eager' : 'lazy',
+	'decoding' => 'async',
+	'sizes'    => $bornado_image_sizes,
+);
+
+if ( $bornado_is_lcp_candidate ) {
+	$bornado_image_attrs['fetchpriority'] = 'high';
+}
+
+$bornado_image_markup = '';
+if ( $bornado_first_image_id > 0 ) {
+	$bornado_image_markup = wp_get_attachment_image( $bornado_first_image_id, $bornado_image_size, false, $bornado_image_attrs );
+}
+
+if ( '' === $bornado_image_markup ) {
+	$bornado_image_markup = sprintf(
+		'<img class="%1$s" src="%2$s" alt="%3$s" loading="%4$s" decoding="async"%5$s sizes="%6$s" width="%7$d" height="%8$d">',
+		esc_attr( $bornado_image_attrs['class'] ),
+		esc_url( $first_img ),
+		esc_attr( $ad_title ),
+		esc_attr( $bornado_image_attrs['loading'] ),
+		$bornado_is_lcp_candidate ? ' fetchpriority="high"' : '',
+		esc_attr( $bornado_image_sizes ),
+		(int) $bornado_fallback_width,
+		(int) $bornado_fallback_height
+	);
+}
 
 if ( $is_featured ) {
     $bornado_root_classes[] = 'adf-card-list--featured';
@@ -58,7 +103,7 @@ if ( $bornado_style3_active ) {
 <div class="<?php echo esc_attr( implode( ' ', $bornado_root_classes ) ); ?>" data-post-id="<?php echo (int) $post_id; ?>">
     <div class="adf-card-list__media">
         <a href="<?php echo esc_url( $ad_permalink ); ?>" aria-label="<?php echo esc_attr( $ad_title ); ?>">
-            <img class="adf-card-list__img" src="<?php echo esc_url( $first_img ); ?>" alt="<?php echo esc_attr( $ad_title ); ?>" loading="lazy">
+            <?php echo $bornado_image_markup; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
         </a>
         <div class="adf-card-list__badges">
             <?php if ( $is_featured ) : ?>
