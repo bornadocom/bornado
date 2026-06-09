@@ -499,6 +499,38 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 			el.style.pointerEvents = 'auto';
 		}
 
+		function getSemanticRouteContext() {
+			var coreConfig = window.BornadoSearchCoreConfig || {};
+			var ctx = coreConfig.routeContext || {};
+			return ctx && ctx.isSemanticRoute ? ctx : null;
+		}
+
+		function applySemanticStructuralContext(params) {
+			var ctx = getSemanticRouteContext();
+			if (!ctx) {
+				return;
+			}
+
+			// Clean semantic URLs (e.g. /uk/property/, /uk/liverpool/) carry no
+			// cat_id/country_id in the address bar, so the AJAX search would
+			// return ads from every category/city. Backfill the structural
+			// context from the resolved route so infinite scroll stays scoped
+			// to the same category and location as the first server-rendered page.
+			if (!params.has('country_id') && !params.has('ad_country')) {
+				var locationId = Number(ctx.cityId || ctx.countryId || 0);
+				if (locationId > 0) {
+					params.set('country_id', String(locationId));
+				}
+			}
+
+			if (!params.has('cat_id') && !params.has('ad_cats')) {
+				var categoryId = Number(ctx.categoryId || 0);
+				if (categoryId > 0) {
+					params.set('cat_id', String(categoryId));
+				}
+			}
+		}
+
 		function buildFiltersRaw(config) {
 			var currentQs = '';
 			if (window.adforestAjaxSearchApi && typeof window.adforestAjaxSearchApi.collect === 'function') {
@@ -514,6 +546,7 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 			var params = new URLSearchParams(currentQs);
 			params.delete('paged');
 			params.delete('page-number');
+			applySemanticStructuralContext(params);
 			if (config && config.viewType) {
 				params.set('view-type', config.viewType);
 			}

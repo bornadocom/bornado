@@ -35,10 +35,6 @@ if ( ! empty( $ad_categories_post ) && is_array( $ad_categories_post ) ) {
     }
 }
 
-if ( count( $category_links ) > 1 ) {
-    $category_links = array( end( $category_links ) );
-}
-
 $is_verified = false;
 if ( function_exists( 'adforest_is_verified_user' ) ) {
     $is_verified = (bool) adforest_is_verified_user( get_post_field( 'post_author', $post_id ) );
