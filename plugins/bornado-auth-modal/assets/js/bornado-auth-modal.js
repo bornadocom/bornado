@@ -18,6 +18,7 @@
         currentView: 'phone-entry',
         redirectUrl: getDefaultRedirectTarget(),
         continueTokenHandled: false,
+        continueToken: '',
         continueFlowSource: '',
         claimAdId: 0,
         claimPhoneNumber: '',
@@ -249,6 +250,7 @@
             mode: 'login',
             redirectUrl: fallbackRedirectUrl || config.profileUrl || window.location.href
         });
+        state.continueToken = String(continueToken || '').trim();
 
         switchView('otp');
         toggleSubmitState(forms.otp, true);
@@ -494,6 +496,7 @@
                     phone_number: state.otpFlow.phoneNumber,
                     phone_dial_code: state.otpFlow.phoneDialCode || '',
                     claim_ad_id: state.claimAdId || 0,
+                    continue_token: state.continueToken || '',
                     id_token: idToken,
                     remember: state.otpFlow.remember || '0'
                 });
@@ -583,6 +586,7 @@
                 phone_number: state.pendingRegister.phoneNumber,
                 phone_dial_code: state.pendingRegister.phoneDialCode || '',
                 claim_ad_id: state.claimAdId || 0,
+                continue_token: state.continueToken || '',
                 id_token: state.pendingRegister.idToken,
                 password: password,
                 display_name: displayName,
@@ -666,6 +670,7 @@
 
     function resetJourney(clearInput) {
         state.currentView = 'phone-entry';
+        state.continueToken = '';
         state.continueFlowSource = '';
         state.claimPhoneNumber = '';
         state.phoneNumber = '';

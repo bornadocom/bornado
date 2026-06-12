@@ -18,6 +18,7 @@ if (!class_exists('Bornado_Contact_Verification')) {
         const WHATSAPP_STATUS_KEY = 'bornado_whatsapp_verification_status';
         const WHATSAPP_VERIFIED_AT_KEY = 'bornado_whatsapp_verified_at';
         const WHATSAPP_VERIFIED_PHONE_KEY = 'bornado_whatsapp_verified_phone';
+        const WHATSAPP_VERIFICATION_SOURCE_KEY = 'bornado_whatsapp_verification_source';
         const WHATSAPP_PENDING_PHONE_KEY = 'bornado_whatsapp_verification_phone';
         const WHATSAPP_CODE_HASH_KEY = 'bornado_whatsapp_verification_code_hash';
         const WHATSAPP_EXPIRES_AT_KEY = 'bornado_whatsapp_verification_expires_at';
@@ -70,6 +71,7 @@ if (!class_exists('Bornado_Contact_Verification')) {
             add_action('profile_update', array($this, 'handle_profile_update'), 20, 2);
             add_action('updated_user_meta', array($this, 'handle_phone_meta_change'), 20, 4);
             add_action('added_user_meta', array($this, 'handle_phone_meta_change'), 20, 4);
+            add_action('bornado_auth_modal_firebase_register_success', array($this, 'handle_notification_continue_register_success'), 20, 3);
         }
 
         public function enqueue_assets()
@@ -360,13 +362,7 @@ if (!class_exists('Bornado_Contact_Verification')) {
                 wp_send_json_error(array('message' => 'کد تایید واردشده صحیح نیست.'), 422);
             }
 
-            update_user_meta($user_id, self::WHATSAPP_STATUS_KEY, 'verified');
-            update_user_meta($user_id, self::WHATSAPP_VERIFIED_AT_KEY, time());
-            update_user_meta($user_id, self::WHATSAPP_VERIFIED_PHONE_KEY, $phone);
-            delete_user_meta($user_id, self::WHATSAPP_CODE_HASH_KEY);
-            delete_user_meta($user_id, self::WHATSAPP_EXPIRES_AT_KEY);
-            delete_user_meta($user_id, self::WHATSAPP_ATTEMPTS_KEY);
-            delete_user_meta($user_id, self::WHATSAPP_REQUESTED_AT_KEY);
+            $this->mark_whatsapp_verified($user_id, $phone, 'manual_code');
 
             wp_send_json_success(
                 array(
@@ -464,6 +460,50 @@ if (!class_exists('Bornado_Contact_Verification')) {
             ) {
                 $this->reset_whatsapp_verification($user_id);
             }
+        }
+
+        /**
+         * Auto verify WhatsApp only for trusted notification continue registrations.
+         *
+         * @param int    $user_id
+         * @param string $verified_phone
+         * @param array  $context
+         * @return void
+         */
+        public function handle_notification_continue_register_success($user_id, $verified_phone, $context = array())
+        {
+            $user_id = (int) $user_id;
+            if ($user_id <= 0 || !is_array($context)) {
+                return;
+            }
+
+            if (empty($context['continue_token_valid'])) {
+                return;
+            }
+
+            $flow_source = !empty($context['continue_flow_source']) ? sanitize_key((string) $context['continue_flow_source']) : '';
+            if ('notification' !== $flow_source) {
+                return;
+            }
+
+            $current_phone  = $this->normalize_phone((string) get_user_meta($user_id, '_sb_contact', true));
+            $verified_phone = $this->normalize_phone($verified_phone);
+            $continue_phone = $this->normalize_phone(isset($context['continue_phone']) ? (string) $context['continue_phone'] : '');
+
+            if (
+                !$this->is_valid_phone_number($current_phone)
+                || $current_phone !== $verified_phone
+                || $current_phone !== $continue_phone
+            ) {
+                return;
+            }
+
+            $status = $this->get_whatsapp_status_data($user_id);
+            if (!empty($status['is_verified']) && $current_phone === $this->normalize_phone((string) ($status['address'] ?? ''))) {
+                return;
+            }
+
+            $this->mark_whatsapp_verified($user_id, $current_phone, 'notification_continue');
         }
 
         /**
@@ -815,11 +855,47 @@ if (!class_exists('Bornado_Contact_Verification')) {
             update_user_meta($user_id, self::WHATSAPP_STATUS_KEY, 'unverified');
             delete_user_meta($user_id, self::WHATSAPP_VERIFIED_AT_KEY);
             delete_user_meta($user_id, self::WHATSAPP_VERIFIED_PHONE_KEY);
+            delete_user_meta($user_id, self::WHATSAPP_VERIFICATION_SOURCE_KEY);
             delete_user_meta($user_id, self::WHATSAPP_PENDING_PHONE_KEY);
             delete_user_meta($user_id, self::WHATSAPP_CODE_HASH_KEY);
             delete_user_meta($user_id, self::WHATSAPP_EXPIRES_AT_KEY);
             delete_user_meta($user_id, self::WHATSAPP_ATTEMPTS_KEY);
             delete_user_meta($user_id, self::WHATSAPP_REQUESTED_AT_KEY);
+        }
+
+        /**
+         * @param int    $user_id
+         * @param string $phone
+         * @param string $source
+         * @return bool
+         */
+        private function mark_whatsapp_verified($user_id, $phone, $source = '')
+        {
+            $user_id = (int) $user_id;
+            $phone   = $this->normalize_phone($phone);
+            $source  = sanitize_key((string) $source);
+
+            if ($user_id <= 0 || !$this->is_valid_phone_number($phone)) {
+                return false;
+            }
+
+            update_user_meta($user_id, self::WHATSAPP_STATUS_KEY, 'verified');
+            update_user_meta($user_id, self::WHATSAPP_VERIFIED_AT_KEY, time());
+            update_user_meta($user_id, self::WHATSAPP_VERIFIED_PHONE_KEY, $phone);
+
+            if ('' !== $source) {
+                update_user_meta($user_id, self::WHATSAPP_VERIFICATION_SOURCE_KEY, $source);
+            } else {
+                delete_user_meta($user_id, self::WHATSAPP_VERIFICATION_SOURCE_KEY);
+            }
+
+            delete_user_meta($user_id, self::WHATSAPP_PENDING_PHONE_KEY);
+            delete_user_meta($user_id, self::WHATSAPP_CODE_HASH_KEY);
+            delete_user_meta($user_id, self::WHATSAPP_EXPIRES_AT_KEY);
+            delete_user_meta($user_id, self::WHATSAPP_ATTEMPTS_KEY);
+            delete_user_meta($user_id, self::WHATSAPP_REQUESTED_AT_KEY);
+
+            return true;
         }
 
         /**

@@ -601,6 +601,7 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 			$requested_phone = $this->normalize_phone_number( isset( $_POST['phone_number'] ) ? wp_unslash( $_POST['phone_number'] ) : '', $phone_dial_code );
 			$remember        = ! empty( $_POST['remember'] ) && '1' === (string) wp_unslash( $_POST['remember'] );
 			$claim_ad_id     = ! empty( $_POST['claim_ad_id'] ) ? absint( wp_unslash( $_POST['claim_ad_id'] ) ) : 0;
+			$continue_token  = isset( $_POST['continue_token'] ) ? wp_unslash( $_POST['continue_token'] ) : '';
 			$token_result    = $this->verify_firebase_identity_token( isset( $_POST['id_token'] ) ? wp_unslash( $_POST['id_token'] ) : '' );
 
 			if ( is_wp_error( $token_result ) ) {
@@ -611,6 +612,7 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 			if ( $requested_phone && $verified_phone !== $requested_phone ) {
 				wp_send_json_error( array( 'message' => __( 'شماره تاییدشده با شماره درخواستی یکسان نیست.', 'bornado-auth-modal' ) ), 409 );
 			}
+			$continue_context = $this->build_continue_auth_context( $continue_token, $verified_phone );
 
 			$user_id = $this->find_user_id_by_phone( $verified_phone );
 			if ( ! $user_id ) {
@@ -631,9 +633,13 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 				$user_id,
 				$verified_phone,
 				array(
-					'event'        => 'firebase_login',
-					'firebase_uid' => isset( $token_result['firebase_uid'] ) ? (string) $token_result['firebase_uid'] : '',
-					'claim_ad_id'  => $claim_ad_id,
+					'event'                 => 'firebase_login',
+					'firebase_uid'          => isset( $token_result['firebase_uid'] ) ? (string) $token_result['firebase_uid'] : '',
+					'claim_ad_id'           => $claim_ad_id,
+					'continue_token_valid'  => ! empty( $continue_context['continue_token_valid'] ),
+					'continue_flow_source'  => isset( $continue_context['continue_flow_source'] ) ? (string) $continue_context['continue_flow_source'] : '',
+					'continue_listing_id'   => isset( $continue_context['continue_listing_id'] ) ? absint( $continue_context['continue_listing_id'] ) : 0,
+					'continue_phone'        => isset( $continue_context['continue_phone'] ) ? (string) $continue_context['continue_phone'] : '',
 				)
 			);
 			do_action( 'bornado_auth_modal_phone_login_success', $user_id, $verified_phone );
@@ -662,6 +668,7 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 			$password        = (string) wp_unslash( $_POST['password'] ?? '' );
 			$remember        = ! empty( $_POST['remember'] ) && '1' === (string) wp_unslash( $_POST['remember'] );
 			$claim_ad_id     = ! empty( $_POST['claim_ad_id'] ) ? absint( wp_unslash( $_POST['claim_ad_id'] ) ) : 0;
+			$continue_token  = isset( $_POST['continue_token'] ) ? wp_unslash( $_POST['continue_token'] ) : '';
 			$token_result    = $this->verify_firebase_identity_token( isset( $_POST['id_token'] ) ? wp_unslash( $_POST['id_token'] ) : '' );
 
 			if ( '' === trim( $password ) ) {
@@ -680,6 +687,7 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 			if ( $requested_phone && $verified_phone !== $requested_phone ) {
 				wp_send_json_error( array( 'message' => __( 'شماره تاییدشده با شماره درخواستی یکسان نیست.', 'bornado-auth-modal' ) ), 409 );
 			}
+			$continue_context = $this->build_continue_auth_context( $continue_token, $verified_phone );
 
 			if ( $this->find_user_id_by_phone( $verified_phone ) ) {
 				wp_send_json_error( array( 'message' => __( 'این شماره قبلا ثبت شده است.', 'bornado-auth-modal' ) ), 409 );
@@ -740,9 +748,13 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 				$user_id,
 				$verified_phone,
 				array(
-					'event'        => 'firebase_register',
-					'firebase_uid' => isset( $token_result['firebase_uid'] ) ? (string) $token_result['firebase_uid'] : '',
-					'claim_ad_id'  => $claim_ad_id,
+					'event'                 => 'firebase_register',
+					'firebase_uid'          => isset( $token_result['firebase_uid'] ) ? (string) $token_result['firebase_uid'] : '',
+					'claim_ad_id'           => $claim_ad_id,
+					'continue_token_valid'  => ! empty( $continue_context['continue_token_valid'] ),
+					'continue_flow_source'  => isset( $continue_context['continue_flow_source'] ) ? (string) $continue_context['continue_flow_source'] : '',
+					'continue_listing_id'   => isset( $continue_context['continue_listing_id'] ) ? absint( $continue_context['continue_listing_id'] ) : 0,
+					'continue_phone'        => isset( $continue_context['continue_phone'] ) ? (string) $continue_context['continue_phone'] : '',
 				)
 			);
 			do_action( 'bornado_auth_modal_phone_register_success', $user_id, $verified_phone );
@@ -1162,6 +1174,42 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 			}
 
 			return home_url( '/profile/' );
+		}
+
+		private function build_continue_auth_context( $continue_token, $verified_phone = '' ) {
+			$context = array(
+				'continue_token_valid' => false,
+				'continue_flow_source' => '',
+				'continue_listing_id'  => 0,
+				'continue_phone'       => '',
+			);
+
+			$continue_token = trim( (string) $continue_token );
+			if ( '' === $continue_token ) {
+				return $context;
+			}
+
+			$payload = $this->parse_continue_token( $continue_token );
+			if ( is_wp_error( $payload ) ) {
+				return $context;
+			}
+
+			$continue_phone = $this->normalize_phone_number( isset( $payload['phone'] ) ? (string) $payload['phone'] : '' );
+			if ( '' === $continue_phone ) {
+				return $context;
+			}
+
+			$verified_phone = $this->normalize_phone_number( $verified_phone );
+			if ( '' !== $verified_phone && $continue_phone !== $verified_phone ) {
+				return $context;
+			}
+
+			$context['continue_token_valid'] = true;
+			$context['continue_flow_source'] = $this->resolve_continue_flow_source( $payload );
+			$context['continue_listing_id']  = ! empty( $payload['listing_id'] ) ? absint( $payload['listing_id'] ) : 0;
+			$context['continue_phone']       = $continue_phone;
+
+			return $context;
 		}
 
 		private function parse_continue_token( $token ) {

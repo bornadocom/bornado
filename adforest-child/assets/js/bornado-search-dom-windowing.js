@@ -425,6 +425,24 @@
 		initTimer = window.setTimeout(reconcileNewCards, 80);
 	}
 
+	function handlePageShow(event) {
+		// When the page is restored from the browser's back-forward cache,
+		// keep the in-memory windowing state so off-screen cards can still
+		// rehydrate from their cached HTML instead of being dropped on reset.
+		if (event && event.persisted && state && state.entries.length) {
+			window.requestAnimationFrame(function () {
+				if (!state) {
+					return;
+				}
+				bindScrollRoot(state.scrollRoot);
+				applyWindowing();
+			});
+			return;
+		}
+
+		scheduleReset();
+	}
+
 	function onScroll() {
 		if (ticking) {
 			return;
@@ -464,7 +482,7 @@
 
 	window.addEventListener("scroll", onScroll, { passive: true });
 	window.addEventListener("resize", onScroll);
-	window.addEventListener("pageshow", scheduleReset);
+	window.addEventListener("pageshow", handlePageShow);
 
 	if (document.readyState === "loading") {
 		document.addEventListener("DOMContentLoaded", resetState, { once: true });

@@ -731,6 +731,207 @@
         }
     }
 
+    function isMobileViewport() {
+        if (window.matchMedia && typeof window.matchMedia === "function") {
+            return window.matchMedia("(max-width: 767px)").matches;
+        }
+
+        return window.innerWidth <= 767;
+    }
+
+    function isIOSWebKit() {
+        var ua = window.navigator.userAgent || "";
+        var platform = window.navigator.platform || "";
+        var isIOSDevice = /iP(ad|hone|od)/i.test(ua) || (platform === "MacIntel" && window.navigator.maxTouchPoints > 1);
+
+        return isIOSDevice && /WebKit/i.test(ua);
+    }
+
+    function syncIOSViewportState() {
+        var root = document.documentElement;
+        var viewport = window.visualViewport;
+        var viewportWidth = viewport && viewport.width ? viewport.width : window.innerWidth;
+        var viewportOffsetLeft = viewport && viewport.offsetLeft ? viewport.offsetLeft : 0;
+
+        if (!isIOSWebKit()) {
+            root.classList.remove("bornado-ios-ad-post");
+            root.style.removeProperty("--bornado-ios-vw");
+            root.style.removeProperty("--bornado-ios-offset-left");
+            return;
+        }
+
+        root.classList.add("bornado-ios-ad-post");
+        root.style.setProperty("--bornado-ios-vw", Math.max(0, Math.round(viewportWidth)) + "px");
+        root.style.setProperty("--bornado-ios-offset-left", Math.max(0, Math.round(viewportOffsetLeft)) + "px");
+    }
+
+    function clampHorizontalScroll() {
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+
+        document.documentElement.scrollLeft = 0;
+        document.body.scrollLeft = 0;
+
+        if ((window.pageXOffset || 0) !== 0) {
+            window.scrollTo(0, scrollTop);
+        }
+    }
+
+    function bindMobileOverflowGuard(form) {
+        var clampTimer = 0;
+        var viewportTimer = 0;
+
+        function runOnNextFrame(callback) {
+            window.requestAnimationFrame(function () {
+                window.requestAnimationFrame(callback);
+            });
+        }
+
+        function scheduleClamp(target) {
+            window.clearTimeout(clampTimer);
+
+            runOnNextFrame(function () {
+                if (!isMobileViewport()) {
+                    return;
+                }
+
+                clampHorizontalScroll();
+            });
+
+            clampTimer = window.setTimeout(function () {
+                if (!isMobileViewport()) {
+                    return;
+                }
+
+                clampHorizontalScroll();
+            }, 180);
+        }
+
+        function scheduleViewportSync() {
+            window.clearTimeout(viewportTimer);
+
+            runOnNextFrame(function () {
+                syncIOSViewportState();
+                if (isMobileViewport()) {
+                    clampHorizontalScroll();
+                }
+            });
+
+            viewportTimer = window.setTimeout(function () {
+                syncIOSViewportState();
+                if (isMobileViewport()) {
+                    clampHorizontalScroll();
+                }
+            }, 180);
+        }
+
+        function bindHorizontalPanLock() {
+            var startX = 0;
+            var startY = 0;
+            var tracking = false;
+
+            document.addEventListener("touchstart", function (event) {
+                var touch;
+
+                if (!isIOSWebKit() || !isMobileViewport() || !form.contains(event.target)) {
+                    tracking = false;
+                    return;
+                }
+
+                touch = event.touches && event.touches[0];
+                if (!touch) {
+                    tracking = false;
+                    return;
+                }
+
+                startX = touch.clientX;
+                startY = touch.clientY;
+                tracking = true;
+            }, { passive: true, capture: true });
+
+            document.addEventListener("touchmove", function (event) {
+                var touch;
+                var deltaX;
+                var deltaY;
+
+                if (!tracking || !isIOSWebKit() || !isMobileViewport() || !form.contains(event.target)) {
+                    return;
+                }
+
+                touch = event.touches && event.touches[0];
+                if (!touch) {
+                    return;
+                }
+
+                deltaX = touch.clientX - startX;
+                deltaY = touch.clientY - startY;
+
+                if (Math.abs(deltaX) > 8 && Math.abs(deltaX) > Math.abs(deltaY) + 4) {
+                    event.preventDefault();
+                    clampHorizontalScroll();
+                }
+            }, { passive: false, capture: true });
+
+            document.addEventListener("touchend", function () {
+                tracking = false;
+            }, { passive: true, capture: true });
+
+            document.addEventListener("touchcancel", function () {
+                tracking = false;
+            }, { passive: true, capture: true });
+        }
+
+        document.addEventListener("focusin", function (event) {
+            if (!isMobileViewport() || !form.contains(event.target) || !isFormField(event.target)) {
+                return;
+            }
+
+            scheduleViewportSync();
+            scheduleClamp(event.target);
+        }, true);
+
+        if (window.jQuery && typeof window.jQuery === "function") {
+            window.jQuery(document).on("shown.bs.tab", '#adforest-ad-post-form [data-bs-toggle="pill"]', function () {
+                scheduleViewportSync();
+                scheduleClamp(form.querySelector(".tab-pane.active, .tab-pane.show.active") || form);
+            });
+        }
+
+        document.addEventListener("click", function (event) {
+            if (!isMobileViewport()) {
+                return;
+            }
+
+            if (event.target.closest(".next-btn, .prev-btn, .adforest-stepper__item")) {
+                scheduleViewportSync();
+                scheduleClamp(form.querySelector(".tab-pane.active, .tab-pane.show.active") || form);
+            }
+        }, true);
+
+        window.addEventListener("resize", function () {
+            syncIOSViewportState();
+            if (isMobileViewport()) {
+                clampHorizontalScroll();
+            }
+        });
+
+        window.addEventListener("orientationchange", function () {
+            window.setTimeout(function () {
+                syncIOSViewportState();
+                if (isMobileViewport()) {
+                    clampHorizontalScroll();
+                }
+            }, 120);
+        });
+
+        if (window.visualViewport && typeof window.visualViewport.addEventListener === "function") {
+            window.visualViewport.addEventListener("resize", scheduleViewportSync);
+        }
+
+        bindHorizontalPanLock();
+        syncIOSViewportState();
+        scheduleClamp(form);
+    }
+
     function init() {
         var form = document.getElementById("adforest-ad-post-form");
         if (!form) {
@@ -743,6 +944,7 @@
         bindDraftPersistence(form);
         bindAjaxSuccessCleanup();
         restoreDraft(form);
+        bindMobileOverflowGuard(form);
         if (!hasCustomContactMethods()) {
             enhanceAdPostPhoneField(form);
         }

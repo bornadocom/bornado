@@ -226,7 +226,228 @@ body #adforest-ad-post-form .bornado-contact-methods__managed-field {
     display: none !important;
 }
 
+/* Keep the ad-post experience inside the mobile viewport.
+   The parent form mixes Bootstrap rows, custom grids, tags input, and the
+   modern stepper/nav shell; on narrow screens one oversized child can push the
+   whole page wider than the viewport and mobile browsers then pan sideways when
+   an input receives focus. Clamp widths here in the child theme layer only. */
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-x: clip;
+}
+
+html.bornado-ios-ad-post,
+html.bornado-ios-ad-post body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden !important;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html.bornado-ios-ad-post::-webkit-scrollbar,
+html.bornado-ios-ad-post body::-webkit-scrollbar,
+html.bornado-ios-ad-post body .adforest-add-new-page::-webkit-scrollbar,
+html.bornado-ios-ad-post body .adforest-add-new-page *::-webkit-scrollbar {
+    display: none;
+    height: 0 !important;
+    width: 0 !important;
+}
+
+html.bornado-ios-ad-post body .adforest-add-new-page,
+html.bornado-ios-ad-post body .adforest-add-new-page > .container,
+html.bornado-ios-ad-post body .adforest-add-new-page > .container.adt-container,
+html.bornado-ios-ad-post body .adforest-add-card,
+html.bornado-ios-ad-post body #adforest-ad-post-form,
+html.bornado-ios-ad-post body #adforest-ad-post-form .ad-post-tabs-wrapper,
+html.bornado-ios-ad-post body #adforest-ad-post-form .tab-content,
+html.bornado-ios-ad-post body #adforest-ad-post-form .tab-content > .tab-pane,
+html.bornado-ios-ad-post body #adforest-ad-post-form .ad-post-tab-content,
+html.bornado-ios-ad-post body #adforest-ad-post-form .ad-post-tab-box {
+    left: 0;
+    max-width: 100%;
+    overflow-x: hidden !important;
+    overscroll-behavior-x: none;
+    touch-action: pan-y pinch-zoom;
+    width: min(100%, var(--bornado-ios-vw, 100%));
+}
+
+html.bornado-ios-ad-post body #adforest-ad-post-form .form-control,
+html.bornado-ios-ad-post body #adforest-ad-post-form input,
+html.bornado-ios-ad-post body #adforest-ad-post-form select,
+html.bornado-ios-ad-post body #adforest-ad-post-form textarea,
+html.bornado-ios-ad-post body #adforest-ad-post-form .select2,
+html.bornado-ios-ad-post body #adforest-ad-post-form .select2-container,
+html.bornado-ios-ad-post body #adforest-ad-post-form .select2-selection--single,
+html.bornado-ios-ad-post body #adforest-ad-post-form .tagsinput,
+html.bornado-ios-ad-post body #adforest-ad-post-form .bootstrap-tagsinput {
+    max-width: 100%;
+}
+
+body #adforest-ad-post-form,
+body #adforest-ad-post-form .tab-content,
+body #adforest-ad-post-form .tab-content > .tab-pane,
+body #adforest-ad-post-form .tab-pane,
+body #adforest-ad-post-form .ad-post-tabs-wrapper,
+body #adforest-ad-post-form .ad-post-tab-content,
+body #adforest-ad-post-form .ad-post-tab-box,
+body #adforest-ad-post-form .row,
+body #adforest-ad-post-form [class*="col-"] {
+    max-width: 100%;
+    min-width: 0;
+}
+
+body .adforest-add-new-page,
+body .adforest-add-new-page .container,
+body .adforest-add-new-page .adt-container,
+body .adforest-add-new-page .adforest-add-card,
+body .adforest-add-new-page .adforest-stepper,
+body #adforest-ad-post-form .tab-content,
+body #adforest-ad-post-form .tab-content > .tab-pane,
+body #adforest-ad-post-form .ad-post-tab-content,
+body #adforest-ad-post-form .ad-post-tab-box {
+    overflow-x: clip;
+}
+
+body #adforest-ad-post-form .form-control,
+body #adforest-ad-post-form input,
+body #adforest-ad-post-form select,
+body #adforest-ad-post-form textarea,
+body #adforest-ad-post-form .select2,
+body #adforest-ad-post-form .select2-container,
+body #adforest-ad-post-form .chosen-container,
+body #adforest-ad-post-form .ad_post_image_container,
+body #adforest-ad-post-form #dropzone_video {
+    max-width: 100%;
+    min-width: 0;
+}
+
+body #adforest-ad-post-form .select2,
+body #adforest-ad-post-form .select2-container,
+body #adforest-ad-post-form .chosen-container {
+    width: 100% !important;
+}
+
+body #adforest-ad-post-form #custom_field_container,
+body #adforest-ad-post-form #cat_template_html,
+body #adforest-ad-post-form #ad_condition_and_warranty_box,
+body #adforest-ad-post-form #tags_and_video_link_box,
+body #adforest-ad-post-form #child-category-container,
+body #adforest-ad-post-form #child-country-container {
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: clip;
+}
+
+body #adforest-ad-post-form .tagsinput,
+body #adforest-ad-post-form .bootstrap-tagsinput {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+body #adforest-ad-post-form .tagsinput input,
+body #adforest-ad-post-form .bootstrap-tagsinput input {
+    flex: 1 1 120px;
+    max-width: 100% !important;
+    min-width: 0 !important;
+}
+
 @media (max-width: 767px) {
+    body .adforest-add-new-page,
+    body .adforest-add-new-page .container,
+    body .adforest-add-new-page .adt-container,
+    body .adforest-add-new-page .adforest-add-card,
+    body #adforest-ad-post-form,
+    body #adforest-ad-post-form .ad-post-tabs-wrapper,
+    body #adforest-ad-post-form .tab-content,
+    body #adforest-ad-post-form .tab-content > .tab-pane,
+    body #adforest-ad-post-form .ad-post-tab-content,
+    body #adforest-ad-post-form .ad-post-tab-box {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    body .adforest-add-new-page > .container,
+    body .adforest-add-new-page > .container.adt-container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    body .adforest-add-new-page .adforest-account-nav {
+        display: grid;
+        gap: 8px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        overflow-x: visible;
+    }
+
+    body .adforest-add-new-page .adforest-account-nav a {
+        justify-content: center;
+        line-height: 1.35;
+        min-width: 0;
+        text-align: center;
+        white-space: normal;
+    }
+
+    body .adforest-add-new-page .adforest-stepper__track {
+        display: grid !important;
+        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        overflow-x: visible;
+        padding-bottom: 0;
+    }
+
+    body .adforest-add-new-page .adforest-stepper__item {
+        min-width: 0;
+        width: 100%;
+    }
+
+    body .adforest-add-new-page .adforest-stepper__label strong {
+        white-space: normal;
+    }
+
+    body #adforest-ad-post-form .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    body #adforest-ad-post-form [class*="col-"] {
+        max-width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+        width: 100%;
+    }
+
+    body #adforest-ad-post-form .form-control,
+    body #adforest-ad-post-form input[type="text"],
+    body #adforest-ad-post-form input[type="number"],
+    body #adforest-ad-post-form input[type="email"],
+    body #adforest-ad-post-form input[type="url"],
+    body #adforest-ad-post-form input[type="tel"],
+    body #adforest-ad-post-form select,
+    body #adforest-ad-post-form textarea,
+    body #adforest-ad-post-form .select2-container .select2-selection--single,
+    body #adforest-ad-post-form .select2-container .select2-selection__rendered,
+    body #adforest-ad-post-form .select2-search__field,
+    body #adforest-ad-post-form .tagsinput input,
+    body #adforest-ad-post-form .bootstrap-tagsinput input {
+        font-size: 16px !important;
+    }
+
+    body #adforest-ad-post-form #custom_field_container,
+    body #adforest-ad-post-form #cat_template_html,
+    body #adforest-ad-post-form #ad_condition_and_warranty_box,
+    body #adforest-ad-post-form #tags_and_video_link_box {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
     body #adforest-ad-post-form .bornado-contact-methods {
         border-radius: 14px;
         padding: 16px;
@@ -245,5 +466,21 @@ body #adforest-ad-post-form .bornado-contact-methods__managed-field {
         left: 0;
         max-width: calc(100vw - 48px);
         width: min(280px, calc(100vw - 48px));
+    }
+}
+
+@supports (-webkit-touch-callout: none) {
+    @media (max-width: 767px) {
+        body #adforest-ad-post-form .tab-content > .tab-pane,
+        body #adforest-ad-post-form .ad-post-tab-content,
+        body #adforest-ad-post-form .ad-post-tab-box,
+        body #adforest-ad-post-form .field-box,
+        body #adforest-ad-post-form .form-group,
+        body #adforest-ad-post-form .input-container {
+            -webkit-transform: translateZ(0);
+            backface-visibility: hidden;
+            overscroll-behavior-x: none;
+            touch-action: pan-y pinch-zoom;
+        }
     }
 }
