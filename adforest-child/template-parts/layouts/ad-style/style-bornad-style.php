@@ -91,6 +91,7 @@ if (!function_exists('bornado_build_summary_field_items')) {
             $summary[]  = array(
                 'label'      => $label,
                 'value_html' => $value,
+                'edit_key'   => isset($item['edit_key']) ? (string) $item['edit_key'] : '',
             );
 
             if (count($summary) >= (int) $max_items) {
@@ -208,6 +209,31 @@ if (!function_exists('bornado_render_contact_item')) {
     }
 }
 
+if (!function_exists('bornado_edit_attr')) {
+    /**
+     * Emit per-element edit hooks, but only while the in-place editor is active.
+     *
+     * Each editable display node is tagged so the front-end can turn THAT exact
+     * element (in its exact place) into an editor on click. For custom-field
+     * rows the label is passed so the script can find the matching form input.
+     *
+     * @param string $key   Field key (title, price, cf, …).
+     * @param string $label Optional custom-field label to match against the form.
+     * @return string Ready-to-print HTML attributes (empty on the public view).
+     */
+    function bornado_edit_attr($key, $label = '')
+    {
+        if (!function_exists('bornado_inline_edit_is_active') || !bornado_inline_edit_is_active()) {
+            return '';
+        }
+        $out = ' data-bornado-edit="' . esc_attr($key) . '"';
+        if ('' !== $label) {
+            $out .= ' data-bornado-cf-label="' . esc_attr($label) . '"';
+        }
+        return $out;
+    }
+}
+
 $original_layout_style = isset($adforest_theme['ad_layout_style']) ? $adforest_theme['ad_layout_style'] : null;
 $original_layout_flag  = isset($adforest_theme['bornado_ad_layout_bornad_style_active']) ? $adforest_theme['bornado_ad_layout_bornad_style_active'] : null;
 
@@ -312,6 +338,14 @@ if ($modern_post_ad_page_id > 0) {
         $ad_update_source = 'modern-url-active';
     }
 }
+// Prefer the in-place editor (same single-ad page in edit mode) when available.
+if (function_exists('bornado_inline_edit_get_url')) {
+    $bornado_inline_edit_url = bornado_inline_edit_get_url($pid, '');
+    if ('' !== $bornado_inline_edit_url) {
+        $ad_update_url    = $bornado_inline_edit_url;
+        $ad_update_source = 'bornado-inline-edit';
+    }
+}
 $posted_time           = get_the_time('U', $pid);
 $ad_posted_date        = adforest_get_ad_posted_date($posted_time);
 $ad_views              = (int) get_post_meta($pid, 'adforest_ad_views', true);
@@ -388,13 +422,16 @@ if (!$claim_is_logged_in && !empty($claim_login_page)) {
     $claim_login_url = $guest_login_url;
 }
 
+$bornado_is_edit_request = (function_exists('bornado_inline_edit_is_active') && bornado_inline_edit_is_active());
 if (isset($adforest_theme['sb_show_recently_viewed_on_ad_detail']) && 1 == $adforest_theme['sb_show_recently_viewed_on_ad_detail']) {
     $has_viewed_before = is_recently_viewed_ad_post($pid);
-    add_recently_viewed_ad_post($pid);
+    if (!$bornado_is_edit_request) {
+        add_recently_viewed_ad_post($pid);
+    }
     if ($has_viewed_before) {
         $recently_viewed_html = adforest_recently_viewed_ad($pid);
     }
-} else {
+} elseif (!$bornado_is_edit_request) {
     update_post_meta($pid, 'adforest_ad_views', $ad_views + 1);
 }
 
@@ -483,26 +520,30 @@ $fallback_summary    = array();
 
 if ('' !== $ad_type) {
     $fallback_summary[] = array(
-        'label'      => esc_html__('Type', 'adforest'),
+        'label'      => 'نوع آگهی',
         'value_html' => esc_html($ad_type),
+        'edit_key'   => 'adtype',
     );
 }
 if ('' !== $ad_condition_name) {
     $fallback_summary[] = array(
-        'label'      => esc_html__('Condition', 'adforest'),
+        'label'      => 'وضعیت',
         'value_html' => esc_html($ad_condition_name),
+        'edit_key'   => 'condition',
     );
 }
 if ('' !== $ad_warranty_name) {
     $fallback_summary[] = array(
-        'label'      => esc_html__('Warranty', 'adforest'),
+        'label'      => 'گارانتی',
         'value_html' => esc_html($ad_warranty_name),
+        'edit_key'   => 'warranty',
     );
 }
 if ('' !== $country_summary_value) {
     $fallback_summary[] = array(
         'label'      => esc_html__('Location', 'adforest'),
         'value_html' => esc_html($country_summary_value),
+        'edit_key'   => 'location',
     );
 }
 
@@ -516,13 +557,32 @@ $adf_show_ad_720_1 = function_exists('adforest_has_visible_ad_content')
 $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
     ? adforest_has_visible_ad_content('style_ad_720_2')
     : ('' !== $horizontal_ad_2);
+
+/*
+ * In-place editor mode.
+ *
+ * When the owner/admin opens this ad with ?bornado_edit=1 we render THIS exact
+ * read-only view (so the page is pixel-identical) and only flag it as editable.
+ * The hidden AdForest form + save bar are injected in the footer by the
+ * controller, and `bornado-inline-ad-edit.js` turns the displayed elements into
+ * in-place editors that feed the real form. The public view is never affected.
+ */
+$bornado_edit_mode = (function_exists('bornado_inline_edit_is_active') && bornado_inline_edit_is_active());
+$bornado_section_class = 'bornad-ad-detail-section' . ($bornado_edit_mode ? ' bornado-edit-mode' : '');
+
+// Render the (hidden) real AdForest form + save bar here in the page body so its
+// inline localizations (e.g. preselected categories) attach before footer
+// scripts print. CSS keeps it off-screen; JS borrows its controls in-place.
+if ($bornado_edit_mode && function_exists('bornado_inline_edit_render_editor_shell')) {
+    bornado_inline_edit_render_editor_shell();
+}
 ?>
-<section class="bornad-ad-detail-section">
+<section class="<?php echo esc_attr($bornado_section_class); ?>">
     <div class="container bornad-ad-detail-container">
         <div class="row bornad-detail-layout">
             <div class="col-lg-7 bornad-detail-main">
                 <div class="bornad-card bornad-gallery-card" id="adt-ad-detail-top-box">
-                    <div class="bornad-card-body">
+                    <div class="bornad-card-body"<?php echo bornado_edit_attr('images'); ?>>
                         <?php get_template_part('template-parts/layouts/ad-style/ad-img', 'carousel'); ?>
                         <?php get_template_part('template-parts/layouts/ad-style/status', 'watermark'); ?>
                     </div>
@@ -596,6 +656,8 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
                                 <h3>موقعیت آگهی</h3>
                                 <?php if (!empty($ad_location)) { ?>
                                     <p><?php echo esc_html($ad_location); ?></p>
+                                <?php } elseif (!empty($bornado_edit_mode)) { ?>
+                                    <p><span class="bornado-edit-empty">افزودن موقعیت مکانی</span></p>
                                 <?php } ?>
                             </div>
                             <a href="#adt-ad-location-box" class="bornad-map-link">نمایش روی نقشه</a>
@@ -647,21 +709,35 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
             <div class="col-lg-5 bornad-detail-sidebar">
                 <div class="bornad-card bornad-summary-card">
                     <div class="bornad-card-body">
-                        <?php if ('' !== $category_links_string) { ?>
-                            <div class="bornad-breadcrumbs">
-                                <?php echo wp_kses_post($category_links_string); ?>
+                        <?php if ('' !== $category_links_string || !empty($bornado_edit_mode)) { ?>
+                            <div class="bornad-breadcrumbs"<?php echo bornado_edit_attr('category'); ?>>
+                                <?php
+                                if ('' !== $category_links_string) {
+                                    echo wp_kses_post($category_links_string);
+                                } elseif (!empty($bornado_edit_mode)) {
+                                    echo '<span class="bornado-edit-empty">انتخاب دسته‌بندی</span>';
+                                }
+                                ?>
                             </div>
                         <?php } ?>
 
-                        <h1 class="bornad-ad-title"><?php echo esc_html(get_the_title()); ?></h1>
+                        <h1 class="bornad-ad-title"<?php echo bornado_edit_attr('title'); ?>><?php echo esc_html(get_the_title()); ?></h1>
 
-                        <?php if ('' !== $ad_tagline) { ?>
-                            <p class="bornad-ad-tagline"><?php echo esc_html($ad_tagline); ?></p>
+                        <?php if ('' !== $ad_tagline || !empty($bornado_edit_mode)) { ?>
+                            <p class="bornad-ad-tagline"<?php echo bornado_edit_attr('tagline'); ?>><?php
+                                if ('' !== $ad_tagline) {
+                                    echo esc_html($ad_tagline);
+                                } elseif (!empty($bornado_edit_mode)) {
+                                    echo '<span class="bornado-edit-empty">افزودن زیرعنوان</span>';
+                                }
+                            ?></p>
                         <?php } ?>
 
                         <div class="bornad-meta-line">
                             <?php if (!empty($ad_location)) { ?>
-                                <span><i class="fas fa-map-marker-alt" aria-hidden="true"></i><?php echo esc_html($ad_location); ?></span>
+                                <span<?php echo bornado_edit_attr('address'); ?>><i class="fas fa-map-marker-alt" aria-hidden="true"></i><?php echo esc_html($ad_location); ?></span>
+                            <?php } elseif (!empty($bornado_edit_mode)) { ?>
+                                <span<?php echo bornado_edit_attr('address'); ?>><i class="fas fa-map-marker-alt" aria-hidden="true"></i><span class="bornado-edit-empty">افزودن موقعیت مکانی</span></span>
                             <?php } ?>
                             <span><i class="far fa-calendar-alt" aria-hidden="true"></i><?php echo esc_html($ad_posted_date); ?></span>
                             <span><i class="far fa-eye" aria-hidden="true"></i><?php echo esc_html($formatted_views); ?></span>
@@ -712,25 +788,37 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
                             </a>
                         </div>
 
-                        <?php if ('' !== $price_amount_html || !empty($summary_items)) { ?>
-                            <div class="bornad-summary-list">
-                                <?php if ('' !== $price_amount_html) { ?>
+                        <?php if ('' !== $price_amount_html || !empty($summary_items) || !empty($bornado_edit_mode)) { ?>
+                            <div class="bornad-summary-list" id="bornado-summary-list">
+                                <?php if ('' !== $price_amount_html || !empty($bornado_edit_mode)) { ?>
                                     <div class="bornad-summary-item bornad-summary-item--price">
                                         <span class="bornad-summary-label">قیمت</span>
-                                        <strong class="bornad-summary-value bornad-summary-value--price">
+                                        <strong class="bornad-summary-value bornad-summary-value--price"<?php echo bornado_edit_attr('price'); ?>>
                                             <?php if ('' !== $price_type_html) { ?>
                                                 <span class="bornad-price-type"><?php echo wp_kses_post($price_type_html); ?></span>
                                             <?php } ?>
-                                            <span class="bornad-price-amount"><?php echo wp_kses_post($price_amount_html); ?></span>
+                                            <span class="bornad-price-amount"><?php
+                                                if ('' !== $price_amount_html) {
+                                                    echo wp_kses_post($price_amount_html);
+                                                } elseif (!empty($bornado_edit_mode)) {
+                                                    echo '<span class="bornado-edit-empty">افزودن قیمت</span>';
+                                                }
+                                            ?></span>
                                         </strong>
                                     </div>
                                 <?php } ?>
-                                <?php foreach ($summary_items as $summary_item) { ?>
-                                    <div class="bornad-summary-item">
+                                <div id="bornado-summary-dynamic-fields">
+                                    <?php foreach ($summary_items as $summary_item) {
+                                        $bornado_item_edit = (!empty($summary_item['edit_key']))
+                                            ? bornado_edit_attr($summary_item['edit_key'])
+                                            : bornado_edit_attr('cf', $summary_item['label']);
+                                        ?>
+                                    <div class="bornad-summary-item" data-bornado-dynamic-cf-item="1">
                                         <span class="bornad-summary-label"><?php echo esc_html($summary_item['label']); ?></span>
-                                        <strong class="bornad-summary-value"><?php echo wp_kses_post($summary_item['value_html']); ?></strong>
+                                        <strong class="bornad-summary-value"<?php echo $bornado_item_edit; ?>><?php echo wp_kses_post($summary_item['value_html']); ?></strong>
                                     </div>
                                 <?php } ?>
+                                </div>
                             </div>
                         <?php } ?>
 
@@ -753,16 +841,20 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
                 </div>
 
                 <?php if (!empty($detail_field_items)) { ?>
-                    <div class="bornad-card bornad-details-card">
+                    <div class="bornad-card bornad-details-card" id="bornado-details-card">
                         <div class="bornad-card-header">
                             <h3>جزئیات آگهی</h3>
                         </div>
                         <div class="bornad-card-body">
                             <ul class="bornad-detail-list" id="adt-ad-general-info-box">
-                                <?php foreach ($detail_field_items as $custom_field_item) { ?>
-                                    <li>
+                                <?php foreach ($detail_field_items as $custom_field_item) {
+                                    $bornado_item_edit = (!empty($custom_field_item['edit_key']))
+                                        ? bornado_edit_attr($custom_field_item['edit_key'])
+                                        : bornado_edit_attr('cf', $custom_field_item['label']);
+                                    ?>
+                                    <li data-bornado-dynamic-cf-item="1">
                                         <span><?php echo esc_html($custom_field_item['label']); ?></span>
-                                        <strong><?php echo wp_kses_post($custom_field_item['value_html']); ?></strong>
+                                        <strong<?php echo $bornado_item_edit; ?>><?php echo wp_kses_post($custom_field_item['value_html']); ?></strong>
                                     </li>
                                 <?php } ?>
                             </ul>
@@ -770,10 +862,16 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
                     </div>
                 <?php } ?>
 
-                <?php if ('' !== $desktop_contact_methods_markup) { ?>
+                <?php if ('' !== $desktop_contact_methods_markup || !empty($bornado_edit_mode)) { ?>
                     <div class="bornad-card bornad-contact-methods-card bornad-contact-methods-card--desktop">
-                        <div class="bornad-card-body">
-                            <?php echo $desktop_contact_methods_markup; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                        <div class="bornad-card-body"<?php echo bornado_edit_attr('contact'); ?>>
+                            <?php
+                            if ('' !== $desktop_contact_methods_markup) {
+                                echo $desktop_contact_methods_markup; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                            } elseif (!empty($bornado_edit_mode)) {
+                                echo '<span class="bornado-edit-empty">افزودن اطلاعات تماس</span>';
+                            }
+                            ?>
                         </div>
                     </div>
                 <?php } ?>
@@ -783,8 +881,15 @@ $adf_show_ad_720_2 = function_exists('adforest_has_visible_ad_content')
                         <h3>توضیحات</h3>
                     </div>
                     <div class="bornad-card-body">
-                        <div class="bornad-description-content">
-                            <?php echo wp_kses_post(get_the_content()); ?>
+                        <div class="bornad-description-content"<?php echo bornado_edit_attr('description'); ?>>
+                            <?php
+                            $bornado_ad_content = get_the_content();
+                            if ('' !== trim(wp_strip_all_tags((string) $bornado_ad_content))) {
+                                echo wp_kses_post($bornado_ad_content);
+                            } elseif (!empty($bornado_edit_mode)) {
+                                echo '<span class="bornado-edit-empty">افزودن توضیحات</span>';
+                            }
+                            ?>
                         </div>
                         <?php do_action('adforest_owner_text'); ?>
                         <?php get_template_part('template-parts/layouts/ad-style/ad', 'tags'); ?>
@@ -1100,6 +1205,7 @@ if ($claim_enabled) {
                             </div>
                         <?php } elseif (!empty($smart_claim_context['action_url'])) {
                             $claim_action_url = (string) $smart_claim_context['action_url'];
+                            $claim_display_url = $claim_action_url;
                             $claim_continue_token = '';
                             $claim_action_query = wp_parse_url($claim_action_url, PHP_URL_QUERY);
                             if (is_string($claim_action_query) && '' !== $claim_action_query) {
@@ -1107,13 +1213,33 @@ if ($claim_enabled) {
                                 parse_str($claim_action_query, $claim_action_params);
                                 if (!empty($claim_action_params['bornado_continue_token'])) {
                                     $claim_continue_token = (string) $claim_action_params['bornado_continue_token'];
+                                } elseif (!empty($claim_action_params['redirect_to']) && is_string($claim_action_params['redirect_to'])) {
+                                    $claim_redirect_url = (string) $claim_action_params['redirect_to'];
+                                    $claim_redirect_query = wp_parse_url($claim_redirect_url, PHP_URL_QUERY);
+                                    if (is_string($claim_redirect_query) && '' !== $claim_redirect_query) {
+                                        $claim_redirect_params = array();
+                                        parse_str($claim_redirect_query, $claim_redirect_params);
+                                        if (!empty($claim_redirect_params['bornado_continue_token'])) {
+                                            $claim_continue_token = (string) $claim_redirect_params['bornado_continue_token'];
+                                            $claim_display_url = remove_query_arg('bornado_continue_token', $claim_redirect_url);
+                                        }
+                                    }
+                                }
+                            }
+
+                            if ('' !== $claim_continue_token) {
+                                $claim_display_url = remove_query_arg('bornado_continue_token', $claim_display_url);
+                                if (!is_string($claim_display_url) || '' === $claim_display_url) {
+                                    $claim_display_url = function_exists('bornado_auth_modal_profile_url')
+                                        ? (string) bornado_auth_modal_profile_url()
+                                        : home_url('/profile/');
                                 }
                             }
                             ?>
                             <a
                                 class="adt-button-dark btn-block bornad-claim-action-link"
-                                href="<?php echo esc_url($claim_action_url); ?>"
-                                data-action-url="<?php echo esc_url($claim_action_url); ?>"
+                                href="<?php echo esc_url($claim_display_url); ?>"
+                                data-action-url="<?php echo esc_url($claim_display_url); ?>"
                                 <?php if ('' !== $claim_continue_token) { ?>
                                     data-bornado-auth-open="1"
                                     data-mode="login"

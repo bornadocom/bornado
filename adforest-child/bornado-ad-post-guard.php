@@ -12,7 +12,13 @@ if ( ! function_exists( 'bornado_enqueue_ad_post_guard_assets' ) ) {
 	 * @return void
 	 */
 	function bornado_enqueue_ad_post_guard_assets() {
-		if ( is_admin() || ! function_exists( 'bornado_is_ad_post_page' ) || ! bornado_is_ad_post_page() ) {
+		$is_ad_post_page  = function_exists( 'bornado_is_ad_post_page' ) && bornado_is_ad_post_page();
+		$is_inline_edit   = function_exists( 'bornado_inline_edit_is_active' ) && bornado_inline_edit_is_active();
+
+		// The guard (and its contact-methods UI) is needed both on the real
+		// ad-post page AND inside the single-ad inline editor, which renders the
+		// same hidden AdForest form.
+		if ( is_admin() || ( ! $is_ad_post_page && ! $is_inline_edit ) ) {
 			return;
 		}
 
@@ -22,7 +28,12 @@ if ( ! function_exists( 'bornado_enqueue_ad_post_guard_assets' ) ) {
 		$asset_path   = trailingslashit( get_stylesheet_directory() ) . 'assets/js/bornado-ad-post-guard.js';
 		$style_uri    = trailingslashit( get_stylesheet_directory_uri() ) . 'assets/css/bornado-ad-post-contact-methods.css';
 		$style_path   = trailingslashit( get_stylesheet_directory() ) . 'assets/css/bornado-ad-post-contact-methods.css';
-		$editing_ad_id = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
+
+		// On the inline editor the ad id is the queried ad, not a `?id=` arg.
+		$inline_ad_id  = $is_inline_edit && function_exists( 'bornado_inline_edit_current_ad_id' )
+			? (int) bornado_inline_edit_current_ad_id()
+			: 0;
+		$editing_ad_id = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : $inline_ad_id;
 
 		if ( ! file_exists( $asset_path ) ) {
 			return;
@@ -45,6 +56,24 @@ if ( ! function_exists( 'bornado_enqueue_ad_post_guard_assets' ) ) {
 			true
 		);
 
+		// Resolve the contact-methods context against the ad being edited. The
+		// context helper keys the edit id off `$_GET['id']`, so on the inline
+		// editor we set it just for this call and restore it immediately.
+		$prev_get_id = array_key_exists( 'id', $_GET ) ? $_GET['id'] : null;
+		if ( $is_inline_edit && $inline_ad_id > 0 ) {
+			$_GET['id'] = $inline_ad_id;
+		}
+		$contact_methods_context = function_exists( 'bornado_get_ad_post_contact_methods_context' )
+			? bornado_get_ad_post_contact_methods_context( get_current_user_id() )
+			: array();
+		if ( $is_inline_edit && $inline_ad_id > 0 ) {
+			if ( null === $prev_get_id ) {
+				unset( $_GET['id'] );
+			} else {
+				$_GET['id'] = $prev_get_id;
+			}
+		}
+
 		wp_localize_script(
 			$handle,
 			'bornadoAdPostGuard',
@@ -57,7 +86,7 @@ if ( ! function_exists( 'bornado_enqueue_ad_post_guard_assets' ) ) {
 				),
 				'phoneCountries' => function_exists( 'bornado_get_phone_country_options' ) ? bornado_get_phone_country_options() : array(),
 				'defaultPhoneCountry' => function_exists( 'bornado_get_default_phone_country_option' ) ? bornado_get_default_phone_country_option() : array(),
-				'contactMethods' => function_exists( 'bornado_get_ad_post_contact_methods_context' ) ? bornado_get_ad_post_contact_methods_context( get_current_user_id() ) : array(),
+				'contactMethods' => $contact_methods_context,
 				'i18n' => array(
 					'phoneExample' => __( 'نمونه نهایی', 'adforest-child' ),
 					'localPhoneExample' => __( 'نمونه شماره بدون کد کشور', 'adforest-child' ),

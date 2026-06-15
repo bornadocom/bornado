@@ -62,6 +62,96 @@ if (!function_exists('bornado_pick_fallback_image_for_ad_category')) {
 }
 
 if (!function_exists('adforest_get_ad_images')) {
+    if (!function_exists('bornado_inline_edit_debug_log')) {
+        /**
+         * Write inline-edit image debugging entries to uploads.
+         *
+         * @param string $event   Short event label.
+         * @param array  $payload Structured diagnostic data.
+         * @return void
+         */
+        function bornado_inline_edit_debug_log($event, array $payload = array())
+        {
+            $uploads = wp_upload_dir();
+            $base_dir = isset($uploads['basedir']) ? (string) $uploads['basedir'] : '';
+            if ($base_dir === '') {
+                return;
+            }
+
+            $log_path = trailingslashit($base_dir) . 'bornado-inline-edit-debug.log';
+            $entry = array(
+                'time'    => current_time('mysql'),
+                'event'   => (string) $event,
+                'request' => isset($_REQUEST['action']) ? sanitize_key(wp_unslash($_REQUEST['action'])) : '',
+                'payload' => $payload,
+            );
+
+            $line = wp_json_encode($entry, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            if (is_string($line) && $line !== '') {
+                @file_put_contents($log_path, $line . PHP_EOL, FILE_APPEND);
+            }
+        }
+    }
+
+    if (!function_exists('bornado_inline_edit_use_live_gallery_source')) {
+        /**
+         * During inline-edit AJAX, always read the live gallery state instead of
+         * the cached `_bornado_inline_gallery_ids` snapshot.
+         *
+         * The snapshot is correct for normal display after save, but while the
+         * owner is actively editing, AdForest's upload/delete endpoints mutate
+         * `_sb_photo_arrangement_` immediately. If helper AJAX keeps reading the
+         * snapshot, it can hand stale ids back to the editor and resurrect a
+         * deleted image on the final save.
+         *
+         * @return bool
+         */
+        function bornado_inline_edit_use_live_gallery_source()
+        {
+            if (!wp_doing_ajax()) {
+                return false;
+            }
+
+            $action = isset($_REQUEST['action']) ? sanitize_key(wp_unslash($_REQUEST['action'])) : '';
+
+            return in_array($action, array('get_uploaded_ad_images', 'delete_ad_image', 'bornado_sync_ad_images'), true);
+        }
+    }
+
+    if (!function_exists('bornado_inline_edit_get_live_gallery_ids')) {
+        /**
+         * Resolve the current gallery ids directly from the live AdForest source.
+         *
+         * Order comes from `_sb_photo_arrangement_` when available; otherwise we
+         * fall back to the currently attached media.
+         *
+         * @param int $pid Ad post ID.
+         * @return array<int>
+         */
+        function bornado_inline_edit_get_live_gallery_ids($pid)
+        {
+            $pid = (int) $pid;
+            if ($pid < 1) {
+                return array();
+            }
+
+            $re_order = get_post_meta($pid, '_sb_photo_arrangement_', true);
+            if ($re_order !== '') {
+                $ordered_ids = array_values(array_filter(array_map('intval', array_map('trim', explode(',', $re_order)))));
+                if (!empty($ordered_ids)) {
+                    return $ordered_ids;
+                }
+            }
+
+            $attached_media = get_attached_media('', $pid);
+            if (!empty($attached_media)) {
+                return array_values(array_map('intval', array_keys($attached_media)));
+            }
+
+            return array();
+        }
+    }
+
     /**
      * Child-theme override:
      * - Keep original behavior for real ad images.
@@ -69,18 +159,44 @@ if (!function_exists('adforest_get_ad_images')) {
      */
     function adforest_get_ad_images($pid)
     {
-        $re_order = get_post_meta($pid, '_sb_photo_arrangement_', true);
-        if ($re_order !== '') {
-            $ordered_ids = array_values(array_filter(array_map('intval', array_map('trim', explode(',', $re_order)))));
-            if (!empty($ordered_ids)) {
-                return $ordered_ids;
+        $use_live_source = bornado_inline_edit_use_live_gallery_source();
+        $explicitly_empty = ('1' === (string) get_post_meta($pid, '_bornado_gallery_explicitly_empty', true));
+
+        if (!$use_live_source && metadata_exists('post', $pid, '_bornado_inline_gallery_ids')) {
+            $bornado_inline_order = (string) get_post_meta($pid, '_bornado_inline_gallery_ids', true);
+            if ($bornado_inline_order !== '') {
+                $bornado_inline_ids = array_values(array_filter(array_map('intval', array_map('trim', explode(',', $bornado_inline_order)))));
+                if (!empty($bornado_inline_ids)) {
+                    return $bornado_inline_ids;
+                }
             }
         }
 
-        $attached_media = get_attached_media('', $pid);
-        if (!empty($attached_media)) {
-            // Numeric keys so callers like Recent Ads Widget ($media[0]) work.
-            return array_values(array_map('intval', array_keys($attached_media)));
+        $live_ids = bornado_inline_edit_get_live_gallery_ids($pid);
+        if ($use_live_source) {
+            bornado_inline_edit_debug_log(
+                'ad_images_live_source',
+                array(
+                    'ad_id'               => (int) $pid,
+                    'live_ids'            => $live_ids,
+                    'inline_cached_ids'   => (string) get_post_meta($pid, '_bornado_inline_gallery_ids', true),
+                    'arrangement_meta'    => (string) get_post_meta($pid, '_sb_photo_arrangement_', true),
+                    'explicitly_empty'    => (string) get_post_meta($pid, '_bornado_gallery_explicitly_empty', true),
+                    'attached_media_keys' => array_values(array_map('intval', array_keys((array) get_attached_media('', $pid)))),
+                )
+            );
+        }
+        if (!empty($live_ids)) {
+            return $live_ids;
+        }
+
+        // Important distinction:
+        // - During inline-edit AJAX, an explicitly empty gallery must stay empty
+        //   so the editor does not treat the category fallback as a real image.
+        // - During normal front-end display, "no real images" should still fall
+        //   back to the category-specific placeholder selected in the child theme.
+        if ($use_live_source && $explicitly_empty) {
+            return array();
         }
 
         $fallback_attachment_id = bornado_pick_fallback_image_for_ad_category($pid);
@@ -240,6 +356,14 @@ if (file_exists($bornado_phone_display_fix_bootstrap)) {
 }
 
 /**
+ * Normalize Persian/Arabic numerals for numeric-like user input.
+ */
+$bornado_numeric_normalization_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-numeric-normalization.php';
+if (file_exists($bornado_numeric_normalization_bootstrap)) {
+    require_once $bornado_numeric_normalization_bootstrap;
+}
+
+/**
  * Keep performance-oriented asset overrides in the child theme layer.
  */
 $bornado_performance_optimizations_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-performance-optimizations.php';
@@ -269,6 +393,14 @@ if (file_exists($bornado_edit_ad_link_fix_bootstrap)) {
 $bornado_single_ad_style_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornad-single-ad-style.php';
 if (file_exists($bornado_single_ad_style_bootstrap)) {
     require_once $bornado_single_ad_style_bootstrap;
+}
+
+/**
+ * In-place ad editor: edit an ad directly on its single-ad page.
+ */
+$bornado_inline_ad_edit_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-inline-ad-edit.php';
+if (file_exists($bornado_inline_ad_edit_bootstrap)) {
+    require_once $bornado_inline_ad_edit_bootstrap;
 }
 
 /**

@@ -474,6 +474,159 @@
         return "\u2066" + String(value || "") + "\u2069";
     }
 
+    function convertLocaleDigitsToLatin(value) {
+        return String(value || "").replace(/[۰-۹٠-٩٫٬،−–—]/g, function (char) {
+            var map = {
+                "۰": "0", "۱": "1", "۲": "2", "۳": "3", "۴": "4",
+                "۵": "5", "۶": "6", "۷": "7", "۸": "8", "۹": "9",
+                "٠": "0", "١": "1", "٢": "2", "٣": "3", "٤": "4",
+                "٥": "5", "٦": "6", "٧": "7", "٨": "8", "٩": "9",
+                "٫": ".", "٬": ",", "،": ",",
+                "−": "-", "–": "-", "—": "-"
+            };
+            return Object.prototype.hasOwnProperty.call(map, char) ? map[char] : char;
+        });
+    }
+
+    function isNumericLikeString(value) {
+        var normalized = String(value || "").trim();
+        if (!normalized) {
+            return false;
+        }
+
+        return /^[0-9۰-۹٠-٩\s+\-()\/\\:.,،٫٬]+$/.test(normalized);
+    }
+
+    function isPriceLikeFieldName(name) {
+        return ["ad_price", "ad_price_from", "ad_price_to", "bid_amount", "min_price", "max_price"].indexOf(String(name || "").toLowerCase()) !== -1;
+    }
+
+    function isPhoneLikeFieldName(name) {
+        return ["ad_contact_number", "sb_reg_contact", "sb_reg_phone", "adforest_reg_number", "sb_contact", "phone", "mobile"].indexOf(String(name || "").toLowerCase()) !== -1;
+    }
+
+    function isDecimalLikeFieldName(name) {
+        return ["ad_map_lat", "ad_map_long", "lat", "long", "longitude", "latitude", "radius"].indexOf(String(name || "").toLowerCase()) !== -1;
+    }
+
+    function normalizePriceLikeValue(value) {
+        return convertLocaleDigitsToLatin(value).replace(/[\s,]+/g, "").replace(/[^0-9.\-]/g, "");
+    }
+
+    function normalizePhoneLikeValue(value) {
+        return convertLocaleDigitsToLatin(value).replace(/[\s\-()]+/g, "").replace(/(?!^\+)[^0-9]/g, "");
+    }
+
+    function normalizeDecimalLikeValue(value) {
+        return convertLocaleDigitsToLatin(value).replace(/\s+/g, "").replace(/[^0-9.\-]/g, "");
+    }
+
+    function belongsToManagedAdPostContext(control, form) {
+        if (!control || !form) {
+            return false;
+        }
+
+        return form.contains(control) || !!control.closest(".bornado-inline-slot");
+    }
+
+    function shouldNormalizeNumericControl(control, form) {
+        var name;
+        var inputMode;
+        var parsleyPattern;
+        var type;
+
+        if (!control || !belongsToManagedAdPostContext(control, form)) {
+            return false;
+        }
+
+        name = String(control.name || "").toLowerCase();
+        inputMode = String(control.getAttribute("inputmode") || "").toLowerCase();
+        parsleyPattern = String(control.getAttribute("data-parsley-pattern") || "");
+        type = String(control.type || "").toLowerCase();
+
+        if (isPriceLikeFieldName(name) || isPhoneLikeFieldName(name) || isDecimalLikeFieldName(name)) {
+            return true;
+        }
+
+        if (type === "number" || type === "tel" || inputMode === "numeric" || inputMode === "decimal") {
+            return true;
+        }
+
+        return /0-9/.test(parsleyPattern);
+    }
+
+    function normalizeNumericControlValue(control) {
+        var name;
+        var rawValue;
+        var normalizedValue;
+        var start;
+        var end;
+        var supportsSelection;
+        var delta;
+
+        if (!control) {
+            return;
+        }
+
+        name = String(control.name || "").toLowerCase();
+        rawValue = String(control.value || "");
+
+        if (isPriceLikeFieldName(name)) {
+            normalizedValue = normalizePriceLikeValue(rawValue);
+        } else if (isPhoneLikeFieldName(name)) {
+            normalizedValue = normalizePhoneLikeValue(rawValue);
+        } else if (isDecimalLikeFieldName(name)) {
+            normalizedValue = normalizeDecimalLikeValue(rawValue);
+        } else if (isNumericLikeString(rawValue)) {
+            normalizedValue = convertLocaleDigitsToLatin(rawValue);
+        } else {
+            return;
+        }
+
+        if (normalizedValue === rawValue) {
+            return;
+        }
+
+        supportsSelection = typeof control.selectionStart === "number" && typeof control.selectionEnd === "number";
+        start = supportsSelection ? control.selectionStart : 0;
+        end = supportsSelection ? control.selectionEnd : 0;
+        delta = normalizedValue.length - rawValue.length;
+
+        control.value = normalizedValue;
+
+        if (supportsSelection) {
+            try {
+                control.setSelectionRange(Math.max(0, start + delta), Math.max(0, end + delta));
+            } catch (_error) {
+                // Ignore controls that do not support restoring selection.
+            }
+        }
+    }
+
+    function bindNumericInputNormalization(form) {
+        function maybeNormalize(target) {
+            if (!shouldNormalizeNumericControl(target, form)) {
+                return;
+            }
+
+            normalizeNumericControlValue(target);
+        }
+
+        document.addEventListener("input", function (event) {
+            maybeNormalize(event.target);
+        }, true);
+
+        document.addEventListener("blur", function (event) {
+            maybeNormalize(event.target);
+        }, true);
+
+        form.addEventListener("submit", function () {
+            form.querySelectorAll("input, textarea").forEach(function (control) {
+                maybeNormalize(control);
+            });
+        }, true);
+    }
+
     function enhanceAdPostPhoneField(form) {
         var phoneInput = form.querySelector('input[name="ad_contact_number"]');
         var rootCountry = form.querySelector('select[name="ad_country"]');
@@ -940,6 +1093,7 @@
 
         bindTermsAgreementCheckbox(form);
         renderContactMethodsUi(form);
+        bindNumericInputNormalization(form);
         bindSubmitGuard(form);
         bindDraftPersistence(form);
         bindAjaxSuccessCleanup();

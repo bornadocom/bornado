@@ -1,0 +1,1025 @@
+/**
+ * Bornado — Inline Ad Edit styles (true per-element, in-place editing).
+ *
+ * The edit page IS the real single-ad view (pixel-identical at rest). These
+ * rules only:
+ *   1. Hide the genuine AdForest form shell (kept in the DOM for the save
+ *      pipeline) off-screen.
+ *   2. Add a subtle per-element "click to edit" affordance.
+ *   3. Style the real control once it is borrowed into the value's exact place.
+ *   4. Add the sticky save bar.
+ *
+ * Progressive enhancement: affordances + save bar stay hidden until the script
+ * adds `bornado-inline-edit-ready` to <body>, so a JS failure leaves the owner
+ * with a clean, unbroken read-only page.
+ */
+
+:root {
+    --bornado-edit-accent: #ff002e;
+    --bornado-edit-accent-soft: rgba(255, 0, 46, 0.08);
+    --bornado-edit-border: #e6e8ee;
+    --bornado-edit-radius: 12px;
+}
+
+/* ===== 1) Hide the real form shell (still active for save) ================= */
+.bornado-edit-shell {
+    position: fixed !important;
+    left: -10000px !important;
+    top: 0 !important;
+    width: 1100px;
+    max-width: 1100px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ===== 2) Per-element "click to edit" affordance ========================== *
+ * Persistent (not hover-only) so the owner immediately understands every value
+ * is editable. Only elements whose real control exists get `.bornado-can-edit`. */
+body.bornado-inline-edit-ready [data-bornado-edit].bornado-can-edit {
+    cursor: pointer;
+    position: relative;
+    border-radius: 8px;
+    background-color: rgba(255, 0, 46, 0.045);
+    box-shadow: inset 0 0 0 1px rgba(255, 0, 46, 0.16);
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Give inline values a little breathing room so the tint reads as a chip. */
+body.bornado-inline-edit-ready h1[data-bornado-edit].bornado-can-edit,
+body.bornado-inline-edit-ready p[data-bornado-edit].bornado-can-edit,
+body.bornado-inline-edit-ready strong[data-bornado-edit].bornado-can-edit,
+body.bornado-inline-edit-ready span[data-bornado-edit].bornado-can-edit,
+body.bornado-inline-edit-ready div.bornad-breadcrumbs[data-bornado-edit].bornado-can-edit,
+body.bornado-inline-edit-ready .bornad-card-header div[data-bornado-edit].bornado-can-edit {
+    padding: 4px 8px;
+}
+
+body.bornado-inline-edit-ready [data-bornado-edit].bornado-can-edit:hover {
+    background-color: var(--bornado-edit-accent-soft);
+    box-shadow: inset 0 0 0 1px rgba(255, 0, 46, 0.4);
+}
+
+/* Always-visible pencil cue, brighter on hover. */
+body.bornado-inline-edit-ready [data-bornado-edit].bornado-can-edit::after {
+    content: "\f303"; /* fa-pencil */
+    font-family: "Font Awesome 5 Free", "FontAwesome", sans-serif;
+    font-weight: 900;
+    font-size: 11px;
+    color: var(--bornado-edit-accent);
+    opacity: 0.5;
+    margin-inline-start: 8px;
+    vertical-align: middle;
+    transition: opacity 0.15s ease;
+}
+
+body.bornado-inline-edit-ready [data-bornado-edit].bornado-can-edit:hover::after {
+    opacity: 1;
+}
+
+/* Large card-body areas use a lighter cue and a corner pencil chip. */
+body.bornado-inline-edit-ready .bornad-card-body[data-bornado-edit].bornado-can-edit {
+    background-color: transparent;
+    box-shadow: none;
+    outline: 1px dashed rgba(255, 0, 46, 0.28);
+    outline-offset: -6px;
+}
+
+body.bornado-inline-edit-ready .bornad-card-body[data-bornado-edit].bornado-can-edit::after {
+    position: absolute;
+    inset-inline-end: 12px;
+    top: 10px;
+    margin: 0;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(20, 23, 38, 0.12);
+    opacity: 0.85;
+}
+
+/* Placeholder shown in edit mode where a value was never filled in. */
+.bornado-edit-empty {
+    display: inline-block;
+    min-width: 120px;
+    padding: 2px 4px;
+    color: #9aa1ad;
+    font-style: normal;
+    font-weight: 500;
+}
+
+body:not(.bornado-inline-edit-active) .bornado-edit-empty {
+    display: none;
+}
+
+/* Never promise an "add" placeholder for a field the form cannot edit. */
+[data-bornado-edit]:not(.bornado-can-edit):not(.bornado-editing) .bornado-edit-empty {
+    display: none;
+}
+
+/* The value being edited collapses; its control shows in the very same spot. */
+[data-bornado-edit].bornado-editing:not(.bornado-keep-visible-while-editing) {
+    display: none !important;
+}
+
+/* ===== 3) In-place control slot =========================================== */
+.bornado-inline-slot {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+    padding: 6px 0;
+    animation: bornado-slot-in 0.18s ease;
+}
+
+@keyframes bornado-slot-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.bornado-inline-slot,
+.bornado-inline-slot * {
+    pointer-events: auto;
+}
+
+.bornado-slot-fields {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.bornad-summary-item > .bornado-inline-slot,
+.bornad-detail-list li > .bornado-inline-slot {
+    flex: 0 1 auto;
+    width: auto;
+    min-width: min(100%, 420px);
+    margin-right: auto;
+    justify-content: flex-end;
+    padding: 0;
+}
+
+.bornad-summary-item > .bornado-inline-slot .bornado-slot-fields,
+.bornad-detail-list li > .bornado-inline-slot .bornado-slot-fields {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.bornad-summary-item > .bornado-inline-slot--location {
+    width: 100%;
+    min-width: 0;
+    margin-right: 0;
+    justify-content: stretch;
+}
+
+.bornad-summary-item > .bornado-inline-slot--location .bornado-slot-fields {
+    display: block;
+    width: 100%;
+}
+
+.bornad-summary-item > .bornado-inline-slot--price {
+    width: 100%;
+    min-width: 0;
+    margin-right: 0;
+    justify-content: stretch;
+}
+
+.bornad-summary-item > .bornado-inline-slot--price .bornado-slot-fields {
+    display: block;
+    width: 100%;
+}
+
+/* Always-on regions (images / contact methods): shown in place, no click. */
+.bornado-mounted {
+    position: relative;
+}
+
+.bornado-mounted > *:not(.bornado-persistent-slot) {
+    display: none !important;
+}
+
+.bornado-gallery-editing {
+    position: relative;
+}
+
+.bornado-gallery-editing > *:not(.bornado-persistent-slot) {
+    display: block !important;
+}
+
+.bornado-persistent-slot {
+    display: block;
+    padding: 0;
+}
+
+.bornado-persistent-slot .bornado-slot-fields {
+    width: 100%;
+}
+
+.bornado-gallery-edit-slot {
+    position: absolute;
+    inset: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Borrowed controls often sit in Bootstrap columns — let them fill the slot. */
+.bornado-slot-fields [class*="col-"] {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.bornado-slot-fields .row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.bornado-inline-slot--price .row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+}
+
+.bornado-inline-slot--price .row > [class*="col-"] {
+    width: auto !important;
+    max-width: 100% !important;
+    min-width: 0;
+}
+
+.bornado-inline-slot--price .field-box {
+    margin-bottom: 0;
+}
+
+.bornado-inline-slot--price > .bornado-slot-fields > .field-box,
+.bornado-inline-slot--price > .bornado-slot-fields > .location-box {
+    margin-top: 12px;
+}
+
+/* Make the price-type select feel like the price input on desktop. */
+.bornado-inline-slot--price .select2-container--default .select2-selection--single {
+    min-height: 48px;
+    border: 1px solid var(--bornado-edit-border) !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+}
+
+.bornado-inline-slot--price .select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding-right: 14px !important;
+    padding-left: 34px !important;
+    line-height: 46px !important;
+    font-size: 15px;
+    color: #1f2937 !important;
+}
+
+.bornado-inline-slot--price .select2-container--default .select2-selection--single .select2-selection__arrow {
+    left: 8px;
+    right: auto;
+    width: 24px;
+    height: 46px;
+}
+
+.bornado-inline-slot--price input[type="text"],
+.bornado-inline-slot--price input[type="number"],
+.bornado-inline-slot--price .form-control {
+    min-height: 48px;
+    height: 48px;
+}
+
+/* Make borrowed AdForest controls feel native exactly where the value was. */
+.bornado-slot-fields .field-box,
+.bornado-slot-fields .label-box,
+.bornado-slot-fields .form-group {
+    margin-bottom: 14px;
+}
+
+.bornado-slot-fields .field-box:last-child,
+.bornado-slot-fields .form-group:last-child {
+    margin-bottom: 0;
+}
+
+/* The field name already exists on the page, so hide the borrowed label. */
+.bornado-slot-fields > .bornado-slot-fields,
+.bornado-slot-fields label.form-label,
+.bornado-slot-fields .label-box,
+.bornado-slot-fields .field-box > label:first-child,
+.bornado-slot-fields .country-heading > label,
+.bornado-slot-fields h3 {
+    display: none !important;
+}
+
+/* Keep choice labels (radios/checkboxes) visible — they ARE the options. */
+.bornado-slot-fields .ad_type_list_adpost label,
+.bornado-slot-fields li label,
+.bornado-slot-fields .dont_change_color {
+    display: inline-block !important;
+    font-weight: 600;
+    margin: 0;
+}
+
+.bornado-slot-fields .select-user-type,
+.bornado-slot-fields .ad_type_list_adpost,
+.bornado-slot-fields .switch-btns-box ul,
+.bornado-slot-fields #ad_type ul,
+.bornado-slot-fields #condition ul,
+.bornado-slot-fields #warranty ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-start;
+    justify-content: flex-end;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.bornado-slot-fields .select-user-type li,
+.bornado-slot-fields .ad_type_list_adpost li,
+.bornado-slot-fields .switch-btns-box ul li {
+    display: inline-flex;
+    align-items: stretch;
+    margin: 0;
+}
+
+.bornado-slot-fields .select-user-type li input[type="radio"],
+.bornado-slot-fields .ad_type_list_adpost li input[type="radio"],
+.bornado-slot-fields .switch-btns-box ul li input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.bornado-slot-fields .select-user-type li label,
+.bornado-slot-fields .ad_type_list_adpost li label,
+.bornado-slot-fields .switch-btns-box ul li label {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 10px 18px;
+    text-align: center;
+    color: #6d6d6d;
+    background-color: #f6f6f6;
+    border: 1px solid #d3d3d3;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+/* ===== Confirm (✓) button ================================================= */
+.bornado-slot-confirm {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    margin-top: 0;
+    border: 0;
+    border-radius: 10px;
+    background: #16a34a;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+    transition: filter 0.15s ease, transform 0.05s ease;
+}
+
+.bornado-slot-confirm:hover {
+    filter: brightness(0.95);
+}
+
+.bornado-slot-confirm:active {
+    transform: translateY(1px);
+}
+
+.bornado-inline-slot .form-control,
+.bornado-inline-slot input[type="text"],
+.bornado-inline-slot input[type="number"],
+.bornado-inline-slot input[type="tel"],
+.bornado-inline-slot input[type="url"],
+.bornado-inline-slot input[type="email"],
+.bornado-inline-slot textarea,
+.bornado-inline-slot select {
+    width: 100%;
+    border: 1px solid var(--bornado-edit-border);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 15px;
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.bornado-inline-slot .form-control:focus,
+.bornado-inline-slot input:focus,
+.bornado-inline-slot textarea:focus,
+.bornado-inline-slot select:focus {
+    border-color: var(--bornado-edit-accent);
+    box-shadow: 0 0 0 3px var(--bornado-edit-accent-soft);
+    outline: none;
+}
+
+.bornado-inline-slot textarea {
+    min-height: 140px;
+    resize: vertical;
+}
+
+/* Select2 widgets keep full width in place. */
+.bornado-inline-slot .select2-container {
+    width: 100% !important;
+}
+
+/* Location editor opens away from the clicked summary chip, so keep it as a
+ * compact stacked form instead of letting borrowed Bootstrap columns float
+ * side-by-side and overflow on desktop. */
+.bornado-inline-slot--location {
+    display: block;
+    width: min(100%, 460px);
+    max-width: 100%;
+    padding: 0;
+}
+
+.bornado-inline-slot--location .bornado-slot-fields {
+    display: block !important;
+    width: 100%;
+}
+
+.bornado-inline-slot--location .bornado-slot-fields [class*="col-"] {
+    display: block !important;
+    float: none !important;
+    clear: both;
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: none !important;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.bornado-inline-slot--location .bornado-slot-fields #ad_country_sub_div {
+    margin-top: 12px;
+}
+
+.bornado-inline-mobile-choice-sheet .bornado-mobile-choice__item.is-disabled {
+    opacity: 0.5;
+}
+
+.bornado-inline-mobile-choice-sheet {
+    z-index: 12050;
+}
+
+/* Keep the map usable once borrowed. */
+.bornado-inline-slot #dvMap {
+    width: 100% !important;
+    min-height: 300px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* ===== Image gallery editor: public carousel + remove/add controls ========= *
+ * The visible gallery stays exactly the same as the single-ad view. The real
+ * Dropzone lives hidden in `.bornado-gallery-edit-slot`; we only add a small
+ * ✕ on image thumbnails and a matching ＋ tile to the thumbnail strip. */
+.bornado-gallery-edit-slot .ad_post_image_container,
+.bornado-gallery-edit-slot .dropzone,
+.bornado-gallery-edit-slot .dz-preview,
+.bornado-gallery-edit-slot .dz-message,
+.bornado-gallery-edit-slot .dz-remove {
+    pointer-events: none !important;
+}
+
+.bornado-gallery-editing #sync2 .img-box {
+    position: relative;
+}
+
+.bornado-gallery-thumb-remove {
+    position: absolute;
+    top: 6px;
+    inset-inline-end: 6px;
+    z-index: 4;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    margin: 0 !important;
+    border: 1px solid rgba(255, 0, 46, 0.22) !important;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.96) !important;
+    color: var(--bornado-edit-accent) !important;
+    font-size: 0;
+    line-height: 0;
+    cursor: pointer;
+    box-shadow: none;
+    outline: none;
+    transition: background 0.15s ease, transform 0.05s ease;
+}
+
+.bornado-gallery-thumb-remove__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-family: Arial, "Segoe UI", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--bornado-edit-accent) !important;
+    transform: translateY(-1px);
+    pointer-events: none;
+}
+
+.bornado-gallery-thumb-remove:hover {
+    background: rgba(255, 0, 46, 0.08) !important;
+}
+
+.bornado-gallery-thumb-remove:active {
+    transform: scale(0.93);
+}
+
+.bornado-gallery-add-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    border: 2px dashed rgba(255, 0, 46, 0.34) !important;
+    border-radius: 12px;
+    background: var(--bornado-edit-accent-soft) !important;
+    overflow: hidden;
+    box-shadow: none !important;
+}
+
+.bornado-gallery-add-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: var(--bornado-edit-accent) !important;
+    font-size: 0;
+    line-height: 0;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: none;
+    outline: none;
+}
+
+.bornado-gallery-add-btn:hover {
+    background: rgba(255, 0, 46, 0.06) !important;
+}
+
+.bornado-gallery-add-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-family: Arial, "Segoe UI", sans-serif;
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--bornado-edit-accent) !important;
+    transform: translateY(-2px);
+    pointer-events: none;
+}
+
+.bornado-gallery-add-btn span { pointer-events: none; }
+
+/* ===== Contact card: always available to edit, even when empty / on mobile = */
+body.bornado-inline-edit-active .bornad-contact-methods-card--desktop {
+    display: block !important;
+}
+
+body.bornado-inline-edit-ready .bornad-contact-methods-card [data-bornado-edit="contact"] {
+    border-radius: 8px;
+    background-color: rgba(255, 0, 46, 0.045);
+    box-shadow: inset 0 0 0 1px rgba(255, 0, 46, 0.16);
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+body.bornado-inline-edit-ready .bornad-contact-methods-card [data-bornado-edit="contact"]:hover {
+    background-color: var(--bornado-edit-accent-soft);
+    box-shadow: inset 0 0 0 1px rgba(255, 0, 46, 0.4);
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card [data-bornado-edit="contact"] {
+    position: relative;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .adf-mbn__item {
+    position: relative;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice-btn {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    font: inherit;
+    position: relative;
+    width: 100%;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice-badge {
+    position: absolute;
+    top: 6px;
+    inset-inline-start: 6px;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+    pointer-events: none;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice-state {
+    display: block;
+    margin-top: 2px;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.15;
+    text-align: center;
+    white-space: nowrap;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--inactive .adf-mbn__link,
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--disabled .adf-mbn__link {
+    background: linear-gradient(180deg, #ffffff 0%, #f7f9fd 100%) !important;
+    border-color: #edf1f7 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--inactive .adf-mbn__icon svg,
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--inactive .adf-mbn__label,
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--inactive .bornado-contact-choice-state,
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--disabled .adf-mbn__icon svg,
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--disabled .adf-mbn__label,
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--disabled .bornado-contact-choice-state {
+    color: #8a9098 !important;
+    fill: #8a9098 !important;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--inactive .adf-mbn__link:hover {
+    border-color: #d9e0eb !important;
+    transform: translateY(-1px);
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--inactive .adf-mbn__link {
+    opacity: 0.72;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--selected .adf-mbn__link {
+    transform: none;
+    box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--selected .bornado-contact-choice-badge {
+    background: rgba(22, 163, 74, 0.12);
+    border-color: rgba(22, 163, 74, 0.24);
+    color: #15803d;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--selected .bornado-contact-choice-state {
+    color: #15803d;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--inactive .bornado-contact-choice-badge {
+    background: rgba(37, 99, 235, 0.12);
+    border-color: rgba(37, 99, 235, 0.24);
+    color: #2563eb;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--disabled .adf-mbn__link {
+    cursor: pointer;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--disabled .adf-mbn__link {
+    opacity: 0.72;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--disabled .adf-mbn__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.18);
+    pointer-events: none;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--disabled .bornado-contact-choice-badge {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.28);
+    color: #b45309;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--disabled .bornado-contact-choice-state {
+    color: #b45309;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-inline-note {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border: 1px solid rgba(245, 158, 11, 0.22);
+    border-radius: 12px;
+    background: rgba(255, 251, 235, 0.92);
+    color: #7c2d12;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-inline-note[hidden] {
+    display: none !important;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-inline-note__body {
+    min-width: 0;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-inline-note__title {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #92400e;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-inline-note__text,
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-inline-note__text a {
+    font-size: 0.84rem;
+    line-height: 1.9;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-inline-note__text a {
+    color: #b45309;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-inline-note__close {
+    border: 0;
+    background: transparent;
+    color: #92400e;
+    font-size: 20px;
+    line-height: 1;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* ===== Location card: hide the read-only map while its editor is open ====== *
+ * The editor slot is appended INTO the body, so hide only the display map and
+ * its hidden coordinate inputs — not the body itself. */
+.bornad-map-card.bornado-loc-editing .bornad-card-body > #itemMap,
+.bornad-map-card.bornado-loc-editing .bornad-card-body > input {
+    display: none !important;
+}
+
+/* The legacy display "edit ad" link is redundant inside the live editor. */
+.bornado-edit-mode .bornad-edit-link {
+    display: none !important;
+}
+
+/* ===== 4) Sticky save bar ================================================= */
+.bornado-edit-bar {
+    display: none;
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 9990;
+    background: #fff;
+    border-top: 1px solid var(--bornado-edit-border);
+    box-shadow: 0 -8px 24px rgba(20, 23, 38, 0.08);
+}
+
+body.bornado-inline-edit-ready .bornado-edit-bar {
+    display: block;
+}
+
+body.bornado-inline-edit-ready {
+    padding-bottom: 84px;
+}
+
+.bornado-edit-bar__inner {
+    max-width: 1170px;
+    margin: 0 auto;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.bornado-edit-bar__hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.bornado-edit-bar__hint i {
+    color: var(--bornado-edit-accent);
+}
+
+.bornado-edit-bar__actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bornado-edit-bar__cancel {
+    color: #6b7280;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+}
+
+.bornado-edit-bar__cancel:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.bornado-edit-bar__save {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bornado-edit-accent);
+    color: #fff;
+    border: 0;
+    border-radius: 10px;
+    padding: 12px 26px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.15s ease, transform 0.05s ease;
+}
+
+.bornado-edit-bar__save:hover {
+    filter: brightness(0.94);
+}
+
+.bornado-edit-bar__save:active {
+    transform: translateY(1px);
+}
+
+.bornado-edit-bar__save.is-saving {
+    opacity: 0.75;
+    cursor: default;
+}
+
+.bornado-edit-bar__save.is-saving i {
+    animation: bornado-spin 0.8s linear infinite;
+}
+
+@keyframes bornado-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ===== 5) Mobile: app-like ================================================ */
+@media (max-width: 768px) {
+    .bornado-inline-slot--price {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .bornado-inline-slot--price .row {
+        display: grid !important;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .bornado-inline-slot--price .row > [class*="col-"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0;
+    }
+
+    .bornado-inline-slot--price .row > [class*="col-"]:first-child {
+        order: 2;
+    }
+
+    .bornado-inline-slot--price .row > [class*="col-"]:last-child {
+        order: 1;
+    }
+
+    .bornado-inline-slot--price .field-box {
+        margin-bottom: 0;
+    }
+
+    .bornado-inline-slot--location {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .bornado-inline-slot--location,
+    .bornado-inline-slot--location .bornado-slot-fields,
+    .bornado-inline-slot--location .bornado-slot-fields [class*="col-"] {
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .bornado-inline-slot--location .bornado-slot-fields [class*="col-"] {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .bornado-inline-slot--location select,
+    .bornado-inline-slot--location .select2-container,
+    .bornado-inline-slot--location .select2-selection--single,
+    .bornado-inline-slot--location .select2-selection__rendered {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box;
+    }
+
+    .bornado-inline-slot select,
+    .bornado-inline-slot .select2-container--default .select2-selection--single {
+        min-height: 56px;
+        border: 1px solid rgba(20, 28, 45, 0.12) !important;
+        border-radius: 18px !important;
+        background: #fff !important;
+        box-shadow: none !important;
+    }
+
+    .bornado-inline-slot .select2-container--default .select2-selection--single .select2-selection__rendered {
+        padding-right: 16px !important;
+        padding-left: 46px !important;
+        line-height: 54px !important;
+        font-size: 15px;
+        font-weight: 700;
+        color: #1f2633 !important;
+    }
+
+    .bornado-inline-slot .select2-container--default .select2-selection--single .select2-selection__arrow {
+        left: 10px;
+        right: auto;
+        width: 36px;
+        height: 36px;
+        top: 50%;
+        transform: translateY(-50%);
+        border-radius: 999px;
+        background: #f7f9fc;
+    }
+
+    .bornado-inline-slot .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        border-color: #1f6fff transparent transparent transparent;
+        border-width: 6px 5px 0 5px;
+        margin-left: -5px;
+        margin-top: -2px;
+    }
+
+    .bornado-inline-slot select {
+        padding-right: 16px;
+        padding-left: 44px;
+    }
+
+    .bornado-inline-slot--price input[type="text"],
+    .bornado-inline-slot--price input[type="number"],
+    .bornado-inline-slot--price .form-control {
+        min-height: 56px;
+        height: 56px;
+    }
+
+    .bornado-edit-bar__inner {
+        padding: 10px 14px;
+    }
+
+    .bornado-edit-bar__hint {
+        display: none;
+    }
+
+    .bornado-edit-bar__actions {
+        flex: 1;
+        justify-content: space-between;
+    }
+
+    .bornado-edit-bar__save {
+        flex: 1;
+        justify-content: center;
+        padding: 13px 18px;
+    }
+
+    body.bornado-inline-edit-ready {
+        padding-bottom: 76px;
+    }
+}
