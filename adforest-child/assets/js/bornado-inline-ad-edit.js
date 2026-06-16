@@ -753,6 +753,1346 @@
         }
 
         /* ------------------------------------------------------------------ *
+         * Mobile price modal: keeps price editing focused in one sheet and
+         * replaces the separate price-type dropdown with a wheel-styled column.
+         * ------------------------------------------------------------------ */
+        function shouldUseMobilePriceModal(editor) {
+            return !!(editor && editor.key === 'price' && isMobileChoiceViewport());
+        }
+
+        function capturePriceEditorState(editor) {
+            var values = {};
+            if (!editor || !editor.$fields) {
+                return values;
+            }
+
+            editor.$fields.find('#ad_post_price_type, #ad_price, #ad_price_from, #ad_price_to, #ad_currency').each(function () {
+                values[this.id] = $(this).val();
+            });
+
+            return values;
+        }
+
+        function restorePriceEditorState(editor) {
+            var snapshot = editor && editor._priceSnapshot ? editor._priceSnapshot : null;
+            if (!snapshot || !editor || !editor.$fields) {
+                return;
+            }
+
+            ['ad_post_price_type', 'ad_price', 'ad_price_from', 'ad_price_to', 'ad_currency'].forEach(function (id) {
+                var $field = editor.$fields.find('#' + id).first();
+                if (!$field.length || !Object.prototype.hasOwnProperty.call(snapshot, id)) {
+                    return;
+                }
+                $field.val(snapshot[id]);
+                if ($field.is('select')) {
+                    $field.trigger('change').trigger('change.select2');
+                } else {
+                    $field.trigger('input').trigger('change');
+                }
+            });
+        }
+
+        function syncPriceModalBodyState() {
+            $('body').toggleClass('bornado-price-mobile-modal-open', $('.bornado-price-mobile-modal:visible').length > 0);
+        }
+
+        function buildPriceWheelItemHtml(option, isSelected) {
+            var value = String(option && option.value || '');
+            var label = $.trim(option && option.text ? option.text : '');
+            var disabled = !!(option && option.disabled);
+            var classes = 'bornado-wheel-picker__item' + (isSelected ? ' is-active' : '') + (disabled ? ' is-disabled' : '');
+
+            return '<button type="button" class="' + classes + '" data-price-wheel-item="' + escapeHtml(value) + '"' +
+                (disabled ? ' disabled aria-disabled="true"' : '') + ' role="option" aria-selected="' + (isSelected ? 'true' : 'false') + '">' +
+                escapeHtml(label) +
+            '</button>';
+        }
+
+        function syncPriceWheelFromSelect(editor) {
+            if (!editor || !editor._priceWheel || !editor._priceWheel.$select || !editor._priceWheel.$select.length) {
+                return;
+            }
+
+            var currentValue = String(editor._priceWheel.$select.val() || '');
+            var $items = editor._priceWheel.$wheel.find('[data-price-wheel-item]');
+            var $active = $();
+
+            $items.each(function () {
+                var $item = $(this);
+                var isActive = String($item.attr('data-price-wheel-item') || '') === currentValue;
+                $item.toggleClass('is-active', isActive).attr('aria-selected', isActive ? 'true' : 'false');
+                if (isActive) {
+                    $active = $item;
+                }
+            });
+
+            if ($active.length) {
+                var track = editor._priceWheel.$track.get(0);
+                var top = $active.position().top + track.scrollTop;
+                editor._priceWheel._syncing = true;
+                track.scrollTo({
+                    top: Math.max(0, top - editor._priceWheel.rowHeight * 2),
+                    behavior: 'auto'
+                });
+                window.setTimeout(function () {
+                    if (editor && editor._priceWheel) {
+                        editor._priceWheel._syncing = false;
+                    }
+                }, 30);
+            }
+        }
+
+        function mountPriceTypeWheel(editor) {
+            var $select = editor.$fields.find('#ad_post_price_type').first();
+            var $box = $select.closest('.field-box').first();
+            var $select2 = $select.next('.select2, .select2-container');
+            var options = [];
+            var html = [];
+            var wheelLabel = '';
+
+            if (!$select.length || !$box.length) {
+                return;
+            }
+
+            if (editor._priceWheel && editor._priceWheel.$wheel && editor._priceWheel.$wheel.length) {
+                syncPriceWheelFromSelect(editor);
+                return;
+            }
+
+            wheelLabel = getDynamicFieldLabel($box) || t('selectOption', 'انتخاب گزینه');
+            $box.addClass('bornado-price-wheel-host');
+
+            Array.prototype.slice.call($select.get(0).options || []).forEach(function (option) {
+                if (!option) {
+                    return;
+                }
+                var label = $.trim(option.text || '');
+                if (!label) {
+                    return;
+                }
+                options.push({
+                    value: String(option.value || ''),
+                    text: label,
+                    disabled: !!option.disabled
+                });
+            });
+
+            for (var i = 0; i < options.length; i++) {
+                html.push(buildPriceWheelItemHtml(options[i], String(options[i].value) === String($select.val() || '')));
+            }
+
+            var $wheel = $(
+                '<div class="bornado-price-wheel">' +
+                    '<div class="bornado-wheel-picker__drum bornado-price-wheel__drum">' +
+                        '<div class="bornado-wheel-picker__highlight"></div>' +
+                        '<div class="bornado-wheel-picker__fade"></div>' +
+                        '<div class="bornado-wheel-picker__columns">' +
+                            '<div class="bornado-wheel-picker__column bornado-price-wheel__column">' +
+                                '<div class="bornado-wheel-picker__track bornado-price-wheel__track" role="listbox" aria-label="' + escapeHtml(wheelLabel) + '">' +
+                                    '<div class="bornado-wheel-picker__list">' + html.join('') + '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>'
+            );
+
+            $select.addClass('bornado-price-wheel-source').attr('tabindex', '-1');
+            if ($select2.length) {
+                $select2.addClass('bornado-price-wheel-source-container');
+            }
+
+            $box.append($wheel);
+
+            editor._priceWheel = {
+                $select: $select,
+                $wheel: $wheel,
+                $track: $wheel.find('.bornado-price-wheel__track').first(),
+                rowHeight: 44,
+                _syncing: false,
+                _scrollTimer: 0,
+                onChange: function () {
+                    syncPriceWheelFromSelect(editor);
+                    window.setTimeout(function () {
+                        if (editor && editor.$fields) {
+                            refreshWidgets();
+                        }
+                    }, 30);
+                }
+            };
+
+            editor._priceWheel.$track.on('click.bornadopricewheel', '[data-price-wheel-item]', function (e) {
+                var value = String($(this).attr('data-price-wheel-item') || '');
+                e.preventDefault();
+                editor._priceWheel.$select.val(value).trigger('change').trigger('change.select2');
+            });
+
+            editor._priceWheel.$track.on('scroll.bornadopricewheel', function () {
+                if (!editor || !editor._priceWheel || editor._priceWheel._syncing) {
+                    return;
+                }
+
+                window.clearTimeout(editor._priceWheel._scrollTimer);
+                editor._priceWheel._scrollTimer = window.setTimeout(function () {
+                    var $items = editor._priceWheel.$wheel.find('[data-price-wheel-item]');
+                    if (!$items.length) {
+                        return;
+                    }
+
+                    var rawIndex = Math.round(editor._priceWheel.$track.get(0).scrollTop / editor._priceWheel.rowHeight);
+                    var index = Math.max(0, Math.min($items.length - 1, rawIndex));
+                    var value = String($items.eq(index).attr('data-price-wheel-item') || '');
+                    if (value !== String(editor._priceWheel.$select.val() || '')) {
+                        editor._priceWheel.$select.val(value).trigger('change').trigger('change.select2');
+                    } else {
+                        syncPriceWheelFromSelect(editor);
+                    }
+                }, 80);
+            });
+
+            editor._priceWheel.$select.on('change.bornadopricewheel', editor._priceWheel.onChange);
+            syncPriceWheelFromSelect(editor);
+        }
+
+        function destroyPriceTypeWheel(editor) {
+            if (!editor || !editor._priceWheel) {
+                return;
+            }
+
+            if (editor._priceWheel.$select && editor._priceWheel.$select.length) {
+                editor._priceWheel.$select.removeClass('bornado-price-wheel-source').removeAttr('tabindex');
+                editor._priceWheel.$select.off('change.bornadopricewheel', editor._priceWheel.onChange);
+                editor._priceWheel.$select.closest('.field-box').removeClass('bornado-price-wheel-host');
+                var $select2 = editor._priceWheel.$select.next('.select2, .select2-container');
+                if ($select2.length) {
+                    $select2.removeClass('bornado-price-wheel-source-container');
+                }
+            }
+
+            if (editor._priceWheel.$track && editor._priceWheel.$track.length) {
+                editor._priceWheel.$track.off('.bornadopricewheel');
+            }
+            window.clearTimeout(editor._priceWheel._scrollTimer);
+
+            if (editor._priceWheel.$wheel && editor._priceWheel.$wheel.length) {
+                editor._priceWheel.$wheel.remove();
+            }
+
+            editor._priceWheel = null;
+        }
+
+        function ensurePriceMobileModal(editor) {
+            if (!editor) {
+                return $();
+            }
+            if (editor.$priceModal && editor.$priceModal.length) {
+                return editor.$priceModal;
+            }
+
+            var title = getPreferredDisplayLabel('price', editor.$el.attr('data-bornado-label') || '') || t('addPrice', 'افزودن قیمت');
+            editor.$priceModal = $(
+                '<div class="bornado-price-mobile-modal" hidden>' +
+                    '<button type="button" class="bornado-price-mobile-modal__backdrop" data-price-modal-action="cancel" aria-label="' + escapeHtml(t('close', 'بستن')) + '"></button>' +
+                    '<div class="bornado-price-mobile-modal__panel" role="dialog" aria-modal="true" aria-label="' + escapeHtml(title) + '">' +
+                        '<div class="bornado-price-mobile-modal__handle"></div>' +
+                        '<div class="bornado-price-mobile-modal__head">' +
+                            '<div class="bornado-price-mobile-modal__title-wrap">' +
+                                '<span class="bornado-price-mobile-modal__eyebrow">' + escapeHtml(t('editing', 'حالت ویرایش')) + '</span>' +
+                                '<h4 class="bornado-price-mobile-modal__title">' + escapeHtml(title) + '</h4>' +
+                            '</div>' +
+                            '<button type="button" class="bornado-price-mobile-modal__close" data-price-modal-action="cancel" aria-label="' + escapeHtml(t('close', 'بستن')) + '"><span aria-hidden="true">&times;</span></button>' +
+                        '</div>' +
+                        '<div class="bornado-price-mobile-modal__body"></div>' +
+                        '<div class="bornado-price-mobile-modal__actions">' +
+                            '<button type="button" class="bornado-slot-confirm bornado-price-mobile-modal__confirm" data-price-modal-action="confirm" aria-label="' + escapeHtml(t('done', 'تمام')) + '">' +
+                                '<i class="fas fa-check" aria-hidden="true"></i>' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>'
+            );
+
+            editor.$priceModal.find('.bornado-price-mobile-modal__body').append(editor.$slot);
+            $('body').append(editor.$priceModal);
+
+            editor.$priceModal.on('click', '[data-price-modal-action]', function (e) {
+                var action = String($(this).attr('data-price-modal-action') || '');
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (action === 'confirm') {
+                    closeEditor(editor, true);
+                    return;
+                }
+
+                restorePriceEditorState(editor);
+                closeEditor(editor, true);
+            });
+
+            return editor.$priceModal;
+        }
+
+        function normalizePriceMobileLayout(editor) {
+            if (!editor || !editor.$fields) {
+                return;
+            }
+            if (editor._priceMobileLayout && editor._priceMobileLayout.$layout && editor._priceMobileLayout.$layout.length) {
+                return;
+            }
+
+            var $row = editor.$fields.find('.row').first();
+            var $cols = $row.children('[class*="col-"]');
+            if (!$row.length || $cols.length < 2) {
+                return;
+            }
+
+            var $typeCol = $cols.eq(0);
+            var $priceCol = $cols.eq(1);
+            var $layout = $(
+                '<div class="bornado-price-mobile-layout">' +
+                    '<div class="bornado-price-mobile-layout__type"></div>' +
+                    '<div class="bornado-price-mobile-layout__price"></div>' +
+                '</div>'
+            );
+
+            $row.addClass('bornado-price-mobile-row');
+            $layout.appendTo($row);
+            $layout.find('.bornado-price-mobile-layout__type').append($typeCol);
+            $layout.find('.bornado-price-mobile-layout__price').append($priceCol);
+
+            editor._priceMobileLayout = {
+                $row: $row,
+                $layout: $layout,
+                $typeCol: $typeCol,
+                $priceCol: $priceCol
+            };
+        }
+
+        function localizePriceEditorPlaceholders(editor) {
+            if (!editor || !editor.$fields) {
+                return;
+            }
+
+            var $price = editor.$fields.find('#ad_price').first();
+            var $priceFrom = editor.$fields.find('#ad_price_from').first();
+            var $priceTo = editor.$fields.find('#ad_price_to').first();
+
+            if ($price.length) {
+                $price.attr('placeholder', t('pricePlaceholder', 'قیمت را وارد کنید'));
+            }
+            if ($priceFrom.length) {
+                $priceFrom.attr('placeholder', t('priceFromPlaceholder', 'از'));
+            }
+            if ($priceTo.length) {
+                $priceTo.attr('placeholder', t('priceToPlaceholder', 'تا'));
+            }
+        }
+
+        function teardownPriceMobileLayout(editor) {
+            var layout = editor && editor._priceMobileLayout ? editor._priceMobileLayout : null;
+            if (!layout || !layout.$row || !layout.$row.length) {
+                return;
+            }
+
+            if (layout.$typeCol && layout.$typeCol.length) {
+                layout.$row.append(layout.$typeCol);
+            }
+            if (layout.$priceCol && layout.$priceCol.length) {
+                layout.$row.append(layout.$priceCol);
+            }
+            if (layout.$layout && layout.$layout.length) {
+                layout.$layout.remove();
+            }
+            layout.$row.removeClass('bornado-price-mobile-row');
+            editor._priceMobileLayout = null;
+        }
+
+        function mountPriceMobileModal(editor) {
+            if (!shouldUseMobilePriceModal(editor)) {
+                return;
+            }
+
+            editor._priceSnapshot = capturePriceEditorState(editor);
+            editor.$slot.addClass('bornado-inline-slot--price-modal');
+            ensurePriceMobileModal(editor).prop('hidden', false);
+            normalizePriceMobileLayout(editor);
+            localizePriceEditorPlaceholders(editor);
+            mountPriceTypeWheel(editor);
+            syncPriceModalBodyState();
+
+            window.setTimeout(function () {
+                if (!editor || !editor.$fields) {
+                    return;
+                }
+                var $first = editor.$fields.find('#ad_price, #ad_price_from, #ad_price_to').filter(':visible').first();
+                if ($first.length) {
+                    try { $first.trigger('focus'); } catch (e) {}
+                }
+            }, 30);
+        }
+
+        function teardownPriceMobileModal(editor) {
+            destroyPriceTypeWheel(editor);
+            teardownPriceMobileLayout(editor);
+
+            if (editor && editor.$priceModal && editor.$priceModal.length) {
+                editor.$priceModal.remove();
+                editor.$priceModal = null;
+            }
+
+            if (editor && editor.$slot) {
+                editor.$slot.removeClass('bornado-inline-slot--price-modal');
+            }
+
+            syncPriceModalBodyState();
+        }
+
+        /* ------------------------------------------------------------------ *
+         * Mobile location modal: two linked wheels for country and city/state.
+         * ------------------------------------------------------------------ */
+        function shouldUseLocationMobileModal(editor) {
+            return !!(editor && editor.key === 'location' && isMobileChoiceViewport());
+        }
+
+        var LOCATION_SELECT_NAMES = ['ad_country', 'ad_country_states', 'ad_country_cities', 'ad_country_towns'];
+
+        function captureLocationEditorState(editor) {
+            var values = {};
+            getAllLocationEditorSelects(editor).each(function () {
+                if (this && this.name) {
+                    values[this.name] = $(this).val();
+                }
+            });
+            return values;
+        }
+
+        function captureLocationOptionsSnapshot(editor) {
+            var html = {};
+
+            getAllLocationEditorSelects(editor).each(function () {
+                if (this && this.name) {
+                    html[this.name] = this.innerHTML;
+                }
+            });
+
+            return html;
+        }
+
+        function restoreLocationEditorState(editor, done) {
+            var snapshot = editor && editor._locationSnapshot ? editor._locationSnapshot : null;
+            var optionsSnapshot = editor && editor._locationOptionsSnapshot ? editor._locationOptionsSnapshot : null;
+
+            if (!snapshot && !optionsSnapshot) {
+                if (typeof done === 'function') {
+                    done();
+                }
+                return;
+            }
+
+            editor._locationCityRequestId = (editor._locationCityRequestId || 0) + 1;
+            window.clearTimeout(editor._locationRestoreTimer);
+
+            for (var i = 0; i < LOCATION_SELECT_NAMES.length; i++) {
+                var name = LOCATION_SELECT_NAMES[i];
+                var $select = getLocationSelectByName(editor, name);
+
+                if (!$select.length) {
+                    continue;
+                }
+
+                if (optionsSnapshot && Object.prototype.hasOwnProperty.call(optionsSnapshot, name)) {
+                    $select.html(optionsSnapshot[name]);
+                }
+
+                if (snapshot && Object.prototype.hasOwnProperty.call(snapshot, name)) {
+                    setLocationSelectValueSilently($select, snapshot[name] !== null && typeof snapshot[name] !== 'undefined' ? snapshot[name] : '');
+                }
+            }
+
+            if (editor._usesLocationMobileModal) {
+                refreshLocationModalWheels(editor);
+            }
+
+            if (typeof done === 'function') {
+                done();
+            }
+        }
+
+        function getLocationSelectByName(editor, name) {
+            if (!editor || !editor.$fields || !name) {
+                return $();
+            }
+            return editor.$fields.find('select[name="' + name + '"]').first();
+        }
+
+        function getAllLocationEditorSelects(editor) {
+            if (!editor || editor.key !== 'location' || !editor.$fields) {
+                return $();
+            }
+
+            var nodes = [];
+            for (var i = 0; i < LOCATION_SELECT_NAMES.length; i++) {
+                var $select = getLocationSelectByName(editor, LOCATION_SELECT_NAMES[i]);
+                if ($select.length) {
+                    nodes.push($select.get(0));
+                }
+            }
+
+            return $(nodes);
+        }
+
+        function getLocationFieldBox($select) {
+            if (!$select || !$select.length) {
+                return $();
+            }
+            return $select.closest('.field-box, .col-md-6, .col-lg-6, .col-sm-6, .col-xs-12').first();
+        }
+
+        function isLocationBlockShown(editor, $block) {
+            if (!editor || !$block || !$block.length) {
+                return false;
+            }
+
+            var $node = $block;
+            while ($node.length) {
+                if ($node.css('display') === 'none' || $node.attr('hidden')) {
+                    return false;
+                }
+                if (editor.$fields && $node.get(0) === editor.$fields.get(0)) {
+                    break;
+                }
+                $node = $node.parent();
+            }
+
+            return true;
+        }
+
+        function getActiveLocationChildSelect(editor) {
+            var $fallback = $();
+            var $pending = $();
+
+            for (var i = 1; i < LOCATION_SELECT_NAMES.length; i++) {
+                var $select = getLocationSelectByName(editor, LOCATION_SELECT_NAMES[i]);
+                if (!$select.length) {
+                    continue;
+                }
+
+                if (!$fallback.length) {
+                    $fallback = $select;
+                }
+
+                var $box = getLocationFieldBox($select);
+                if (!isLocationBlockShown(editor, $box)) {
+                    continue;
+                }
+
+                $fallback = $select;
+                var value = $select.val();
+                if (!value || !String(value).trim()) {
+                    $pending = $select;
+                }
+            }
+
+            return $pending.length ? $pending : $fallback;
+        }
+
+        function getSelectedCountryId($scope) {
+            var $root = $scope && $scope.length ? $scope : $form;
+            var value = String($root.find('select[name="ad_country"]').first().val() || '').trim();
+            return value;
+        }
+
+        function getLocationCountryRequiredLabel() {
+            return t('selectCountryFirst', 'ابتدا کشور را انتخاب کنید');
+        }
+
+        function getLocationLoadingLabel() {
+            return t('loadingOptions', 'در حال بارگذاری…');
+        }
+
+        function getLocationNoCityLabel() {
+            return t('noCityOptions', 'شهری برای این کشور یافت نشد');
+        }
+
+        function setLocationChildSelectMessage($select, label) {
+            if (!$select || !$select.length) {
+                return;
+            }
+
+            $select.empty().append(
+                $('<option/>', {
+                    value: '',
+                    text: label,
+                    disabled: true
+                })
+            );
+            $select.val('');
+        }
+
+        function setCitySelectCountryRequiredState($select) {
+            setLocationChildSelectMessage($select, getLocationCountryRequiredLabel());
+        }
+
+        function setCitySelectLoadingState($select) {
+            setLocationChildSelectMessage($select, getLocationLoadingLabel());
+        }
+
+        function setCitySelectEmptyState($select) {
+            setLocationChildSelectMessage($select, getLocationNoCityLabel());
+        }
+
+        function isLocationChildStatusLabel(text) {
+            var value = $.trim(String(text || '')).toLowerCase();
+            if (!value) {
+                return true;
+            }
+
+            return [
+                getLocationCountryRequiredLabel(),
+                getLocationLoadingLabel(),
+                getLocationNoCityLabel()
+            ].some(function (label) {
+                return label.toLowerCase() === value;
+            });
+        }
+
+        function applySubStatesResponseToSelect($select, responseText) {
+            if (!$select || !$select.length) {
+                return false;
+            }
+
+            var trimmed = $.trim(String(responseText || ''));
+            if (!trimmed) {
+                return false;
+            }
+
+            var $wrapper = $('<div/>').append($.parseHTML(trimmed, document, true));
+            var $options = $wrapper.find('select option');
+            if (!$options.length) {
+                $options = $wrapper.find('option');
+            }
+            if (!$options.length) {
+                return false;
+            }
+
+            var nodes = [];
+            var sawEmptyPlaceholder = false;
+
+            $options.each(function () {
+                var value = String(this.value || '');
+                var text = getSelectOptionDisplayText(this);
+
+                if (value === '' && (!text || isPlaceholderChoice(text))) {
+                    if (sawEmptyPlaceholder) {
+                        return;
+                    }
+                    sawEmptyPlaceholder = true;
+                    var placeholder = document.createElement('option');
+                    placeholder.value = '';
+                    placeholder.text = getLocationPlaceholderLabel();
+                    nodes.push(placeholder);
+                    return;
+                }
+
+                nodes.push(this.cloneNode(true));
+            });
+
+            if (!nodes.length) {
+                return false;
+            }
+
+            $select.empty().append(nodes);
+            return true;
+        }
+
+        function removeDuplicateLeadingLocationPlaceholders(selectEl) {
+            if (!selectEl || !selectEl.options || !selectEl.options.length) {
+                return;
+            }
+
+            var index = 1;
+            while (index < selectEl.options.length) {
+                var option = selectEl.options[index];
+                var value = String(option.value || '');
+                var text = getSelectOptionDisplayText(option);
+
+                if (value === '' && (!text || isPlaceholderChoice(text) || isLocationChildStatusLabel(text))) {
+                    selectEl.remove(index);
+                    continue;
+                }
+
+                index++;
+            }
+        }
+
+        function finalizeLocationCitySelectOptions($select) {
+            if (!$select || !$select.length) {
+                return;
+            }
+
+            var selectEl = $select.get(0);
+            if (!selectEl || !selectEl.options) {
+                return;
+            }
+
+            var placeholderLabel = getLocationPlaceholderLabel();
+            var options = selectEl.options;
+            var sawPlaceholder = false;
+            var hasRealOption = false;
+            var index = 0;
+
+            while (index < options.length) {
+                var option = options[index];
+                var value = String(option.value || '');
+                var text = getSelectOptionDisplayText(option);
+                var isPlaceholder = value === '' && (!text || isPlaceholderChoice(text) || isLocationChildStatusLabel(text));
+
+                if (value !== '') {
+                    hasRealOption = true;
+                }
+
+                if (isPlaceholder) {
+                    if (sawPlaceholder) {
+                        selectEl.remove(index);
+                        options = selectEl.options;
+                        continue;
+                    }
+                    sawPlaceholder = true;
+                    option.text = placeholderLabel;
+                    option.label = placeholderLabel;
+                    option.disabled = false;
+                }
+
+                index++;
+            }
+
+            if (hasRealOption && !sawPlaceholder) {
+                var leading = document.createElement('option');
+                leading.value = '';
+                leading.text = placeholderLabel;
+                selectEl.insertBefore(leading, selectEl.options[0] || null);
+            }
+
+            removeDuplicateLeadingLocationPlaceholders(selectEl);
+        }
+
+        function setLocationCountrySelection(editor, wheelState, value) {
+            if (!wheelState || !wheelState.$select || !wheelState.$select.length) {
+                return;
+            }
+
+            setLocationSelectValueSilently(wheelState.$select, value);
+            syncLocationWheelFromSelect(wheelState);
+
+            if (editor && editor.key === 'location') {
+                handleLocationCountryChange(editor);
+            }
+        }
+
+        function setLocationSelectValueSilently($select, value) {
+            if (!$select || !$select.length) {
+                return;
+            }
+
+            $select.data('bornadoSilentLocationChange', 1);
+            $select.val(value);
+            $select.removeData('bornadoSilentLocationChange');
+        }
+
+        function getPrimaryLocationCitySelect(editor) {
+            var $citySelect = getLocationSelectByName(editor, 'ad_country_states');
+            if (!$citySelect.length) {
+                $citySelect = getActiveLocationChildSelect(editor);
+            }
+            return $citySelect;
+        }
+
+        function refreshLocationCityWheel(editor) {
+            if (!editor || !editor._usesLocationMobileModal || !editor.$fields) {
+                return;
+            }
+
+            var layout = editor._locationMobileLayout || {};
+            var $citySelect = getPrimaryLocationCitySelect(editor);
+
+            if ($citySelect.length && layout.$cityHost && layout.$cityHost.length) {
+                mountLocationWheelForSelect(editor, 'city', $citySelect, layout.$cityHost);
+                return;
+            }
+
+            if (layout.$cityHost && layout.$cityHost.length) {
+                layout.$cityHost.empty();
+            }
+            destroyLocationWheel(editor, 'city');
+        }
+
+        function fetchLocationSubStates(countryId) {
+            var ajaxEndpoint = getAjaxEndpoint();
+            var nonceEl = document.getElementById('sb_get_sub_states_nonce');
+
+            if (!ajaxEndpoint || !nonceEl || !countryId) {
+                return $.Deferred().reject().promise();
+            }
+
+            return $.post(ajaxEndpoint, {
+                action: 'sb_get_sub_states',
+                country_id: countryId,
+                security: String(nonceEl.value || '')
+            });
+        }
+
+        function isLocationCitySelectPendingLoad($select) {
+            if (!$select || !$select.length) {
+                return true;
+            }
+
+            var options = $select.get(0).options;
+            if (!options || !options.length) {
+                return true;
+            }
+
+            if (options.length === 1) {
+                return isLocationChildStatusLabel(getSelectOptionDisplayText(options[0]));
+            }
+
+            return false;
+        }
+
+        function applyLocationCityResponse(editor, countryId, responseText, requestId) {
+            if (!editor || editor.key !== 'location') {
+                return;
+            }
+
+            if (requestId && editor._locationCityRequestId !== requestId) {
+                return;
+            }
+
+            if (!isEditorAlive(editor)) {
+                return;
+            }
+
+            completeLocationCityLoad(editor, countryId, responseText);
+        }
+
+        function handleLocationCountryChange(editor) {
+            if (!editor || editor.key !== 'location' || !editor.$fields) {
+                return;
+            }
+
+            var countryId = getSelectedCountryId(editor.$fields);
+            var $citySelect = getPrimaryLocationCitySelect(editor);
+
+            editor._locationPendingCountryId = countryId || null;
+            editor._locationCityRequestId = (editor._locationCityRequestId || 0) + 1;
+            var requestId = editor._locationCityRequestId;
+
+            if (!$citySelect.length) {
+                if (editor._usesLocationMobileModal) {
+                    refreshLocationCityWheel(editor);
+                }
+                return;
+            }
+
+            if (!countryId) {
+                setCitySelectCountryRequiredState($citySelect);
+                if (editor._usesLocationMobileModal) {
+                    refreshLocationCityWheel(editor);
+                }
+                return;
+            }
+
+            setCitySelectLoadingState($citySelect);
+            if (editor._usesLocationMobileModal) {
+                refreshLocationCityWheel(editor);
+            }
+
+            editor._locationCityFetchPending = true;
+
+            fetchLocationSubStates(countryId).done(function (response) {
+                editor._locationLastCityResponse = response;
+                applyLocationCityResponse(editor, countryId, response, requestId);
+            }).fail(function () {
+                if (requestId && editor._locationCityRequestId !== requestId) {
+                    return;
+                }
+                if (!isEditorAlive(editor)) {
+                    return;
+                }
+
+                if ($citySelect.length) {
+                    setCitySelectEmptyState($citySelect);
+                }
+                if (editor._usesLocationMobileModal) {
+                    refreshLocationCityWheel(editor);
+                }
+            }).always(function () {
+                if (requestId && editor._locationCityRequestId === requestId) {
+                    editor._locationCityFetchPending = false;
+                }
+            });
+        }
+
+        function syncLocationEditorFromCountry(editor) {
+            if (!editor || editor.key !== 'location' || !editor.$fields) {
+                return;
+            }
+
+            var countryId = getSelectedCountryId(editor.$fields);
+            var $citySelect = getPrimaryLocationCitySelect(editor);
+
+            if (!countryId || !$citySelect.length || isLocationCitySelectPendingLoad($citySelect)) {
+                handleLocationCountryChange(editor);
+                return;
+            }
+
+            ensureLocationChildPlaceholders(editor.$fields);
+            if (editor._usesLocationMobileModal) {
+                refreshLocationModalWheels(editor);
+            }
+        }
+
+        function completeLocationCityLoad(editor, countryId, responseText) {
+            if (!editor || editor.key !== 'location' || !editor.$fields) {
+                return;
+            }
+
+            var currentCountryId = getSelectedCountryId(editor.$fields);
+            if (String(currentCountryId || '') !== String(countryId || '')) {
+                return;
+            }
+
+            var $citySelect = getPrimaryLocationCitySelect(editor);
+            if (!$citySelect.length) {
+                return;
+            }
+
+            if (!countryId) {
+                setCitySelectCountryRequiredState($citySelect);
+            } else if (!applySubStatesResponseToSelect($citySelect, responseText)) {
+                setCitySelectEmptyState($citySelect);
+                getLocationFieldBox($citySelect).closest('#ad_country_sub_div').hide();
+            } else {
+                finalizeLocationCitySelectOptions($citySelect);
+                setLocationSelectValueSilently($citySelect, '');
+                getLocationFieldBox($citySelect).closest('#ad_country_sub_div').show();
+            }
+
+            if (editor._usesLocationMobileModal) {
+                refreshLocationCityWheel(editor);
+            }
+        }
+
+        function buildLocationWheelItemHtml(option, isSelected) {
+            var value = String(option && option.value || '');
+            var label = $.trim(option && option.text ? option.text : '');
+            var disabled = !!(option && option.disabled);
+            var classes = 'bornado-wheel-picker__item' + (isSelected ? ' is-active' : '') + (disabled ? ' is-disabled' : '');
+
+            return '<button type="button" class="' + classes + '" data-location-wheel-item="' + escapeHtml(value) + '"' +
+                (disabled ? ' disabled aria-disabled="true"' : '') + ' role="option" aria-selected="' + (isSelected ? 'true' : 'false') + '">' +
+                escapeHtml(label) +
+            '</button>';
+        }
+
+        function syncLocationWheelFromSelect(wheelState) {
+            if (!wheelState || !wheelState.$select || !wheelState.$select.length || !wheelState.$wheel || !wheelState.$wheel.length) {
+                return;
+            }
+
+            var currentValue = String(wheelState.$select.val() || '');
+            var $items = wheelState.$wheel.find('[data-location-wheel-item]');
+            var $active = $();
+
+            $items.each(function () {
+                var $item = $(this);
+                var isActive = String($item.attr('data-location-wheel-item') || '') === currentValue;
+                $item.toggleClass('is-active', isActive).attr('aria-selected', isActive ? 'true' : 'false');
+                if (isActive) {
+                    $active = $item;
+                }
+            });
+
+            if ($active.length) {
+                var track = wheelState.$track.get(0);
+                var top = $active.position().top + track.scrollTop;
+                wheelState._syncing = true;
+                track.scrollTo({
+                    top: Math.max(0, top - wheelState.rowHeight * 2),
+                    behavior: 'auto'
+                });
+                window.setTimeout(function () {
+                    if (wheelState) {
+                        wheelState._syncing = false;
+                    }
+                }, 30);
+            }
+        }
+
+        function commitLocationWheelSelection(wheelState) {
+            if (!wheelState || !wheelState.$track || !wheelState.$track.length || !wheelState.$wheel || !wheelState.$wheel.length) {
+                return;
+            }
+
+            var $items = wheelState.$wheel.find('[data-location-wheel-item]');
+            if (!$items.length) {
+                return;
+            }
+
+            var rawIndex = Math.round(wheelState.$track.get(0).scrollTop / wheelState.rowHeight);
+            var index = Math.max(0, Math.min($items.length - 1, rawIndex));
+            var $item = $items.eq(index);
+
+            if ($item.hasClass('is-disabled') || $item.prop('disabled')) {
+                syncLocationWheelFromSelect(wheelState);
+                return;
+            }
+
+            var value = String($item.attr('data-location-wheel-item') || '');
+
+            if (value !== String(wheelState.$select.val() || '')) {
+                if (wheelState.key === 'country') {
+                    setLocationCountrySelection(wheelState.editor, wheelState, value);
+                } else {
+                    wheelState.$select.val(value).trigger('change').trigger('change.select2');
+                }
+                return;
+            }
+
+            syncLocationWheelFromSelect(wheelState);
+        }
+
+        function scheduleLocationWheelCommit(wheelState, delay) {
+            if (!wheelState) {
+                return;
+            }
+
+            window.clearTimeout(wheelState._scrollTimer);
+            wheelState._scrollTimer = window.setTimeout(function () {
+                commitLocationWheelSelection(wheelState);
+            }, typeof delay === 'number' ? delay : 90);
+        }
+
+        function mountLocationWheelForSelect(editor, key, $select, $host) {
+            var wheelMap = editor._locationWheels || {};
+            var existing = wheelMap[key] || null;
+            var $box = getLocationFieldBox($select);
+            var options = [];
+            var html = [];
+            var label = key === 'country' ? t('country', 'کشور') : t('city', 'شهر');
+
+            if (!$select.length || !$box.length || !$host || !$host.length) {
+                return;
+            }
+
+            Array.prototype.slice.call($select.get(0).options || []).forEach(function (option) {
+                if (!option) {
+                    return;
+                }
+                var text = getSelectOptionDisplayText(option);
+                if (!text) {
+                    return;
+                }
+                options.push({
+                    value: String(option.value || ''),
+                    text: text,
+                    disabled: !!option.disabled
+                });
+            });
+
+            if (existing && existing.$select && existing.$select.length && existing.$select.get(0) === $select.get(0) && existing.$host && existing.$host.get(0) === $host.get(0) && existing.$wheel && existing.$wheel.length) {
+                for (var j = 0; j < options.length; j++) {
+                    html.push(buildLocationWheelItemHtml(options[j], String(options[j].value) === String($select.val() || '')));
+                }
+                existing.$wheel.find('.bornado-wheel-picker__list').html(html.join(''));
+                syncLocationWheelFromSelect(existing);
+                return;
+            }
+
+            if (existing) {
+                destroyLocationWheel(editor, key);
+            }
+
+            for (var i = 0; i < options.length; i++) {
+                html.push(buildLocationWheelItemHtml(options[i], String(options[i].value) === String($select.val() || '')));
+            }
+
+            var $wheel = $(
+                '<div class="bornado-price-wheel bornado-location-wheel bornado-location-wheel--' + escapeHtml(key) + '">' +
+                    '<div class="bornado-wheel-picker__drum bornado-price-wheel__drum">' +
+                        '<div class="bornado-wheel-picker__highlight"></div>' +
+                        '<div class="bornado-wheel-picker__fade"></div>' +
+                        '<div class="bornado-wheel-picker__columns">' +
+                            '<div class="bornado-wheel-picker__column bornado-price-wheel__column">' +
+                                '<div class="bornado-wheel-picker__track bornado-price-wheel__track" role="listbox" aria-label="' + escapeHtml(label) + '">' +
+                                    '<div class="bornado-wheel-picker__list">' + html.join('') + '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>'
+            );
+
+            $host.empty().append($wheel);
+
+            var wheelState = {
+                key: key,
+                editor: editor,
+                $select: $select,
+                $host: $host,
+                $wheel: $wheel,
+                $track: $wheel.find('.bornado-price-wheel__track').first(),
+                rowHeight: 52,
+                _syncing: false,
+                _scrollTimer: 0,
+                onChange: function () {
+                    if (wheelState.$select.data('bornadoSilentLocationChange')) {
+                        return;
+                    }
+                    syncLocationWheelFromSelect(wheelState);
+                    if (key === 'country') {
+                        return;
+                    }
+                    window.clearTimeout(editor._locationWheelRefreshTimer);
+                    editor._locationWheelRefreshTimer = window.setTimeout(function () {
+                        refreshLocationCityWheel(editor);
+                    }, 120);
+                }
+            };
+
+            wheelState.$track.on('click.bornadolocationwheel', '[data-location-wheel-item]', function (e) {
+                var $item = $(this);
+                if ($item.hasClass('is-disabled') || $item.prop('disabled')) {
+                    e.preventDefault();
+                    return;
+                }
+                var value = String($item.attr('data-location-wheel-item') || '');
+                e.preventDefault();
+                if (key === 'country') {
+                    setLocationCountrySelection(editor, wheelState, value);
+                } else {
+                    wheelState.$select.val(value).trigger('change').trigger('change.select2');
+                }
+            });
+
+            wheelState.$track.on('scroll.bornadolocationwheel', function () {
+                if (!wheelState || wheelState._syncing) {
+                    return;
+                }
+                scheduleLocationWheelCommit(wheelState, 80);
+            });
+
+            wheelState.$track.on('touchend.bornadolocationwheel pointerup.bornadolocationwheel mouseup.bornadolocationwheel wheel.bornadolocationwheel', function () {
+                scheduleLocationWheelCommit(wheelState, 140);
+            });
+
+            if ('onscrollend' in window) {
+                wheelState.$track.on('scrollend.bornadolocationwheel', function () {
+                    scheduleLocationWheelCommit(wheelState, 0);
+                });
+            }
+
+            wheelState.$select.on('change.bornadolocationwheel', wheelState.onChange);
+            syncLocationWheelFromSelect(wheelState);
+            wheelMap[key] = wheelState;
+            editor._locationWheels = wheelMap;
+        }
+
+        function destroyLocationWheel(editor, key) {
+            var wheelMap = editor && editor._locationWheels ? editor._locationWheels : null;
+            var wheelState = wheelMap && wheelMap[key] ? wheelMap[key] : null;
+            if (!wheelState) {
+                return;
+            }
+
+            if (wheelState.$select && wheelState.$select.length) {
+                wheelState.$select.off('change.bornadolocationwheel', wheelState.onChange);
+            }
+
+            if (wheelState.$track && wheelState.$track.length) {
+                wheelState.$track.off('.bornadolocationwheel');
+            }
+            window.clearTimeout(wheelState._scrollTimer);
+
+            if (wheelState.$wheel && wheelState.$wheel.length) {
+                wheelState.$wheel.remove();
+            }
+
+            delete wheelMap[key];
+        }
+
+        function normalizeLocationMobileLayout(editor) {
+            if (!editor || !editor.$fields) {
+                return;
+            }
+            if (editor._locationMobileLayout && editor._locationMobileLayout.$layout && editor._locationMobileLayout.$layout.length) {
+                return;
+            }
+
+            var $countryBlock = getLocationFieldBox(getLocationSelectByName(editor, 'ad_country'));
+            if (!$countryBlock.length) {
+                return;
+            }
+
+            var $layout = $(
+                '<div class="bornado-location-mobile-layout">' +
+                    '<div class="bornado-location-mobile-layout__country"><div class="bornado-location-mobile-layout__wheel-host" data-location-wheel-host="country"></div></div>' +
+                    '<div class="bornado-location-mobile-layout__city"><div class="bornado-location-mobile-layout__wheel-host" data-location-wheel-host="city"></div></div>' +
+                '</div>'
+            );
+            var $stash = $('<div class="bornado-location-mobile-layout__stash" aria-hidden="true"></div>');
+
+            $layout.appendTo(editor.$fields);
+            $stash.appendTo(editor.$fields);
+
+            for (var i = 0; i < LOCATION_SELECT_NAMES.length; i++) {
+                var $block = getLocationFieldBox(getLocationSelectByName(editor, LOCATION_SELECT_NAMES[i]));
+                if ($block.length) {
+                    $stash.append($block);
+                }
+            }
+
+            editor._locationMobileLayout = {
+                $layout: $layout,
+                $stash: $stash,
+                $countryHost: $layout.find('[data-location-wheel-host="country"]').first(),
+                $cityHost: $layout.find('[data-location-wheel-host="city"]').first()
+            };
+        }
+
+        function teardownLocationMobileLayout(editor) {
+            var layout = editor && editor._locationMobileLayout ? editor._locationMobileLayout : null;
+            if (!layout) {
+                return;
+            }
+
+            if (layout.$stash && layout.$stash.length && editor.$fields && editor.$fields.length) {
+                layout.$stash.children().appendTo(editor.$fields);
+            }
+            if (layout.$layout && layout.$layout.length) {
+                layout.$layout.remove();
+            }
+            if (layout.$stash && layout.$stash.length) {
+                layout.$stash.remove();
+            }
+            editor._locationMobileLayout = null;
+        }
+
+        function ensureLocationMobileModal(editor) {
+            if (!editor) {
+                return $();
+            }
+            if (editor.$locationModal && editor.$locationModal.length) {
+                return editor.$locationModal;
+            }
+
+            var title = getPreferredDisplayLabel('location', editor.$el.attr('data-bornado-label') || '') || t('location', 'موقعیت');
+            editor.$locationModal = $(
+                '<div class="bornado-price-mobile-modal bornado-location-mobile-modal" hidden>' +
+                    '<button type="button" class="bornado-price-mobile-modal__backdrop" data-location-modal-action="cancel" aria-label="' + escapeHtml(t('close', 'بستن')) + '"></button>' +
+                    '<div class="bornado-price-mobile-modal__panel" role="dialog" aria-modal="true" aria-label="' + escapeHtml(title) + '">' +
+                        '<div class="bornado-price-mobile-modal__handle"></div>' +
+                        '<div class="bornado-price-mobile-modal__head">' +
+                            '<div class="bornado-price-mobile-modal__title-wrap">' +
+                                '<span class="bornado-price-mobile-modal__eyebrow">' + escapeHtml(t('editing', 'حالت ویرایش')) + '</span>' +
+                                '<h4 class="bornado-price-mobile-modal__title">' + escapeHtml(title) + '</h4>' +
+                            '</div>' +
+                            '<button type="button" class="bornado-price-mobile-modal__close" data-location-modal-action="cancel" aria-label="' + escapeHtml(t('close', 'بستن')) + '"><span aria-hidden="true">&times;</span></button>' +
+                        '</div>' +
+                        '<div class="bornado-price-mobile-modal__body"></div>' +
+                        '<div class="bornado-price-mobile-modal__actions">' +
+                            '<button type="button" class="bornado-slot-confirm bornado-price-mobile-modal__confirm" data-location-modal-action="confirm" aria-label="' + escapeHtml(t('done', 'تمام')) + '">' +
+                                '<i class="fas fa-check" aria-hidden="true"></i>' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>'
+            );
+
+            editor.$locationModal.find('.bornado-price-mobile-modal__body').append(editor.$slot);
+            $('body').append(editor.$locationModal);
+
+            editor.$locationModal.on('click', '[data-location-modal-action]', function (e) {
+                var action = String($(this).attr('data-location-modal-action') || '');
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (action === 'confirm') {
+                    closeEditor(editor, true);
+                    return;
+                }
+
+                restoreLocationEditorState(editor, function () {
+                    closeEditor(editor, true);
+                });
+            });
+
+            return editor.$locationModal;
+        }
+
+        function refreshLocationModalWheels(editor) {
+            if (!editor || !editor._usesLocationMobileModal || !editor.$fields) {
+                return;
+            }
+            normalizeLocationMobileLayout(editor);
+
+            var $countrySelect = getLocationSelectByName(editor, 'ad_country');
+            var countryId = getSelectedCountryId(editor.$fields);
+            var layout = editor._locationMobileLayout || {};
+
+            if ($countrySelect.length && layout.$countryHost && layout.$countryHost.length) {
+                mountLocationWheelForSelect(editor, 'country', $countrySelect, layout.$countryHost);
+            }
+
+            if (!countryId) {
+                var $blockedCitySelect = getPrimaryLocationCitySelect(editor);
+                if ($blockedCitySelect.length) {
+                    setCitySelectCountryRequiredState($blockedCitySelect);
+                }
+                refreshLocationCityWheel(editor);
+                return;
+            }
+
+            refreshLocationCityWheel(editor);
+        }
+
+        function mountLocationMobileModal(editor) {
+            if (!shouldUseLocationMobileModal(editor)) {
+                return;
+            }
+
+            editor._locationSnapshot = captureLocationEditorState(editor);
+            editor._locationOptionsSnapshot = captureLocationOptionsSnapshot(editor);
+            editor.$slot.addClass('bornado-inline-slot--location-modal bornado-inline-slot--price-modal');
+            ensureLocationMobileModal(editor).prop('hidden', false);
+            normalizeLocationMobileLayout(editor);
+            syncLocationEditorFromCountry(editor);
+            syncPriceModalBodyState();
+        }
+
+        function teardownLocationMobileModal(editor) {
+            if (editor) {
+                editor._locationCityRequestId = (editor._locationCityRequestId || 0) + 1;
+            }
+            window.clearTimeout(editor && editor._locationWheelRefreshTimer);
+            window.clearTimeout(editor && editor._locationRestoreTimer);
+            destroyLocationWheel(editor, 'country');
+            destroyLocationWheel(editor, 'city');
+            teardownLocationMobileLayout(editor);
+
+            if (editor && editor.$locationModal && editor.$locationModal.length) {
+                editor.$locationModal.remove();
+                editor.$locationModal = null;
+            }
+
+            if (editor && editor.$slot) {
+                editor.$slot.removeClass('bornado-inline-slot--location-modal bornado-inline-slot--price-modal');
+            }
+
+            syncPriceModalBodyState();
+        }
+
+        /* ------------------------------------------------------------------ *
          * Reusable wheel picker bridge for mobile date inputs.
          * Keeps the new picker optional and scoped to inline-edit mobile flows,
          * so desktop and non-inline contexts continue using the theme defaults.
@@ -861,11 +2201,17 @@
         }
 
         function getLocationEditorSelects(editor) {
-            if (!editor || editor.key !== 'location' || !editor.$fields) {
+            var $all = getAllLocationEditorSelects(editor);
+            if (!$all.length) {
                 return $();
             }
 
-            return editor.$fields.find('select[name="ad_country"], select[name="ad_country_states"]').filter(':visible');
+            return $all.filter(function () {
+                if (editor && editor._usesLocationMobileModal) {
+                    return true;
+                }
+                return isLocationBlockShown(editor, getLocationFieldBox($(this)));
+            });
         }
 
         function locationEditorHasPendingChild(editor) {
@@ -2037,7 +3383,39 @@
             if (!value) {
                 return true;
             }
-            return ['---', 'select option', 'choose option', 'انتخاب کنید', 'انتخاب گزینه'].indexOf(value.toLowerCase()) !== -1;
+            return ['---', 'select option', 'choose option', 'انتخاب کنید', 'انتخاب گزینه', 'ابتدا کشور را انتخاب کنید', 'در حال بارگذاری…', 'شهری برای این کشور یافت نشد'].indexOf(value.toLowerCase()) !== -1;
+        }
+
+        function getLocationPlaceholderLabel() {
+            return t('selectOption', 'انتخاب گزینه');
+        }
+
+        function getSelectOptionDisplayText(option) {
+            if (!option) {
+                return '';
+            }
+            return $.trim(String(option.text || option.label || ''));
+        }
+
+        function ensureLocationChildPlaceholders($scope) {
+            var $root = $scope && $scope.length ? $scope : $form;
+            var countryId = getSelectedCountryId($root);
+            var $childSelects = $root.find('select[name="ad_country_states"], select[name="ad_country_cities"], select[name="ad_country_towns"]');
+
+            if (!countryId) {
+                $childSelects.each(function () {
+                    setCitySelectCountryRequiredState($(this));
+                });
+                return;
+            }
+
+            $childSelects.each(function () {
+                var $select = $(this);
+                if ($select.find('option').length === 1 && isLocationChildStatusLabel(getSelectOptionDisplayText($select.find('option').get(0)))) {
+                    return;
+                }
+                finalizeLocationCitySelectOptions($select);
+            });
         }
 
         function getChoiceLabelForControl($control) {
@@ -2343,6 +3721,8 @@
             var $slot = $('<div class="bornado-inline-slot"><div class="bornado-slot-fields"></div></div>');
             editor.$slot = $slot;
             editor.$fields = $slot.find('.bornado-slot-fields');
+            editor._usesPriceMobileModal = editor.key === 'price' && isMobileChoiceViewport();
+            editor._usesLocationMobileModal = editor.key === 'location' && isMobileChoiceViewport();
 
             var placed = false;
             if (editor.key === 'price') {
@@ -2390,7 +3770,7 @@
             var hasFreeText = $texts.length > 0;
             var AUTO_CLOSE = ['cf', 'currency', 'adtype', 'condition', 'warranty'];
 
-            if (hasFreeText) {
+            if (hasFreeText && !editor._usesPriceMobileModal) {
                 var $confirm = $('<button type="button" class="bornado-slot-confirm" aria-label="' +
                     t('done', 'تمام') + '"><i class="fas fa-check" aria-hidden="true"></i></button>');
                 $confirm.on('click', function (e) {
@@ -2417,10 +3797,19 @@
                     scheduleCategoryEditorClose(editor, 320);
                 });
             }
-            if (editor.key === 'location') {
+            if (editor.key === 'location' && !editor._usesLocationMobileModal) {
                 editor.$fields.on('change.bornadolocation', 'select', function () {
                     scheduleLocationEditorClose(editor, 320);
                 });
+            }
+
+            if (editor._usesPriceMobileModal) {
+                mountPriceMobileModal(editor);
+            }
+            if (editor._usesLocationMobileModal) {
+                mountLocationMobileModal(editor);
+            } else if (editor.key === 'location') {
+                syncLocationEditorFromCountry(editor);
             }
 
             refreshWidgets();
@@ -2434,7 +3823,7 @@
             }
             if (editor.key === 'category' && !autoOpenedMobileChoice) {
                 focusDeepestCategorySelect(editor);
-            } else if (editor.key === 'location' && !autoOpenedMobileChoice) {
+            } else if (editor.key === 'location' && !autoOpenedMobileChoice && !editor._usesLocationMobileModal) {
                 focusDeepestLocationSelect(editor);
             }
         }
@@ -2575,6 +3964,12 @@
             window.clearTimeout(editor && editor._locationCloseTimer);
             if (apply) {
                 applyPreview(editor);
+            }
+            if (editor && editor._usesPriceMobileModal) {
+                teardownPriceMobileModal(editor);
+            }
+            if (editor && editor._usesLocationMobileModal) {
+                teardownLocationMobileModal(editor);
             }
             while (editor.entries.length) {
                 reattachEntry(editor.entries.pop());
@@ -3007,7 +4402,8 @@
             ' .select2-dropdown, .select2-results, .pac-container, .ui-datepicker,' +
             ' .flatpickr-calendar, .datepicker, .ui-autocomplete,' +
             ' .bornado-mobile-choice__sheet, .bornado-mobile-choice__panel,' +
-            ' .bornado-wheel-picker, .bornado-wheel-picker__panel';
+            ' .bornado-wheel-picker, .bornado-wheel-picker__panel,' +
+            ' .bornado-price-mobile-modal, .bornado-price-mobile-modal__panel';
 
         $(document).on('mousedown.bornadoaway', function (e) {
             if (!editors.length) { return; }
@@ -3088,6 +4484,100 @@
         }
 
         scheduleInitialAvailabilityBurst();
+        ensureLocationChildPlaceholders($form);
+
+        $(document).on('change.bornadolocationcountry', 'select[name="ad_country"]', function () {
+            var changedSelect = this;
+            for (var i = 0; i < editors.length; i++) {
+                if (editors[i].key !== 'location') {
+                    continue;
+                }
+                var $editorCountry = getLocationSelectByName(editors[i], 'ad_country');
+                if ($editorCountry.length && $editorCountry.get(0) === changedSelect) {
+                    handleLocationCountryChange(editors[i]);
+                }
+            }
+        });
+
+        function parseAjaxPostData(rawData) {
+            var parsed = {};
+
+            if (!rawData) {
+                return parsed;
+            }
+
+            if (typeof rawData === 'string') {
+                rawData.replace(/\+/g, ' ').split('&').forEach(function (pair) {
+                    if (!pair) {
+                        return;
+                    }
+                    var parts = pair.split('=');
+                    var key = decodeURIComponent(parts[0] || '');
+                    var value = decodeURIComponent(parts.slice(1).join('=') || '');
+                    parsed[key] = value;
+                });
+                return parsed;
+            }
+
+            if (typeof rawData === 'object' && !(rawData instanceof FormData)) {
+                return rawData;
+            }
+
+            return parsed;
+        }
+
+        function reapplyStoredLocationCityResponse(editor) {
+            if (!editor || editor.key !== 'location' || !editor._locationLastCityResponse) {
+                return;
+            }
+
+            var countryId = getSelectedCountryId(editor.$fields);
+            if (!countryId) {
+                return;
+            }
+
+            var $citySelect = getPrimaryLocationCitySelect(editor);
+            if (!$citySelect.length) {
+                return;
+            }
+
+            if (!applySubStatesResponseToSelect($citySelect, editor._locationLastCityResponse)) {
+                return;
+            }
+
+            finalizeLocationCitySelectOptions($citySelect);
+
+            var selectedValue = String($citySelect.val() || '');
+            if (!selectedValue || isPlaceholderChoice($.trim($citySelect.find('option:selected').text() || ''))) {
+                setLocationSelectValueSilently($citySelect, '');
+            }
+
+            if (editor._usesLocationMobileModal) {
+                refreshLocationCityWheel(editor);
+            }
+        }
+
+        $(document).on('ajaxSuccess.bornadolocationtheme', function (event, xhr, settings) {
+            var data = parseAjaxPostData(settings.data);
+            if (String(data.action || '') !== 'sb_get_sub_states') {
+                return;
+            }
+
+            var countryId = String(data.country_id || '').trim();
+            if (!countryId) {
+                return;
+            }
+
+            for (var i = 0; i < editors.length; i++) {
+                if (editors[i].key !== 'location') {
+                    continue;
+                }
+                if (String(getSelectedCountryId(editors[i].$fields) || '') !== countryId) {
+                    continue;
+                }
+                reapplyStoredLocationCityResponse(editors[i]);
+            }
+        });
 
         if (window.MutationObserver) {
             var pending = null;

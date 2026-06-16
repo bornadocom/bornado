@@ -410,8 +410,15 @@ if (!function_exists('bornado_inline_edit_enqueue_assets')) {
                         'addTagline'   => __('افزودن زیرعنوان', 'adforest'),
                         'addDetails'   => __('افزودن مشخصات', 'adforest'),
                         'selectDate'   => __('انتخاب تاریخ', 'adforest'),
+                        'pricePlaceholder' => __('قیمت را وارد کنید', 'adforest'),
+                        'priceFromPlaceholder' => __('از', 'adforest'),
+                        'priceToPlaceholder' => __('تا', 'adforest'),
                         'emptyValue'   => __('— تکمیل نشده —', 'adforest'),
                         'unsavedLeave' => __('تغییرات ذخیره‌نشده دارید. از این صفحه خارج می‌شوید؟', 'adforest'),
+                        'selectOption' => __('Select Option', 'adforest'),
+                        'selectCountryFirst' => __('ابتدا کشور را انتخاب کنید', 'adforest'),
+                        'loadingOptions' => __('در حال بارگذاری…', 'adforest'),
+                        'noCityOptions'  => __('شهری برای این کشور یافت نشد', 'adforest'),
                     ),
                 )
             );

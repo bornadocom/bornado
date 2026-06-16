@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wheel Date Picker</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="style.css" rel="stylesheet" />
+</head>
+<body>
+
+<div class="card">
+
+  <!-- Top accent line via ::before -->
+
+  <!-- Header -->
+  <div class="card-header">
+    <div class="card-title-block">
+      <span class="card-eyebrow">Date Picker</span>
+      <h2 class="card-title">Select<br/>Date</h2>
+    </div>
+    <div class="card-date-preview" id="livePreview">
+      —<span class="preview-year">——</span>
+    </div>
+  </div>
+
+  <!-- Column labels -->
+  <div class="drum-labels">
+    <span class="drum-label">Month</span>
+    <span class="drum-label-sep"></span>
+    <span class="drum-label">Day</span>
+    <span class="drum-label-sep"></span>
+    <span class="drum-label">Year</span>
+  </div>
+
+  <!-- Drum -->
+  <div class="drum">
+
+    <div class="col" id="colMonth">
+      <div class="swiper" id="swMonth"><div class="swiper-wrapper"></div></div>
+    </div>
+    <div class="drum-sep"></div>
+    <div class="col" id="colDay">
+      <div class="swiper" id="swDay"><div class="swiper-wrapper"></div></div>
+    </div>
+    <div class="drum-sep"></div>
+    <div class="col" id="colYear">
+      <div class="swiper" id="swYear"><div class="swiper-wrapper"></div></div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="card-actions">
+    <button id="confirmBtn">Confirm Date</button>
+    <div class="output-wrap">
+      <span class="output-label">Selected</span>
+      <input id="dateOut" type="text" readonly placeholder="Chosen date appears here…" />
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/YT-PixelPerfectLabs/Youtube-Floating-Button/dist/script.js?1"></script>
+<script src="script.js"></script>
+</body>
+</html>

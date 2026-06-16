@@ -1393,6 +1393,50 @@ add_filter('locale', function ($locale) {
     return bornado_frontend_locale();
 }, 20);
 
+if (!function_exists('bornado_override_adforest_edit_labels')) {
+    /**
+     * Force a small set of AdForest edit-form labels into Persian from the child
+     * theme, even when the loaded theme .mo does not resolve them as expected.
+     *
+     * The source strings live in `adforest/inc/adforest_ad_post.php` and are
+     * normally translated through the `adforest` textdomain. We keep the fix
+     * local to the child theme so AdForest core files remain untouched.
+     *
+     * @param string $translated Already translated text.
+     * @param string $text       Original source string.
+     * @param string $domain     Text domain.
+     * @return string
+     */
+    function bornado_override_adforest_edit_labels($translated, $text, $domain)
+    {
+        if ($domain !== 'adforest' || !is_string($text) || $text === '') {
+            return $translated;
+        }
+
+        $locale = function_exists('determine_locale') ? determine_locale() : get_locale();
+        $target_locale = function_exists('bornado_frontend_locale') ? bornado_frontend_locale() : 'fa_IR';
+
+        if (
+            !preg_match('/^fa(?:_|$)/i', (string) $locale)
+            && !preg_match('/^fa(?:_|$)/i', (string) $target_locale)
+        ) {
+            return $translated;
+        }
+
+        static $overrides = array(
+            'Ad Type'            => 'نوع آگهی',
+            'Condition'          => 'وضعیت کالا',
+            'Warranty'           => 'گارانتی / ضمانت',
+            'Select Option'      => 'انتخاب گزینه',
+            '-- Select Option --' => 'انتخاب گزینه',
+        );
+
+        return array_key_exists($text, $overrides) ? $overrides[$text] : $translated;
+    }
+}
+
+add_filter('gettext', 'bornado_override_adforest_edit_labels', 20, 3);
+
 add_filter('wp_robots', function ($robots) {
     if (!bornado_is_public_seo_request()) {
         return $robots;

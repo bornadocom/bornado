@@ -290,6 +290,82 @@ body:not(.bornado-inline-edit-active) .bornado-edit-empty {
     height: 48px;
 }
 
+.bornado-price-wheel-source,
+.bornado-price-wheel-source-container {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+.bornado-inline-slot--price-modal .bornado-price-wheel-host > select,
+.bornado-inline-slot--price-modal .bornado-price-wheel-host > .select2,
+.bornado-inline-slot--price-modal .bornado-price-wheel-host > .select2-container {
+    display: none !important;
+}
+
+.bornado-inline-slot--price-modal .bornado-price-wheel-host .select2,
+.bornado-inline-slot--price-modal .bornado-price-wheel-host .select2-container {
+    display: none !important;
+}
+
+.bornado-price-wheel {
+    --bornado-wheel-picker-row-height: 44px;
+    --bornado-wheel-picker-visible-rows: 5;
+    --bornado-wheel-picker-drum-height: 220px;
+    --bornado-wheel-picker-offset: 88px;
+    position: relative;
+}
+
+.bornado-price-wheel .bornado-wheel-picker__drum {
+    height: var(--bornado-wheel-picker-drum-height);
+    border: 0;
+    border-radius: 14px;
+    background: transparent;
+    box-shadow: none;
+    overflow: hidden;
+}
+
+.bornado-price-wheel .bornado-wheel-picker__column {
+    border-left: 0;
+}
+
+.bornado-price-wheel .bornado-wheel-picker__highlight {
+    inset-inline: 8px;
+    top: var(--bornado-wheel-picker-offset);
+    height: var(--bornado-wheel-picker-row-height);
+    border-radius: 12px;
+    border-color: rgba(255, 0, 46, 0.12);
+    background: rgba(255, 0, 46, 0.05);
+}
+
+.bornado-price-wheel .bornado-wheel-picker__track {
+    height: var(--bornado-wheel-picker-drum-height);
+    overflow-y: auto !important;
+    padding-block: var(--bornado-wheel-picker-offset);
+    scroll-padding-block: var(--bornado-wheel-picker-offset);
+    background: transparent;
+    touch-action: pan-y !important;
+}
+
+.bornado-price-wheel .bornado-wheel-picker__item {
+    min-height: var(--bornado-wheel-picker-row-height);
+    height: var(--bornado-wheel-picker-row-height) !important;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bornado-price-wheel .bornado-wheel-picker__item.is-disabled {
+    color: #9ca3af;
+}
+
 /* Make borrowed AdForest controls feel native exactly where the value was. */
 .bornado-slot-fields .field-box,
 .bornado-slot-fields .label-box,
@@ -332,6 +408,9 @@ body:not(.bornado-inline-edit-active) .bornado-edit-empty {
     gap: 10px;
     align-items: flex-start;
     justify-content: flex-end;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -341,7 +420,10 @@ body:not(.bornado-inline-edit-active) .bornado-edit-empty {
 .bornado-slot-fields .ad_type_list_adpost li,
 .bornado-slot-fields .switch-btns-box ul li {
     display: inline-flex;
+    flex: 0 1 auto;
     align-items: stretch;
+    max-width: 100%;
+    min-width: 0;
     margin: 0;
 }
 
@@ -360,12 +442,15 @@ body:not(.bornado-inline-edit-active) .bornado-edit-empty {
     align-items: center;
     justify-content: center;
     min-height: 42px;
+    max-width: 100%;
+    min-width: 0;
     padding: 10px 18px;
     text-align: center;
     color: #6d6d6d;
     background-color: #f6f6f6;
     border: 1px solid #d3d3d3;
     border-radius: 4px;
+    box-sizing: border-box;
     white-space: nowrap;
 }
 
@@ -411,6 +496,417 @@ body:not(.bornado-inline-edit-active) .bornado-edit-empty {
     font-size: 15px;
     background: #fff;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.bornado-price-mobile-modal[hidden] {
+    display: none !important;
+}
+
+.bornado-price-mobile-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000001;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.bornado-price-mobile-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: rgba(15, 23, 42, 0.32);
+    backdrop-filter: blur(6px);
+}
+
+.bornado-price-mobile-modal__panel {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 460px);
+    max-height: min(88vh, 760px);
+    overflow: auto;
+    padding: 10px 14px 18px;
+    border-radius: 24px 24px 0 0;
+    border: 0;
+    background: var(--bornado-choice-bg, #fff);
+    box-shadow: 0 -18px 48px rgba(15, 23, 42, 0.18);
+}
+
+.bornado-price-mobile-modal__handle {
+    width: 34px;
+    height: 4px;
+    margin: 0 auto 12px;
+    border-radius: 999px;
+    background: #d6dce5;
+}
+
+.bornado-price-mobile-modal__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 10px;
+}
+
+.bornado-price-mobile-modal__eyebrow {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--bornado-edit-accent);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.bornado-price-mobile-modal__title {
+    margin: 0;
+    color: #0f172a;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.bornado-price-mobile-modal__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    border: 1px solid var(--bornado-choice-border, rgba(15, 23, 42, 0.08));
+    border-radius: 999px;
+    background: transparent;
+    color: var(--bornado-choice-text, #0f172a);
+    font-size: 28px;
+    line-height: 1;
+}
+
+.bornado-price-mobile-modal__body {
+    padding: 6px 0 8px;
+}
+
+.bornado-price-mobile-modal__body .bornado-inline-slot {
+    display: block;
+    padding: 0;
+}
+
+.bornado-price-mobile-modal__body .bornado-slot-fields {
+    width: 100%;
+}
+
+.bornado-price-mobile-modal__actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 0 0;
+}
+
+.bornado-price-mobile-modal__confirm {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    margin-right: auto;
+}
+
+.bornado-inline-slot--price-modal .field-box {
+    margin-bottom: 0;
+}
+
+.bornado-inline-slot--location-modal .field-box {
+    margin-bottom: 0;
+}
+
+.bornado-inline-slot--location-modal > .bornado-slot-fields > .row {
+    display: none !important;
+}
+
+.bornado-inline-slot--price-modal .row.bornado-price-mobile-row {
+    display: block !important;
+}
+
+.bornado-inline-slot--location-modal .bornado-location-mobile-layout {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.bornado-inline-slot--location-modal .bornado-location-mobile-layout__country,
+.bornado-inline-slot--location-modal .bornado-location-mobile-layout__city {
+    flex: 1 1 50%;
+    width: 50%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.bornado-inline-slot--location-modal .bornado-location-mobile-layout__wheel-host {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+    min-width: 0;
+    display: block;
+}
+
+.bornado-inline-slot--location-modal .bornado-location-mobile-layout__stash {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important;
+}
+
+.bornado-inline-slot--location-modal .bornado-location-wheel {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.bornado-inline-slot--location-modal .bornado-location-wheel .bornado-wheel-picker__columns,
+.bornado-inline-slot--location-modal .bornado-location-wheel .bornado-wheel-picker__column,
+.bornado-inline-slot--location-modal .bornado-location-wheel .bornado-wheel-picker__track,
+.bornado-inline-slot--location-modal .bornado-location-wheel .bornado-wheel-picker__list {
+    width: 100%;
+    max-width: 100%;
+}
+
+.bornado-inline-slot--price-modal .bornado-price-mobile-layout {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.bornado-inline-slot--price-modal .bornado-price-mobile-layout__type {
+    flex: 0 0 25%;
+    width: 25%;
+    min-width: 90px;
+    max-width: 25%;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.bornado-inline-slot--price-modal .bornado-price-wheel-host {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+    display: block;
+}
+
+.bornado-inline-slot--price-modal .bornado-price-mobile-layout__price {
+    flex: 1 1 75%;
+    width: 75%;
+    min-width: 0;
+    overflow: hidden;
+    min-height: var(--bornado-wheel-picker-drum-height, 200px);
+    display: flex;
+    align-items: center;
+}
+
+.bornado-inline-slot--price-modal .bornado-price-mobile-layout__type > [class*="col-"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+    min-width: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.bornado-inline-slot--price-modal .bornado-price-mobile-layout__price > [class*="col-"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+    min-width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    display: flex;
+    align-items: center;
+    min-height: var(--bornado-wheel-picker-drum-height, 200px);
+}
+
+.bornado-inline-slot--price-modal .bornado-price-wheel {
+    --bornado-wheel-picker-row-height: 52px;
+    --bornado-wheel-picker-drum-height: 260px;
+    --bornado-wheel-picker-offset: 104px;
+    --bornado-wheel-picker-column-count: 1;
+    --bornado-wheel-text: var(--bornado-choice-text, #1f2633);
+    --bornado-wheel-text-muted: var(--bornado-choice-muted, #667085);
+    --bornado-wheel-accent: var(--bornado-choice-accent, #1f6fff);
+    --bornado-wheel-accent-soft: rgba(31, 111, 255, 0.10);
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    direction: rtl;
+}
+
+.bornado-inline-slot--price-modal .bornado-price-wheel__track {
+    touch-action: pan-y;
+}
+
+.bornado-inline-slot--price-modal .bornado-price-wheel .bornado-wheel-picker__columns,
+.bornado-inline-slot--price-modal .bornado-price-wheel .bornado-wheel-picker__column,
+.bornado-inline-slot--price-modal .bornado-price-wheel .bornado-wheel-picker__track,
+.bornado-inline-slot--price-modal .bornado-price-wheel .bornado-wheel-picker__list {
+    width: 100%;
+    max-width: 100%;
+}
+
+.bornado-inline-slot--price-modal .bornado-price-wheel .bornado-wheel-picker__list {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.bornado-inline-slot--price-modal .bornado-price-wheel .bornado-wheel-picker__item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center;
+    text-align: center;
+    padding-inline: 0;
+    width: 100%;
+    direction: rtl;
+    font-size: 11px;
+    letter-spacing: 0;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+    box-sizing: border-box;
+    color: var(--bornado-choice-muted, #667085);
+}
+
+.bornado-inline-slot--price-modal .bornado-price-wheel .bornado-wheel-picker__highlight {
+    inset-inline: 0;
+    width: 100%;
+    box-sizing: border-box;
+    border-color: rgba(31, 111, 255, 0.18);
+    background: rgba(31, 111, 255, 0.08);
+}
+
+.bornado-inline-slot--price-modal .bornado-price-wheel .bornado-wheel-picker__item.is-active {
+    transform: none;
+    font-size: 12px;
+    color: var(--bornado-choice-text, #1f2633);
+}
+
+.bornado-inline-slot--price-modal .ad_price_container,
+.bornado-inline-slot--price-modal .price_range_container {
+    margin-top: 0;
+}
+
+.bornado-inline-slot--price-modal .price_range_container > div {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px;
+}
+
+.bornado-price-mobile-modal__body .form-control,
+.bornado-price-mobile-modal__body input[type="text"],
+.bornado-price-mobile-modal__body input[type="number"] {
+    border: 1px solid #d7deea;
+    border-radius: 14px;
+    background: var(--bornado-choice-surface, #f7f9fc);
+    color: var(--bornado-choice-text, #1f2633);
+    box-shadow: none;
+}
+
+.bornado-price-mobile-modal__body .form-control::placeholder,
+.bornado-price-mobile-modal__body input[type="text"]::placeholder,
+.bornado-price-mobile-modal__body input[type="number"]::placeholder {
+    color: var(--bornado-choice-muted, #667085);
+    opacity: 1;
+}
+
+.bornado-price-mobile-modal__body .form-control:focus,
+.bornado-price-mobile-modal__body input[type="text"]:focus,
+.bornado-price-mobile-modal__body input[type="number"]:focus {
+    border-color: #9fb4d9;
+    background: #ffffff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(31, 111, 255, 0.12);
+}
+
+body.bornado-price-mobile-modal-open {
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .bornad-summary-item > .bornado-inline-slot,
+    .bornad-detail-list li > .bornado-inline-slot {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .bornad-summary-item > .bornado-inline-slot .bornado-slot-fields,
+    .bornad-detail-list li > .bornado-inline-slot .bornado-slot-fields,
+    .bornado-inline-slot .switch-btns-box,
+    .bornado-inline-slot .switch-btns-box > ul,
+    .bornado-inline-slot .select-user-type,
+    .bornado-inline-slot .ad_type_list_adpost {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .bornado-inline-slot .select-user-type,
+    .bornado-inline-slot .ad_type_list_adpost,
+    .bornado-inline-slot .switch-btns-box ul {
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .bornado-inline-slot .select-user-type li,
+    .bornado-inline-slot .ad_type_list_adpost li,
+    .bornado-inline-slot .switch-btns-box ul li {
+        flex: 0 1 calc(46% - 4px);
+        max-width: calc(46% - 4px);
+        min-width: 0;
+    }
+
+    .bornado-inline-slot .select-user-type li label,
+    .bornado-inline-slot .ad_type_list_adpost li label,
+    .bornado-inline-slot .switch-btns-box ul li label {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 12px 14px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        line-height: 1.4;
+    }
+
+    .bornado-inline-slot--price-modal .form-control,
+    .bornado-inline-slot--price-modal input[type="text"],
+    .bornado-inline-slot--price-modal input[type="number"] {
+        min-height: 52px;
+        height: 52px;
+        border-radius: 14px;
+        font-size: 16px;
+    }
+
+    .bornado-price-mobile-modal__panel {
+        width: 100%;
+    }
+
+    .bornado-inline-slot--price-modal .bornado-price-mobile-layout {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .bornado-inline-slot--location-modal .bornado-location-mobile-layout {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
 }
 
 .bornado-inline-slot .form-control:focus,
@@ -599,19 +1095,35 @@ body.bornado-inline-edit-active .bornad-contact-methods-card--desktop {
 }
 
 body.bornado-inline-edit-ready .bornad-contact-methods-card [data-bornado-edit="contact"] {
-    border-radius: 8px;
-    background-color: rgba(255, 0, 46, 0.045);
-    box-shadow: inset 0 0 0 1px rgba(255, 0, 46, 0.16);
+    background: transparent;
+    box-shadow: none;
+}
+
+body.bornado-inline-edit-ready .bornad-contact-methods-card [data-bornado-edit="contact"] .adf-mobile-bottom-nav--contact {
+    background: rgba(255, 0, 46, 0.045) !important;
+    border-color: rgba(255, 0, 46, 0.16) !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 0, 46, 0.16) !important;
     transition: background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-body.bornado-inline-edit-ready .bornad-contact-methods-card [data-bornado-edit="contact"]:hover {
-    background-color: var(--bornado-edit-accent-soft);
-    box-shadow: inset 0 0 0 1px rgba(255, 0, 46, 0.4);
+body.bornado-inline-edit-ready .bornad-contact-methods-card [data-bornado-edit="contact"]:hover .adf-mobile-bottom-nav--contact {
+    background: var(--bornado-edit-accent-soft) !important;
+    border-color: rgba(255, 0, 46, 0.4) !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 0, 46, 0.4) !important;
 }
 
 body.bornado-inline-edit-active .bornad-contact-methods-card [data-bornado-edit="contact"] {
     position: relative;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .adf-mobile-bottom-nav--contact .adf-mbn__list,
+body.bornado-inline-edit-ready .bornad-contact-methods-card .adf-mobile-bottom-nav--contact .adf-mbn__list {
+    justify-content: center;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .adf-mobile-bottom-nav--contact .adf-mbn__item,
+body.bornado-inline-edit-ready .bornad-contact-methods-card .adf-mobile-bottom-nav--contact .adf-mbn__item {
+    justify-content: center;
 }
 
 body.bornado-inline-edit-active .bornad-contact-methods-card .adf-mbn__item {
@@ -684,8 +1196,22 @@ body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-ch
 }
 
 body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--selected .adf-mbn__link {
-    transform: none;
-    box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    transform: translateY(-1px);
+    box-shadow:
+        0 10px 22px rgba(15, 23, 42, 0.14),
+        0 2px 6px rgba(15, 23, 42, 0.08),
+        0 0 0 1px rgba(15, 23, 42, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--selected .adf-mbn__label {
+    font-weight: 800;
+    color: #1f2633;
+}
+
+body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--selected .adf-mbn__meta {
+    font-weight: 700;
+    color: #1f2633;
 }
 
 body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--selected .bornado-contact-choice-badge {
@@ -695,6 +1221,7 @@ body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-ch
 }
 
 body.bornado-inline-edit-active .bornad-contact-methods-card .bornado-contact-choice--selected .bornado-contact-choice-state {
+    font-weight: 800;
     color: #15803d;
 }
 

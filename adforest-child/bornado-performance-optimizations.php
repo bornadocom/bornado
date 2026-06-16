@@ -205,7 +205,15 @@ JS
 			}
 		}
 
-		if ( ! function_exists( 'bornado_is_ad_post_page' ) || ! bornado_is_ad_post_page() ) {
+		$is_ad_post_page = function_exists( 'bornado_is_ad_post_page' ) && bornado_is_ad_post_page();
+		$is_inline_edit  = function_exists( 'bornado_inline_edit_is_active' ) && bornado_inline_edit_is_active();
+
+		/*
+		 * The inline single-ad editor renders AdForest's ad-post form on a normal
+		 * single-ad request, so it still needs the editor/date/tags assets even
+		 * though it is not the dedicated post-ad page template.
+		 */
+		if ( ! $is_ad_post_page && ! $is_inline_edit ) {
 			foreach ( array( 'jquery-tagsinput', 'jquery-te', 'adforest-dt' ) as $style_handle ) {
 				if ( wp_style_is( $style_handle, 'enqueued' ) ) {
 					wp_dequeue_style( $style_handle );
