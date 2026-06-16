@@ -396,6 +396,14 @@ if (file_exists($bornado_single_ad_style_bootstrap)) {
 }
 
 /**
+ * Reusable wheel picker infrastructure shared across Bornado flows.
+ */
+$bornado_wheel_picker_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-wheel-picker.php';
+if (file_exists($bornado_wheel_picker_bootstrap)) {
+    require_once $bornado_wheel_picker_bootstrap;
+}
+
+/**
  * In-place ad editor: edit an ad directly on its single-ad page.
  */
 $bornado_inline_ad_edit_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-inline-ad-edit.php';

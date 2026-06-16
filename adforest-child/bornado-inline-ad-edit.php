@@ -374,6 +374,10 @@ if (!function_exists('bornado_inline_edit_enqueue_assets')) {
             );
         }
 
+        if (function_exists('bornado_wheel_picker_enqueue_assets')) {
+            bornado_wheel_picker_enqueue_assets();
+        }
+
         if (file_exists($js_abs)) {
             $prewarm_category = bornado_inline_edit_get_deepest_category_context($ad_id);
             wp_enqueue_script(
@@ -405,6 +409,7 @@ if (!function_exists('bornado_inline_edit_enqueue_assets')) {
                         'addPrice'     => __('افزودن قیمت', 'adforest'),
                         'addTagline'   => __('افزودن زیرعنوان', 'adforest'),
                         'addDetails'   => __('افزودن مشخصات', 'adforest'),
+                        'selectDate'   => __('انتخاب تاریخ', 'adforest'),
                         'emptyValue'   => __('— تکمیل نشده —', 'adforest'),
                         'unsavedLeave' => __('تغییرات ذخیره‌نشده دارید. از این صفحه خارج می‌شوید؟', 'adforest'),
                     ),
@@ -731,6 +736,27 @@ if (!function_exists('bornado_inline_edit_render_editor_shell')) {
         <div id="bornado-edit-shell" class="bornado-edit-shell" aria-hidden="false">
             <div class="bornado-edit-formhost"><?php echo $form_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — trusted AdForest shortcode markup. ?></div>
         </div>
+        <?php
+        if (function_exists('bornado_render_wheel_picker')) {
+            echo bornado_render_wheel_picker(
+                array(
+                    'id' => 'bornado-inline-date-wheel-picker',
+                    'class_name' => 'bornado-inline-date-wheel-picker',
+                    'type' => 'date',
+                    'variant' => 'date-modal',
+                    'hidden' => true,
+                    'title' => __('انتخاب تاریخ', 'adforest'),
+                    'eyebrow' => __('Inline Edit', 'adforest'),
+                    'confirm_text' => __('تایید تاریخ', 'adforest'),
+                    'cancel_text' => __('انصراف', 'adforest'),
+                    'show_output' => false,
+                    'preview_format' => 'YYYY-MM-DD',
+                    'output_format' => 'YYYY-MM-DD',
+                    'column_order' => array('year', 'month', 'day'),
+                )
+            ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        }
+        ?>
 
         <div class="bornado-edit-bar" id="bornado-edit-bar" role="region" aria-label="<?php echo esc_attr__('ذخیرهٔ تغییرات آگهی', 'adforest'); ?>">
             <div class="bornado-edit-bar__inner">

@@ -752,6 +752,57 @@
             return $select.length ? $select.get(0) : null;
         }
 
+        /* ------------------------------------------------------------------ *
+         * Reusable wheel picker bridge for mobile date inputs.
+         * Keeps the new picker optional and scoped to inline-edit mobile flows,
+         * so desktop and non-inline contexts continue using the theme defaults.
+         * ------------------------------------------------------------------ */
+        function getInlineDateWheelPickerRoot() {
+            return document.getElementById('bornado-inline-date-wheel-picker');
+        }
+
+        function shouldUseWheelPickerForInput(inputEl) {
+            var $input = $(inputEl);
+            return !!(
+                inputEl &&
+                window.BornadoWheelPicker &&
+                isMobileChoiceViewport() &&
+                $input.length &&
+                $input.hasClass('dynamic-form-date-fields') &&
+                $input.closest('.bornado-inline-slot').length
+            );
+        }
+
+        function getWheelPickerTitle(inputEl) {
+            var $input = $(inputEl);
+            var $box = $input.closest('.field-box, .form-group');
+            return getDynamicFieldLabel($box) || t('selectDate', 'انتخاب تاریخ');
+        }
+
+        function resolveWheelDateInput(target) {
+            var $input = $(target).closest('.bornado-inline-slot').find('.dynamic-form-date-fields').first();
+            return $input.length ? $input.get(0) : null;
+        }
+
+        function openWheelPickerForInput(inputEl) {
+            var root = getInlineDateWheelPickerRoot();
+            var $input = $(inputEl);
+            if (!root || !$input.length || !window.BornadoWheelPicker) {
+                return;
+            }
+
+            if (typeof $input.blur === 'function') {
+                $input.blur();
+            }
+
+            window.BornadoWheelPicker.open(root, {
+                sourceInput: inputEl,
+                restoreFocus: inputEl,
+                title: getWheelPickerTitle(inputEl),
+                initialValue: String($input.val() || '')
+            });
+        }
+
         function getEditorForNode(node) {
             if (!node) {
                 return null;
@@ -2736,6 +2787,33 @@
             openMobileChoiceSheet(selectEl);
         });
 
+        $section.on('mousedown.bornadowheelpicker touchstart.bornadowheelpicker click.bornadowheelpicker', '.bornado-inline-slot .dynamic-form-date-fields', function (e) {
+            if (!shouldUseWheelPickerForInput(this)) {
+                return;
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            openWheelPickerForInput(this);
+        });
+
+        $section.on('focusin.bornadowheelpicker', '.bornado-inline-slot .dynamic-form-date-fields', function (e) {
+            if (!shouldUseWheelPickerForInput(this)) {
+                return;
+            }
+            e.preventDefault();
+            openWheelPickerForInput(this);
+        });
+
+        $section.on('click.bornadowheelpicker', '.bornado-inline-slot .fa-calendar', function (e) {
+            var inputEl = resolveWheelDateInput(e.target);
+            if (!shouldUseWheelPickerForInput(inputEl)) {
+                return;
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            openWheelPickerForInput(inputEl);
+        });
+
         $form.on('change input', 'input, select, textarea', function () {
             if (armed) { dirty = true; }
         });
@@ -2928,7 +3006,8 @@
         var IGNORE_AWAY = '.bornado-inline-slot, .bornado-edit-bar, .select2-container,' +
             ' .select2-dropdown, .select2-results, .pac-container, .ui-datepicker,' +
             ' .flatpickr-calendar, .datepicker, .ui-autocomplete,' +
-            ' .bornado-mobile-choice__sheet, .bornado-mobile-choice__panel';
+            ' .bornado-mobile-choice__sheet, .bornado-mobile-choice__panel,' +
+            ' .bornado-wheel-picker, .bornado-wheel-picker__panel';
 
         $(document).on('mousedown.bornadoaway', function (e) {
             if (!editors.length) { return; }
