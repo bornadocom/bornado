@@ -1,0 +1,393 @@
+.adforest-dashboard-section .bornado-profile-contact-card {
+    margin-top: 0;
+}
+
+.adforest-dashboard-section .bornado-profile-contact-card__header {
+    margin-bottom: 18px;
+}
+
+.adforest-dashboard-section .bornado-profile-contact-card__header h5 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.adforest-dashboard-section .bornado-profile-contact-card__header p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.8;
+    color: #6b7280;
+}
+
+.adforest-dashboard-section .bornado-contact-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+}
+
+.adforest-dashboard-section .bornado-contact-list__item {
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    background: #fafafa;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.adforest-dashboard-section .bornado-contact-list__item:hover {
+    border-color: #d1d5db;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(17, 24, 39, 0.06);
+}
+
+.adforest-dashboard-section .bornado-contact-list__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.adforest-dashboard-section .bornado-contact-list__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.adforest-dashboard-section .bornado-contact-list__label i {
+    width: 18px;
+    text-align: center;
+    color: #374151;
+    font-size: 16px;
+}
+
+.adforest-dashboard-section .bornado-contact-status {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+}
+
+.adforest-dashboard-section .bornado-contact-status__value {
+    min-width: 0;
+    font-size: 14px;
+    line-height: 1.9;
+    color: #374151;
+    word-break: break-word;
+    justify-self: start;
+    width: 100%;
+}
+
+.adforest-dashboard-section .bornado-contact-status__value--phone {
+    display: block;
+    width: 100%;
+    direction: ltr;
+    unicode-bidi: isolate;
+    text-align: right;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.adforest-dashboard-section .bornado-contact-status__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.adforest-dashboard-section .bornado-contact-status__badge.is-verified {
+    color: #166534;
+    background: #dcfce7;
+}
+
+.adforest-dashboard-section .bornado-contact-status__badge.is-unverified,
+.adforest-dashboard-section .bornado-contact-status__badge.is-pending {
+    color: #92400e;
+    background: #fef3c7;
+}
+
+.adforest-dashboard-section .bornado-contact-status__badge.is-missing {
+    color: #6b7280;
+    background: #f3f4f6;
+}
+
+.adforest-dashboard-section .bornado-contact-status__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-self: end;
+}
+
+.adforest-dashboard-section .bornado-contact-status__action,
+.adforest-dashboard-section #sb-verify-phone,
+.adforest-dashboard-section #sb-verify-phone-firebase {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    background: #fff;
+    color: #111827;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    justify-self: end;
+}
+
+.adforest-dashboard-section .bornado-contact-status__action:hover,
+.adforest-dashboard-section .bornado-contact-status__action:focus,
+.adforest-dashboard-section #sb-verify-phone:hover,
+.adforest-dashboard-section #sb-verify-phone:focus,
+.adforest-dashboard-section #sb-verify-phone-firebase:hover,
+.adforest-dashboard-section #sb-verify-phone-firebase:focus {
+    border-color: #111827;
+    color: #111827;
+    background: #f9fafb;
+    text-decoration: none;
+}
+
+.adforest-dashboard-section .bornado-contact-status__help {
+    display: block;
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 1.85;
+    color: #6b7280;
+}
+
+.adforest-dashboard-section .bornado-contact-list__item--social .social-button {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.adforest-dashboard-section .bornado-contact-list__item--social .social-button .btn {
+    margin: 0;
+}
+
+.adforest-dashboard-section .bornado-contact-notice .alert {
+    border-radius: 14px;
+}
+
+.adforest-dashboard-section .firebase-recaptcha {
+    margin-top: 10px;
+}
+
+.adforest-dashboard-section .sb-verify-modal,
+.adforest-dashboard-section .bornado-whatsapp-modal {
+    padding: 20px 12px;
+}
+
+.adforest-dashboard-section .bornado-contact-modal__dialog {
+    max-width: 520px;
+    margin: 1.75rem auto;
+}
+
+.adforest-dashboard-section .bornado-contact-modal__content {
+    border: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 24px 80px rgba(17, 24, 39, 0.18);
+}
+
+.adforest-dashboard-section .bornado-contact-modal__header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px 56px 16px;
+    border-bottom: 1px solid #edf0f3;
+}
+
+.adforest-dashboard-section .bornado-contact-modal__header .modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    text-align: center;
+}
+
+.adforest-dashboard-section .bornado-contact-modal__close {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    right: auto;
+    margin: 0;
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    background-color: #f3f4f6;
+    background-size: 12px;
+    opacity: 1;
+    box-shadow: none;
+}
+
+.adforest-dashboard-section .bornado-contact-modal__close:hover,
+.adforest-dashboard-section .bornado-contact-modal__close:focus {
+    background-color: #e5e7eb;
+    opacity: 1;
+}
+
+.adforest-dashboard-section .sb-verify-modal .modal-body,
+.adforest-dashboard-section .bornado-whatsapp-modal .modal-body {
+    padding: 20px 24px 12px;
+}
+
+.adforest-dashboard-section .sb-verify-modal .modal-footer,
+.adforest-dashboard-section .bornado-whatsapp-modal .modal-footer {
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 24px 24px;
+    border-top: 0;
+}
+
+.adforest-dashboard-section .sb-verify-modal .modal-footer .main-btn,
+.adforest-dashboard-section .sb-verify-modal .modal-footer .dark-btn,
+.adforest-dashboard-section .bornado-whatsapp-modal .modal-footer .main-btn,
+.adforest-dashboard-section .bornado-whatsapp-modal .modal-footer .dark-btn {
+    min-width: 160px;
+    border-radius: 12px;
+}
+
+.adforest-dashboard-section .sb-verify-modal .input-style-1 input,
+.adforest-dashboard-section .bornado-whatsapp-modal .input-style-1 input {
+    min-height: 48px;
+    border-radius: 12px;
+}
+
+.adforest-dashboard-section .bornado-contact-modal__resend {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 10px;
+    color: #6b7280;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.adforest-dashboard-section .bornado-contact-modal__resend a {
+    flex: 0 0 auto;
+    color: #111827;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.adforest-dashboard-section .bornado-contact-modal__resend a:hover,
+.adforest-dashboard-section .bornado-contact-modal__resend a:focus {
+    text-decoration: underline;
+}
+
+.adforest-dashboard-section #sb_update_profile .bornado-phone-country-select {
+    margin-bottom: 10px;
+    min-height: 48px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: none;
+}
+
+.adforest-dashboard-section #sb_update_profile .bornado-phone-country-select:focus {
+    border-color: #111827;
+    box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+}
+
+.adforest-dashboard-section #sb_update_profile #sb_user_contact + small,
+.adforest-dashboard-section #sb_update_profile .input-style-1 small {
+    display: block;
+    margin-top: 8px;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #6b7280;
+}
+
+@media (max-width: 767.98px) {
+    .adforest-dashboard-section .bornado-profile-contact-card__header h5 {
+        font-size: 17px;
+    }
+
+    .adforest-dashboard-section .bornado-contact-list__item {
+        padding: 14px;
+        border-radius: 14px;
+    }
+
+    .adforest-dashboard-section .bornado-contact-status {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .adforest-dashboard-section .bornado-contact-status__badge {
+        align-self: center;
+    }
+
+    .adforest-dashboard-section .bornado-contact-status__value {
+        justify-self: start;
+    }
+
+    .adforest-dashboard-section .bornado-contact-status__action,
+    .adforest-dashboard-section #sb-verify-phone,
+    .adforest-dashboard-section #sb-verify-phone-firebase {
+        width: 100%;
+        justify-content: center;
+        justify-self: stretch;
+    }
+
+    .adforest-dashboard-section .bornado-contact-status__actions {
+        width: 100%;
+        justify-self: stretch;
+    }
+
+    .adforest-dashboard-section .sb-verify-modal,
+    .adforest-dashboard-section .bornado-whatsapp-modal {
+        padding: 16px 8px;
+    }
+
+    .adforest-dashboard-section .bornado-contact-modal__dialog {
+        margin: 0.75rem auto;
+    }
+
+    .adforest-dashboard-section .bornado-contact-modal__header {
+        padding: 18px 52px 14px;
+    }
+
+    .adforest-dashboard-section .sb-verify-modal .modal-body,
+    .adforest-dashboard-section .bornado-whatsapp-modal .modal-body {
+        padding: 18px 16px 10px;
+    }
+
+    .adforest-dashboard-section .sb-verify-modal .modal-footer,
+    .adforest-dashboard-section .bornado-whatsapp-modal .modal-footer {
+        padding: 10px 16px 18px;
+    }
+
+    .adforest-dashboard-section .sb-verify-modal .modal-footer .main-btn,
+    .adforest-dashboard-section .sb-verify-modal .modal-footer .dark-btn,
+    .adforest-dashboard-section .bornado-whatsapp-modal .modal-footer .main-btn,
+    .adforest-dashboard-section .bornado-whatsapp-modal .modal-footer .dark-btn {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .adforest-dashboard-section .bornado-contact-modal__resend {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+}

@@ -18,6 +18,18 @@ if ( ! function_exists( 'bornado_enqueue_profile_phone_guard_assets' ) ) {
 		$handle     = 'bornado-profile-phone-guard';
 		$asset_uri  = trailingslashit( get_stylesheet_directory_uri() ) . 'assets/js/bornado-profile-phone-guard.js';
 		$asset_path = trailingslashit( get_stylesheet_directory() ) . 'assets/js/bornado-profile-phone-guard.js';
+		$style_handle = 'bornado-profile-contact-card';
+		$style_uri    = trailingslashit( get_stylesheet_directory_uri() ) . 'assets/css/bornado-profile-contact-card.css';
+		$style_path   = trailingslashit( get_stylesheet_directory() ) . 'assets/css/bornado-profile-contact-card.css';
+
+		if ( file_exists( $style_path ) ) {
+			wp_enqueue_style(
+				$style_handle,
+				$style_uri,
+				array(),
+				(string) filemtime( $style_path )
+			);
+		}
 
 		if ( ! file_exists( $asset_path ) ) {
 			return;

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: adforest\n"
 "POT-Creation-Date: 2026-06-16 19:12+0100\n"
-"PO-Revision-Date: 2026-06-16 19:24+0100\n"
+"PO-Revision-Date: 2026-06-18 20:51+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
@@ -56,12 +56,12 @@ msgstr "نام شما"
 #: MultiVendorX/archive-vendor-info-1.php:112 MultiVendorX/archive-vendor-info.php:183
 #: MultiVendorX/archive-vendor-info.php:190 MultiVendorX/archive-vendor-info.php:204
 #: functions.php:1722 inc/adforest_ad_post.php:619 inc/adforest_ad_post.php:674
-#: inc/adforest_ad_post.php:682 inc/adforest_ad_post.php:738
-#: inc/adforest_ad_post.php:752 inc/ads-widgets.php:1776 inc/ads-widgets.php:1781
-#: inc/ads-widgets.php:1792 inc/utilities.php:929 inc/utilities.php:984
-#: inc/utilities.php:1004 inc/utilities.php:1074 inc/utilities.php:1091
-#: inc/utilities.php:1110 inc/utilities.php:1131 inc/utilities.php:1152
-#: template-parts/ad-alerts.php:21 template-parts/layouts/ad-style/ad-reviews.php:270
+#: inc/adforest_ad_post.php:682 inc/adforest_ad_post.php:738 inc/adforest_ad_post.php:752
+#: inc/ads-widgets.php:1776 inc/ads-widgets.php:1781 inc/ads-widgets.php:1792
+#: inc/utilities.php:929 inc/utilities.php:984 inc/utilities.php:1004
+#: inc/utilities.php:1074 inc/utilities.php:1091 inc/utilities.php:1110
+#: inc/utilities.php:1131 inc/utilities.php:1152 template-parts/ad-alerts.php:21
+#: template-parts/layouts/ad-style/ad-reviews.php:270
 #: template-parts/layouts/ad-style/ad-reviews.php:303
 #: template-parts/layouts/profile/contact-form.php:20
 #: template-parts/layouts/profile/contact-form.php:25
@@ -108,8 +108,7 @@ msgstr "اطلاعات شخصی"
 #: MultiVendorX/archive-vendor-info-1.php:213 comments.php:25 functions.php:1117
 #: inc/ads-widgets.php:1780 inc/options-init.php:1577 page-invoices.php:374
 #: template-parts/layouts/multivendor/profile.php:118
-#: template-parts/layouts/profile/contact-form.php:24
-#: woocommerce/single-product.php:394
+#: template-parts/layouts/profile/contact-form.php:24 woocommerce/single-product.php:394
 msgid "Email"
 msgstr "ایمیل"
 
@@ -130,23 +129,20 @@ msgstr "ما را دنبال کنید:"
 msgid "Banner image"
 msgstr "تصویر بنر"
 
-#: MultiVendorX/archive-vendor-info-1.php:319
-#: MultiVendorX/archive-vendor-info-1.php:436
+#: MultiVendorX/archive-vendor-info-1.php:319 MultiVendorX/archive-vendor-info-1.php:436
 #: MultiVendorX/archive-vendor-info-1.php:527 MultiVendorX/archive-vendor-info.php:392
 #: MultiVendorX/archive-vendor-info.php:548 MultiVendorX/archive-vendor-info.php:668
 msgid "You must logged in to follow"
 msgstr "برای دنبال کردن باید وارد سایت شوید"
 
-#: MultiVendorX/archive-vendor-info-1.php:336
-#: MultiVendorX/archive-vendor-info-1.php:411
+#: MultiVendorX/archive-vendor-info-1.php:336 MultiVendorX/archive-vendor-info-1.php:411
 #: MultiVendorX/archive-vendor-info-1.php:509 MultiVendorX/archive-vendor-info.php:418
 #: MultiVendorX/archive-vendor-info.php:504 MultiVendorX/archive-vendor-info.php:645
 msgid "External Store URL"
 msgstr "آدرس فروشگاه خارجی"
 
 #: MultiVendorX/archive-vendor-info.php:89 template-parts/footers/footer-2.php:5
-#: template-parts/footers/footer-3.php:8
-#: template-parts/layouts/multivendor/profile.php:23
+#: template-parts/footers/footer-3.php:8 template-parts/layouts/multivendor/profile.php:23
 msgid "Follow Us"
 msgstr "ما را دنبال کنید"
 
@@ -174,8 +170,8 @@ msgid "Phone: "
 msgstr "شماره تماس: "
 
 #: MultiVendorX/archive-vendor-info.php:274
-#: template-parts/layouts/multivendor/profile.php:178
-#: woocommerce/archive-product.php:223 woocommerce/single-product/related.php:108
+#: template-parts/layouts/multivendor/profile.php:178 woocommerce/archive-product.php:223
+#: woocommerce/single-product/related.php:108
 msgid "Detail Now"
 msgstr "مشاهده جزئیات"
 
@@ -368,14 +364,14 @@ msgstr "مشکلی وجود دارد، لطفاً بعداً دوباره امت
 
 #: dashboard/functions.php:43 dashboard/functions.php:211 dashboard/functions.php:302
 #: dashboard/functions.php:531 dashboard/functions.php:945 dashboard/functions.php:1089
-#: dashboard/functions.php:1202 dashboard/functions.php:1297
-#: dashboard/functions.php:1326 dashboard/functions.php:1977 inc/authentication.php:124
-#: inc/authentication.php:210 inc/authentication.php:372 inc/authentication.php:550
-#: inc/authentication.php:607 inc/authentication.php:1416 inc/authentication.php:1498
-#: inc/authentication.php:1638 inc/authentication.php:2019 inc/authentication.php:2113
-#: inc/authentication.php:2259 inc/authentication.php:2344 inc/authentication.php:2634
-#: inc/authentication.php:3027 inc/authentication.php:3140 inc/authentication.php:3363
-#: inc/authentication.php:3918 inc/authentication.php:4166 inc/utilities.php:346
+#: dashboard/functions.php:1202 dashboard/functions.php:1297 dashboard/functions.php:1326
+#: dashboard/functions.php:1977 inc/authentication.php:124 inc/authentication.php:210
+#: inc/authentication.php:372 inc/authentication.php:550 inc/authentication.php:607
+#: inc/authentication.php:1416 inc/authentication.php:1498 inc/authentication.php:1638
+#: inc/authentication.php:2019 inc/authentication.php:2113 inc/authentication.php:2259
+#: inc/authentication.php:2344 inc/authentication.php:2634 inc/authentication.php:3027
+#: inc/authentication.php:3140 inc/authentication.php:3363 inc/authentication.php:3918
+#: inc/authentication.php:4166 inc/utilities.php:346
 msgid "Not allowed in demo mode"
 msgstr "در حالت دمو مجاز نیست"
 
@@ -489,8 +485,8 @@ msgstr "لطفاً یک شماره تلفن معتبر با کد کشور وار
 msgid "Phone Number already registered"
 msgstr "شماره تلفن از قبل ثبت شده است"
 
-#: dashboard/functions.php:793 dashboard/functions.php:1888
-#: page-awaiting-approval.php:301 page-favorites.php:325 page-my-listings.php:397
+#: dashboard/functions.php:793 dashboard/functions.php:1888 page-awaiting-approval.php:301
+#: page-favorites.php:325 page-my-listings.php:397
 #: template-parts/layouts/ad-style/style-1.php:298
 #: template-parts/layouts/ad-style/style-1.php:902
 #: template-parts/layouts/ad-style/style-2.php:241
@@ -604,13 +600,13 @@ msgstr "با موفقیت به‌روزرسانی شد."
 msgid "Post Bumped up Submit."
 msgstr "درخواست نردبان آگهی ثبت شد."
 
-#: dashboard/functions.php:1116 dashboard/functions.php:1223
-#: dashboard/functions.php:1259 inc/authentication.php:2655 inc/authentication.php:2682
+#: dashboard/functions.php:1116 dashboard/functions.php:1223 dashboard/functions.php:1259
+#: inc/authentication.php:2655 inc/authentication.php:2682
 msgid "Your package has expired"
 msgstr "پکیج شما منقضی شده است"
 
-#: dashboard/functions.php:1136 dashboard/functions.php:1142
-#: dashboard/functions.php:1153 dashboard/functions.php:1159
+#: dashboard/functions.php:1136 dashboard/functions.php:1142 dashboard/functions.php:1153
+#: dashboard/functions.php:1159
 msgid "Bumped up successfully."
 msgstr "با موفقیت نردبان شد."
 
@@ -618,8 +614,7 @@ msgstr "با موفقیت نردبان شد."
 msgid "Buy package to make it bump."
 msgstr "برای نردبان کردن، پکیج خریداری کنید."
 
-#: dashboard/functions.php:1171 dashboard/functions.php:1284
-#: inc/authentication.php:2704
+#: dashboard/functions.php:1171 dashboard/functions.php:1284 inc/authentication.php:2704
 msgid "You must be the Ad owner to make it featured."
 msgstr "برای ویژه کردن آگهی باید صاحب آن باشید."
 
@@ -631,13 +626,12 @@ msgstr "این آگهی از قبل ویژه شده است."
 msgid "Redirecting...."
 msgstr "در حال انتقال...."
 
-#: dashboard/functions.php:1248 dashboard/functions.php:1275
-#: inc/authentication.php:2674
+#: dashboard/functions.php:1248 dashboard/functions.php:1275 inc/authentication.php:2674
 msgid "This ad has been featured successfully."
 msgstr "این آگهی با موفقیت ویژه شد."
 
-#: dashboard/functions.php:1250 dashboard/functions.php:1277
-#: inc/authentication.php:2001 inc/authentication.php:2676 inc/authentication.php:2697
+#: dashboard/functions.php:1250 dashboard/functions.php:1277 inc/authentication.php:2001
+#: inc/authentication.php:2676 inc/authentication.php:2697
 msgid "Something Went Wrong"
 msgstr "مشکلی پیش آمد"
 
@@ -657,8 +651,8 @@ msgstr "حذف امکان‌پذیر نیست"
 msgid "There's some problem, please try again later."
 msgstr "مشکلی وجود دارد، لطفاً بعداً دوباره امتحان کنید."
 
-#: dashboard/functions.php:1418 dashboard/functions.php:1425
-#: dashboard/functions.php:1441 inc/authentication.php:622
+#: dashboard/functions.php:1418 dashboard/functions.php:1425 dashboard/functions.php:1441
+#: inc/authentication.php:622
 msgid "Invalid request."
 msgstr "درخواست نامعتبر است."
 
@@ -1073,15 +1067,15 @@ msgstr "آگهی‌های رایگان PPP"
 
 #: dashboard/index.php:823 template-parts/layouts/profile/profile-header.php:71
 msgid "Ad Sold"
-msgstr "آگهی فروخته شد"
+msgstr "آگهی های فروخته شده"
 
 #: dashboard/index.php:836
 msgid "Total Listings"
-msgstr "کل آگهی‌ها"
+msgstr "آگهی های من"
 
 #: dashboard/index.php:864
 msgid "Total Ratings"
-msgstr "کل امتیازها"
+msgstr "امتیاز کل من"
 
 #: dashboard/index.php:879 functions.php:923
 msgid "Ad Views"
@@ -1220,8 +1214,7 @@ msgstr "تایمر مزایده"
 #: dashboard/template-parts/page-ad_bids.php:81
 #: dashboard/template-parts/page-ad_bids.php:136
 #: dashboard/template-parts/page-ad_bids.php:190
-#: dashboard/template-parts/page-invoices.php:52 functions.php:2895
-#: page-invoices.php:373
+#: dashboard/template-parts/page-invoices.php:52 functions.php:2895 page-invoices.php:373
 msgid "Date"
 msgstr "تاریخ"
 
@@ -1233,8 +1226,7 @@ msgstr ""
 
 #: dashboard/template-parts/page-ad_bids.php:83
 #: dashboard/template-parts/page-ad_bids.php:142
-#: dashboard/template-parts/page-alerts.php:61
-#: dashboard/template-parts/page-claims.php:55
+#: dashboard/template-parts/page-alerts.php:61 dashboard/template-parts/page-claims.php:55
 msgid "Action"
 msgstr "عملیات"
 
@@ -1259,8 +1251,7 @@ msgstr "مخفی‌سازی جزئیات"
 msgid "Bid Details"
 msgstr "مخفی‌سازی جزئیات"
 
-#: dashboard/template-parts/page-alerts.php:59
-#: dashboard/template-parts/page-claims.php:53
+#: dashboard/template-parts/page-alerts.php:59 dashboard/template-parts/page-claims.php:53
 msgid "Alert name"
 msgstr "نام هشدار"
 
@@ -1350,9 +1341,8 @@ msgstr "فاکتورها"
 #: dashboard/template-parts/page-msg.php:18 functions.php:1920 inc/search-ajax.php:917
 #: inc/widgets.php:23 inc/widgets.php:1358 inc/widgets.php:1403
 #: page-awaiting-approval.php:252 page-favorites.php:269 page-invoices.php:345
-#: page-messages.php:1135 page-my-listings.php:336
-#: template-parts/headers/header-2.php:194 template-parts/headers/header-3.php:119
-#: template-parts/headers/header-4.php:364
+#: page-messages.php:1135 page-my-listings.php:336 template-parts/headers/header-2.php:194
+#: template-parts/headers/header-3.php:119 template-parts/headers/header-4.php:364
 #: template-parts/headers/header-cybersale.php:114
 #: template-parts/layouts/seller-search/search-form.php:17
 #: template-parts/layouts/widgets/map/ad_location.php:23
@@ -1411,8 +1401,7 @@ msgstr "شما هنوز هیچ پکیجی خریداری نکرده‌اید."
 #: dashboard/template-parts/page-my_profile.php:14
 #: dashboard/template-parts/page-my_profile.php:22
 #: dashboard/template-parts/page-my_profile.php:180 inc/authentication.php:2437
-#: page-settings.php:31 page-users.php:121
-#: template-parts/layouts/ad-style/style-1.php:14
+#: page-settings.php:31 page-users.php:121 template-parts/layouts/ad-style/style-1.php:14
 #: template-parts/layouts/ad-style/style-2.php:13
 #: template-parts/layouts/profile/profile-header.php:13
 #: template-parts/layouts/seller-search/search-modern.php:91
@@ -1421,8 +1410,7 @@ msgstr "نمایشگاه / واسطه"
 
 #: dashboard/template-parts/page-my_profile.php:18
 #: dashboard/template-parts/page-my_profile.php:21 inc/authentication.php:2437
-#: page-settings.php:30 page-users.php:118
-#: template-parts/layouts/ad-style/style-1.php:12
+#: page-settings.php:30 page-users.php:118 template-parts/layouts/ad-style/style-1.php:12
 #: template-parts/layouts/ad-style/style-2.php:11
 #: template-parts/layouts/profile/profile-header.php:11
 #: template-parts/layouts/seller-search/search-modern.php:89
@@ -1430,8 +1418,6 @@ msgid "Individual"
 msgstr "شخصی"
 
 #: dashboard/template-parts/page-my_profile.php:20 page-settings.php:29
-#, fuzzy
-#| msgid "Select Option"
 msgid "Select option"
 msgstr "انتخاب گزینه"
 
@@ -1506,8 +1492,7 @@ msgstr "من هستم:"
 
 #: dashboard/template-parts/page-my_profile.php:263 inc/options-init.php:730
 #: inc/widgets.php:891 template-parts/headers/header-2.php:127
-#: template-parts/headers/header-4.php:59
-#: template-parts/layouts/ad-style/style-1.php:89
+#: template-parts/headers/header-4.php:59 template-parts/layouts/ad-style/style-1.php:89
 #: template-parts/layouts/search/search-tags.php:28
 msgid "Location"
 msgstr "موقعیت مکانی"
@@ -1779,10 +1764,8 @@ msgid "Upload failed"
 msgstr "آپلود/افزودن تصویر"
 
 #: functions.php:958
-#, fuzzy
-#| msgid "Select a package"
 msgid "Select a Package."
-msgstr "انتخاب یک پکیج"
+msgstr "انتخاب پکیج"
 
 #: functions.php:959 inc/search-ajax.php:1173 template-parts/footers/footer-1.php:52
 #: template-parts/footers/footer-2.php:46
@@ -1864,9 +1847,9 @@ msgid "Be the first to review &ldquo;%s&rdquo;"
 msgstr "اولین کسی باشید که برای «%s» نظر می‌دهد"
 
 #: functions.php:1102 inc/setup-wizard-adf/wordpress-importer/class-wp-import.php:261
-#: inc/utilities.php:2787 page-search.php:42 page-search.php:67
-#: taxonomy-ad_cats.php:320 taxonomy-ad_cats.php:342 taxonomy-ad_country.php:327
-#: template-parts/ad-alerts.php:94 template-parts/layouts/ad-style/ad-reviews.php:315
+#: inc/utilities.php:2787 page-search.php:42 page-search.php:67 taxonomy-ad_cats.php:320
+#: taxonomy-ad_cats.php:342 taxonomy-ad_country.php:327 template-parts/ad-alerts.php:94
+#: template-parts/layouts/ad-style/ad-reviews.php:315
 #: template-parts/layouts/ad-style/report-ad.php:38
 msgid "Submit"
 msgstr "ارسال"
@@ -1939,8 +1922,7 @@ msgstr "خانه"
 msgid "Breadcrumb"
 msgstr "مسیر راهنما"
 
-#: functions.php:1276 functions.php:1337
-#: template-parts/footers/footer-home-modern.php:329
+#: functions.php:1276 functions.php:1337 template-parts/footers/footer-home-modern.php:329
 msgid "Blog"
 msgstr "وبلاگ"
 
@@ -2069,8 +2051,8 @@ msgstr "لایسنس قالب الزامی است"
 
 #: functions.php:2383
 msgid ""
-"Your AdForest theme license is not activated. Please activate your license to "
-"receive updates and support."
+"Your AdForest theme license is not activated. Please activate your license to receive "
+"updates and support."
 msgstr ""
 "لایسنس قالب AdForest شما فعال نیست. لطفاً برای دریافت به‌روزرسانی‌ها و پشتیبانی، لایسنس "
 "خود را فعال کنید."
@@ -2251,8 +2233,8 @@ msgstr "کاربر؟"
 #: inc/UserPackageManager.php:172
 #, php-format
 msgid ""
-"Package \"%s\" unassigned from %d user(s) successfully! %d users skipped (package "
-"not found)."
+"Package \"%s\" unassigned from %d user(s) successfully! %d users skipped (package not "
+"found)."
 msgstr "پکیج «%s» با موفقیت از %d کاربر لغو شد! از %d کاربر صرف‌نظر شد (پکیج یافت نشد)."
 
 #: inc/UserPackageManager.php:182
@@ -2374,8 +2356,7 @@ msgid "Clear All Logs"
 msgstr "پاکسازی تمام گزارش‌ها"
 
 #: inc/UserPackageManager.php:481
-msgid ""
-"Are you sure you want to clear all revocation logs? This action cannot be undone."
+msgid "Are you sure you want to clear all revocation logs? This action cannot be undone."
 msgstr ""
 "آیا مطمئن هستید که می‌خواهید تمام گزارش‌های ابطال را پاک کنید؟ این عملیات قابل بازگشت "
 "نیست."
@@ -2402,13 +2383,13 @@ msgstr "ابزارک‌های فوتر"
 
 #: inc/adforest-footer-functions.php:110
 msgid ""
-"Enable on the footer widgets and add custom footer sidebar columns of your "
-"choice.After that you can add widgets in these custom footer sidebar <b>dashboard > "
-"Apperance > widgets</b> these widgets displays at the top of the footer."
+"Enable on the footer widgets and add custom footer sidebar columns of your choice.After "
+"that you can add widgets in these custom footer sidebar <b>dashboard > Apperance > "
+"widgets</b> these widgets displays at the top of the footer."
 msgstr ""
-"ابزارک‌های فوتر را فعال کرده و ستون‌های دلخواه خود را به سایدبار فوتر اضافه کنید. پس "
-"از آن می‌توانید ابزارک‌ها را در مسیر <b>پیشخوان > نمایش > ابزارک‌ها</b> به این "
-"سایدبارهای سفارشی اضافه کنید تا در بالای فوتر نمایش داده شوند."
+"ابزارک‌های فوتر را فعال کرده و ستون‌های دلخواه خود را به سایدبار فوتر اضافه کنید. پس از "
+"آن می‌توانید ابزارک‌ها را در مسیر <b>پیشخوان > نمایش > ابزارک‌ها</b> به این سایدبارهای "
+"سفارشی اضافه کنید تا در بالای فوتر نمایش داده شوند."
 
 #: inc/adforest-footer-functions.php:118
 msgid "<b>Note</b> : This widgetize area will only work for footer-8"
@@ -2510,17 +2491,15 @@ msgstr "محدوده"
 msgid "Price Type"
 msgstr "نوع قیمت"
 
-#: inc/adforest_ad_post.php:203 inc/adforest_ad_post.php:216
-#: inc/adforest_ad_post.php:291 inc/adforest_ad_post.php:336
-#: inc/adforest_ad_post.php:556 inc/adforest_ad_post.php:573
+#: inc/adforest_ad_post.php:203 inc/adforest_ad_post.php:216 inc/adforest_ad_post.php:291
+#: inc/adforest_ad_post.php:336 inc/adforest_ad_post.php:556 inc/adforest_ad_post.php:573
 #: inc/adforest_ad_post.php:834 inc/adforest_ad_post.php:881
 msgid "This field is required . "
 msgstr "این فیلد الزامی است . "
 
-#: inc/adforest_ad_post.php:204 inc/adforest_ad_post.php:557
-#: inc/authentication.php:2384 inc/nav.php:313 inc/nav.php:331 inc/search-ajax.php:836
-#: inc/utilities.php:385 template-parts/ad-alerts.php:22
-#: template-parts/layouts/widgets/map/custom.php:93
+#: inc/adforest_ad_post.php:204 inc/adforest_ad_post.php:557 inc/authentication.php:2384
+#: inc/nav.php:313 inc/nav.php:331 inc/search-ajax.php:836 inc/utilities.php:385
+#: template-parts/ad-alerts.php:22 template-parts/layouts/widgets/map/custom.php:93
 #: template-parts/layouts/widgets/sidebar/custom.php:94
 msgid "Select Option"
 msgstr "انتخاب گزینه"
@@ -2583,10 +2562,8 @@ msgid "Category ID or name not set."
 msgstr "شناسه یا نام دسته‌بندی تنظیم نشده است."
 
 #: inc/adforest_ad_post.php:621
-#, fuzzy
-#| msgid "Select Option"
 msgid "-- Select Option --"
-msgstr "انتخاب گزینه"
+msgstr "--انتخاب گزینه--"
 
 #: inc/adforest_ad_post.php:958
 msgid "Maximum file size: "
@@ -2670,9 +2647,8 @@ msgstr "دسته‌بندی‌های آگهی"
 #: template-parts/layouts/widgets/sidebar/categories-select.php:3
 #: template-parts/layouts/widgets/sidebar/categories.php:3
 #: template-parts/layouts/widgets/topbar/categories-select.php:3
-#: template-parts/layouts/widgets/topbar/categories.php:3
-#: woocommerce/widgets/price.php:3 woocommerce/widgets/search.php:3
-#: woocommerce/widgets/title.php:2
+#: template-parts/layouts/widgets/topbar/categories.php:3 woocommerce/widgets/price.php:3
+#: woocommerce/widgets/search.php:3 woocommerce/widgets/title.php:2
 msgid "Categories"
 msgstr "دسته‌بندی‌ها"
 
@@ -2749,8 +2725,7 @@ msgstr "می‌توانید آن را خالی بگذارید"
 
 #: inc/ads-widgets.php:1538 inc/widgets.php:1617
 msgid ""
-"You can show/hide the specific type from categories custom fields where you created "
-"it."
+"You can show/hide the specific type from categories custom fields where you created it."
 msgstr ""
 "می‌توانید نوع خاص را از فیلدهای سفارشی دسته‌بندی‌هایی که ایجاد کرده‌اید، نمایش دهید یا "
 "پنهان کنید."
@@ -2795,8 +2770,8 @@ msgid ""
 "Contact with ad owner with/without login. This widget is for single ad page only and "
 "you can use only one widget on the page "
 msgstr ""
-"تماس با مالک آگهی با یا بدون ورود به حساب کاربری. این ابزارک فقط برای صفحه تک‌آگهی "
-"است و فقط یک‌بار در صفحه قابل استفاده می‌باشد "
+"تماس با مالک آگهی با یا بدون ورود به حساب کاربری. این ابزارک فقط برای صفحه تک‌آگهی است و "
+"فقط یک‌بار در صفحه قابل استفاده می‌باشد "
 
 #: inc/ads-widgets.php:1785 page-settings.php:277 woocommerce/checkout/thankyou.php:162
 msgid "Phone Number"
@@ -2984,8 +2959,7 @@ msgstr "قیمت (%s)"
 
 #: inc/ai-suggestions.php:785
 msgid ""
-"If you have what I'm looking for, please contact me with details and your asking "
-"price."
+"If you have what I'm looking for, please contact me with details and your asking price."
 msgstr ""
 
 #: inc/ai-suggestions.php:787
@@ -3416,8 +3390,7 @@ msgstr "فروشنده از علاقه‌مندی‌های شما حذف شد."
 msgid "Added to your favourites."
 msgstr "به لیست نشان‌شده‌های شما اضافه شد."
 
-#: inc/authentication.php:2450
-#: template-parts/layouts/seller-search/search-modern.php:107
+#: inc/authentication.php:2450 template-parts/layouts/seller-search/search-modern.php:107
 #, php-format
 msgid "%s Ads"
 msgstr "%s آگهی"
@@ -3664,8 +3637,7 @@ msgid "You can not delete this"
 msgstr "شما مجاز به حذف این مورد نیستید"
 
 #: inc/authentication.php:4531 inc/authentication.php:4654
-#: template-parts/headers/header-3.php:172
-#: template-parts/headers/header-cybersale.php:159
+#: template-parts/headers/header-3.php:172 template-parts/headers/header-cybersale.php:159
 msgid "user profile picture"
 msgstr "عکس پروفایل کاربر"
 
@@ -3732,8 +3704,7 @@ msgid "Register"
 msgstr "ثبت‌نام"
 
 #: inc/authentication.php:4661 page-messages.php:1667
-#: template-parts/headers/header-3.php:177
-#: template-parts/headers/header-cybersale.php:164
+#: template-parts/headers/header-3.php:177 template-parts/headers/header-cybersale.php:164
 msgid "Profile"
 msgstr "پروفایل"
 
@@ -3750,8 +3721,7 @@ msgstr "خروج"
 msgid "Imagefor theme"
 msgstr "تصویر برای قالب"
 
-#: inc/categories-images.php:38 inc/categories-images.php:49
-#: inc/categories-images.php:140
+#: inc/categories-images.php:38 inc/categories-images.php:49 inc/categories-images.php:140
 msgid "Upload/Add image"
 msgstr "آپلود/افزودن تصویر"
 
@@ -3784,8 +3754,7 @@ msgid ""
 "Enable this option to duplicate posts in all others languages after successfully "
 "publish."
 msgstr ""
-"این گزینه را فعال کنید تا آگهی‌ها پس از انتشار موفقیت‌آمیز، در تمام زبان‌های دیگر کپی "
-"شوند."
+"این گزینه را فعال کنید تا آگهی‌ها پس از انتشار موفقیت‌آمیز، در تمام زبان‌های دیگر کپی شوند."
 
 #: inc/multilingual-functions.php:512
 msgid "<b>Note : </b> Disable means the posts publish only in the current language."
@@ -3866,13 +3835,12 @@ msgstr "فاصله عمودی"
 #: inc/nav.php:426
 #, fuzzy
 #| msgid ""
-#| "If you want to hide column name in mega menu just write {HideMe} in  Navigation "
-#| "Label"
+#| "If you want to hide column name in mega menu just write {HideMe} in  Navigation Label"
 msgid ""
 "If you want to hide column name in mega menu just write {HideMe} in  Navigation Label"
 msgstr ""
-"اگر می‌خواهید نام ستون در مگامنو پنهان شود، کافی است عبارت {HideMe} را در برچسب "
-"ناوبری بنویسید"
+"اگر می‌خواهید نام ستون در مگامنو پنهان شود، کافی است عبارت {HideMe} را در برچسب ناوبری "
+"بنویسید"
 
 #: inc/nav.php:431
 msgid "Lebel Color"
@@ -3911,8 +3879,7 @@ msgid "Theme Options - AdForest Pro Theme"
 msgstr "تنظیمات قالب - قالب ادفارست پرو"
 
 #: inc/options-init.php:24 inc/setup-wizard-adf/setup-wizard.php:96
-#: inc/setup-wizard-adf/setup-wizard.php:126
-#: inc/setup-wizard-adf/views/step-demo.php:104
+#: inc/setup-wizard-adf/setup-wizard.php:126 inc/setup-wizard-adf/views/step-demo.php:104
 msgid "Theme Options"
 msgstr "تنظیمات قالب"
 
@@ -3946,8 +3913,8 @@ msgstr "تاریخ و زمان : "
 
 #: inc/options-init.php:119
 msgid ""
-"Set Timezone of your region that is applied to all time related theme "
-"functionalities.<br /><b>(like : bidding timer, messages time)</b>"
+"Set Timezone of your region that is applied to all time related theme functionalities."
+"<br /><b>(like : bidding timer, messages time)</b>"
 msgstr ""
 "منطقه زمانی منطقه خود را تنظیم کنید تا بر تمام عملکردهای زمانی قالب اعمال شود.<br /"
 "><b>(مانند: زمان‌سنج مزایده، زمان پیام‌ها)</b>"
@@ -3973,8 +3940,8 @@ msgid ""
 "Turn OFF this option if you want the admin dashboard to remain in English, even when "
 "the rest of the website is translated. After saving please refresh."
 msgstr ""
-"اگر می‌خواهید پنل مدیریت انگلیسی باقی بماند (حتی در صورت ترجمه سایت)، این گزینه را "
-"خاموش کنید. پس از ذخیره، صفحه را رفرش کنید."
+"اگر می‌خواهید پنل مدیریت انگلیسی باقی بماند (حتی در صورت ترجمه سایت)، این گزینه را خاموش "
+"کنید. پس از ذخیره، صفحه را رفرش کنید."
 
 #: inc/options-init.php:159
 msgid "Pre Page Loader"
@@ -4026,12 +3993,12 @@ msgstr "نوع پکیج دسته‌بندی"
 msgid ""
 "<b>Parent : </b> In Parent Selection, if you buy a parent category in a package then "
 "you can also post in child categories of the paid parent category.<br /><br /"
-"><b>Child : </b>In Child Selection you have to buy each paid category whether it is "
-"a child or parent."
+"><b>Child : </b>In Child Selection you have to buy each paid category whether it is a "
+"child or parent."
 msgstr ""
-"<b>والد (Parent): </b> با خرید یک دسته‌بندی مادر، امکان ثبت آگهی در تمام زیردسته‌های "
-"آن نیز فراهم می‌شود.<br /><br /><b>فرزند (Child): </b> باید برای هر دسته‌بندی (چه اصلی "
-"و چه فرعی) پکیج جداگانه تهیه شود."
+"<b>والد (Parent): </b> با خرید یک دسته‌بندی مادر، امکان ثبت آگهی در تمام زیردسته‌های آن "
+"نیز فراهم می‌شود.<br /><br /><b>فرزند (Child): </b> باید برای هر دسته‌بندی (چه اصلی و چه "
+"فرعی) پکیج جداگانه تهیه شود."
 
 #: inc/options-init.php:214
 msgid "Parent Category"
@@ -4051,8 +4018,8 @@ msgstr "غیرفعال‌سازی اعلان TGM"
 
 #: inc/options-init.php:231
 msgid ""
-"Used to hide/show the theme required/updating plugins notifications at the top of "
-"admin dashboard."
+"Used to hide/show the theme required/updating plugins notifications at the top of admin "
+"dashboard."
 msgstr ""
 "برای پنهان یا آشکار کردن اعلان‌های مربوط به نصب یا آپدیت افزونه‌های ضروری در بالای "
 "پیشخوان مدیریت."
@@ -4099,8 +4066,8 @@ msgstr "برش اجباری تصاویر"
 
 #: inc/options-init.php:273
 msgid ""
-"Note : After Enable/Disable Please Run the \"Force Regenerate Thumbnails\" plugin "
-"for regenerate image sizes."
+"Note : After Enable/Disable Please Run the \"Force Regenerate Thumbnails\" plugin for "
+"regenerate image sizes."
 msgstr ""
 "نکته: پس از تغییر این گزینه، لطفاً افزونه \"Force Regenerate Thumbnails\" را برای "
 "بازسازی اندازه‌های تصاویر اجرا کنید."
@@ -4146,8 +4113,8 @@ msgid ""
 "Refresher is used to add a random version to each style and script file for removing "
 "cached things."
 msgstr ""
-"رفرشر برای افزودن یک نسخه تصادفی به فایل‌های استایل و اسکریپت جهت حذف کش مرورگر "
-"استفاده می‌شود."
+"رفرشر برای افزودن یک نسخه تصادفی به فایل‌های استایل و اسکریپت جهت حذف کش مرورگر استفاده "
+"می‌شود."
 
 #: inc/options-init.php:326
 msgid "Refresher"
@@ -4155,11 +4122,11 @@ msgstr "تازه سازی (Refresher)"
 
 #: inc/options-init.php:328
 msgid ""
-"<b class=\"sb-admin-note\">Note : </b>Enable this option if you are facing issue due "
-"to enqueued file version controlling while editing style/script file."
+"<b class=\"sb-admin-note\">Note : </b>Enable this option if you are facing issue due to "
+"enqueued file version controlling while editing style/script file."
 msgstr ""
-"<b class=\"sb-admin-note\">نکته: </b>اگر هنگام ویرایش فایل‌های استایل یا اسکریپت به "
-"دلیل سیستم کشینگ نسخه فایل دچار مشکل هستید، این گزینه را فعال کنید."
+"<b class=\"sb-admin-note\">نکته: </b>اگر هنگام ویرایش فایل‌های استایل یا اسکریپت به دلیل "
+"سیستم کشینگ نسخه فایل دچار مشکل هستید، این گزینه را فعال کنید."
 
 #: inc/options-init.php:334
 msgid "Default user picture"
@@ -4356,11 +4323,9 @@ msgstr "به دنبال چه هستید..."
 msgid "Ad Type Field Label"
 msgstr ""
 
-#: inc/options-init.php:716
-#: inc/setup-wizard-adf/tgm/class-tgm-plugin-activation.php:2697
+#: inc/options-init.php:716 inc/setup-wizard-adf/tgm/class-tgm-plugin-activation.php:2697
 #: inc/setup-wizard-adf/tgm/tgm-plugin-activation.php:2641
-#: template-parts/headers/header-4.php:58
-#: template-parts/layouts/ad-style/report-ad.php:18
+#: template-parts/headers/header-4.php:58 template-parts/layouts/ad-style/report-ad.php:18
 msgid "Type"
 msgstr "نوع"
 
@@ -4462,8 +4427,8 @@ msgstr "عرض جغرافیایی پیش‌فرض"
 
 #: inc/options-init.php:816
 msgid ""
-"If set, this location is pre-selected until a visitor chooses another one. Leave "
-"empty to show all ads by default."
+"If set, this location is pre-selected until a visitor chooses another one. Leave empty "
+"to show all ads by default."
 msgstr ""
 
 #: inc/options-init.php:817
@@ -4585,8 +4550,8 @@ msgstr ""
 
 #: inc/options-init.php:998
 msgid ""
-"When enabled, the existing user profile icon next to the Post Ad button is hidden. "
-"The new menu UI will be wired up once its pages are created."
+"When enabled, the existing user profile icon next to the Post Ad button is hidden. The "
+"new menu UI will be wired up once its pages are created."
 msgstr ""
 
 #: inc/options-init.php:1005
@@ -4608,8 +4573,7 @@ msgid "Modern: Awaiting Approval Page"
 msgstr ""
 
 #: inc/options-init.php:1015
-msgid ""
-"Pick the WP page that uses the \"AdForest - Awaiting Approval (Modern)\" template."
+msgid "Pick the WP page that uses the \"AdForest - Awaiting Approval (Modern)\" template."
 msgstr ""
 
 #: inc/options-init.php:1016
@@ -4628,8 +4592,8 @@ msgstr ""
 
 #: inc/options-init.php:1025
 msgid ""
-"Create a Page in WP Admin, assign the \"AdForest - Favorites (Modern)\" template, "
-"then select it here. Used by the Modern User Menu."
+"Create a Page in WP Admin, assign the \"AdForest - Favorites (Modern)\" template, then "
+"select it here. Used by the Modern User Menu."
 msgstr ""
 
 #: inc/options-init.php:1032
@@ -4644,8 +4608,8 @@ msgstr ""
 
 #: inc/options-init.php:1034
 msgid ""
-"Create a Page in WP Admin, assign the \"AdForest - Settings (Modern)\" template, "
-"then select it here. Used by the Modern User Menu."
+"Create a Page in WP Admin, assign the \"AdForest - Settings (Modern)\" template, then "
+"select it here. Used by the Modern User Menu."
 msgstr ""
 
 #: inc/options-init.php:1041
@@ -4658,8 +4622,8 @@ msgstr ""
 
 #: inc/options-init.php:1043
 msgid ""
-"Create a Page in WP Admin, assign the \"AdForest - Invoices (Modern)\" template, "
-"then select it here. Used by the Modern User Menu."
+"Create a Page in WP Admin, assign the \"AdForest - Invoices (Modern)\" template, then "
+"select it here. Used by the Modern User Menu."
 msgstr ""
 
 #: inc/options-init.php:1050
@@ -4674,8 +4638,8 @@ msgstr ""
 
 #: inc/options-init.php:1052
 msgid ""
-"Create a Page in WP Admin, assign the \"AdForest - Messages (Modern)\" template, "
-"then select it here. Used by the Modern User Menu."
+"Create a Page in WP Admin, assign the \"AdForest - Messages (Modern)\" template, then "
+"select it here. Used by the Modern User Menu."
 msgstr ""
 
 #: inc/options-init.php:1059
@@ -4755,10 +4719,10 @@ msgstr ""
 
 #: inc/options-init.php:1145
 msgid ""
-"Optional. Overrides the classic \"After Login Page\" above only when Modern User "
-"Menu is enabled. If left empty and the classic After-Login page is set to your "
-"Profile page, users will be auto-redirected to your Modern Profile Settings page (or "
-"Modern My Listings as a fallback) so they don't land on the old dashboard."
+"Optional. Overrides the classic \"After Login Page\" above only when Modern User Menu "
+"is enabled. If left empty and the classic After-Login page is set to your Profile page, "
+"users will be auto-redirected to your Modern Profile Settings page (or Modern My "
+"Listings as a fallback) so they don't land on the old dashboard."
 msgstr ""
 
 #: inc/options-init.php:1153
@@ -4805,8 +4769,7 @@ msgstr "انتخاب کشورها"
 msgid "You can select max 5 countries as per GOOGLE limit."
 msgstr "طبق محدودیت گوگل، می‌توانید حداکثر ۵ کشور انتخاب کنید."
 
-#: inc/options-init.php:1236
-#: template-parts/layouts/search/category/search-sidebar.php:193
+#: inc/options-init.php:1236 template-parts/layouts/search/category/search-sidebar.php:193
 msgid "Read More"
 msgstr "بیشتر بخوانید"
 
@@ -5023,8 +4986,7 @@ msgstr "فعال‌سازی کاربران مورد اعتماد"
 msgid ""
 "This option will allow specific users to get that ads approve even admin approval is "
 "enabled."
-msgstr ""
-"این گزینه اجازه می‌دهد آگهی‌های کاربران خاص بدون نیاز به تأیید مدیریت منتشر شوند."
+msgstr "این گزینه اجازه می‌دهد آگهی‌های کاربران خاص بدون نیاز به تأیید مدیریت منتشر شوند."
 
 #: inc/options-init.php:1522
 msgid "Email to Ad owner on approval"
@@ -5044,9 +5006,9 @@ msgid ""
 "users before package expiry.This option takes a lot of load so any one who wishes to "
 "choose this option must have a good server that can support heavy load."
 msgstr ""
-"<b class=\"sb-admin-note\"> نکته : </b> این قابلیت کاربران را پیش از انقضای پکیج "
-"مطلع می‌کند. این گزینه منابع زیادی مصرف می‌کند و سرور شما باید توانایی پردازش بارهای "
-"سنگین را داشته باشد."
+"<b class=\"sb-admin-note\"> نکته : </b> این قابلیت کاربران را پیش از انقضای پکیج مطلع "
+"می‌کند. این گزینه منابع زیادی مصرف می‌کند و سرور شما باید توانایی پردازش بارهای سنگین را "
+"داشته باشد."
 
 #: inc/options-init.php:1542
 msgid "Package Expiry Notification before"
@@ -5110,11 +5072,10 @@ msgstr "تعداد روزهای فعال بودن آگهی"
 
 #: inc/options-init.php:1611
 msgid ""
-"Your ads will be activated for the specified number of days. Use -1 for unlimited "
-"days."
+"Your ads will be activated for the specified number of days. Use -1 for unlimited days."
 msgstr ""
-"آگهی‌های شما برای تعداد روزهای مشخص شده فعال خواهند بود. برای روزهای نامحدود از عدد "
-"۱- استفاده کنید."
+"آگهی‌های شما برای تعداد روزهای مشخص شده فعال خواهند بود. برای روزهای نامحدود از عدد ۱- "
+"استفاده کنید."
 
 #: inc/options-init.php:1618
 msgid "Ads Post Settings"
@@ -5158,12 +5119,12 @@ msgstr "حالت ثبت آگهی برای وب‌سایت خود را انتخا
 
 #: inc/options-init.php:1643
 msgid ""
-"This option will allow you to choose the ad posting mode for your website. If free "
-"is selected, then users can post ads without any package. If paid post is selected, "
-"then users can post ads only if they have a package."
+"This option will allow you to choose the ad posting mode for your website. If free is "
+"selected, then users can post ads without any package. If paid post is selected, then "
+"users can post ads only if they have a package."
 msgstr ""
-"این گزینه به شما اجازه می‌دهد حالت ثبت آگهی را انتخاب کنید. در حالت رایگان، کاربران "
-"بدون پکیج آگهی ثبت می‌کنند. در حالت پولی، کاربر حتماً باید پکیج داشته باشد."
+"این گزینه به شما اجازه می‌دهد حالت ثبت آگهی را انتخاب کنید. در حالت رایگان، کاربران بدون "
+"پکیج آگهی ثبت می‌کنند. در حالت پولی، کاربر حتماً باید پکیج داشته باشد."
 
 #: inc/options-init.php:1646
 msgid "Paid Posting"
@@ -5245,8 +5206,8 @@ msgstr ""
 
 #: inc/options-init.php:1714
 msgid ""
-"When enabled, users will see a \"Get AI Suggestions\" button that generates title "
-"and description based on the selected category and filled fields."
+"When enabled, users will see a \"Get AI Suggestions\" button that generates title and "
+"description based on the selected category and filled fields."
 msgstr ""
 
 #: inc/options-init.php:1716 inc/options-init.php:1836
@@ -5375,8 +5336,7 @@ msgstr ""
 
 #: inc/options-init.php:1816
 msgid ""
-"Claude 3 Haiku is fast and efficient. Claude 3.5 Sonnet is recommended for best "
-"results."
+"Claude 3 Haiku is fast and efficient. Claude 3.5 Sonnet is recommended for best results."
 msgstr ""
 
 #: inc/options-init.php:1818
@@ -5399,8 +5359,8 @@ msgstr ""
 
 #: inc/options-init.php:1834
 msgid ""
-"When enabled, users will be limited to a maximum number of AI suggestion requests "
-"per day. This helps control API costs."
+"When enabled, users will be limited to a maximum number of AI suggestion requests per "
+"day. This helps control API costs."
 msgstr ""
 
 #: inc/options-init.php:1845
@@ -5414,8 +5374,7 @@ msgid "Maximum number of AI suggestion requests allowed per user per day."
 msgstr "حداکثر تعداد تصاویر مجاز در پکیج شما:"
 
 #: inc/options-init.php:1847
-msgid ""
-"Set to 0 for unlimited (not recommended). Guest users are tracked by IP address."
+msgid "Set to 0 for unlimited (not recommended). Guest users are tracked by IP address."
 msgstr ""
 
 #: inc/options-init.php:1859
@@ -5436,13 +5395,13 @@ msgstr "محدود کردن کاربران برای ثبت آگهی فقط با 
 
 #: inc/options-init.php:1870
 msgid ""
-"<b class=\"sb-admin-note\">Note:</b> In case of <b>\"Phone verified users\"</b> "
-"Please enable the <b>\"Phone verification\"</b> in <b>Dashboard >> Theme Options >> "
-"Users >> Phone verification</b>"
+"<b class=\"sb-admin-note\">Note:</b> In case of <b>\"Phone verified users\"</b> Please "
+"enable the <b>\"Phone verification\"</b> in <b>Dashboard >> Theme Options >> Users >> "
+"Phone verification</b>"
 msgstr ""
-"<b class=\"sb-admin-note\">نکته:</b> در صورت انتخاب <b>\"کاربران با تلفن تأیید "
-"شده\"</b>، لطفاً قابلیت <b>\"تأیید تلفن\"</b> را در بخش <b>تنظیمات قالب >> کاربران >> "
-"تأیید تلفن</b> فعال کنید."
+"<b class=\"sb-admin-note\">نکته:</b> در صورت انتخاب <b>\"کاربران با تلفن تأیید شده\"</"
+"b>، لطفاً قابلیت <b>\"تأیید تلفن\"</b> را در بخش <b>تنظیمات قالب >> کاربران >> تأیید "
+"تلفن</b> فعال کنید."
 
 #: inc/options-init.php:1872
 msgid "All Users"
@@ -5476,8 +5435,8 @@ msgstr "اجازه ثبت آگهی رایگان در کنار پرداخت به 
 msgid ""
 "Allow users to post a limited number of free ads even when Pay Per Post is enabled."
 msgstr ""
-"اجازه به کاربران برای ثبت تعداد محدودی آگهی رایگان، حتی زمانی که قابلیت «پرداخت به "
-"ازای هر آگهی» فعال است."
+"اجازه به کاربران برای ثبت تعداد محدودی آگهی رایگان، حتی زمانی که قابلیت «پرداخت به ازای "
+"هر آگهی» فعال است."
 
 #: inc/options-init.php:1905
 msgid "PPP Free Ads Quota"
@@ -5530,8 +5489,8 @@ msgstr "پرداخت مستقیم برای نردبان کردن آگهی"
 
 #: inc/options-init.php:1951
 msgid ""
-"You will be able to post your ad as a bump up ad and pay directly from WooCommerce "
-"with this option"
+"You will be able to post your ad as a bump up ad and pay directly from WooCommerce with "
+"this option"
 msgstr ""
 "با این گزینه، شما می‌توانید آگهی خود را نردبان کرده و هزینه آن را مستقیماً از طریق "
 "ووکامرس پرداخت کنید"
@@ -5649,14 +5608,14 @@ msgstr "ساعتی"
 
 #: inc/options-init.php:2048
 msgid ""
-"<b class=\"sb-admin-note\">Note : </b> For changing schedule first you have to "
-"disable cron by selecting \"Ads Removal/Expired By : Visit Ads\" save and refresh "
-"page.After that re-select the \"Ads Removal/Expired By : Automatically\" and set "
-"schedule option and save. "
+"<b class=\"sb-admin-note\">Note : </b> For changing schedule first you have to disable "
+"cron by selecting \"Ads Removal/Expired By : Visit Ads\" save and refresh page.After "
+"that re-select the \"Ads Removal/Expired By : Automatically\" and set schedule option "
+"and save. "
 msgstr ""
 "<b class=\"sb-admin-note\">نکته: </b>برای تغییر زمان‌بندی، ابتدا باید با انتخاب گزینه "
-"«بازدید از آگهی‌ها» کرون‌جاب را غیرفعال کرده، ذخیره کنید و صفحه را رفرش نمایید. سپس "
-"مجدداً گزینه «به صورت خودکار» را انتخاب، زمان‌بندی جدید را تنظیم و ذخیره کنید."
+"«بازدید از آگهی‌ها» کرون‌جاب را غیرفعال کرده، ذخیره کنید و صفحه را رفرش نمایید. سپس مجدداً "
+"گزینه «به صورت خودکار» را انتخاب، زمان‌بندی جدید را تنظیم و ذخیره کنید."
 
 #: inc/options-init.php:2054
 msgid "After Sold Ads Should be"
@@ -5664,8 +5623,7 @@ msgstr "آگهی‌ها پس از فروش باید به وضعیت ... برون
 
 #: inc/options-init.php:2055
 msgid ""
-"The ad status will change based on the selected option after the ad is marked as "
-"sold."
+"The ad status will change based on the selected option after the ad is marked as sold."
 msgstr ""
 "پس از اینکه آگهی به عنوان «فروخته شده» علامت‌گذاری شد، وضعیت آن بر اساس گزینه انتخابی "
 "تغییر خواهد کرد."
@@ -5743,8 +5701,7 @@ msgid "Bad Words Replace Word"
 msgstr "کلمه جایگزین برای کلمات نامناسب"
 
 #: inc/options-init.php:2184
-msgid ""
-"This words will be replace with above bad words list from AD Title and Description"
+msgid "This words will be replace with above bad words list from AD Title and Description"
 msgstr ""
 "این کلمه جایگزین کلمات موجود در لیست «کلمات نامناسب» در عنوان و توضیحات آگهی خواهد شد"
 
@@ -5831,11 +5788,11 @@ msgstr "فقط برای تصاویر اسلایدر در صفحه جزئیات �
 
 #: inc/options-init.php:2389
 msgid ""
-"<b class=\"sb-admin-note\">Note : </b> Enable this option if you want to show full "
-"size images uploaded by users on ad details page."
+"<b class=\"sb-admin-note\">Note : </b> Enable this option if you want to show full size "
+"images uploaded by users on ad details page."
 msgstr ""
-"<b class=\"sb-admin-note\">نکته: </b>اگر می‌خواهید تصاویر آپلود شده توسط کاربران با "
-"سایز اصلی در صفحه جزئیات آگهی نمایش داده شوند، این گزینه را فعال کنید."
+"<b class=\"sb-admin-note\">نکته: </b>اگر می‌خواهید تصاویر آپلود شده توسط کاربران با سایز "
+"اصلی در صفحه جزئیات آگهی نمایش داده شوند، این گزینه را فعال کنید."
 
 #: inc/options-init.php:2394
 msgid "Show Ad ID on ad detail page"
@@ -5977,8 +5934,8 @@ msgstr ""
 
 #: inc/options-init.php:2666
 msgid ""
-"Category Based Filters: load the custom-field block after a category is selected. "
-"Show All Filters: load every category's custom fields up-front, deduplicated by slug."
+"Category Based Filters: load the custom-field block after a category is selected. Show "
+"All Filters: load every category's custom fields up-front, deduplicated by slug."
 msgstr ""
 
 #: inc/options-init.php:2668
@@ -6013,11 +5970,11 @@ msgstr "فیلتر جستجوی دسته‌بندی‌ها"
 
 #: inc/options-init.php:2687
 msgid ""
-"Enable this option to display only those categories who have atleast 1 ad in "
-"categories search popup."
+"Enable this option to display only those categories who have atleast 1 ad in categories "
+"search popup."
 msgstr ""
-"با فعال‌سازی این گزینه، فقط دسته‌بندی‌هایی که حداقل ۱ آگهی دارند در پاپ‌آپ جستجو نمایش "
-"داده می‌شوند."
+"با فعال‌سازی این گزینه، فقط دسته‌بندی‌هایی که حداقل ۱ آگهی دارند در پاپ‌آپ جستجو نمایش داده "
+"می‌شوند."
 
 #: inc/options-init.php:2693
 msgid "Show Sub Categories with Parent"
@@ -6030,17 +5987,17 @@ msgstr "رفتار جستجو برای دسته‌بندی‌های مادر"
 #: inc/options-init.php:2695
 #, fuzzy
 #| msgid ""
-#| "When enabled, clicking on a parent category will directly search with that "
-#| "category and show its sub-categories in the widget. When disabled, clicking on a "
-#| "parent category will show a popup with sub-categories."
+#| "When enabled, clicking on a parent category will directly search with that category "
+#| "and show its sub-categories in the widget. When disabled, clicking on a parent "
+#| "category will show a popup with sub-categories."
 msgid ""
 "When enabled, clicking a parent category directly searches it AND includes all child "
-"categories in the results. When disabled, only the exact category selected is "
-"matched (no children) and a popup of sub-categories is shown on parent click."
+"categories in the results. When disabled, only the exact category selected is matched "
+"(no children) and a popup of sub-categories is shown on parent click."
 msgstr ""
-"در صورت فعال بودن، کلیک بر روی دسته‌بندی مادر مستقیماً جستجو را انجام داده و زیردسته‌ها "
-"را در ابزارک نشان می‌دهد. در صورت غیرفعال بودن، کلیک بر روی آن پاپ‌آپی از زیردسته‌ها را "
-"باز می‌کند."
+"در صورت فعال بودن، کلیک بر روی دسته‌بندی مادر مستقیماً جستجو را انجام داده و زیردسته‌ها را "
+"در ابزارک نشان می‌دهد. در صورت غیرفعال بودن، کلیک بر روی آن پاپ‌آپی از زیردسته‌ها را باز "
+"می‌کند."
 
 #: inc/options-init.php:2701
 #, fuzzy
@@ -6071,11 +6028,11 @@ msgstr "فیلتر جستجوی موقعیت‌ها"
 
 #: inc/options-init.php:2711
 msgid ""
-"Enable this option to display only those locations who have atleast 1 ad in "
-"locations search popup."
+"Enable this option to display only those locations who have atleast 1 ad in locations "
+"search popup."
 msgstr ""
-"با فعال‌سازی این گزینه، فقط موقعیت‌هایی که حداقل ۱ آگهی دارند در پاپ‌آپ جستجو نمایش "
-"داده می‌شوند."
+"با فعال‌سازی این گزینه، فقط موقعیت‌هایی که حداقل ۱ آگهی دارند در پاپ‌آپ جستجو نمایش داده "
+"می‌شوند."
 
 #: inc/options-init.php:2717
 msgid "Taxonomies Display Type"
@@ -6087,8 +6044,8 @@ msgstr "بارگذاری دسته‌بندی‌ها/موقعیت‌ها در ف�
 
 #: inc/options-init.php:2719
 msgid ""
-"Set taxonomies load in default way or hierarchical( parent-child relation format ) "
-"in search elements."
+"Set taxonomies load in default way or hierarchical( parent-child relation format ) in "
+"search elements."
 msgstr ""
 "تعیین نحوه بارگذاری طبقه‌بندی‌ها به صورت پیش‌فرض یا سلسله‌مراتبی (رابطه والد-فرزندی) در "
 "المان‌های جستجو."
@@ -6140,8 +6097,8 @@ msgid ""
 "Add your adverts code separated by \"|\" to show in between Ad Grids. For AdSense: "
 "paste your full AdSense code."
 msgstr ""
-"کدهای تبلیغاتی خود را با علامت \"|\" از هم جدا کنید تا بین لیست‌ها و شبکه‌های آگهی "
-"نمایش داده شوند "
+"کدهای تبلیغاتی خود را با علامت \"|\" از هم جدا کنید تا بین لیست‌ها و شبکه‌های آگهی نمایش "
+"داده شوند "
 
 #: inc/options-init.php:2794
 msgid "Turn on Search Page List Adverts"
@@ -6170,8 +6127,8 @@ msgid ""
 "Add your adverts code separated by \"|\" to show in between Ad Lists. For AdSense: "
 "paste your full AdSense code."
 msgstr ""
-"کدهای تبلیغاتی خود را با علامت \"|\" از هم جدا کنید تا بین لیست‌ها و شبکه‌های آگهی "
-"نمایش داده شوند "
+"کدهای تبلیغاتی خود را با علامت \"|\" از هم جدا کنید تا بین لیست‌ها و شبکه‌های آگهی نمایش "
+"داده شوند "
 
 #: inc/options-init.php:2827
 msgid "Enable Mobile Search Filters"
@@ -6181,8 +6138,7 @@ msgstr "فعال‌سازی فیلترهای جستجوی موبایل"
 msgid ""
 "Enable mobile search filters for the mobile devices to reduce the layout height in "
 "mobile devices."
-msgstr ""
-"فعال‌سازی فیلترهای جستجو مخصوص موبایل برای کاهش ارتفاع چیدمان در دستگاه‌های همراه."
+msgstr "فعال‌سازی فیلترهای جستجو مخصوص موبایل برای کاهش ارتفاع چیدمان در دستگاه‌های همراه."
 
 #: inc/options-init.php:2841
 msgid "Default layout for search ads"
@@ -6360,11 +6316,11 @@ msgstr "فعال‌سازی فیلترهای جستجو برای صفحه دست
 
 #: inc/options-init.php:3137
 msgid ""
-"<span class=\"sb-admin-note\"><b>Note : </b></span>After Enabling please add widgets "
-"in the <b>\"Category Search\"</b> sidebar."
+"<span class=\"sb-admin-note\"><b>Note : </b></span>After Enabling please add widgets in "
+"the <b>\"Category Search\"</b> sidebar."
 msgstr ""
-"<span class=\"sb-admin-note\"><b>نکته: </b></span>پس از فعال‌سازی، لطفاً ابزارک‌ها را "
-"در سایدبار <b>\"Category Search\"</b> اضافه کنید."
+"<span class=\"sb-admin-note\"><b>نکته: </b></span>پس از فعال‌سازی، لطفاً ابزارک‌ها را در "
+"سایدبار <b>\"Category Search\"</b> اضافه کنید."
 
 #: inc/options-init.php:3143 inc/options-init.php:3181
 msgid "Search Filter Position"
@@ -6400,11 +6356,11 @@ msgstr "فعال‌سازی فیلترهای جستجو برای صفحه موق
 
 #: inc/options-init.php:3175
 msgid ""
-"<span class=\"sb-admin-note\"><b>Note : </b></span>After Enabling please add widgets "
-"in the <b>\"Location Search\"</b> sidebar."
+"<span class=\"sb-admin-note\"><b>Note : </b></span>After Enabling please add widgets in "
+"the <b>\"Location Search\"</b> sidebar."
 msgstr ""
-"<span class=\"sb-admin-note\"><b>نکته: </b></span>پس از فعال‌سازی، لطفاً ابزارک‌ها را "
-"در سایدبار <b>\"Location Search\"</b> اضافه کنید."
+"<span class=\"sb-admin-note\"><b>نکته: </b></span>پس از فعال‌سازی، لطفاً ابزارک‌ها را در "
+"سایدبار <b>\"Location Search\"</b> اضافه کنید."
 
 #: inc/options-init.php:3199
 msgid "Ad Rating Settings"
@@ -6752,8 +6708,8 @@ msgstr "متن پیام فرم تماس"
 #: inc/options-init.php:4642
 #, fuzzy
 #| msgid ""
-#| "%receiver_name%, %sender_name%, %sender_email%, %sender_subject%, "
-#| "%sender_message%, %author_name%, %author_reply%  will be translated accordingly."
+#| "%receiver_name%, %sender_name%, %sender_email%, %sender_subject%, %sender_message%, "
+#| "%author_name%, %author_reply%  will be translated accordingly."
 msgid ""
 "%receiver_name%, %sender_name%, %sender_email%, %sender_subject%, %sender_message%, "
 "%author_name%, %author_reply%  will be translated accordingly."
@@ -6853,8 +6809,8 @@ msgstr "تأیید شماره تلفن با فایربیس"
 #: inc/options-init.php:5083
 msgid "Send otp from firebase , this will allow the user to send otp using Firebase"
 msgstr ""
-"ارسال کد تأیید (OTP) از فایربیس؛ این گزینه به کاربران اجازه می‌دهد از طریق Firebase "
-"کد تأیید دریافت کنند"
+"ارسال کد تأیید (OTP) از فایربیس؛ این گزینه به کاربران اجازه می‌دهد از طریق Firebase کد "
+"تأیید دریافت کنند"
 
 #: inc/options-init.php:5089
 msgid "Register user with phone number with otp"
@@ -6864,8 +6820,7 @@ msgstr "ثبت‌نام کاربر با شماره تلفن و کد تأیید"
 msgid ""
 "it will allow the user to register and login with their phone number by sending otp"
 msgstr ""
-"این گزینه به کاربر اجازه می‌دهد با شماره تلفن و دریافت کد تأیید، ثبت‌نام کرده و وارد "
-"شود"
+"این گزینه به کاربر اجازه می‌دهد با شماره تلفن و دریافت کد تأیید، ثبت‌نام کرده و وارد شود"
 
 #: inc/options-init.php:5096
 msgid "Default Registration form on page load"
@@ -6918,8 +6873,8 @@ msgstr "تأیید شماره تلفن"
 
 #: inc/options-init.php:5163
 msgid ""
-"If phone verification is on then system put verified batch to ad details on number "
-"so other can see this number is verified."
+"If phone verification is on then system put verified batch to ad details on number so "
+"other can see this number is verified."
 msgstr ""
 "اگر تأیید شماره فعال باشد، سیستم نشان «تأیید شده» را در جزئیات آگهی کنار شماره قرار "
 "می‌دهد تا دیگران از معتبر بودن شماره مطلع شوند."
@@ -6959,8 +6914,7 @@ msgstr "تأیید ایمیل کاربران جدید"
 
 #: inc/options-init.php:5194
 msgid ""
-"If verification on then please update your new user email template by verification "
-"link."
+"If verification on then please update your new user email template by verification link."
 msgstr "اگر تأییدیه فعال است، لطفاً لینک تأیید را در قالب ایمیل کاربر جدید قرار دهید."
 
 #: inc/options-init.php:5199
@@ -6971,8 +6925,8 @@ msgstr "تأیید شماره تلفن با فایربیس"
 
 #: inc/options-init.php:5201
 msgid ""
-"Turn this on to show Send Email verification from User dashboard for Users "
-"registered with phone number"
+"Turn this on to show Send Email verification from User dashboard for Users registered "
+"with phone number"
 msgstr ""
 
 #: inc/options-init.php:5209
@@ -7009,8 +6963,7 @@ msgstr "نمایش تصویر پروفایل کاربران در لیست مدی
 
 #: inc/options-init.php:5246
 msgid ""
-"This option is used to enforce to display user frontend profile image as avatar "
-"image."
+"This option is used to enforce to display user frontend profile image as avatar image."
 msgstr ""
 "این گزینه برای نمایش تصویر پروفایل کاربر به عنوان آواتار در کل سیستم استفاده می‌شود."
 
@@ -7032,8 +6985,7 @@ msgstr "غیرفعال‌سازی ویرایش لینکدین"
 
 #: inc/options-init.php:5266
 msgid "Enable this to restrict users to don't change the linkedin profile URL"
-msgstr ""
-"این گزینه را فعال کنید تا کاربران نتوانند آدرس پروفایل لینکدین خود را تغییر دهند"
+msgstr "این گزینه را فعال کنید تا کاربران نتوانند آدرس پروفایل لینکدین خود را تغییر دهند"
 
 #: inc/options-init.php:5275
 msgid "Enable User Rating"
@@ -7057,8 +7009,7 @@ msgstr "قابلیت ویرایش نظر"
 
 #: inc/options-init.php:5293
 msgid "This option will allow the user to edit his rating on user profile"
-msgstr ""
-"این گزینه به کاربر اجازه می‌دهد امتیازی را که در یک پروفایل ثبت کرده، ویرایش کند"
+msgstr "این گزینه به کاربر اجازه می‌دهد امتیازی را که در یک پروفایل ثبت کرده، ویرایش کند"
 
 #: inc/options-init.php:5299
 msgid "Delete posted review"
@@ -7147,8 +7098,8 @@ msgid ""
 "policy. Note: This will delete the entire user data from the database and can not be "
 "recovered again."
 msgstr ""
-"نمایش دکمه حذف در پروفایل کاربری (مطابق با سیاست‌های GDPR). نکته: این کار تمام "
-"اطلاعات کاربر را از پایگاه داده حذف کرده و غیرقابل بازگشت است."
+"نمایش دکمه حذف در پروفایل کاربری (مطابق با سیاست‌های GDPR). نکته: این کار تمام اطلاعات "
+"کاربر را از پایگاه داده حذف کرده و غیرقابل بازگشت است."
 
 #: inc/options-init.php:5387
 msgid "SMS Gateway"
@@ -7258,8 +7209,7 @@ msgstr "تنظیمات نقشه"
 #| msgid ""
 #| "Here you can setup the Map Settings for the theme. We have two type of map api's."
 msgid "Here you can setup the Map Settings for the theme."
-msgstr ""
-"در اینجا می‌توانید تنظیمات نقشه قالب را انجام دهید. دو نوع API نقشه در دسترس است."
+msgstr "در اینجا می‌توانید تنظیمات نقشه قالب را انجام دهید. دو نوع API نقشه در دسترس است."
 
 #: inc/options-init.php:5577
 msgid "Map Type"
@@ -7270,11 +7220,10 @@ msgid "Select Map"
 msgstr "انتخاب نقشه"
 
 #: inc/options-init.php:5579
-msgid ""
-"Select map type you want to add in the theme. By default google map is activated."
+msgid "Select map type you want to add in the theme. By default google map is activated."
 msgstr ""
-"نوع نقشه‌ای که می‌خواهید به قالب اضافه کنید را انتخاب نمایید. به صورت پیش‌فرض گوگل‌مپ "
-"فعال است."
+"نوع نقشه‌ای که می‌خواهید به قالب اضافه کنید را انتخاب نمایید. به صورت پیش‌فرض گوگل‌مپ فعال "
+"است."
 
 #: inc/options-init.php:5581
 msgid "Google Map"
@@ -7301,8 +7250,8 @@ msgstr "استایل نقشه گوگل"
 #: inc/options-init.php:5602
 msgid "Select map style you want to show. By default google map style is RoadMap."
 msgstr ""
-"استایل نقشه‌ای که می‌خواهید نمایش دهید را انتخاب کنید. پیش‌فرض روی حالت جاده‌ای "
-"(RoadMap) است."
+"استایل نقشه‌ای که می‌خواهید نمایش دهید را انتخاب کنید. پیش‌فرض روی حالت جاده‌ای (RoadMap) "
+"است."
 
 #: inc/options-init.php:5604
 msgid "RoadMap"
@@ -7350,8 +7299,8 @@ msgstr "تغییر هدر در برگه های ووکامرس"
 
 #: inc/options-init.php:5643
 msgid ""
-"Place WooCommerce header on WooCommerce pages like , product detail page ,shop page "
-"and product category archive"
+"Place WooCommerce header on WooCommerce pages like , product detail page ,shop page and "
+"product category archive"
 msgstr ""
 "قرار دادن هدر ووکامرس در برگه هایی مثل جزئیات محصول، فروشگاه و آرشیو دسته‌بندی محصولات"
 
@@ -7391,8 +7340,7 @@ msgstr "نوع آگهی"
 
 #: inc/options-init.php:5692
 msgid ""
-"Above the Middle Section. For AdSense: paste your full AdSense code (script + ins "
-"tags)."
+"Above the Middle Section. For AdSense: paste your full AdSense code (script + ins tags)."
 msgstr ""
 
 #: inc/options-init.php:5697
@@ -7545,8 +7493,7 @@ msgstr ""
 
 #: inc/options-init.php:5892
 msgid ""
-"Bottom of Blog the post. For AdSense: paste your full AdSense code (script + ins "
-"tags)."
+"Bottom of Blog the post. For AdSense: paste your full AdSense code (script + ins tags)."
 msgstr ""
 
 #: inc/options-init.php:5898
@@ -7557,8 +7504,7 @@ msgstr "عنوان نوشته تکی"
 
 #: inc/options-init.php:5911
 msgid ""
-"At the top of blog post. For AdSense: paste your full AdSense code (script + ins "
-"tags)."
+"At the top of blog post. For AdSense: paste your full AdSense code (script + ins tags)."
 msgstr ""
 
 #: inc/options-init.php:5917
@@ -7569,8 +7515,8 @@ msgstr "عنوان نوشته تکی"
 
 #: inc/options-init.php:5929
 msgid ""
-"Bottom of the post description. For AdSense: paste your full AdSense code (script + "
-"ins tags)."
+"Bottom of the post description. For AdSense: paste your full AdSense code (script + ins "
+"tags)."
 msgstr ""
 
 #: inc/options-init.php:5938
@@ -7643,8 +7589,8 @@ msgstr "نوع دسته‌بندی مزایده"
 
 #: inc/options-init.php:6032
 msgid ""
-"For selective case you have to enable checkbox in ad category meta. <b> ( dashboard "
-">> Classified Ads >> Categories ) </b>"
+"For selective case you have to enable checkbox in ad category meta. <b> ( dashboard >> "
+"Classified Ads >> Categories ) </b>"
 msgstr ""
 "برای حالت انتخابی، باید چک‌باکس را در متا دسته‌بندی آگهی فعال کنید. <b>(پیشخوان >> "
 "آگهی‌های نیازمندی >> دسته‌بندی‌ها)</b>"
@@ -7664,8 +7610,8 @@ msgstr "کپچای گوگل (reCAPTCHA)"
 #: inc/options-init.php:6059
 #, fuzzy
 #| msgid ""
-#| "<b class=\"sb-admin-note\">Note : </b> Please make sure you are using the valid "
-#| "<b> reCAPTCHA v2 site </b> OR  <b> reCAPTCHA v3 site</b> keys."
+#| "<b class=\"sb-admin-note\">Note : </b> Please make sure you are using the valid <b> "
+#| "reCAPTCHA v2 site </b> OR  <b> reCAPTCHA v3 site</b> keys."
 msgid ""
 "<b class=\"sb-admin-note\">Note : </b> Please make sure you are using the valid <b> "
 "reCAPTCHA v2 site </b> OR  <b> reCAPTCHA v3 site</b> keys."
@@ -7713,13 +7659,12 @@ msgstr "تأیید کلید"
 msgid ""
 "Enable this and refresh the page to validate that your generated IP API key is "
 "valid.You can see the errors as description below the *IP API Key* field.<br /><b "
-"class=\"sb-admin-note\">Disable switch after validating the key because this "
-"generates a num of API call that increase your billing.</b>"
+"class=\"sb-admin-note\">Disable switch after validating the key because this generates "
+"a num of API call that increase your billing.</b>"
 msgstr ""
-"این گزینه را فعال کرده و صفحه را رفرش کنید تا معتبر بودن کلید IP API بررسی شود. "
-"خطاها در پایین فیلد نمایش داده می‌شوند.<br /><b class=\"sb-admin-note\">پس از تأیید، "
-"حتماً این گزینه را غیرفعال کنید؛ زیرا باعث فراخوانی مداوم API و افزایش هزینه شما "
-"می‌شود.</b>"
+"این گزینه را فعال کرده و صفحه را رفرش کنید تا معتبر بودن کلید IP API بررسی شود. خطاها "
+"در پایین فیلد نمایش داده می‌شوند.<br /><b class=\"sb-admin-note\">پس از تأیید، حتماً این "
+"گزینه را غیرفعال کنید؛ زیرا باعث فراخوانی مداوم API و افزایش هزینه شما می‌شود.</b>"
 
 #: inc/options-init.php:6119
 msgid "validating the IP API Key"
@@ -7823,8 +7768,7 @@ msgstr "رابطه (Relation) اجتماعی"
 #: inc/options-init.php:6291
 msgid "Nofollow links attributes do not allow search engine bots to follow link."
 msgstr ""
-"ویژگی لینک‌های نوفالو (Nofollow) به ربات‌های موتور جستجو اجازه دنبال کردن لینک را "
-"نمی‌دهد."
+"ویژگی لینک‌های نوفالو (Nofollow) به ربات‌های موتور جستجو اجازه دنبال کردن لینک را نمی‌دهد."
 
 #: inc/options-init.php:6329
 msgid "License Management"
@@ -7968,11 +7912,11 @@ msgstr "اطلاعات منوهای فوتر"
 
 #: inc/options-init.php:6684
 msgid ""
-"You can assign links to these footer menu titles using <strong>Appearance &gt; "
-"Menus</strong> and selecting the appropriate menu location."
+"You can assign links to these footer menu titles using <strong>Appearance &gt; Menus</"
+"strong> and selecting the appropriate menu location."
 msgstr ""
-"می‌توانید از بخش <strong>نمایش > فهرست‌ها</strong>، منوهای مورد نظر را به این "
-"جایگاه‌های فوتر اختصاص دهید."
+"می‌توانید از بخش <strong>نمایش > فهرست‌ها</strong>، منوهای مورد نظر را به این جایگاه‌های "
+"فوتر اختصاص دهید."
 
 #: inc/options-init.php:6691
 msgid "Menu 1 Title"
@@ -8007,9 +7951,9 @@ msgstr "اطلاعات منوهای فوتر"
 #: inc/options-init.php:6730
 msgid ""
 "Quick Links and Help &amp; Info pull from the footer menus assigned in "
-"<strong>Appearance &gt; Menus</strong>. Assign a menu to the <em>Footer 1</em> "
-"location for Quick Links and the <em>Footer 2</em> location for Help &amp; Info. The "
-"fields below let you customise the column headings and newsletter copy."
+"<strong>Appearance &gt; Menus</strong>. Assign a menu to the <em>Footer 1</em> location "
+"for Quick Links and the <em>Footer 2</em> location for Help &amp; Info. The fields "
+"below let you customise the column headings and newsletter copy."
 msgstr ""
 
 #: inc/options-init.php:6736 inc/options-init.php:7022
@@ -8046,8 +7990,8 @@ msgstr ""
 
 #: inc/options-init.php:6755
 msgid ""
-"Leave empty to use the menu assigned to the <em>Footer 1</em> location under "
-"Appearance &gt; Menus."
+"Leave empty to use the menu assigned to the <em>Footer 1</em> location under Appearance "
+"&gt; Menus."
 msgstr ""
 
 #: inc/options-init.php:6761
@@ -8070,8 +8014,8 @@ msgstr ""
 
 #: inc/options-init.php:6772
 msgid ""
-"Leave empty to use the menu assigned to the <em>Footer 2</em> location under "
-"Appearance &gt; Menus."
+"Leave empty to use the menu assigned to the <em>Footer 2</em> location under Appearance "
+"&gt; Menus."
 msgstr ""
 
 #: inc/options-init.php:6778
@@ -8124,9 +8068,9 @@ msgstr ""
 
 #: inc/options-init.php:6815
 msgid ""
-"Configure the four trust badges shown directly above the footer. Use any Font "
-"Awesome icon class for the <em>Icon</em> fields (e.g. <code>fa fa-tag</code>, "
-"<code>fas fa-shield-alt</code>)."
+"Configure the four trust badges shown directly above the footer. Use any Font Awesome "
+"icon class for the <em>Icon</em> fields (e.g. <code>fa fa-tag</code>, <code>fas fa-"
+"shield-alt</code>)."
 msgstr ""
 
 #: inc/options-init.php:6821
@@ -8239,8 +8183,8 @@ msgstr ""
 
 #: inc/options-init.php:6955
 msgid ""
-"Optional app download band shown between the footer columns and the copyright bar. "
-"The band only appears when enabled <em>and</em> at least one store URL is filled in."
+"Optional app download band shown between the footer columns and the copyright bar. The "
+"band only appears when enabled <em>and</em> at least one store URL is filled in."
 msgstr ""
 
 #: inc/options-init.php:6961
@@ -8555,8 +8499,7 @@ msgstr "حداکثر"
 msgid "No results found."
 msgstr "نتیجه‌ای یافت نشد"
 
-#: inc/search-ajax.php:1175
-#: template-parts/layouts/search/category/search-sidebar.php:48
+#: inc/search-ajax.php:1175 template-parts/layouts/search/category/search-sidebar.php:48
 #: template-parts/layouts/search/location/search-sidebar.php:51
 #: template-parts/layouts/search/search-map.php:323
 #: template-parts/layouts/search/search-sidebar.php:284
@@ -8600,10 +8543,9 @@ msgstr "مرحله نامعتبر"
 #: inc/setup-wizard-adf/ajax-handlers/demo-handlers.php:42
 #, php-format
 msgid ""
-"Server missing PHP extensions required for XML import: %s. Please enable them for "
-"this site's PHP version."
-msgstr ""
-"سرور فاقد افزونه‌های PHP لازم برای درون‌ریزی XML است: %s. لطفاً آن‌ها را فعال کنید."
+"Server missing PHP extensions required for XML import: %s. Please enable them for this "
+"site's PHP version."
+msgstr "سرور فاقد افزونه‌های PHP لازم برای درون‌ریزی XML است: %s. لطفاً آن‌ها را فعال کنید."
 
 #: inc/setup-wizard-adf/ajax-handlers/demo-handlers.php:69
 msgid "Invalid demo folder."
@@ -8667,9 +8609,9 @@ msgstr "لطفاً کلید لایسنس را وارد کنید."
 
 #: inc/setup-wizard-adf/ajax-handlers/license-handlers.php:45
 msgid ""
-"Could not verify your purchase code. Please check your internet connection or "
-"firewall settings to allow outbound requests from your server. If the problem "
-"persists, contact support."
+"Could not verify your purchase code. Please check your internet connection or firewall "
+"settings to allow outbound requests from your server. If the problem persists, contact "
+"support."
 msgstr ""
 "تأیید کد خرید امکان‌پذیر نیست. لطفاً اتصال اینترنت و تنظیمات فایروال سرور خود را بررسی "
 "کنید."
@@ -8818,8 +8760,7 @@ msgstr "قفل شده – برای درون‌ریزی، دیتابیس را ب�
 msgid "Are you sure you want to start the import? This may overwrite existing data."
 msgstr "آیا از شروع درون‌ریزی مطمئن هستید؟ ممکن است داده‌های فعلی بازنویسی شوند."
 
-#: inc/setup-wizard-adf/setup-wizard.php:120
-#: inc/setup-wizard-adf/views/step-demo.php:51
+#: inc/setup-wizard-adf/setup-wizard.php:120 inc/setup-wizard-adf/views/step-demo.php:51
 msgid "Import This Demo"
 msgstr "درون‌ریزی این دمو"
 
@@ -9103,10 +9044,9 @@ msgstr "به جای آن، متغیر parent_slug را تنظیم کنید."
 #: inc/setup-wizard-adf/tgm/class-tgm-plugin-activation.php:1042
 #: inc/setup-wizard-adf/tgm/tgm-plugin-activation.php:1019
 msgid ""
-"The remote plugin package does not contain a folder with the desired slug and "
-"renaming did not work."
-msgstr ""
-"بسته افزونه حاوی پوشه‌ای با نامک (slug) مورد نظر نیست و تغییر نام نیز انجام نشد."
+"The remote plugin package does not contain a folder with the desired slug and renaming "
+"did not work."
+msgstr "بسته افزونه حاوی پوشه‌ای با نامک (slug) مورد نظر نیست و تغییر نام نیز انجام نشد."
 
 #: inc/setup-wizard-adf/tgm/class-tgm-plugin-activation.php:1042
 #: inc/setup-wizard-adf/tgm/class-tgm-plugin-activation.php:1052
@@ -9383,11 +9323,11 @@ msgstr "نصب افزونه %1$s با شکست مواجه شد."
 #: inc/setup-wizard-adf/tgm/class-tgm-plugin-activation.php:3664
 #: inc/setup-wizard-adf/tgm/tgm-plugin-activation.php:3599
 msgid ""
-"The installation and activation process is starting. This process may take a while "
-"on some hosts, so please be patient."
+"The installation and activation process is starting. This process may take a while on "
+"some hosts, so please be patient."
 msgstr ""
-"فرآیند نصب و فعال‌سازی در حال شروع است. این فرآیند ممکن است در برخی هاست‌ها کمی طول "
-"بکشد، لطفاً صبور باشید."
+"فرآیند نصب و فعال‌سازی در حال شروع است. این فرآیند ممکن است در برخی هاست‌ها کمی طول بکشد، "
+"لطفاً صبور باشید."
 
 #. translators: 1: plugin name.
 #: inc/setup-wizard-adf/tgm/class-tgm-plugin-activation.php:3666
@@ -9411,11 +9351,11 @@ msgstr "در حال نصب و فعال‌سازی افزونه %1$s (%2$d/%3$d)"
 #: inc/setup-wizard-adf/tgm/class-tgm-plugin-activation.php:3672
 #: inc/setup-wizard-adf/tgm/tgm-plugin-activation.php:3607
 msgid ""
-"The installation process is starting. This process may take a while on some hosts, "
-"so please be patient."
+"The installation process is starting. This process may take a while on some hosts, so "
+"please be patient."
 msgstr ""
-"فرآیند نصب در حال شروع است. این فرآیند ممکن است در برخی هاست‌ها کمی طول بکشد، لطفاً "
-"صبور باشید."
+"فرآیند نصب در حال شروع است. این فرآیند ممکن است در برخی هاست‌ها کمی طول بکشد، لطفاً صبور "
+"باشید."
 
 #. translators: 1: plugin name.
 #: inc/setup-wizard-adf/tgm/class-tgm-plugin-activation.php:3674
@@ -9647,8 +9587,7 @@ msgid ""
 "Your license is currently activated. You may deactivate it to transfer it to another "
 "site."
 msgstr ""
-"لایسنس شما در حال حاضر فعال است. می‌توانید آن را برای انتقال به سایت دیگر غیرفعال "
-"کنید."
+"لایسنس شما در حال حاضر فعال است. می‌توانید آن را برای انتقال به سایت دیگر غیرفعال کنید."
 
 #: inc/setup-wizard-adf/views/step-license.php:58
 msgid "Verify & Continue"
@@ -9660,8 +9599,8 @@ msgstr "افزونه‌ها"
 
 #: inc/setup-wizard-adf/views/step-plugins.php:22
 msgid ""
-"Below are the plugins recommended or required for AdForest. Required plugins are "
-"always enabled."
+"Below are the plugins recommended or required for AdForest. Required plugins are always "
+"enabled."
 msgstr ""
 "لیست زیر شامل افزونه‌های ضروری یا پیشنهادی ادفارست است. افزونه‌های ضروری همیشه فعال "
 "خواهند بود."
@@ -9798,8 +9737,8 @@ msgid ""
 "enhancements. However, this update includes critical changes that require your "
 "attention."
 msgstr ""
-"ما مفتخریم که نسخه ۶.۰ ادفارست را با بهبودهای چشمگیر در عملکرد و صفحه‌ساز معرفی کنیم. "
-"با این حال، این نسخه حاوی تغییرات حیاتی است که نیاز به توجه شما دارد."
+"ما مفتخریم که نسخه ۶.۰ ادفارست را با بهبودهای چشمگیر در عملکرد و صفحه‌ساز معرفی کنیم. با "
+"این حال، این نسخه حاوی تغییرات حیاتی است که نیاز به توجه شما دارد."
 
 #: inc/setup-wizard-adf/views/step-welcome.php:49
 msgid "Who should read this:"
@@ -9816,19 +9755,19 @@ msgstr "مهم:"
 
 #: inc/setup-wizard-adf/views/step-welcome.php:55
 msgid ""
-"WPBakery Page Builder is no longer supported in version 6.0. The theme now "
-"exclusively supports Elementor."
+"WPBakery Page Builder is no longer supported in version 6.0. The theme now exclusively "
+"supports Elementor."
 msgstr ""
 "صفحه‌ساز WPBakery دیگر در نسخه ۶.۰ پشتیبانی نمی‌شود. قالب اکنون منحصراً از المنتور "
 "پشتیبانی می‌کند."
 
 #: inc/setup-wizard-adf/views/step-welcome.php:59
 msgid ""
-"⚠️ WARNING: Never use Fresh Import on a live/existing website — it will erase all "
-"your data."
+"⚠️ WARNING: Never use Fresh Import on a live/existing website — it will erase all your "
+"data."
 msgstr ""
-"⚠️ هشدار: هرگز از «درون‌ریزی کامل (Fresh Import)» در یک سایت زنده یا موجود استفاده "
-"نکنید — این کار تمام داده‌های شما را پاک می‌کند."
+"⚠️ هشدار: هرگز از «درون‌ریزی کامل (Fresh Import)» در یک سایت زنده یا موجود استفاده نکنید "
+"— این کار تمام داده‌های شما را پاک می‌کند."
 
 #: inc/setup-wizard-adf/views/step-welcome.php:63
 msgid "Before You Update:"
@@ -9851,15 +9790,13 @@ msgid "🛠️ Test the update on a staging site first."
 msgstr "🛠️ ابتدا به‌روزرسانی را در یک سایت تستی (Staging) آزمایش کنید."
 
 #: inc/setup-wizard-adf/views/step-welcome.php:68
-msgid ""
-"💾 Use a plugin like UpdraftPlus or All-in-One WP Migration to back up your site."
+msgid "💾 Use a plugin like UpdraftPlus or All-in-One WP Migration to back up your site."
 msgstr ""
 "💾 برای بک‌آپ از افزونه‌هایی مثل UpdraftPlus یا All-in-One WP Migration استفاده کنید."
 
 #: inc/setup-wizard-adf/views/step-welcome.php:69
 msgid "🔁 After updating, recheck all customizations, widgets, and page templates."
-msgstr ""
-"🔁 پس از به‌روزرسانی، تمام شخصی‌سازی‌ها، ابزارک‌ها و قالب‌های برگه را دوباره چک کنید."
+msgstr "🔁 پس از به‌روزرسانی، تمام شخصی‌سازی‌ها، ابزارک‌ها و قالب‌های برگه را دوباره چک کنید."
 
 #: inc/setup-wizard-adf/views/step-welcome.php:74
 msgid "This update is a big leap forward, but it's crucial to proceed with caution."
@@ -9938,23 +9875,22 @@ msgid ""
 "The export file could not be found at <code>%s</code>. It is likely that this was "
 "caused by a permissions problem."
 msgstr ""
-"فایل برون‌بری در مسیر <code>%s</code> یافت نشد. احتمالاً این مشکل به دلیل سطح دسترسی‌ها "
-"رخ داده است."
+"فایل برون‌بری در مسیر <code>%s</code> یافت نشد. احتمالاً این مشکل به دلیل سطح دسترسی‌ها رخ "
+"داده است."
 
 #: inc/setup-wizard-adf/wordpress-importer/class-wp-import.php:188
 #, php-format
 msgid ""
-"This WXR file (version %s) may not be supported by this version of the importer. "
-"Please consider updating."
+"This WXR file (version %s) may not be supported by this version of the importer. Please "
+"consider updating."
 msgstr ""
-"این فایل WXR (نسخه %s) ممکن است توسط این نسخه از درون‌ریز پشتیبانی نشود. لطفاً "
-"به‌روزرسانی را بررسی کنید."
+"این فایل WXR (نسخه %s) ممکن است توسط این نسخه از درون‌ریز پشتیبانی نشود. لطفاً به‌روزرسانی "
+"را بررسی کنید."
 
 #: inc/setup-wizard-adf/wordpress-importer/class-wp-import.php:213
 #, php-format
 msgid "Failed to import author %s. Their posts will be attributed to the current user."
-msgstr ""
-"درون‌ریزی نویسنده %s با شکست مواجه شد. نوشته‌های او به نام کاربر فعلی ثبت خواهد شد."
+msgstr "درون‌ریزی نویسنده %s با شکست مواجه شد. نوشته‌های او به نام کاربر فعلی ثبت خواهد شد."
 
 #: inc/setup-wizard-adf/wordpress-importer/class-wp-import.php:241
 msgid "Assign Authors"
@@ -9963,11 +9899,11 @@ msgstr "تخصیص نویسندگان"
 #: inc/setup-wizard-adf/wordpress-importer/class-wp-import.php:242
 msgid ""
 "To make it simpler for you to edit and save the imported content, you may want to "
-"reassign the author of the imported item to an existing user of this site, such as "
-"your primary administrator account."
+"reassign the author of the imported item to an existing user of this site, such as your "
+"primary administrator account."
 msgstr ""
-"برای سهولت در ویرایش محتوای درون‌ریزی شده، می‌توانید نویسنده موارد را به یکی از "
-"کاربران فعلی سایت (مانند مدیر اصلی) تغییر دهید."
+"برای سهولت در ویرایش محتوای درون‌ریزی شده، می‌توانید نویسنده موارد را به یکی از کاربران "
+"فعلی سایت (مانند مدیر اصلی) تغییر دهید."
 
 #: inc/setup-wizard-adf/wordpress-importer/class-wp-import.php:244
 #, php-format
@@ -10122,10 +10058,9 @@ msgstr ""
 
 #: inc/setup-wizard-adf/wordpress-importer/class-wp-import.php:1334
 msgid ""
-"Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import the "
-"posts, pages, comments, custom fields, categories, and tags into this site."
-msgstr ""
-"سلام! فایل WXR خود را آپلود کنید تا نوشته‌ها، برگه‌ها، نظرات و... را درون‌ریزی کنیم."
+"Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import the posts, "
+"pages, comments, custom fields, categories, and tags into this site."
+msgstr "سلام! فایل WXR خود را آپلود کنید تا نوشته‌ها، برگه‌ها، نظرات و... را درون‌ریزی کنیم."
 
 #: inc/setup-wizard-adf/wordpress-importer/class-wp-import.php:1335
 msgid "Choose a WXR (.xml) file to upload, then click Upload file and import."
@@ -10154,8 +10089,8 @@ msgid ""
 "Import <strong>posts, pages, comments, custom fields, categories, and tags</strong> "
 "from a WordPress export file."
 msgstr ""
-"درون‌ریزی <strong>نوشته‌ها، برگه‌ها، نظرات، فیلدهای سفارشی، دسته‌بندی‌ها و برچسب‌ها</"
-"strong> از فایل وردپرس."
+"درون‌ریزی <strong>نوشته‌ها، برگه‌ها، نظرات، فیلدهای سفارشی، دسته‌بندی‌ها و برچسب‌ها</strong> "
+"از فایل وردپرس."
 
 #: inc/shop-func.php:187
 msgid "AdForest Packages"
@@ -10299,8 +10234,7 @@ msgstr ""
 
 #: inc/theme-notifications.php:364 inc/theme-notifications.php:789
 msgid ""
-"Your package purchase is complete. You can now use the package benefits in your "
-"account."
+"Your package purchase is complete. You can now use the package benefits in your account."
 msgstr ""
 
 #: inc/theme-notifications.php:365 inc/theme-notifications.php:791
@@ -10611,11 +10545,9 @@ msgstr "نامحدود: "
 
 #: inc/utilities.php:368
 msgid ""
-"No featured ads in selected package, please select a different package or buy a new "
-"one"
+"No featured ads in selected package, please select a different package or buy a new one"
 msgstr ""
-"در پکیج انتخابی، آگهی ویژه وجود ندارد. لطفاً پکیج دیگری انتخاب کرده یا پکیج جدید "
-"بخرید."
+"در پکیج انتخابی، آگهی ویژه وجود ندارد. لطفاً پکیج دیگری انتخاب کرده یا پکیج جدید بخرید."
 
 #: inc/utilities.php:369
 msgid "here"
@@ -11301,8 +11233,8 @@ msgstr "برگه قوانین و مقررات نویسندگان"
 
 #: page-add-new.php:152 page-add-new.php:953
 msgid ""
-"The AdForest Elementor plugin is required to render the post-ad form. Please "
-"activate it, or use the classic Post Ad page."
+"The AdForest Elementor plugin is required to render the post-ad form. Please activate "
+"it, or use the classic Post Ad page."
 msgstr ""
 
 #: page-add-new.php:155 page-add-new.php:956
@@ -11428,28 +11360,23 @@ msgstr ""
 msgid "You have no ads awaiting approval."
 msgstr "شما قبلاً امتیاز خود را ثبت کرده‌اید."
 
-#: page-bumpup-package.php:62 page-feature-packages.php:64
-#: page-payperpost-packages.php:59
+#: page-bumpup-package.php:62 page-feature-packages.php:64 page-payperpost-packages.php:59
 msgid "hand-shake"
 msgstr "دست دادن"
 
-#: page-bumpup-package.php:65 page-feature-packages.php:67
-#: page-payperpost-packages.php:62
+#: page-bumpup-package.php:65 page-feature-packages.php:67 page-payperpost-packages.php:62
 msgid "Your Ad has been uploaded successfully!"
 msgstr "آگهی شما با موفقیت آپلود شد!"
 
-#: page-bumpup-package.php:66 page-feature-packages.php:68
-#: page-payperpost-packages.php:63
+#: page-bumpup-package.php:66 page-feature-packages.php:68 page-payperpost-packages.php:63
 msgid "Your ad will soon be reachable of "
 msgstr "آگهی شما به‌زودی در دسترسِ "
 
-#: page-bumpup-package.php:67 page-feature-packages.php:69
-#: page-payperpost-packages.php:64
+#: page-bumpup-package.php:67 page-feature-packages.php:69 page-payperpost-packages.php:64
 msgid "millions"
 msgstr "میلیون‌ها"
 
-#: page-bumpup-package.php:67 page-feature-packages.php:69
-#: page-payperpost-packages.php:64
+#: page-bumpup-package.php:67 page-feature-packages.php:69 page-payperpost-packages.php:64
 msgid "of buyers"
 msgstr "خریدار قرار خواهد گرفت"
 
@@ -11645,8 +11572,8 @@ msgstr "تعداد آگهی‌های ویژه باقی‌مانده"
 
 #: page-home-modern.php:397
 msgid ""
-"Discover our featured listings and find the best deals on a wide range of products "
-"and services."
+"Discover our featured listings and find the best deals on a wide range of products and "
+"services."
 msgstr ""
 
 #: page-home-modern.php:408 template-parts/headers/header-3.php:150
@@ -11682,8 +11609,8 @@ msgstr ""
 
 #: page-home-modern.php:511
 msgid ""
-"Choose the perfect plan for your needs and start posting ads today. All plans "
-"include core features."
+"Choose the perfect plan for your needs and start posting ads today. All plans include "
+"core features."
 msgstr ""
 
 #: page-home-modern.php:526 page-home-modern.php:575
@@ -11984,8 +11911,7 @@ msgstr "به‌روزرسانی پیام با شکست مواجه شد."
 
 #: page-messages.php:1754
 msgid ""
-"This user is no longer available. You can no longer send messages in this "
-"conversation."
+"This user is no longer available. You can no longer send messages in this conversation."
 msgstr ""
 
 #: page-messages.php:1761 page-messages.php:2199
@@ -12035,8 +11961,8 @@ msgstr "کاربران مسدود شده"
 
 #: page-messages.php:1831
 msgid ""
-"They won't be able to message you on any of your ads. You can unblock them later "
-"from this conversation's menu."
+"They won't be able to message you on any of your ads. You can unblock them later from "
+"this conversation's menu."
 msgstr ""
 
 #: page-messages.php:1844
@@ -12469,8 +12395,8 @@ msgstr "آگهی در تاریخ %1$s منقضی شده (%2$d روز پیش)"
 msgid "General Details:"
 msgstr "جزئیات عمومی:"
 
-#: template-parts/acfcustom-fields.php:31
-#: template-parts/layouts/ad-style/share-ad.php:52 woocommerce/single-product.php:592
+#: template-parts/acfcustom-fields.php:31 template-parts/layouts/ad-style/share-ad.php:52
+#: woocommerce/single-product.php:592
 msgid "Link"
 msgstr "لینک"
 
@@ -12536,8 +12462,7 @@ msgstr ""
 
 #: template-parts/footers/footer-3.php:104 template-parts/headers/header-1.php:31
 #: template-parts/headers/header-2.php:245 template-parts/headers/header-3.php:101
-#: template-parts/headers/header-4.php:182
-#: template-parts/headers/header-cybersale.php:102
+#: template-parts/headers/header-4.php:182 template-parts/headers/header-cybersale.php:102
 #: template-parts/headers/header-transparent.php:28
 msgid "logo"
 msgstr "لوگو"
@@ -12655,8 +12580,7 @@ msgstr ""
 msgid "What are you looking for..."
 msgstr "به دنبال چه چیزی هستید..."
 
-#: template-parts/headers/header-3.php:87
-#: template-parts/headers/header-cybersale.php:88
+#: template-parts/headers/header-3.php:87 template-parts/headers/header-cybersale.php:88
 msgid "Do not have favourite products"
 msgstr "محصولات مورد علاقه ندارید"
 
@@ -12721,8 +12645,7 @@ msgstr "انتخاب فایل"
 msgid "Your comments..."
 msgstr "متن نظر شما..."
 
-#: template-parts/layouts/ad-style/ad-reviews.php:277
-#: woocommerce/single-product.php:416
+#: template-parts/layouts/ad-style/ad-reviews.php:277 woocommerce/single-product.php:416
 msgid "Submit Review"
 msgstr "ثبت دیدگاه"
 
@@ -12797,9 +12720,8 @@ msgstr "اشتراک‌گذاری"
 msgid "sold out"
 msgstr "فروخته شد"
 
-#: template-parts/layouts/ad-style/style-1.php:77
-#: template-parts/layouts/scroll-up.php:3 template-parts/scroll-up.php:3
-#: woocommerce/single-product.php:91
+#: template-parts/layouts/ad-style/style-1.php:77 template-parts/layouts/scroll-up.php:3
+#: template-parts/scroll-up.php:3 woocommerce/single-product.php:91
 msgid "Top"
 msgstr "بالا"
 
@@ -13011,8 +12933,7 @@ msgstr "پایین‌ترین پیشنهاد"
 #: template-parts/layouts/ad-style/style-1.php:847
 #: template-parts/layouts/ad-style/style-2.php:832
 msgid " <strong>No bids yet!</strong> This ad has not received any bids."
-msgstr ""
-" <strong>هنوز پیشنهادی ثبت نشده!</strong> برای این آگهی پیشنهادی ارسال نشده است."
+msgstr " <strong>هنوز پیشنهادی ثبت نشده!</strong> برای این آگهی پیشنهادی ارسال نشده است."
 
 #: template-parts/layouts/ad-style/style-1.php:859
 #: template-parts/layouts/ad-style/style-1.php:862
@@ -13085,8 +13006,7 @@ msgstr "در حال پردازش..."
 msgid "We are live!"
 msgstr "سایت راه‌اندازی شد!"
 
-#: template-parts/layouts/coming-soon.php:153
-#: woocommerce/checkout/form-checkout.php:257
+#: template-parts/layouts/coming-soon.php:153 woocommerce/checkout/form-checkout.php:257
 msgid "Something went wrong. Please try again."
 msgstr "خطایی رخ داد. لطفاً دوباره تلاش کنید."
 
@@ -13698,18 +13618,17 @@ msgstr "https://adforestwp.com/"
 
 #. Description of the plugin/theme
 msgid ""
-"AdForest is a powerful, modern, and feature-rich WordPress theme designed "
-"specifically for classified ads and eCommerce websites. It offers seamless front-end "
-"ad submission, chat, WooCommerce integration, and full support for Elementor. With "
-"responsive design, multiple demos, multilingual compatibility, and advanced search "
-"functionality, AdForest is ideal for creating any kind of niche-based or general "
-"classifieds platform."
+"AdForest is a powerful, modern, and feature-rich WordPress theme designed specifically "
+"for classified ads and eCommerce websites. It offers seamless front-end ad submission, "
+"chat, WooCommerce integration, and full support for Elementor. With responsive design, "
+"multiple demos, multilingual compatibility, and advanced search functionality, AdForest "
+"is ideal for creating any kind of niche-based or general classifieds platform."
 msgstr ""
 "ادفارست یک قالب قدرتمند، مدرن و پر از امکانات برای وردپرس است که به طور خاص برای "
-"سایت‌های نیازمندی و تجارت الکترونیک طراحی شده است. این قالب امکاناتی همچون ثبت آگهی "
-"از پنل کاربری، چت داخلی، یکپارچه‌سازی با ووکامرس و پشتیبانی کامل از المنتور را ارائه "
-"می‌دهد. با طراحی ریسپانسیو، دموهای متعدد، سازگاری چندزبانه و سیستم جستجوی پیشرفته، "
-"ادفارست گزینه‌ای ایده‌آل برای ایجاد هر نوع پلتفرم آگهی عمومی یا تخصصی است."
+"سایت‌های نیازمندی و تجارت الکترونیک طراحی شده است. این قالب امکاناتی همچون ثبت آگهی از "
+"پنل کاربری، چت داخلی، یکپارچه‌سازی با ووکامرس و پشتیبانی کامل از المنتور را ارائه می‌دهد. "
+"با طراحی ریسپانسیو، دموهای متعدد، سازگاری چندزبانه و سیستم جستجوی پیشرفته، ادفارست "
+"گزینه‌ای ایده‌آل برای ایجاد هر نوع پلتفرم آگهی عمومی یا تخصصی است."
 
 #. Author of the plugin/theme
 msgid "Scripts Bundle"

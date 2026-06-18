@@ -178,6 +178,27 @@ $bornado_status_class = static function ($status) {
 
     return 'is-unverified';
 };
+$phone_status = 'missing';
+$phone_status_label = 'ثبت نشده';
+$phone_action_html = '';
+$phone_help_text = '';
+
+if ($user_phone_number !== '') {
+    $phone_status = ('1' === (string) $is_number_verified) ? 'verified' : 'unverified';
+    $phone_status_label = ('verified' === $phone_status) ? 'تایید شده' : 'تایید نشده';
+} else {
+    $phone_help_text = 'برای فعال‌سازی تماس تلفنی، شماره موبایل خود را در فرم پروفایل ثبت و ذخیره کنید.';
+}
+
+if ('verified' !== $phone_status && $user_phone_number !== '') {
+    if ($is_firebase) {
+        $phone_action_html = $is_verified;
+    } elseif ($sms_gateway !== '') {
+        $phone_action_html = '<a href="javascript:void(0);" data-target="#verification_modal" data-toggle="modal" class="bornado-contact-status__action" id="sb-verify-phone">' . esc_html__('تایید شماره', 'bornado-contact-verification') . '</a>';
+    } else {
+        $phone_help_text = 'در حال حاضر امکان ارسال کد تایید شماره در سایت فعال نیست.';
+    }
+}
 ?>
 
 <?php echo adforest_dashboard_breadcrumb(esc_html__('Edit Profile', 'adforest')); ?>
@@ -229,22 +250,42 @@ $bornado_status_class = static function ($status) {
                 </div>
 
                 <hr class="w-100">
-                <div class="contact-info">
-                    <h5><?php echo esc_html__('Contact Information', 'adforest'); ?></h5>
-                    <ul>
-                        <li>
-                            <p><i class="lni lni-phone"></i><?php echo esc_html__('Phone number', 'adforest'); ?></p>
-                            <p><?php echo esc_html(get_user_meta($user_id, '_sb_contact', true)) . $is_verified; ?></p>
-                        </li>
-                        <li>
-                            <p><i class="lni lni-envelope"></i><?php echo esc_html__('ایمیل', 'bornado-contact-verification'); ?></p>
+                <div class="contact-info bornado-profile-contact-card">
+                    <div class="bornado-profile-contact-card__header">
+                        <h5><?php echo esc_html__('اطلاعات تماس', 'bornado-contact-verification'); ?></h5>
+                        <p><?php echo esc_html__('روش‌های ارتباطی و وضعیت تایید هرکدام را از اینجا ببینید.', 'bornado-contact-verification'); ?></p>
+                    </div>
+
+                    <ul class="bornado-contact-list">
+                        <li class="bornado-contact-list__item">
+                            <div class="bornado-contact-list__top">
+                                <p class="bornado-contact-list__label"><i class="lni lni-phone"></i><?php echo esc_html__('شماره موبایل', 'bornado-contact-verification'); ?></p>
+                                <span class="bornado-contact-status__badge <?php echo esc_attr($bornado_status_class($phone_status)); ?>">
+                                    <?php echo esc_html($phone_status_label); ?>
+                                </span>
+                            </div>
                             <p class="bornado-contact-status">
-                                <span><?php echo esc_html($email_verification['address'] ?: 'ثبت نشده'); ?></span>
+                                <span class="bornado-contact-status__value bornado-contact-status__value--phone" dir="ltr"><?php echo esc_html($user_phone_number ?: 'ثبت نشده'); ?></span>
+                                <?php if (!empty($phone_action_html)) : ?>
+                                    <div class="bornado-contact-status__actions"><?php echo wp_kses_post($phone_action_html); ?></div>
+                                <?php endif; ?>
+                            </p>
+                            <?php if (!empty($phone_help_text)) : ?>
+                                <small class="bornado-contact-status__help"><?php echo esc_html($phone_help_text); ?></small>
+                            <?php endif; ?>
+                        </li>
+
+                        <li class="bornado-contact-list__item">
+                            <div class="bornado-contact-list__top">
+                                <p class="bornado-contact-list__label"><i class="lni lni-envelope"></i><?php echo esc_html__('ایمیل', 'bornado-contact-verification'); ?></p>
                                 <span class="bornado-contact-status__badge <?php echo esc_attr($bornado_status_class($email_verification['status'])); ?>" data-bornado-email-status>
                                     <?php echo esc_html($email_verification['label']); ?>
                                 </span>
+                            </div>
+                            <p class="bornado-contact-status">
+                                <span class="bornado-contact-status__value"><?php echo esc_html($email_verification['address'] ?: 'ثبت نشده'); ?></span>
                                 <?php if (!empty($email_verification['can_send'])) : ?>
-                                    <a href="javascript:void(0);" class="small_text bornado-contact-status__action" data-bornado-email-send>
+                                    <a href="javascript:void(0);" class="bornado-contact-status__action" data-bornado-email-send>
                                         <?php echo esc_html__('ارسال لینک تایید', 'bornado-contact-verification'); ?>
                                     </a>
                                 <?php endif; ?>
@@ -253,29 +294,35 @@ $bornado_status_class = static function ($status) {
                                 <small class="bornado-contact-status__help"><?php echo esc_html__('ابتدا یک ایمیل معتبر در پروفایل خود ثبت و ذخیره کنید.', 'bornado-contact-verification'); ?></small>
                             <?php endif; ?>
                         </li>
-                        <li>
-                            <p><i class="fab fa-whatsapp"></i><?php echo esc_html__('واتس اپ', 'bornado-contact-verification'); ?></p>
-                            <p class="bornado-contact-status">
-                                <span><?php echo esc_html($whatsapp_verification['address'] ?: 'ثبت نشده'); ?></span>
+
+                        <li class="bornado-contact-list__item">
+                            <div class="bornado-contact-list__top">
+                                <p class="bornado-contact-list__label"><i class="lni lni-whatsapp"></i><?php echo esc_html__('واتس‌اپ', 'bornado-contact-verification'); ?></p>
                                 <span class="bornado-contact-status__badge <?php echo esc_attr($bornado_status_class($whatsapp_verification['status'])); ?>" data-bornado-whatsapp-status>
                                     <?php echo esc_html($whatsapp_verification['label']); ?>
                                 </span>
+                            </div>
+                            <p class="bornado-contact-status">
+                                <span class="bornado-contact-status__value bornado-contact-status__value--phone" dir="ltr"><?php echo esc_html($whatsapp_verification['address'] ?: 'ثبت نشده'); ?></span>
                                 <?php if (!empty($whatsapp_verification['can_send'])) : ?>
-                                    <a href="javascript:void(0);" class="small_text bornado-contact-status__action" data-bornado-whatsapp-send>
+                                    <a href="javascript:void(0);" class="bornado-contact-status__action" data-bornado-whatsapp-send>
                                         <?php echo esc_html__('ارسال کد تایید', 'bornado-contact-verification'); ?>
                                     </a>
                                 <?php endif; ?>
                             </p>
                             <?php if (empty($whatsapp_verification['address'])) : ?>
-                                <small class="bornado-contact-status__help"><?php echo esc_html__('واتس اپ از همان شماره تماس ذخیره شده در پروفایل استفاده می‌کند.', 'bornado-contact-verification'); ?></small>
+                                <small class="bornado-contact-status__help"><?php echo esc_html__('واتس‌اپ از همان شماره تماس ذخیره‌شده در پروفایل استفاده می‌کند.', 'bornado-contact-verification'); ?></small>
                             <?php endif; ?>
                         </li>
-                        <li>
-                            <p class=""><i
-                                        class="lni lni-users"></i><?php echo esc_html__('Social Profile', 'adforest'); ?>
-                            </p>
-                            <p class="social-button"><?php echo adforest_return_echo($social_icons); ?></p>
-                        </li>
+
+                        <?php if ($social_icons !== '') : ?>
+                            <li class="bornado-contact-list__item bornado-contact-list__item--social">
+                                <div class="bornado-contact-list__top">
+                                    <p class="bornado-contact-list__label"><i class="lni lni-users"></i><?php echo esc_html__('شبکه‌های اجتماعی', 'adforest'); ?></p>
+                                </div>
+                                <div class="social-button"><?php echo adforest_return_echo($social_icons); ?></div>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
@@ -427,7 +474,7 @@ if (isset($sb_user_phone_num) && $sb_user_phone_num != '' && !$is_firebase) {
                                        <div class="input-style-1 sb_ver_ph_code_div no-display">
                                          <label>' . esc_html__('Enter code', 'adforest') . '</label>
                                          <input type="text" name="sb_ph_number_code" id="sb_ph_number_code" required>
-                                           <small class="pull-right">' . esc_html__('Did not get code?', 'adforest') . ' <a href="javascript:void(0);" class="small_text" id="resend_now" data-security="' . $nonce . '">' . esc_html__('Resend now', 'adforest') . '</a></small>
+                                           <small class="bornado-contact-modal__resend">' . esc_html__('Did not get code?', 'adforest') . ' <a href="javascript:void(0);" class="small_text" id="resend_now" data-security="' . $nonce . '">' . esc_html__('Resend now', 'adforest') . '</a></small>
                                        </div>
                                     </div>
                                     <div class="modal-footer">
@@ -457,11 +504,11 @@ echo '<div class="custom-modal">
          role="dialog"
          data-bs-backdrop="static"
          data-bs-keyboard="false">
-       <div class="modal-dialog">
-          <div class="modal-content">
-             <div class="modal-header">
+       <div class="modal-dialog modal-dialog-centered bornado-contact-modal__dialog">
+          <div class="modal-content bornado-contact-modal__content">
+             <div class="modal-header bornado-contact-modal__header">
                 <span class="modal-title">' . esc_html__('Verify phone number', 'adforest') . '</span>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close bornado-contact-modal__close" data-bs-dismiss="modal" aria-label="Close"></button>
              </div>
               ' . $phone_verified_html . '
           </div>
@@ -477,11 +524,11 @@ if (!empty($whatsapp_verification['address'])) :
              role="dialog"
              data-bs-backdrop="static"
              data-bs-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
+            <div class="modal-dialog modal-dialog-centered bornado-contact-modal__dialog">
+                <div class="modal-content bornado-contact-modal__content">
+                    <div class="modal-header bornado-contact-modal__header">
                         <span class="modal-title"><?php echo esc_html__('تایید واتس اپ', 'bornado-contact-verification'); ?></span>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close bornado-contact-modal__close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="bornado-whatsapp-verify-form">
                         <div class="modal-body">
@@ -492,7 +539,7 @@ if (!empty($whatsapp_verification['address'])) :
                             <div class="input-style-1">
                                 <label><?php echo esc_html__('کد تایید', 'bornado-contact-verification'); ?></label>
                                 <input type="text" name="code" inputmode="numeric" maxlength="6" placeholder="123456" required>
-                                <small class="pull-right"><?php echo esc_html__('کد را دریافت نکردید؟', 'bornado-contact-verification'); ?>
+                                <small class="bornado-contact-modal__resend"><?php echo esc_html__('کد را دریافت نکردید؟', 'bornado-contact-verification'); ?>
                                     <a href="javascript:void(0);" class="small_text" data-bornado-whatsapp-send><?php echo esc_html__('ارسال دوباره', 'bornado-contact-verification'); ?></a>
                                 </small>
                             </div>

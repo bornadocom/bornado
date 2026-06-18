@@ -340,6 +340,14 @@ if (file_exists($bornado_search_filter_toggle_fix_bootstrap)) {
 }
 
 /**
+ * Centralize feature/bump visibility and guard the related actions.
+ */
+$bornado_promotion_visibility_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-promotion-visibility.php';
+if (file_exists($bornado_promotion_visibility_bootstrap)) {
+    require_once $bornado_promotion_visibility_bootstrap;
+}
+
+/**
  * Fix Modern My Listings "Active" filter without touching parent theme files.
  */
 $bornado_my_listings_fix_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-my-listings-fix.php';
