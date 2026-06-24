@@ -1,0 +1,193 @@
+.bornado-profile-contact-panel {
+    margin-top: 22px;
+    padding: 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%);
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06);
+}
+
+.bornado-profile-contact-panel__header {
+    margin-bottom: 16px;
+}
+
+.bornado-profile-contact-panel__header h4 {
+    margin: 0 0 6px;
+    font-size: 17px;
+    font-weight: 800;
+    color: #111827;
+}
+
+.bornado-profile-contact-panel__header p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.9;
+    color: #6b7280;
+}
+
+.bornado-profile-contact-panel__empty {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: #f9fafb;
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.9;
+}
+
+.bornado-profile-contact-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+}
+
+.bornado-profile-contact-list__item {
+    display: block;
+    padding: 14px;
+    border: 1px solid #edf0f4;
+    border-radius: 16px;
+    background: #ffffff;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.bornado-profile-contact-list__item:hover {
+    border-color: #d9dee7;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+    transform: translateY(-1px);
+}
+
+.bornado-profile-contact-list__meta {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.bornado-profile-contact-list__icon {
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    background: #f3f4f6;
+    color: #111827;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.bornado-profile-contact-list__copy {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.bornado-profile-contact-list__label-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+
+.bornado-profile-contact-list__label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.bornado-profile-contact-list__badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #dcfce7;
+    color: #166534;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.bornado-profile-contact-list__value {
+    min-height: 40px;
+    font-size: 13px;
+    line-height: 1.9;
+    color: #4b5563;
+    word-break: break-word;
+    margin-top: 8px;
+}
+
+.bornado-profile-contact-list__item.is-revealed .bornado-profile-contact-list__value,
+.bornado-profile-contact-panel.is-owner-view .bornado-profile-contact-list__value {
+    color: #111827;
+    font-weight: 600;
+}
+
+.bornado-profile-contact-list__value.is-hidden {
+    display: block;
+}
+
+.bornado-profile-contact-list__value.is-filled {
+    display: block;
+}
+
+.bornado-profile-contact__link {
+    color: #111827;
+    text-decoration: none;
+    display: inline-block;
+    width: 100%;
+}
+
+.bornado-profile-contact__link:hover,
+.bornado-profile-contact__link:focus {
+    color: #111827;
+    text-decoration: underline;
+}
+
+.bornado-profile-contact-list__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    background: #fff;
+    color: #111827;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.bornado-profile-contact-list__toggle:hover,
+.bornado-profile-contact-list__toggle:focus {
+    border-color: #111827;
+    background: #f9fafb;
+    color: #111827;
+    text-decoration: none;
+}
+
+.bornado-profile-contact-list__toggle--full {
+    display: inline-flex;
+    width: 100%;
+}
+
+.bornado-profile-contact-panel.is-loading .bornado-profile-contact-list__toggle {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+@media (max-width: 767.98px) {
+    .bornado-profile-contact-panel {
+        padding: 14px;
+        border-radius: 18px;
+    }
+
+    .bornado-profile-contact-list__toggle {
+        width: 100%;
+    }
+}

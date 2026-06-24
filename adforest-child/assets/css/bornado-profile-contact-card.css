@@ -192,6 +192,53 @@
     margin-top: 10px;
 }
 
+.adforest-dashboard-section .user-dp-container {
+    position: relative;
+}
+
+.adforest-dashboard-section .bornado-avatar-remove {
+    position: absolute;
+    left: 50%;
+    bottom: -14px;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    padding: 0 12px;
+    border: 1px solid rgba(220, 38, 38, 0.18);
+    border-radius: 999px;
+    background: #ffffff;
+    color: #b91c1c;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    transition: all 0.2s ease;
+    z-index: 2;
+}
+
+.adforest-dashboard-section .bornado-avatar-remove:hover,
+.adforest-dashboard-section .bornado-avatar-remove:focus {
+    background: #fef2f2;
+    border-color: rgba(220, 38, 38, 0.32);
+    color: #991b1b;
+    text-decoration: none;
+}
+
+.adforest-dashboard-section .bornado-avatar-remove[hidden] {
+    display: none !important;
+}
+
+.adforest-dashboard-section .bornado-avatar-remove.is-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.adforest-dashboard-section .user-dp-container.has-custom-avatar {
+    margin-bottom: 26px;
+}
+
 .adforest-dashboard-section .sb-verify-modal,
 .adforest-dashboard-section .bornado-whatsapp-modal {
     padding: 20px 12px;
@@ -353,6 +400,10 @@
     .adforest-dashboard-section .bornado-contact-status__actions {
         width: 100%;
         justify-self: stretch;
+    }
+
+    .adforest-dashboard-section .bornado-avatar-remove {
+        bottom: -12px;
     }
 
     .adforest-dashboard-section .sb-verify-modal,

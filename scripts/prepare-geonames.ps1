@@ -1,0 +1,36 @@
+param(
+    [string]$OutputDir = ".\var\geonames",
+    [string]$CityDataset = "cities1000.zip"
+)
+
+$ErrorActionPreference = "Stop"
+
+$root = Split-Path -Parent $MyInvocation.MyCommand.Path
+$target = Resolve-Path -LiteralPath (Join-Path $root "..") | Select-Object -ExpandProperty Path
+$outputPath = Join-Path $target $OutputDir
+
+if (-not (Test-Path -LiteralPath $outputPath)) {
+    New-Item -ItemType Directory -Path $outputPath | Out-Null
+}
+
+$downloads = @(
+    @{ Name = "countryInfo.txt"; Url = "https://download.geonames.org/export/dump/countryInfo.txt" },
+    @{ Name = $CityDataset; Url = "https://download.geonames.org/export/dump/$CityDataset" },
+    @{ Name = "alternateNamesV2.zip"; Url = "https://download.geonames.org/export/dump/alternateNamesV2.zip" }
+)
+
+foreach ($item in $downloads) {
+    $destination = Join-Path $outputPath $item.Name
+    Write-Host "Downloading $($item.Name)..."
+    Invoke-WebRequest -Uri $item.Url -OutFile $destination
+}
+
+Write-Host ""
+Write-Host "GeoNames snapshot آماده شد در:"
+Write-Host "  $outputPath"
+Write-Host ""
+Write-Host "وقتی محیط وردپرسی/سروری در دسترس بود، این دستورات را اجرا کنید:"
+Write-Host "  wp bornado-geo import-countries `"$outputPath\countryInfo.txt`""
+Write-Host "  wp bornado-geo import-cities `"$outputPath\$CityDataset`""
+Write-Host "  wp bornado-geo import-fa-names `"$outputPath\alternateNamesV2.zip`""
+Write-Host "  wp bornado-geo seed-root-countries"

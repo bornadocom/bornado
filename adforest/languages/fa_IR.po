@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: adforest\n"
 "POT-Creation-Date: 2026-06-16 19:12+0100\n"
-"PO-Revision-Date: 2026-06-18 20:51+0100\n"
+"PO-Revision-Date: 2026-06-18 22:05+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
@@ -2952,10 +2952,9 @@ msgstr ""
 
 #. translators: %s: price
 #: inc/ai-suggestions.php:776
-#, fuzzy, php-format
-#| msgid "Price (%s)"
+#, php-format
 msgid "Price: %s"
-msgstr "قیمت (%s)"
+msgstr "قیمت: %s"
 
 #: inc/ai-suggestions.php:785
 msgid ""
@@ -12496,10 +12495,8 @@ msgid "Terms & Conditions"
 msgstr "برگه قوانین و مقررات نویسندگان"
 
 #: template-parts/footers/footer-home-modern.php:362
-#, fuzzy
-#| msgid "Terms and Policy"
 msgid "Privacy Policy"
-msgstr "قوانین و مقررات سایت موافقم"
+msgstr "قوانین و مقررات"
 
 #: template-parts/footers/footer-home-modern.php:363
 #, fuzzy
@@ -13048,7 +13045,7 @@ msgstr " من با "
 
 #: template-parts/layouts/profile/contact-form.php:61
 msgid "Terms and Policy"
-msgstr "قوانین و مقررات سایت موافقم"
+msgstr "قوانین و مقررات سایت"
 
 #: template-parts/layouts/profile/profile-header.php:75
 msgid "Total Ads"

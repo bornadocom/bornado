@@ -180,6 +180,7 @@ final class Bornado_Location_Picker_Plugin {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 
 		$country_id = isset( $_POST['country_id'] ) ? absint( wp_unslash( $_POST['country_id'] ) ) : 0;
+		$include_urls = isset( $_POST['include_urls'] ) ? (bool) absint( wp_unslash( $_POST['include_urls'] ) ) : true;
 		if ( $country_id < 1 ) {
 			wp_send_json_error(
 				array(
@@ -191,7 +192,7 @@ final class Bornado_Location_Picker_Plugin {
 
 		wp_send_json_success(
 			array(
-				'items' => Bornado_Location_Picker_Service::get_city_options( $country_id ),
+				'items' => Bornado_Location_Picker_Service::get_city_options( $country_id, $include_urls ),
 			)
 		);
 	}

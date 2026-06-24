@@ -11,3 +11,10 @@ License URI: https://themeforest.net/user/scriptsbundle/
 Text Domain: adforest
 Tags: featured-images, sticky-post, translation-ready
 */
+
+button.cky-btn.cky-btn-accept {
+    background-color: green !important;
+}
+.cky-consent-container.cky-banner-bottom {
+    direction: ltr !important;
+}

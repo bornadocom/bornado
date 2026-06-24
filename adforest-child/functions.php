@@ -252,6 +252,38 @@ if (file_exists($bornado_category_search_sidebar_bootstrap)) {
 }
 
 /**
+ * Make category widget counts respect the active search location context.
+ */
+$bornado_contextual_category_counts_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-contextual-category-counts.php';
+if (file_exists($bornado_contextual_category_counts_bootstrap)) {
+    require_once $bornado_contextual_category_counts_bootstrap;
+}
+
+/**
+ * Fix category-widget counts and active-state rendering on live search pages.
+ */
+$bornado_category_widget_context_fix_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-category-widget-context-fix.php';
+if (file_exists($bornado_category_widget_context_fix_bootstrap)) {
+    require_once $bornado_category_widget_context_fix_bootstrap;
+}
+
+/**
+ * Re-register category widgets so child-theme template overrides are used.
+ */
+$bornado_category_widget_loader_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-category-widget-loader.php';
+if (file_exists($bornado_category_widget_loader_bootstrap)) {
+    require_once $bornado_category_widget_loader_bootstrap;
+}
+
+/**
+ * Remove duplicate category labels and mark active rows without touching plugin files.
+ */
+$bornado_category_widget_render_fix_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-category-widget-render-fix.php';
+if (file_exists($bornado_category_widget_render_fix_bootstrap)) {
+    require_once $bornado_category_widget_render_fix_bootstrap;
+}
+
+/**
  * Show full titles in AdForest Recent Ads sidebar widget.
  */
 $bornado_recent_ads_sidebar_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-recent-ads-sidebar.php';
@@ -324,11 +356,67 @@ if (file_exists($bornado_ad_post_guard_bootstrap)) {
 }
 
 /**
+ * Self-hosted global geo catalog and lookup APIs for ad posting.
+ */
+$bornado_geo_catalog_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-geo-catalog.php';
+if (file_exists($bornado_geo_catalog_bootstrap)) {
+    require_once $bornado_geo_catalog_bootstrap;
+}
+
+/**
+ * Public location UI should only show locations that currently have active listings.
+ */
+$bornado_public_location_visibility_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-public-location-visibility.php';
+if (file_exists($bornado_public_location_visibility_bootstrap)) {
+    require_once $bornado_public_location_visibility_bootstrap;
+}
+
+/**
+ * Currency-code alias overrides for mapping GeoNames countries to ad_currency.
+ */
+$bornado_geo_currency_overrides_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-geo-currency-overrides.php';
+if (file_exists($bornado_geo_currency_overrides_bootstrap)) {
+    require_once $bornado_geo_currency_overrides_bootstrap;
+}
+
+/**
+ * Global country/city ad-post UI plus publish-time sync into ad_country.
+ */
+$bornado_global_ad_location_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-global-ad-location.php';
+if (file_exists($bornado_global_ad_location_bootstrap)) {
+    require_once $bornado_global_ad_location_bootstrap;
+}
+
+/**
  * Keep dashboard profile phone UX aligned with the selected country dial code.
  */
 $bornado_profile_phone_guard_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-profile-phone-guard.php';
 if (file_exists($bornado_profile_phone_guard_bootstrap)) {
     require_once $bornado_profile_phone_guard_bootstrap;
+}
+
+/**
+ * Manage profile avatar upload/remove UX from the child theme layer.
+ */
+$bornado_profile_avatar_manager_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-profile-avatar-manager.php';
+if (file_exists($bornado_profile_avatar_manager_bootstrap)) {
+    require_once $bornado_profile_avatar_manager_bootstrap;
+}
+
+/**
+ * Hide self-contact UI and guard profile-contact submissions.
+ */
+$bornado_profile_contact_guard_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-profile-contact-guard.php';
+if (file_exists($bornado_profile_contact_guard_bootstrap)) {
+    require_once $bornado_profile_contact_guard_bootstrap;
+}
+
+/**
+ * Rich verified-contact panel for public profile pages.
+ */
+$bornado_profile_public_contact_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-profile-public-contact.php';
+if (file_exists($bornado_profile_public_contact_bootstrap)) {
+    require_once $bornado_profile_public_contact_bootstrap;
 }
 
 /**
@@ -377,6 +465,14 @@ if (file_exists($bornado_numeric_normalization_bootstrap)) {
 $bornado_performance_optimizations_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-performance-optimizations.php';
 if (file_exists($bornado_performance_optimizations_bootstrap)) {
     require_once $bornado_performance_optimizations_bootstrap;
+}
+
+/**
+ * Inject Google Tag Manager from the child theme layer.
+ */
+$bornado_google_tag_manager_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-google-tag-manager.php';
+if (file_exists($bornado_google_tag_manager_bootstrap)) {
+    require_once $bornado_google_tag_manager_bootstrap;
 }
 
 /**
@@ -2032,3 +2128,70 @@ if (!function_exists('bornado_hide_adt_ads_sort_box_everywhere')) {
     }
 }
 add_action('wp_enqueue_scripts', 'bornado_hide_adt_ads_sort_box_everywhere', 240);
+
+/**
+ * Temporary live-debug marker for category widget troubleshooting.
+ *
+ * Prints a very visible browser-console signal directly from the child theme's
+ * main functions file so we can confirm that this exact runtime is executing on
+ * the live site, independent of downstream helper includes.
+ */
+add_action('wp_footer', function () {
+    if (is_admin()) {
+        return;
+    }
+
+    $payload = array(
+        'source' => 'adforest-child/functions.php',
+        'stylesheet' => get_stylesheet(),
+        'template' => get_template(),
+        'is_ad_search_view' => function_exists('bornado_is_ad_search_view') ? (bool) bornado_is_ad_search_view() : null,
+        'request_uri' => isset($_SERVER['REQUEST_URI']) ? (string) wp_unslash($_SERVER['REQUEST_URI']) : '',
+        'category_widget_fix_loaded' => function_exists('bornado_category_widget_context_fix_config'),
+        'contextual_count_helper_loaded' => function_exists('bornado_category_widget_get_contextual_ad_count'),
+    );
+    ?>
+    <script id="bornado-functions-php-debug">
+        console.log('[BORNADO_FUNCTIONS_PHP_DEBUG]', <?php echo wp_json_encode($payload); ?>);
+    </script>
+    <?php
+}, 999);
+
+/**
+ * Temporary visual debug badge for confirming live child-theme execution.
+ *
+ * Visit any frontend page with `?bornado_debug=1` (or append `&bornado_debug=1`)
+ * to render a fixed badge directly from `functions.php`. This avoids confusion
+ * from unrelated browser-console noise while we verify the live runtime.
+ */
+add_action('wp_footer', function () {
+    if (is_admin() || !isset($_GET['bornado_debug'])) {
+        return;
+    }
+
+    $is_enabled = strtolower((string) wp_unslash($_GET['bornado_debug']));
+    if (!in_array($is_enabled, array('1', 'true', 'yes'), true)) {
+        return;
+    }
+
+    $payload = array(
+        'source' => 'adforest-child/functions.php',
+        'stylesheet' => get_stylesheet(),
+        'template' => get_template(),
+        'is_ad_search_view' => function_exists('bornado_is_ad_search_view') ? (bool) bornado_is_ad_search_view() : null,
+        'request_uri' => isset($_SERVER['REQUEST_URI']) ? (string) wp_unslash($_SERVER['REQUEST_URI']) : '',
+        'category_widget_fix_loaded' => function_exists('bornado_category_widget_context_fix_config') ? 'yes' : 'no',
+        'contextual_count_helper_loaded' => function_exists('bornado_category_widget_get_contextual_ad_count') ? 'yes' : 'no',
+    );
+    ?>
+    <div id="bornado-live-debug-badge" style="position:fixed;left:16px;bottom:16px;z-index:2147483647;max-width:360px;background:#111;color:#fff;padding:12px 14px;border:2px solid #ff002e;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.35);font:12px/1.7 monospace;direction:ltr;text-align:left;">
+        <div style="font-weight:700;color:#ff4d6d;margin-bottom:6px;">BORNADO_FUNCTIONS_PHP_DEBUG</div>
+        <div>source: <?php echo esc_html($payload['source']); ?></div>
+        <div>stylesheet: <?php echo esc_html($payload['stylesheet']); ?></div>
+        <div>template: <?php echo esc_html($payload['template']); ?></div>
+        <div>search_view: <?php echo esc_html(wp_json_encode($payload['is_ad_search_view'])); ?></div>
+        <div>widget_fix: <?php echo esc_html($payload['category_widget_fix_loaded']); ?></div>
+        <div>count_helper: <?php echo esc_html($payload['contextual_count_helper_loaded']); ?></div>
+    </div>
+    <?php
+}, 1000);

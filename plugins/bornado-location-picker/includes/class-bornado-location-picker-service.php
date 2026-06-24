@@ -71,8 +71,9 @@ final class Bornado_Location_Picker_Service {
 		$city_id        = ! empty( $city['id'] ) ? absint( $city['id'] ) : 0;
 		$deepest_term_id = ! empty( $selected['deepest_term_id'] ) ? absint( $selected['deepest_term_id'] ) : ( $city_id ? $city_id : $country_id );
 		$search_actions = self::normalize_search_actions( self::get_search_actions( isset( $args['widget_action'] ) ? (string) $args['widget_action'] : '' ) );
-		$countries     = self::get_root_country_options();
-		$cities        = $country_id > 0 ? self::get_city_options( $country_id ) : array();
+		$include_term_urls = empty( $args['external_form_selector'] ) && empty( $args['external_input_selector'] );
+		$countries         = self::get_root_country_options( $include_term_urls );
+		$cities            = $country_id > 0 ? self::get_city_options( $country_id, $include_term_urls ) : array();
 		$panel_id      = wp_unique_id( 'bornado-location-picker-' );
 		$form_action   = ! empty( $city['url'] ) ? $city['url'] : ( ! empty( $country['url'] ) ? $country['url'] : $search_actions['all_countries_action'] );
 
@@ -145,15 +146,17 @@ final class Bornado_Location_Picker_Service {
 	 *
 	 * @return array<int,array<string,mixed>>
 	 */
-	public static function get_root_country_options() {
+	public static function get_root_country_options( $include_urls = true ) {
+		$include_urls = (bool) $include_urls;
+
 		if ( null !== self::$root_countries ) {
-			return self::$root_countries;
+			return $include_urls ? self::$root_countries : self::strip_term_urls( self::$root_countries );
 		}
 
 		$cached = wp_cache_get( 'root_countries_' . self::get_cache_version(), self::CACHE_GROUP );
 		if ( is_array( $cached ) ) {
 			self::$root_countries = $cached;
-			return self::$root_countries;
+			return $include_urls ? self::$root_countries : self::strip_term_urls( self::$root_countries );
 		}
 
 		$terms = get_terms(
@@ -175,7 +178,9 @@ final class Bornado_Location_Picker_Service {
 		self::$root_countries = array_values(
 			array_filter(
 				array_map(
-					array( __CLASS__, 'map_term' ),
+					function ( $term ) {
+						return self::map_term( $term, true );
+					},
 					$terms
 				)
 			)
@@ -183,7 +188,7 @@ final class Bornado_Location_Picker_Service {
 
 		wp_cache_set( 'root_countries_' . self::get_cache_version(), self::$root_countries, self::CACHE_GROUP, HOUR_IN_SECONDS );
 
-		return self::$root_countries;
+		return $include_urls ? self::$root_countries : self::strip_term_urls( self::$root_countries );
 	}
 
 	/**
@@ -192,21 +197,22 @@ final class Bornado_Location_Picker_Service {
 	 * @param int $country_id Country term id.
 	 * @return array<int,array<string,mixed>>
 	 */
-	public static function get_city_options( $country_id ) {
+	public static function get_city_options( $country_id, $include_urls = true ) {
 		$country_id = absint( $country_id );
+		$include_urls = (bool) $include_urls;
 		if ( $country_id < 1 ) {
 			return array();
 		}
 
 		if ( isset( self::$cities_by_country[ $country_id ] ) ) {
-			return self::$cities_by_country[ $country_id ];
+			return $include_urls ? self::$cities_by_country[ $country_id ] : self::strip_term_urls( self::$cities_by_country[ $country_id ] );
 		}
 
 		$cache_key = 'cities_' . $country_id . '_' . self::get_cache_version();
 		$cached    = wp_cache_get( $cache_key, self::CACHE_GROUP );
 		if ( is_array( $cached ) ) {
 			self::$cities_by_country[ $country_id ] = $cached;
-			return self::$cities_by_country[ $country_id ];
+			return $include_urls ? self::$cities_by_country[ $country_id ] : self::strip_term_urls( self::$cities_by_country[ $country_id ] );
 		}
 
 		$country_term = self::get_root_country_term( $country_id );
@@ -239,7 +245,7 @@ final class Bornado_Location_Picker_Service {
 
 		if ( ! is_wp_error( $terms ) && is_array( $terms ) ) {
 			foreach ( $terms as $term ) {
-				$mapped = self::map_term( $term );
+				$mapped = self::map_term( $term, true );
 				if ( ! empty( $mapped ) ) {
 					$options[] = $mapped;
 				}
@@ -249,7 +255,7 @@ final class Bornado_Location_Picker_Service {
 		self::$cities_by_country[ $country_id ] = $options;
 		wp_cache_set( $cache_key, $options, self::CACHE_GROUP, HOUR_IN_SECONDS );
 
-		return self::$cities_by_country[ $country_id ];
+		return $include_urls ? self::$cities_by_country[ $country_id ] : self::strip_term_urls( self::$cities_by_country[ $country_id ] );
 	}
 
 	/**
@@ -480,7 +486,7 @@ final class Bornado_Location_Picker_Service {
 	 * @param WP_Term $term Term instance.
 	 * @return array<string,mixed>
 	 */
-	private static function map_term( $term ) {
+	private static function map_term( $term, $include_urls = true ) {
 		if ( ! $term instanceof WP_Term ) {
 			return array();
 		}
@@ -489,11 +495,32 @@ final class Bornado_Location_Picker_Service {
 			'id'          => (int) $term->term_id,
 			'label'       => (string) $term->name,
 			'slug'        => (string) $term->slug,
-			'url'         => self::get_term_url( $term ),
+			'url'         => $include_urls ? self::get_term_url( $term ) : '',
 			'parentId'    => (int) $term->parent,
 			'countryCode' => self::get_country_code( $term ),
 			'kind'        => 0 === (int) $term->parent ? 'country' : 'city',
 		);
+	}
+
+	/**
+	 * Return a copy of picker items with URLs stripped out.
+	 *
+	 * @param array<int,array<string,mixed>> $items
+	 * @return array<int,array<string,mixed>>
+	 */
+	private static function strip_term_urls( $items ) {
+		$normalized = array();
+
+		foreach ( (array) $items as $item ) {
+			if ( ! is_array( $item ) ) {
+				continue;
+			}
+
+			$item['url'] = '';
+			$normalized[] = $item;
+		}
+
+		return $normalized;
 	}
 
 	/**

@@ -359,6 +359,9 @@ $adf_bidding_gate_ok   = function_exists('adforest_should_show_bidding') ? adfor
 $is_bidable            = $adf_bidding_gate_ok ? get_post_meta($pid, '_adforest_ad_bidding', true) : 0;
 $recently_viewed_html  = '';
 $current_user_id       = get_current_user_id();
+$hide_seller_identity  = function_exists('bornado_should_hide_seller_identity')
+    ? (bool) bornado_should_hide_seller_identity($pid)
+    : false;
 $claim_enabled         = !empty($adforest_theme['allow_claim']);
 $claim_is_logged_in    = is_user_logged_in();
 $claim_is_owner        = $claim_is_logged_in && ((int) $current_user_id === (int) $poster_id);
@@ -592,6 +595,7 @@ if ($bornado_edit_mode && function_exists('bornado_inline_edit_render_editor_she
                     <?php adforest_custom_breadcrumbs('adt-white-breadcrumb bornado-mobile-breadcrumb'); ?>
                 </div>
 
+                <?php if (!$hide_seller_identity) { ?>
                 <div class="bornad-card bornad-seller-card bornad-seller-card--desktop" id="bornad-contact-panel">
                     <div class="bornad-card-header">
                         <h3>اطلاعات فروشنده</h3>
@@ -634,6 +638,7 @@ if ($bornado_edit_mode && function_exists('bornado_inline_edit_render_editor_she
                         <?php } ?>
                     </div>
                 </div>
+                <?php } ?>
 
                 <?php if (!empty($adforest_theme['tips_title']) && !empty($adforest_theme['tips_for_ad'])) { ?>
                     <div class="bornad-card bornad-extra-card bornad-tips-card">
@@ -763,9 +768,11 @@ if ($bornado_edit_mode && function_exists('bornado_inline_edit_render_editor_she
                                 </a>
                             <?php } ?>
 
-                            <a class="bornad-toolbar-button" href="<?php echo esc_url(adforest_set_url_param(get_author_posts_url($poster_id), 'type', 'ads')); ?>" title="<?php echo esc_attr__('مشاهده همه آگهی‌های این کاربر', 'adforest'); ?>">
-                                <i class="far fa-user" aria-hidden="true"></i>
-                            </a>
+                            <?php if (!$hide_seller_identity) { ?>
+                                <a class="bornad-toolbar-button" href="<?php echo esc_url(adforest_set_url_param(get_author_posts_url($poster_id), 'type', 'ads')); ?>" title="<?php echo esc_attr__('مشاهده همه آگهی‌های این کاربر', 'adforest'); ?>">
+                                    <i class="far fa-user" aria-hidden="true"></i>
+                                </a>
+                            <?php } ?>
 
                             <?php if (isset($adforest_theme['share_ads_on']) && $adforest_theme['share_ads_on']) { ?>
                                 <a class="bornad-toolbar-button" data-bs-toggle="modal" data-bs-target=".share-ad" data-adid="<?php echo esc_attr(get_the_ID()); ?>" href="javascript:void(0);" title="<?php echo esc_attr__('اشتراک‌گذاری آگهی', 'adforest'); ?>">
@@ -864,6 +871,9 @@ if ($bornado_edit_mode && function_exists('bornado_inline_edit_render_editor_she
 
                 <?php if ('' !== $desktop_contact_methods_markup || !empty($bornado_edit_mode)) { ?>
                     <div class="bornad-card bornad-contact-methods-card bornad-contact-methods-card--desktop">
+                        <div class="bornad-card-header">
+                            <h3>روش های ارتباطی</h3>
+                        </div>
                         <div class="bornad-card-body"<?php echo bornado_edit_attr('contact'); ?>>
                             <?php
                             if ('' !== $desktop_contact_methods_markup) {
@@ -1110,6 +1120,7 @@ if ($bornado_edit_mode && function_exists('bornado_inline_edit_render_editor_she
             </div>
         </div>
 
+        <?php if (!$hide_seller_identity) { ?>
         <div class="bornad-card bornad-seller-card bornad-seller-card--mobile">
             <div class="bornad-card-header">
                 <h3>اطلاعات فروشنده</h3>
@@ -1152,6 +1163,7 @@ if ($bornado_edit_mode && function_exists('bornado_inline_edit_render_editor_she
                 <?php } ?>
             </div>
         </div>
+        <?php } ?>
 
         <?php if (isset($adforest_theme['Related_ads_on']) && '1' === (string) $adforest_theme['Related_ads_on']) { ?>
             <div class="bornad-related-wrap">

@@ -1,0 +1,115 @@
+.bornado-geo-legacy-hidden {
+    display: none !important;
+}
+
+.bornado-geo-legacy-hidden-control {
+    pointer-events: none;
+}
+
+.bornado-global-location {
+    margin: 0 0 24px;
+}
+
+.bornado-global-location__card {
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 14px;
+    background: #fff;
+    padding: 18px;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+}
+
+.bornado-global-location__header h3 {
+    margin: 0 0 16px;
+    font-size: 18px;
+}
+
+.bornado-global-location__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.bornado-global-location__field {
+    position: relative;
+}
+
+.bornado-global-location__field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.bornado-global-location__optional {
+    font-weight: 400;
+    opacity: 0.7;
+}
+
+.bornado-global-location__input-wrap {
+    position: relative;
+}
+
+.bornado-global-location__input {
+    width: 100%;
+    min-height: 48px;
+    border: 1px solid rgba(15, 23, 42, 0.15);
+    border-radius: 10px;
+    padding: 0 14px;
+    background: #fff;
+}
+
+.bornado-global-location__input:disabled {
+    background: #f8fafc;
+    color: #64748b;
+}
+
+.bornado-global-location__results {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 0;
+    right: 0;
+    z-index: 40;
+    display: none;
+    max-height: 260px;
+    overflow-y: auto;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+}
+
+.bornado-global-location__results.is-open {
+    display: block;
+}
+
+.bornado-global-location__result {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    text-align: right;
+    padding: 12px 14px;
+    cursor: pointer;
+}
+
+.bornado-global-location__result:hover,
+.bornado-global-location__result:focus {
+    background: #fff8d6;
+    outline: none;
+}
+
+.bornado-global-location__empty {
+    padding: 12px 14px;
+    color: #64748b;
+}
+
+.bornado-global-location__summary {
+    min-height: 20px;
+    margin: 8px 0 0;
+    color: #334155;
+    font-size: 13px;
+}
+
+@media (max-width: 767px) {
+    .bornado-global-location__grid {
+        grid-template-columns: 1fr;
+    }
+}

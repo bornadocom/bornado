@@ -4,6 +4,10 @@ $sb_sign_in_page = apply_filters('adforest_language_page_id', $adforest_theme['s
 $user_info = get_userdata(get_current_user_id());
 $user_id = $user_info->ID;
 $user_pic = adforest_get_user_dp($user_info->ID);
+$has_custom_user_pic = (
+    get_user_meta($user_id, '_sb_user_pic', true) !== ''
+    || get_user_meta($user_id, '_sb_user_linkedin_pic', true) !== ''
+);
 /* user type html */
 $user_type = get_user_meta($user_info->ID, '_sb_user_type', true);
 $is_indiviual = '';
@@ -214,13 +218,19 @@ if ('verified' !== $phone_status && $user_phone_number !== '') {
         <div class="col-lg-4">
             <div class="card-style">
                 <div class="card text-center widget-profile px-0 border-0">
-                    <div class="user-dp-container"
+                    <div class="user-dp-container<?php echo $has_custom_user_pic ? ' has-custom-avatar' : ''; ?>"
                          style="position: relative; display: inline-block; cursor: pointer;">
                         <img src="<?php echo esc_url($user_pic); ?>"
                              alt="<?php echo esc_html__('img', 'adforest'); ?>" id="img-upload">
                         <div class="edit-dp">
                             <i class="lni lni-camera" aria-hidden="true" id="upload_user_dp"></i>
                         </div>
+                        <button type="button"
+                                class="bornado-avatar-remove"
+                                data-bornado-avatar-remove
+                                <?php echo $has_custom_user_pic ? '' : 'hidden aria-hidden="true"'; ?>>
+                            <?php echo esc_html__('حذف عکس', 'adforest-child'); ?>
+                        </button>
                         <input type="file" id="imgInp" name="my_file_upload[]" accept="image/*"
                                class="sb_files-data form-control" style="display: none;" data-security="<?php echo wp_create_nonce('upload_user_image_nonce'); ?>">
                     </div>

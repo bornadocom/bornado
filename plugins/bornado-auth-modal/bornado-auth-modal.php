@@ -167,7 +167,7 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 					'verificationSent'      => __( 'کد تایید برای شماره شما ارسال شد.', 'bornado-auth-modal' ),
 					'phoneLoginSuccess'     => __( 'ورود با موفقیت انجام شد.', 'bornado-auth-modal' ),
 					'phoneRegisterSuccess'  => __( 'عضویت با موفقیت انجام شد.', 'bornado-auth-modal' ),
-					'phoneVerified'         => __( 'شماره موبایل تایید شد. حالا رمز عبور حساب را مشخص کنید.', 'bornado-auth-modal' ),
+					'phoneVerified'         => __( 'شماره موبایل شما تایید شد ، لطفا برای حساب خود یک رمز عبور ایجاد کنید:', 'bornado-auth-modal' ),
 					'resendCode'            => __( 'ارسال دوباره کد', 'bornado-auth-modal' ),
 					'resendIn'              => __( 'ارسال دوباره تا', 'bornado-auth-modal' ),
 					'seconds'               => __( 'ثانیه', 'bornado-auth-modal' ),

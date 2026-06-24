@@ -68,7 +68,7 @@
 		return visibleCount;
 	}
 
-	function requestCities(countryId) {
+	function requestCities(countryId, includeUrls) {
 		if (!globalConfig.ajaxUrl || !globalConfig.nonce || !globalConfig.action) {
 			return Promise.resolve([]);
 		}
@@ -77,6 +77,7 @@
 		body.set("action", globalConfig.action);
 		body.set("nonce", globalConfig.nonce);
 		body.set("country_id", String(countryId || 0));
+		body.set("include_urls", includeUrls ? "1" : "0");
 
 		return fetch(globalConfig.ajaxUrl, {
 			method: "POST",
@@ -492,7 +493,7 @@
 			this.cityList.innerHTML = '<div class="blp__empty">' + String(globalConfig.strings && globalConfig.strings.loading ? globalConfig.strings.loading : "") + "</div>";
 		}
 
-		requestCities(countryId).then(function (items) {
+		requestCities(countryId, !self.externalForm).then(function (items) {
 			self.state.citiesCache[countryId] = items;
 			self.renderCities(countryId, items);
 			if (self.config.autoSubmit && (!items.length || items.length === 1)) {

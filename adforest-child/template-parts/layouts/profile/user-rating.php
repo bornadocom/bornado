@@ -45,7 +45,7 @@ $ratings = adforest_get_all_ratings($author_id);
     <div class="container">
         <div class="row">
             <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
-                <?php require trailingslashit(get_template_directory()) . 'template-parts/layouts/profile/profile-header.php'; ?>
+                <?php require trailingslashit(get_stylesheet_directory()) . 'template-parts/layouts/profile/profile-header.php'; ?>
             </div>
             <div class="col-xxl-8 col-xl-8 col-lg-8 col-md-12 col-sm-12 col-12">
                 <nav>

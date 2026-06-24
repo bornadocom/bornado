@@ -18,7 +18,11 @@ if ( ! function_exists( 'bornado_get_phone_country_options' ) ) {
 		}
 
 		$options = array();
-		$terms   = get_terms(
+		if ( function_exists( 'bornado_location_terms_bypass_push' ) ) {
+			bornado_location_terms_bypass_push();
+		}
+
+		$terms = get_terms(
 			array(
 				'taxonomy'   => 'ad_country',
 				'parent'     => 0,
@@ -28,12 +32,20 @@ if ( ! function_exists( 'bornado_get_phone_country_options' ) ) {
 			)
 		);
 
+		if ( function_exists( 'bornado_location_terms_bypass_pop' ) ) {
+			bornado_location_terms_bypass_pop();
+		}
+
 		if ( is_wp_error( $terms ) || empty( $terms ) ) {
 			return $options;
 		}
 
 		foreach ( $terms as $term ) {
 			if ( ! $term instanceof WP_Term ) {
+				continue;
+			}
+
+			if ( function_exists( 'bornado_is_tier_one_country' ) && ! bornado_is_tier_one_country( $term ) ) {
 				continue;
 			}
 

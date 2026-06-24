@@ -16,6 +16,21 @@ final class Bornado_Country_Model {
 	const NONCE_NAME           = 'bornado_country_model_nonce';
 
 	/**
+	 * @var array<int,array<string,mixed>>
+	 */
+	private static $country_data_cache = array();
+
+	/**
+	 * @var array<int,WP_Term|null>
+	 */
+	private static $root_country_cache = array();
+
+	/**
+	 * @var array<int,WP_Term|null>
+	 */
+	private static $currency_term_cache = array();
+
+	/**
 	 * Register hooks.
 	 *
 	 * @return void
@@ -325,12 +340,17 @@ final class Bornado_Country_Model {
 			return self::get_empty_country_data();
 		}
 
+		$term_id = (int) $term->term_id;
+		if ( isset( self::$country_data_cache[ $term_id ] ) ) {
+			return self::$country_data_cache[ $term_id ];
+		}
+
 		$root_country     = self::get_root_country_term( $term );
 		$is_root          = $root_country instanceof WP_Term && (int) $root_country->term_id === (int) $term->term_id;
 		$currency_term_id = $root_country instanceof WP_Term ? (int) get_term_meta( $root_country->term_id, self::META_CURRENCY_TERM_ID, true ) : 0;
 		$currency_term    = self::get_currency_term_by_id( $currency_term_id );
 
-		return array(
+		self::$country_data_cache[ $term_id ] = array(
 			'term_id'          => $root_country instanceof WP_Term ? (int) $root_country->term_id : 0,
 			'market_slug'      => $root_country instanceof WP_Term ? (string) $root_country->slug : '',
 			'display_name_fa'  => $root_country instanceof WP_Term ? (string) $root_country->name : '',
@@ -344,6 +364,30 @@ final class Bornado_Country_Model {
 			'is_root_country'  => $is_root,
 			'root_country_id'  => $root_country instanceof WP_Term ? (int) $root_country->term_id : 0,
 		);
+
+		return self::$country_data_cache[ $term_id ];
+	}
+
+	/**
+	 * Return the normalized market status for a country/root-country term.
+	 *
+	 * @param WP_Term|int $term Term object or ID.
+	 * @return string
+	 */
+	public static function get_market_status( $term ) {
+		$data = self::get_country_data( $term );
+
+		return ! empty( $data['market_status'] ) ? (string) $data['market_status'] : '';
+	}
+
+	/**
+	 * Return whether the given country/root-country is currently Tier 1.
+	 *
+	 * @param WP_Term|int $term Term object or ID.
+	 * @return bool
+	 */
+	public static function is_tier_one_market( $term ) {
+		return 'tier1' === self::get_market_status( $term );
 	}
 
 	/**
@@ -358,18 +402,33 @@ final class Bornado_Country_Model {
 			return null;
 		}
 
+		$term_id = (int) $term->term_id;
+		if ( array_key_exists( $term_id, self::$root_country_cache ) ) {
+			return self::$root_country_cache[ $term_id ];
+		}
+
 		if ( self::is_root_country_term( $term ) ) {
+			self::$root_country_cache[ $term_id ] = $term;
 			return $term;
+		}
+
+		$parent_term = get_term( (int) $term->parent, self::TAXONOMY );
+		if ( $parent_term instanceof WP_Term && self::is_root_country_term( $parent_term ) ) {
+			self::$root_country_cache[ $term_id ] = $parent_term;
+			return $parent_term;
 		}
 
 		$ancestors = array_reverse( array_map( 'intval', get_ancestors( (int) $term->term_id, self::TAXONOMY, 'taxonomy' ) ) );
 		if ( empty( $ancestors ) ) {
+			self::$root_country_cache[ $term_id ] = null;
 			return null;
 		}
 
 		$root_country = get_term( (int) $ancestors[0], self::TAXONOMY );
 
-		return $root_country instanceof WP_Term ? $root_country : null;
+		self::$root_country_cache[ $term_id ] = $root_country instanceof WP_Term ? $root_country : null;
+
+		return self::$root_country_cache[ $term_id ];
 	}
 
 	/**
@@ -526,9 +585,15 @@ final class Bornado_Country_Model {
 			return null;
 		}
 
+		if ( array_key_exists( $term_id, self::$currency_term_cache ) ) {
+			return self::$currency_term_cache[ $term_id ];
+		}
+
 		$term = get_term( $term_id, self::CURRENCY_TAXONOMY );
 
-		return $term instanceof WP_Term ? $term : null;
+		self::$currency_term_cache[ $term_id ] = $term instanceof WP_Term ? $term : null;
+
+		return self::$currency_term_cache[ $term_id ];
 	}
 
 	/**
@@ -584,5 +649,37 @@ if ( ! function_exists( 'bornado_get_country_data' ) ) {
 		}
 
 		return Bornado_Country_Model::get_country_data( $term );
+	}
+}
+
+if ( ! function_exists( 'bornado_get_country_market_status' ) ) {
+	/**
+	 * Public helper for reading the market status of a country/root-country term.
+	 *
+	 * @param WP_Term|int $term Term object or ID.
+	 * @return string
+	 */
+	function bornado_get_country_market_status( $term ) {
+		if ( ! class_exists( 'Bornado_Country_Model' ) ) {
+			return '';
+		}
+
+		return Bornado_Country_Model::get_market_status( $term );
+	}
+}
+
+if ( ! function_exists( 'bornado_is_tier_one_country' ) ) {
+	/**
+	 * Public helper for checking whether a country/root-country is Tier 1.
+	 *
+	 * @param WP_Term|int $term Term object or ID.
+	 * @return bool
+	 */
+	function bornado_is_tier_one_country( $term ) {
+		if ( ! class_exists( 'Bornado_Country_Model' ) ) {
+			return false;
+		}
+
+		return Bornado_Country_Model::is_tier_one_market( $term );
 	}
 }

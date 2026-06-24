@@ -290,6 +290,34 @@ if (!function_exists('bornado_should_bridge_single_ad_layout')) {
     }
 }
 
+if (!function_exists('bornado_should_hide_seller_identity')) {
+    /**
+     * Hide seller identity while an imported ad still belongs to an admin account.
+     *
+     * The ownership transfer flow updates post_author, so this check automatically
+     * flips back to visible once the ad is reassigned to a regular user.
+     *
+     * @param int $ad_id Listing ID.
+     * @return bool
+     */
+    function bornado_should_hide_seller_identity($ad_id)
+    {
+        $ad_id = absint($ad_id);
+        if ($ad_id <= 0 || 'ad_post' !== get_post_type($ad_id)) {
+            return false;
+        }
+
+        $owner_id = (int) get_post_field('post_author', $ad_id);
+        if ($owner_id <= 0) {
+            return false;
+        }
+
+        $should_hide = user_can($owner_id, 'manage_options');
+
+        return (bool) apply_filters('bornado_should_hide_seller_identity', $should_hide, $ad_id, $owner_id);
+    }
+}
+
 if (!function_exists('bornado_bridge_single_ad_layout_option_for_frontend')) {
     /**
      * Replace the theme layout option only for single ad rendering.
