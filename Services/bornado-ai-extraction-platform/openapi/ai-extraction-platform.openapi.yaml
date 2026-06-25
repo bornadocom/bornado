@@ -1,0 +1,127 @@
+openapi: 3.1.0
+info:
+  title: Bornado AI Extraction Platform
+  version: 1.0.0
+servers:
+  - url: http://localhost:8086
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: Service is healthy
+  /schema:
+    get:
+      summary: Get canonical schema for a market and channel
+      security:
+        - bornadoServiceKey: []
+      parameters:
+        - in: query
+          name: market
+          schema:
+            type: string
+            default: uk
+        - in: query
+          name: channel
+          schema:
+            type: string
+            default: instagram
+      responses:
+        '200':
+          description: Canonical schema
+        '403':
+          description: Forbidden
+  /prompt-package:
+    get:
+      summary: Get composed prompt package for Make or another orchestrator
+      security:
+        - bornadoServiceKey: []
+      parameters:
+        - in: query
+          name: market
+          schema:
+            type: string
+            default: uk
+        - in: query
+          name: channel
+          schema:
+            type: string
+            default: instagram
+      responses:
+        '200':
+          description: Prompt package
+  /resolve:
+    post:
+      summary: Resolve AI output keys into target payload
+      security:
+        - bornadoSignature: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResolveRequest'
+      responses:
+        '200':
+          description: Resolution result
+        '400':
+          description: Invalid request
+        '401':
+          description: Invalid signature
+components:
+  securitySchemes:
+    bornadoServiceKey:
+      type: apiKey
+      in: header
+      name: X-Bornado-Service-Key
+    bornadoSignature:
+      type: apiKey
+      in: header
+      name: X-Bornado-Signature
+  schemas:
+    ResolveRequest:
+      type: object
+      required:
+        - extraction
+      properties:
+        market:
+          type: string
+        channel:
+          type: string
+        extraction:
+          $ref: '#/components/schemas/ExtractionResult'
+    ExtractionResult:
+      type: object
+      required:
+        - status
+        - category_key
+      properties:
+        status:
+          type: string
+        reason:
+          type:
+            - string
+            - 'null'
+        category_key:
+          type: string
+        country_key:
+          type:
+            - string
+            - 'null'
+        city_key:
+          type:
+            - string
+            - 'null'
+        ad_type_key:
+          type:
+            - string
+            - 'null'
+        ad_condition_key:
+          type:
+            - string
+            - 'null'
+        ad_warranty_key:
+          type:
+            - string
+            - 'null'

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bornado.local/schemas/extraction-result.v1.schema.json",
+  "title": "ExtractionResultV1",
+  "type": "object",
+  "required": [
+    "status",
+    "category_key",
+    "dynamic_fields"
+  ],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["approved", "pending", "rejected"]
+    },
+    "reason": {
+      "type": ["string", "null"]
+    },
+    "category_key": {
+      "type": "string"
+    },
+    "country_key": {
+      "type": ["string", "null"]
+    },
+    "city_key": {
+      "type": ["string", "null"]
+    },
+    "exact_address": {
+      "type": ["string", "null"]
+    },
+    "seo_title": {
+      "type": ["string", "null"]
+    },
+    "slug": {
+      "type": ["string", "null"]
+    },
+    "final_ad_text": {
+      "type": ["string", "null"]
+    },
+    "primary_contact": {
+      "type": ["string", "null"]
+    },
+    "secondary_contacts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "dynamic_fields": {
+      "type": "object",
+      "additionalProperties": {
+        "type": [
+          "string",
+          "number",
+          "integer",
+          "boolean",
+          "array",
+          "null"
+        ]
+      }
+    }
+  },
+  "additionalProperties": true
+}

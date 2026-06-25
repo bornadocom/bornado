@@ -508,6 +508,7 @@ wp bornado-geo seed-root-countries</pre>
 				'AN' => 'آنتیل هلند',
 				'CS' => 'صربستان و مونته نگرو',
 				'DO' => 'جمهوری دومینیکن',
+				'GB' => 'بریتانیا',
 			);
 		}
 
@@ -567,6 +568,7 @@ if ( ! class_exists( 'Bornado_Geo_Term_Manager' ) ) {
 		const META_COUNTRY_CODE            = '_bornado_country_code';
 		const META_PHONE_DIAL_CODE         = '_bornado_country_phone_dial_code';
 		const META_DISPLAY_NAME_EN         = '_bornado_country_display_name_en';
+		const META_DISPLAY_NAME_FA_OVERRIDE = '_bornado_country_display_name_fa_override';
 		const META_CURRENCY_TERM_ID        = '_bornado_country_currency_term_id';
 		const META_GEO_SOURCE              = '_bornado_geo_source';
 		const META_GEO_SOURCE_ID           = '_bornado_geo_source_id';
@@ -1267,13 +1269,17 @@ if ( ! class_exists( 'Bornado_Geo_Term_Manager' ) ) {
 		 */
 		private static function sync_root_country_term_meta( WP_Term $term, array $country ) {
 			$currency_term_id = self::resolve_currency_term_id( isset( $country['currency_code'] ) ? (string) $country['currency_code'] : '' );
+			$override_name     = sanitize_text_field( (string) get_term_meta( $term->term_id, self::META_DISPLAY_NAME_FA_OVERRIDE, true ) );
+			$target_name       = '' !== $override_name
+				? $override_name
+				: ( ! empty( $country['name_fa'] ) ? (string) $country['name_fa'] : (string) $term->name );
 
-			if ( ! empty( $country['name_fa'] ) && (string) $term->name !== (string) $country['name_fa'] ) {
+			if ( '' !== $target_name && (string) $term->name !== $target_name ) {
 				wp_update_term(
 					(int) $term->term_id,
 					self::LOCATION_TAXONOMY,
 					array(
-						'name' => (string) $country['name_fa'],
+						'name' => $target_name,
 						'slug' => self::build_root_country_slug( $country ),
 					)
 				);

@@ -1,0 +1,47 @@
+[
+    {
+        "result": {
+            "status": "approved",
+            "reason": null,
+            "category_key": "jobs",
+            "country_key": "gb",
+            "city_key": "london",
+            "exact_address": "شمال لندن",
+            "seo_title": "استخدام آرایشگر زنانه در شمال لندن",
+            "slug": "استخدام-آرایشگر-زنانه-در-شمال-لندن",
+            "final_ad_text": "به یک آرایشگر زنانه ماهر در شمال لندن نیازمندیم.",
+            "primary_contact": "07398199962",
+            "secondary_contacts": [],
+            "dynamic_fields": {}
+        },
+        "candidates": [
+            {
+                "content": {
+                    "parts": [
+                        {
+                            "text": "{\n    \"status\": \"approved\",\n    \"reason\": null,\n    \"category_key\": \"jobs\",\n    \"country_key\": \"gb\",\n    \"city_key\": \"london\",\n    \"exact_address\": \"شمال لندن\",\n    \"seo_title\": \"استخدام آرایشگر زنانه در شمال لندن\",\n    \"slug\": \"استخدام-آرایشگر-زنانه-در-شمال-لندن\",\n    \"final_ad_text\": \"به یک آرایشگر زنانه ماهر در شمال لندن نیازمندیم.\",\n    \"primary_contact\": \"07398199962\",\n    \"secondary_contacts\": [],\n    \"dynamic_fields\": {}\n}"
+                        }
+                    ],
+                    "role": "model"
+                },
+                "finishReason": "STOP",
+                "index": 0
+            }
+        ],
+        "usageMetadata": {
+            "promptTokenCount": 2611,
+            "candidatesTokenCount": 167,
+            "totalTokenCount": 4428,
+            "promptTokensDetails": [
+                {
+                    "modality": "TEXT",
+                    "tokenCount": 2611
+                }
+            ],
+            "thoughtsTokenCount": 1650,
+            "serviceTier": "standard"
+        },
+        "modelVersion": "gemini-2.5-flash",
+        "responseId": "r6o9apfDFeiUkdUP9sfA2Qc"
+    }
+]

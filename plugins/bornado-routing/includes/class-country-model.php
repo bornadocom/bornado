@@ -10,6 +10,7 @@ final class Bornado_Country_Model {
 	const META_COUNTRY_CODE    = '_bornado_country_code';
 	const META_PHONE_DIAL_CODE = '_bornado_country_phone_dial_code';
 	const META_DISPLAY_NAME_EN = '_bornado_country_display_name_en';
+	const META_DISPLAY_NAME_FA_OVERRIDE = '_bornado_country_display_name_fa_override';
 	const META_MARKET_STATUS   = '_bornado_country_market_status';
 	const META_CURRENCY_TERM_ID = '_bornado_country_currency_term_id';
 	const NONCE_ACTION         = 'bornado_country_model_save';
@@ -261,10 +262,13 @@ final class Bornado_Country_Model {
 			delete_term_meta( $term_id, self::META_COUNTRY_CODE );
 			delete_term_meta( $term_id, self::META_PHONE_DIAL_CODE );
 			delete_term_meta( $term_id, self::META_DISPLAY_NAME_EN );
+			delete_term_meta( $term_id, self::META_DISPLAY_NAME_FA_OVERRIDE );
 			delete_term_meta( $term_id, self::META_MARKET_STATUS );
 			delete_term_meta( $term_id, self::META_CURRENCY_TERM_ID );
 			return;
 		}
+
+		self::maybe_capture_manual_fa_name_override( $term );
 
 		$country_code    = isset( $_POST['bornado_country_code'] ) ? self::sanitize_country_code( wp_unslash( $_POST['bornado_country_code'] ) ) : '';
 		$phone_dial_code = isset( $_POST['bornado_country_phone_dial_code'] ) ? self::sanitize_phone_dial_code( wp_unslash( $_POST['bornado_country_phone_dial_code'] ) ) : '';
@@ -277,6 +281,42 @@ final class Bornado_Country_Model {
 		self::update_or_delete_term_meta( $term_id, self::META_DISPLAY_NAME_EN, $display_name_en );
 		self::update_or_delete_term_meta( $term_id, self::META_MARKET_STATUS, $market_status );
 		self::update_or_delete_term_meta( $term_id, self::META_CURRENCY_TERM_ID, $currency_term_id > 0 ? $currency_term_id : '' );
+	}
+
+	/**
+	 * Persist a manual Persian display-name override when an admin edits the
+	 * taxonomy term name directly.
+	 *
+	 * @param WP_Term $term Root country term.
+	 * @return void
+	 */
+	private static function maybe_capture_manual_fa_name_override( $term ) {
+		if ( ! $term instanceof WP_Term || ! isset( $_POST['name'] ) ) {
+			return;
+		}
+
+		$submitted_name = sanitize_text_field( wp_unslash( $_POST['name'] ) );
+		if ( '' === $submitted_name ) {
+			delete_term_meta( $term->term_id, self::META_DISPLAY_NAME_FA_OVERRIDE );
+			return;
+		}
+
+		$country_code = (string) get_term_meta( $term->term_id, self::META_COUNTRY_CODE, true );
+		$canonical_fa = '';
+
+		if ( class_exists( 'Bornado_Geo_Catalog' ) && method_exists( 'Bornado_Geo_Catalog', 'get_country_by_iso2' ) ) {
+			$country = Bornado_Geo_Catalog::get_country_by_iso2( $country_code );
+			if ( is_array( $country ) && ! empty( $country['name_fa'] ) ) {
+				$canonical_fa = sanitize_text_field( (string) $country['name_fa'] );
+			}
+		}
+
+		if ( '' !== $canonical_fa && $submitted_name === $canonical_fa ) {
+			delete_term_meta( $term->term_id, self::META_DISPLAY_NAME_FA_OVERRIDE );
+			return;
+		}
+
+		update_term_meta( $term->term_id, self::META_DISPLAY_NAME_FA_OVERRIDE, $submitted_name );
 	}
 
 	/**
@@ -354,6 +394,7 @@ final class Bornado_Country_Model {
 			'term_id'          => $root_country instanceof WP_Term ? (int) $root_country->term_id : 0,
 			'market_slug'      => $root_country instanceof WP_Term ? (string) $root_country->slug : '',
 			'display_name_fa'  => $root_country instanceof WP_Term ? (string) $root_country->name : '',
+			'display_name_fa_override' => $root_country instanceof WP_Term ? (string) get_term_meta( $root_country->term_id, self::META_DISPLAY_NAME_FA_OVERRIDE, true ) : '',
 			'display_name_en'  => $root_country instanceof WP_Term ? (string) get_term_meta( $root_country->term_id, self::META_DISPLAY_NAME_EN, true ) : '',
 			'country_code'     => $root_country instanceof WP_Term ? (string) get_term_meta( $root_country->term_id, self::META_COUNTRY_CODE, true ) : '',
 			'phone_dial_code'  => $root_country instanceof WP_Term ? (string) get_term_meta( $root_country->term_id, self::META_PHONE_DIAL_CODE, true ) : '',
@@ -623,6 +664,7 @@ final class Bornado_Country_Model {
 			'term_id'         => 0,
 			'market_slug'     => '',
 			'display_name_fa' => '',
+			'display_name_fa_override' => '',
 			'display_name_en' => '',
 			'country_code'    => '',
 			'phone_dial_code' => '',
