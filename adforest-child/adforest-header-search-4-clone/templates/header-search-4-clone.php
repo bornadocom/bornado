@@ -159,6 +159,51 @@ if ($needs_locations && taxonomy_exists('ad_country')) {
     }
 }
 $category_terms = $needs_categories_dropdown ? adforest_header_get_hierarchical_terms('ad_cats') : array();
+$search_filter_mode = isset($adforest_theme['sb_search_filter_mode']) ? (string) $adforest_theme['sb_search_filter_mode'] : 'category_based';
+if ($search_filter_mode === 'category') {
+    $search_filter_mode = 'category_based';
+}
+
+if (!function_exists('adforest_header_get_dynamic_field_category_map')) {
+    /**
+     * Return a sanitized slug => [category ids] map for dynamic search fields.
+     *
+     * Uses AdForest's own cached template map so header navigation can keep
+     * only category-compatible custom filters when the user switches category.
+     *
+     * @return array<string,array<int,int>>
+     */
+    function adforest_header_get_dynamic_field_category_map()
+    {
+        if (!function_exists('adforest_get_global_field_category_map')) {
+            return array();
+        }
+
+        $raw_map = adforest_get_global_field_category_map();
+        if (!is_array($raw_map)) {
+            return array();
+        }
+
+        $clean_map = array();
+        foreach ($raw_map as $slug => $category_ids) {
+            $slug = sanitize_key((string) $slug);
+            if ($slug === '' || !is_array($category_ids)) {
+                continue;
+            }
+
+            $normalized_ids = array_values(array_unique(array_filter(array_map('absint', $category_ids))));
+            if (empty($normalized_ids)) {
+                continue;
+            }
+
+            $clean_map[$slug] = $normalized_ids;
+        }
+
+        return $clean_map;
+    }
+}
+
+$dynamic_field_category_map = adforest_header_get_dynamic_field_category_map();
 
 if (!function_exists('adforest_header_render_hidden_fields')) {
     function adforest_header_render_hidden_fields($name, $value)
@@ -477,7 +522,8 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                             content: none;
                         }
 
-                        .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar .filter-box label {
+                        .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar .filter-box label,
+                        .adt-top-tabs-header .adt-hero-search-tabs .search-filters-bar .filter-box .filter-box__label {
                             position: absolute !important;
                             width: 1px;
                             height: 1px;
@@ -837,7 +883,7 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                                         $form_field_names[] = $field_name;
                                         ?>
                                         <div class="<?php echo esc_attr($wrapper_classes); ?> bornado-keyword-submit">
-                                            <label><?php echo esc_html($label_text); ?></label>
+                                            <label for="<?php echo esc_attr($field_id); ?>"><?php echo esc_html($label_text); ?></label>
                                             <div class="bornado-keyword-submit__row">
                                                 <input type="text"
                                                        id="<?php echo esc_attr($field_id); ?>"
@@ -897,7 +943,7 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                                         $form_field_names[] = $field_name;
                                         ?>
                                         <div class="<?php echo esc_attr(trim($wrapper_classes . ' bornado-location-filter')); ?>">
-                                            <label><?php echo esc_html($label_text); ?></label>
+                                            <span class="filter-box__label" id="<?php echo esc_attr($field_id); ?>-label"><?php echo esc_html($label_text); ?></span>
                                             <?php
                                             if (function_exists('bornado_render_location_picker')) {
                                                 echo bornado_render_location_picker(
@@ -956,7 +1002,7 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                                         }
                                         ?>
                                         <div class="<?php echo esc_attr(trim($wrapper_classes . ' bornado-category-filter')); ?>">
-                                            <label for="<?php echo esc_attr($field_id); ?>"><?php echo esc_html($label_text); ?></label>
+                                            <span class="filter-box__label" id="<?php echo esc_attr($field_id); ?>-label"><?php echo esc_html($label_text); ?></span>
                                             <div class="adt-header-category-picker">
                                                 <input type="hidden"
                                                        id="<?php echo esc_attr($field_id); ?>"
@@ -966,7 +1012,8 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                                                 <button type="button"
                                                         class="bornado-mobile-choice__trigger adt-header-category-picker__trigger"
                                                         aria-expanded="false"
-                                                        aria-controls="<?php echo esc_attr($category_sheet_id); ?>">
+                                                        aria-controls="<?php echo esc_attr($category_sheet_id); ?>"
+                                                        aria-labelledby="<?php echo esc_attr($field_id); ?>-label">
                                                     <span class="bornado-mobile-choice__trigger-copy">
                                                         <span class="bornado-mobile-choice__trigger-label"><?php echo esc_html($label_text); ?></span>
                                                         <span class="bornado-mobile-choice__summary"><?php echo esc_html($current_category_label); ?></span>
@@ -984,7 +1031,13 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
-                                                        <input type="search" class="bornado-mobile-choice__search adt-header-category-picker__search" placeholder="<?php echo esc_attr__('جستجو در دسته‌بندی‌ها', 'adforest'); ?>">
+                                                        <label class="screen-reader-text" for="<?php echo esc_attr($category_sheet_id); ?>-search"><?php echo esc_html__('جستجو در دسته‌بندی‌ها', 'adforest'); ?></label>
+                                                        <input type="search"
+                                                               id="<?php echo esc_attr($category_sheet_id); ?>-search"
+                                                               class="bornado-mobile-choice__search adt-header-category-picker__search"
+                                                               placeholder="<?php echo esc_attr__('جستجو در دسته‌بندی‌ها', 'adforest'); ?>"
+                                                               aria-label="<?php echo esc_attr__('جستجو در دسته‌بندی‌ها', 'adforest'); ?>"
+                                                               autocomplete="off">
                                                         <div class="bornado-mobile-choice__list adt-header-category-picker__list" role="listbox">
                                                             <li>
                                                                 <button type="button"
@@ -1060,9 +1113,63 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                 document.addEventListener("DOMContentLoaded", function () {
                     const searchForm = document.querySelector(".adt-hero-search-tabs");
                     const searchCore = window.BornadoSearchCore || null;
+                    const searchFilterMode = <?php echo wp_json_encode($search_filter_mode); ?>;
+                    const dynamicFieldCategoryMap = <?php echo wp_json_encode($dynamic_field_category_map); ?> || {};
 
                     if (!searchForm) {
                         return;
+                    }
+
+                    function getDynamicFieldSlug(paramKey) {
+                        const match = String(paramKey || "").match(/^(custom|min_custom|max_custom)\[([^\]]+)\](?:\[\])?$/);
+                        if (!match || !match[2]) {
+                            return "";
+                        }
+
+                        return String(match[2]).trim().toLowerCase();
+                    }
+
+                    function pruneIncompatibleCategoryFilters(searchParams, nextCategoryId) {
+                        if (!searchParams || typeof searchParams.forEach !== "function") {
+                            return;
+                        }
+
+                        const targetCategoryId = Number(nextCategoryId || 0);
+                        const keysToDelete = new Set();
+
+                        searchParams.forEach(function (_value, key) {
+                            const slug = getDynamicFieldSlug(key);
+                            if (!slug) {
+                                return;
+                            }
+
+                            if (targetCategoryId < 1) {
+                                if (searchFilterMode !== "global") {
+                                    keysToDelete.add(key);
+                                }
+                                return;
+                            }
+
+                            const allowedCategories = Object.prototype.hasOwnProperty.call(dynamicFieldCategoryMap, slug)
+                                ? dynamicFieldCategoryMap[slug]
+                                : null;
+
+                            if (!Array.isArray(allowedCategories) || allowedCategories.length === 0) {
+                                return;
+                            }
+
+                            const isAllowed = allowedCategories.some(function (categoryId) {
+                                return Number(categoryId || 0) === targetCategoryId;
+                            });
+
+                            if (!isAllowed) {
+                                keysToDelete.add(key);
+                            }
+                        });
+
+                        keysToDelete.forEach(function (key) {
+                            searchParams.delete(key);
+                        });
                     }
 
                     window.setCategory = function (catId) {
@@ -1075,7 +1182,10 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                     };
 
                     function submitSearchFormState() {
-                        let selectedAction = searchForm.getAttribute("data-default-action") || searchForm.getAttribute("action");
+                        let selectedAction = searchForm.getAttribute("action") || searchForm.getAttribute("data-default-action");
+                        const currentParams = searchCore && typeof searchCore.getCleanCurrentSearchParams === "function"
+                            ? searchCore.getCleanCurrentSearchParams()
+                            : new URLSearchParams(window.location.search);
 
                         const titleInput = searchForm.querySelector('[data-search-role="title"]');
                         if (titleInput) {
@@ -1139,13 +1249,21 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                             }
                         }
 
-                        if (searchCore && typeof searchCore.navigateWithForm === "function") {
-                            searchCore.navigateWithForm(searchForm, selectedAction || window.location.href);
-                            return false;
-                        }
-
                         const formData = new FormData(searchForm);
-                        const searchParams = new URLSearchParams();
+                        const searchParams = new URLSearchParams(currentParams.toString());
+                        const formKeys = new Set();
+
+                        formData.forEach(function (value, key) {
+                            const safeKey = key ? String(key).trim() : "";
+                            if (safeKey !== "") {
+                                formKeys.add(safeKey);
+                            }
+                        });
+
+                        formKeys.forEach(function (key) {
+                            searchParams.delete(key);
+                        });
+
                         formData.forEach(function (value, key) {
                             const safeKey = key ? String(key).trim() : "";
                             const safeValue = value == null ? "" : String(value).trim();
@@ -1154,8 +1272,16 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
                             }
                         });
 
+                        pruneIncompatibleCategoryFilters(
+                            searchParams,
+                            categoryInput ? categoryInput.value : ""
+                        );
+
                         const targetUrl = new URL(selectedAction || window.location.href, window.location.origin);
                         targetUrl.search = searchParams.toString();
+                        if (searchCore && typeof searchCore.persistSearchParams === "function") {
+                            searchCore.persistSearchParams(targetUrl.search);
+                        }
                         window.location.href = targetUrl.toString();
                         return false;
                     }

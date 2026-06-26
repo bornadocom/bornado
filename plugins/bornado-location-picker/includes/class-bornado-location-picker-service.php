@@ -71,7 +71,10 @@ final class Bornado_Location_Picker_Service {
 		$city_id        = ! empty( $city['id'] ) ? absint( $city['id'] ) : 0;
 		$deepest_term_id = ! empty( $selected['deepest_term_id'] ) ? absint( $selected['deepest_term_id'] ) : ( $city_id ? $city_id : $country_id );
 		$search_actions = self::normalize_search_actions( self::get_search_actions( isset( $args['widget_action'] ) ? (string) $args['widget_action'] : '' ) );
-		$include_term_urls = empty( $args['external_form_selector'] ) && empty( $args['external_input_selector'] );
+		// External search forms still need semantic target URLs so the picker can
+		// retarget the host form when the visitor switches between country-only
+		// and city-level selections.
+		$include_term_urls = true;
 		$countries         = self::get_root_country_options( $include_term_urls );
 		$cities            = $country_id > 0 ? self::get_city_options( $country_id, $include_term_urls ) : array();
 		$panel_id      = wp_unique_id( 'bornado-location-picker-' );

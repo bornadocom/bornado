@@ -18,3 +18,9 @@ button.cky-btn.cky-btn-accept {
 .cky-consent-container.cky-banner-bottom {
     direction: ltr !important;
 }
+
+@media (max-width: 767.98px) {
+    .cky-btn-revisit-wrapper.cky-revisit-bottom-left {
+        display: none !important;
+    }
+}

@@ -668,6 +668,13 @@
         }
     }
 
+    function syncPasswordLoginUsername(phoneNumber) {
+        const input = forms.passwordLogin ? forms.passwordLogin.querySelector('input[name="username"]') : null;
+        if (input) {
+            input.value = String(phoneNumber || '').trim();
+        }
+    }
+
     function resetJourney(clearInput) {
         state.currentView = 'phone-entry';
         state.continueToken = '';
@@ -696,6 +703,7 @@
         signOutFirebase();
         resetFirebaseVerifier();
         updateResendUi();
+        syncPasswordLoginUsername('');
     }
 
     function closeParentClaimModal(element) {
@@ -991,6 +999,8 @@
         if (country && select && country.dialCode) {
             select.value = country.dialCode;
         }
+
+        syncPasswordLoginUsername(phoneNumber);
     }
 
     function enhancePhoneField() {

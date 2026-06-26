@@ -236,6 +236,14 @@ if (file_exists($bornado_public_search_query_fix_bootstrap)) {
 }
 
 /**
+ * Re-apply semantic route country/category constraints directly to ad queries.
+ */
+$bornado_semantic_route_query_fix_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-semantic-route-query-fix.php';
+if (file_exists($bornado_semantic_route_query_fix_bootstrap)) {
+    require_once $bornado_semantic_route_query_fix_bootstrap;
+}
+
+/**
  * Load semantic breadcrumb override before the parent theme defines its pluggable function.
  */
 $bornado_breadcrumb_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-breadcrumbs.php';
@@ -465,6 +473,14 @@ if (file_exists($bornado_numeric_normalization_bootstrap)) {
 $bornado_performance_optimizations_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-performance-optimizations.php';
 if (file_exists($bornado_performance_optimizations_bootstrap)) {
     require_once $bornado_performance_optimizations_bootstrap;
+}
+
+/**
+ * Guard third-party tracking and noisy fallback integrations from the child theme layer.
+ */
+$bornado_tracking_guards_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-tracking-guards.php';
+if (file_exists($bornado_tracking_guards_bootstrap)) {
+    require_once $bornado_tracking_guards_bootstrap;
 }
 
 /**
@@ -1900,6 +1916,8 @@ if (!function_exists('bornado_enforce_price_slider_step')) {
         $js = <<<'JS'
         document.addEventListener('DOMContentLoaded', function () {
             var STEP = 10;
+            var queuedScope = document;
+            var isEnhanceQueued = false;
 
             function getJQuery() {
                 return window.jQuery || null;
@@ -1913,12 +1931,23 @@ if (!function_exists('bornado_enforce_price_slider_step')) {
 
                 var $slider = $(sliderNode);
                 var instance = $slider.data('ionRangeSlider');
+                var currentStep = Number($slider.attr('data-step') || 0);
+                var instanceStep = instance && instance.options ? Number(instance.options.step || 0) : 0;
                 if (!instance || !instance.result) {
+                    return;
+                }
+
+                if (
+                    sliderNode.getAttribute('data-bornado-step-applied') === '1'
+                    && currentStep === STEP
+                    && instanceStep === STEP
+                ) {
                     return;
                 }
 
                 instance.update({ step: STEP });
                 $slider.attr('data-step', String(STEP)).data('step', STEP);
+                sliderNode.setAttribute('data-bornado-step-applied', '1');
             }
 
             function enhanceAllSliders(scope) {
@@ -1938,33 +1967,55 @@ if (!function_exists('bornado_enforce_price_slider_step')) {
                 });
             }
 
-            function scheduleEnhance(scope, delay) {
-                window.setTimeout(function () {
-                    enhanceAllSliders(scope || document);
-                }, delay || 0);
+            function flushEnhanceQueue() {
+                var scope = queuedScope || document;
+                queuedScope = document;
+                isEnhanceQueued = false;
+                enhanceAllSliders(scope);
             }
 
-            scheduleEnhance(document, 0);
-            scheduleEnhance(document, 300);
-            scheduleEnhance(document, 1000);
+            function queueEnhance(scope, delay) {
+                if (delay && delay > 0) {
+                    window.setTimeout(function () {
+                        queueEnhance(scope, 0);
+                    }, delay);
+                    return;
+                }
+
+                queuedScope = scope || queuedScope || document;
+                if (isEnhanceQueued) {
+                    return;
+                }
+
+                isEnhanceQueued = true;
+                if (typeof window.requestAnimationFrame === 'function') {
+                    window.requestAnimationFrame(flushEnhanceQueue);
+                    return;
+                }
+
+                window.setTimeout(flushEnhanceQueue, 16);
+            }
+
+            queueEnhance(document, 0);
+            queueEnhance(document, 400);
 
             var $ = getJQuery();
             if ($) {
                 $(window).on('load', function () {
-                    scheduleEnhance(document, 0);
+                    queueEnhance(document, 0);
                 });
 
                 $(document).on('adforest:search:rendered', function () {
-                    scheduleEnhance(document, 0);
+                    queueEnhance(document, 0);
                 });
 
                 $(document).ajaxComplete(function () {
-                    scheduleEnhance(document, 0);
+                    queueEnhance(document, 0);
                 });
             }
 
             document.addEventListener('adforestCategoryTemplateLoaded', function () {
-                scheduleEnhance(document, 0);
+                queueEnhance(document, 0);
             });
         });
         JS;
@@ -2129,69 +2180,28 @@ if (!function_exists('bornado_hide_adt_ads_sort_box_everywhere')) {
 }
 add_action('wp_enqueue_scripts', 'bornado_hide_adt_ads_sort_box_everywhere', 240);
 
-/**
- * Temporary live-debug marker for category widget troubleshooting.
- *
- * Prints a very visible browser-console signal directly from the child theme's
- * main functions file so we can confirm that this exact runtime is executing on
- * the live site, independent of downstream helper includes.
- */
-add_action('wp_footer', function () {
-    if (is_admin()) {
-        return;
+if (!function_exists('bornado_enqueue_form_a11y_fixes')) {
+    /**
+     * Patch third-party and dynamic frontend form markup from the child theme layer.
+     */
+    function bornado_enqueue_form_a11y_fixes()
+    {
+        if (is_admin()) {
+            return;
+        }
+
+        $script_path = get_stylesheet_directory() . '/assets/js/bornado-form-a11y-fixes.js';
+        if (!file_exists($script_path)) {
+            return;
+        }
+
+        wp_enqueue_script(
+            'bornado-form-a11y-fixes',
+            get_stylesheet_directory_uri() . '/assets/js/bornado-form-a11y-fixes.js',
+            array(),
+            (string) filemtime($script_path),
+            true
+        );
     }
-
-    $payload = array(
-        'source' => 'adforest-child/functions.php',
-        'stylesheet' => get_stylesheet(),
-        'template' => get_template(),
-        'is_ad_search_view' => function_exists('bornado_is_ad_search_view') ? (bool) bornado_is_ad_search_view() : null,
-        'request_uri' => isset($_SERVER['REQUEST_URI']) ? (string) wp_unslash($_SERVER['REQUEST_URI']) : '',
-        'category_widget_fix_loaded' => function_exists('bornado_category_widget_context_fix_config'),
-        'contextual_count_helper_loaded' => function_exists('bornado_category_widget_get_contextual_ad_count'),
-    );
-    ?>
-    <script id="bornado-functions-php-debug">
-        console.log('[BORNADO_FUNCTIONS_PHP_DEBUG]', <?php echo wp_json_encode($payload); ?>);
-    </script>
-    <?php
-}, 999);
-
-/**
- * Temporary visual debug badge for confirming live child-theme execution.
- *
- * Visit any frontend page with `?bornado_debug=1` (or append `&bornado_debug=1`)
- * to render a fixed badge directly from `functions.php`. This avoids confusion
- * from unrelated browser-console noise while we verify the live runtime.
- */
-add_action('wp_footer', function () {
-    if (is_admin() || !isset($_GET['bornado_debug'])) {
-        return;
-    }
-
-    $is_enabled = strtolower((string) wp_unslash($_GET['bornado_debug']));
-    if (!in_array($is_enabled, array('1', 'true', 'yes'), true)) {
-        return;
-    }
-
-    $payload = array(
-        'source' => 'adforest-child/functions.php',
-        'stylesheet' => get_stylesheet(),
-        'template' => get_template(),
-        'is_ad_search_view' => function_exists('bornado_is_ad_search_view') ? (bool) bornado_is_ad_search_view() : null,
-        'request_uri' => isset($_SERVER['REQUEST_URI']) ? (string) wp_unslash($_SERVER['REQUEST_URI']) : '',
-        'category_widget_fix_loaded' => function_exists('bornado_category_widget_context_fix_config') ? 'yes' : 'no',
-        'contextual_count_helper_loaded' => function_exists('bornado_category_widget_get_contextual_ad_count') ? 'yes' : 'no',
-    );
-    ?>
-    <div id="bornado-live-debug-badge" style="position:fixed;left:16px;bottom:16px;z-index:2147483647;max-width:360px;background:#111;color:#fff;padding:12px 14px;border:2px solid #ff002e;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.35);font:12px/1.7 monospace;direction:ltr;text-align:left;">
-        <div style="font-weight:700;color:#ff4d6d;margin-bottom:6px;">BORNADO_FUNCTIONS_PHP_DEBUG</div>
-        <div>source: <?php echo esc_html($payload['source']); ?></div>
-        <div>stylesheet: <?php echo esc_html($payload['stylesheet']); ?></div>
-        <div>template: <?php echo esc_html($payload['template']); ?></div>
-        <div>search_view: <?php echo esc_html(wp_json_encode($payload['is_ad_search_view'])); ?></div>
-        <div>widget_fix: <?php echo esc_html($payload['category_widget_fix_loaded']); ?></div>
-        <div>count_helper: <?php echo esc_html($payload['contextual_count_helper_loaded']); ?></div>
-    </div>
-    <?php
-}, 1000);
+}
+add_action('wp_enqueue_scripts', 'bornado_enqueue_form_a11y_fixes', 245);

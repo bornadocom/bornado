@@ -398,6 +398,10 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 
 							<section class="bornado-auth-view" data-view="password-login">
 								<form id="bornado-auth-password-login-form" novalidate>
+									<div class="bornado-auth-autofill-username" aria-hidden="true">
+										<label for="bornado-auth-password-login-username"><?php esc_html_e( 'شماره موبایل', 'bornado-auth-modal' ); ?></label>
+										<input type="text" id="bornado-auth-password-login-username" name="username" autocomplete="username" tabindex="-1">
+									</div>
 									<div class="bornado-auth-field">
 										<label for="bornado-auth-password-login-input"><?php esc_html_e( 'رمز عبور', 'bornado-auth-modal' ); ?></label>
 										<input type="password" id="bornado-auth-password-login-input" name="password" autocomplete="current-password" placeholder="<?php esc_attr_e( 'رمز عبور', 'bornado-auth-modal' ); ?>">

@@ -97,6 +97,26 @@
 		});
 	}
 
+	function syncFormAction(form, city, country, fallbackUrl) {
+		if (!form) {
+			return;
+		}
+
+		if (city && city.url) {
+			form.action = city.url;
+			return;
+		}
+
+		if (country && country.url) {
+			form.action = country.url;
+			return;
+		}
+
+		if (fallbackUrl) {
+			form.action = fallbackUrl;
+		}
+	}
+
 	function resolveExternalNode(root, selector) {
 		if (!selector) {
 			return null;
@@ -419,15 +439,14 @@
 			this.activeInput.value = String(this.state.committed.cityId || this.state.committed.countryId || "");
 		}
 
-		if (this.form && !this.externalForm) {
-			if (city && city.url) {
-				this.form.action = city.url;
-			} else if (country && country.url) {
-				this.form.action = country.url;
-			} else if (this.config.actions && this.config.actions.all_countries_action) {
-				this.form.action = this.config.actions.all_countries_action;
-			}
-		}
+		syncFormAction(
+			this.activeForm,
+			city,
+			country,
+			this.config.actions && this.config.actions.all_countries_action
+				? this.config.actions.all_countries_action
+				: ""
+		);
 
 		this.refreshSelectionClasses();
 	};
@@ -493,7 +512,7 @@
 			this.cityList.innerHTML = '<div class="blp__empty">' + String(globalConfig.strings && globalConfig.strings.loading ? globalConfig.strings.loading : "") + "</div>";
 		}
 
-		requestCities(countryId, !self.externalForm).then(function (items) {
+		requestCities(countryId, true).then(function (items) {
 			self.state.citiesCache[countryId] = items;
 			self.renderCities(countryId, items);
 			if (self.config.autoSubmit && (!items.length || items.length === 1)) {
@@ -518,9 +537,14 @@
 		this.state.selected.countryId = 0;
 		this.state.selected.cityId = 0;
 		this.state.selected.deepestTermId = 0;
-		if (this.form && this.config.actions && this.config.actions.all_countries_action) {
-			this.form.action = this.config.actions.all_countries_action;
-		}
+		syncFormAction(
+			this.activeForm,
+			null,
+			null,
+			this.config.actions && this.config.actions.all_countries_action
+				? this.config.actions.all_countries_action
+				: ""
+		);
 		this.renderCities(0, []);
 		this.refreshSelectionClasses();
 		if (this.config.autoSubmit && this.config.submitOnApply) {

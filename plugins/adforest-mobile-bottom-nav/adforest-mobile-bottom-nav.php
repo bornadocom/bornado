@@ -989,7 +989,13 @@ final class ADF_Mobile_Bottom_Nav {
 						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 5l.7.7L12 10.59l4.9-4.89.7-.7 1.4 1.41-.7.7L13.41 12l4.89 4.9.7.7-1.41 1.4-.7-.7L12 13.41l-4.9 4.89-.7.7-1.4-1.41.7-.7L10.59 12 5.7 7.1l-.7-.7L6.4 5z"/></svg>
 					</button>
 				</div>
-				<input type="text" class="adf-mobile-category-sheet__search bornado-mobile-choice__search" placeholder="<?php esc_attr_e( 'جستجوی دسته‌بندی...', 'adf-mobile-bottom-nav' ); ?>">
+				<label class="screen-reader-text" for="adf-mobile-category-sheet-search"><?php esc_html_e( 'جستجوی دسته‌بندی', 'adf-mobile-bottom-nav' ); ?></label>
+				<input type="text"
+				       id="adf-mobile-category-sheet-search"
+				       class="adf-mobile-category-sheet__search bornado-mobile-choice__search"
+				       placeholder="<?php esc_attr_e( 'جستجوی دسته‌بندی...', 'adf-mobile-bottom-nav' ); ?>"
+				       aria-label="<?php esc_attr_e( 'جستجوی دسته‌بندی', 'adf-mobile-bottom-nav' ); ?>"
+				       autocomplete="off">
 				<ul class="adf-mobile-category-sheet__list bornado-mobile-choice__list"></ul>
 			</div>
 		</div>

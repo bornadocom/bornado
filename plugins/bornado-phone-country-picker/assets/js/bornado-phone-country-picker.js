@@ -12,6 +12,7 @@
         : null;
     var countryMap = buildCountryMap(countries);
     var observer = null;
+    var panelSequence = 0;
 
     function getI18n(key) {
         return config.i18n && config.i18n[key] ? String(config.i18n[key]) : key;
@@ -419,14 +420,22 @@
         var search = document.createElement("input");
         var list = document.createElement("div");
         var empty = document.createElement("div");
+        var panelId;
+        var searchId;
 
         panel.className = "bpcp__panel";
         panel.hidden = true;
+        panelSequence += 1;
+        panelId = "bpcp-panel-" + panelSequence;
+        searchId = "bpcp-search-" + panelSequence;
+        panel.id = panelId;
 
         search.type = "search";
+        search.id = searchId;
         search.className = "bpcp__search";
         search.placeholder = getI18n("searchPlaceholder");
         search.autocomplete = "off";
+        search.setAttribute("aria-label", getI18n("searchPlaceholder"));
 
         list.className = "bpcp__list";
         empty.className = "bpcp__empty";
