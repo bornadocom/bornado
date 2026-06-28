@@ -312,23 +312,36 @@ if ($modern_post_ad_page_id > 0) {
     }
 }
 if ($modern_post_ad_page_id < 1) {
-    $bornado_modern_post_pages = get_posts(array(
-        'post_type'              => 'page',
-        'post_status'            => array('publish', 'private'),
-        'posts_per_page'         => 1,
-        'fields'                 => 'ids',
-        'meta_key'               => '_wp_page_template',
-        'meta_value'             => 'page-add-new.php',
-        'orderby'                => 'menu_order title',
-        'order'                  => 'ASC',
-        'suppress_filters'       => false,
-        'update_post_meta_cache' => false,
-        'update_post_term_cache' => false,
-        'no_found_rows'          => true,
-    ));
-    if (!empty($bornado_modern_post_pages)) {
-        $modern_post_ad_page_id = (int) $bornado_modern_post_pages[0];
-        $ad_update_source       = 'modern-template-fallback';
+    $cached_modern_post_page_id = (int) get_option('bornado_modern_post_ad_page_fallback_id', 0);
+    if (
+        $cached_modern_post_page_id > 0
+        && 'page' === get_post_type($cached_modern_post_page_id)
+        && 'page-add-new.php' === get_page_template_slug($cached_modern_post_page_id)
+    ) {
+        $modern_post_ad_page_id = $cached_modern_post_page_id;
+        $ad_update_source       = 'modern-template-fallback-cached';
+    } else {
+        $bornado_modern_post_pages = get_posts(array(
+            'post_type'              => 'page',
+            'post_status'            => array('publish', 'private'),
+            'posts_per_page'         => 1,
+            'fields'                 => 'ids',
+            'meta_key'               => '_wp_page_template',
+            'meta_value'             => 'page-add-new.php',
+            'orderby'                => 'menu_order title',
+            'order'                  => 'ASC',
+            'suppress_filters'       => false,
+            'update_post_meta_cache' => false,
+            'update_post_term_cache' => false,
+            'no_found_rows'          => true,
+        ));
+        if (!empty($bornado_modern_post_pages)) {
+            $modern_post_ad_page_id = (int) $bornado_modern_post_pages[0];
+            $ad_update_source       = 'modern-template-fallback';
+            update_option('bornado_modern_post_ad_page_fallback_id', $modern_post_ad_page_id, false);
+        } else {
+            delete_option('bornado_modern_post_ad_page_fallback_id');
+        }
     }
 }
 if ($modern_post_ad_page_id > 0) {
@@ -363,14 +376,10 @@ $hide_seller_identity  = function_exists('bornado_should_hide_seller_identity')
     ? (bool) bornado_should_hide_seller_identity($pid)
     : false;
 $claim_enabled         = !empty($adforest_theme['allow_claim']);
-$claim_is_logged_in    = is_user_logged_in();
-$claim_is_owner        = $claim_is_logged_in && ((int) $current_user_id === (int) $poster_id);
-$claim_is_claimed      = function_exists('bornado_is_ad_claim_already_approved')
-    ? bornado_is_ad_claim_already_approved($pid)
-    : false;
-$claim_existing_id     = ($claim_is_logged_in && function_exists('bornado_get_existing_claim_post_id'))
-    ? bornado_get_existing_claim_post_id($pid, $current_user_id)
-    : 0;
+$claim_is_logged_in    = $claim_enabled && is_user_logged_in();
+$claim_is_owner        = false;
+$claim_is_claimed      = false;
+$claim_existing_id     = 0;
 $claim_login_page      = apply_filters('adforest_language_page_id', $adforest_theme['sb_sign_in_page'] ?? '');
 $claim_login_url       = '';
 $current_page_url      = function_exists('adforest_get_current_url')
@@ -416,10 +425,22 @@ $show_toolbar_chat = $sb_chat_feature_active
     && $has_custom_contact_methods
     && in_array('site_message', $selected_contact_methods, true);
 $claim_contact_value   = $claim_is_logged_in ? (string) get_user_meta($current_user_id, '_sb_contact', true) : '';
-$smart_claim_context   = function_exists('bornado_get_ad_ownership_claim_context')
-    ? (array) bornado_get_ad_ownership_claim_context($pid)
-    : array();
-$claim_uses_phone_flow = !empty($smart_claim_context['has_phone']);
+$smart_claim_context   = array();
+$claim_uses_phone_flow = false;
+
+if ($claim_enabled) {
+    $claim_is_owner = $claim_is_logged_in && ((int) $current_user_id === (int) $poster_id);
+    $claim_is_claimed = function_exists('bornado_is_ad_claim_already_approved')
+        ? bornado_is_ad_claim_already_approved($pid)
+        : false;
+    $claim_existing_id = ($claim_is_logged_in && function_exists('bornado_get_existing_claim_post_id'))
+        ? bornado_get_existing_claim_post_id($pid, $current_user_id)
+        : 0;
+    $smart_claim_context = function_exists('bornado_get_ad_ownership_claim_context')
+        ? (array) bornado_get_ad_ownership_claim_context($pid)
+        : array();
+    $claim_uses_phone_flow = !empty($smart_claim_context['has_phone']);
+}
 
 if (!$claim_is_logged_in && !empty($claim_login_page)) {
     $claim_login_url = $guest_login_url;
@@ -479,14 +500,20 @@ $ad_condition_name     = (!is_wp_error($ad_selected_condition) && !empty($ad_sel
     ? $ad_selected_condition[0]->name
     : '';
 
-$ad_condition_val = wp_get_post_terms($pid, 'ad_condition');
-$ad_condition_val = (!is_wp_error($ad_condition_val) && !empty($ad_condition_val) && isset($ad_condition_val[0]->name))
-    ? $ad_condition_val[0]->name
+$ad_condition_val = (!is_wp_error($ad_selected_condition) && !empty($ad_selected_condition) && isset($ad_selected_condition[0]->name))
+    ? $ad_selected_condition[0]->name
     : get_post_meta($pid, '_adforest_ad_condition', true);
 
-$ad_details            = get_ad_post_details($pid);
-$ad_category_selected  = isset($ad_details['categories']) && is_array($ad_details['categories']) ? $ad_details['categories'] : array();
-$ad_country_selected   = isset($ad_details['countries']) && is_array($ad_details['countries']) ? $ad_details['countries'] : array();
+$ad_category_selected  = wp_get_post_terms($pid, 'ad_cats', array(
+    'orderby' => 'parent',
+    'order'   => 'ASC',
+));
+$ad_country_selected   = wp_get_post_terms($pid, 'ad_country', array(
+    'orderby' => 'parent',
+    'order'   => 'ASC',
+));
+$ad_category_selected  = (is_wp_error($ad_category_selected) || !is_array($ad_category_selected)) ? array() : $ad_category_selected;
+$ad_country_selected   = (is_wp_error($ad_country_selected) || !is_array($ad_country_selected)) ? array() : $ad_country_selected;
 $category_links        = array();
 $country_links         = array();
 $country_summary_value = '';

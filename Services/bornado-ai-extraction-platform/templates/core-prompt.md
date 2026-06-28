@@ -41,6 +41,10 @@ Ignore unrelated content such as:
 # Contact Extraction Rules
 Only extract a contact method if it is clearly tied to the advertiser of the core ad.
 
+`primary_contact` is reserved ONLY for one real advertiser phone number.
+Never place Instagram IDs, Telegram IDs, WhatsApp usernames, social handles, website URLs, email addresses, names, or publisher metadata inside `primary_contact`.
+Non-phone contact methods are not a substitute for a phone number and do not make an ad approvable by themselves.
+
 A contact method is valid only if:
 1. It appears inside the main ad text itself, or
 2. It appears near the core ad description and clearly belongs to the same offer or request, or
@@ -48,7 +52,15 @@ A contact method is valid only if:
 
 If multiple valid phone numbers exist:
 - choose the clearest advertiser contact as `primary_contact`
-- place all other valid advertiser contacts in `secondary_contacts`
+- you may place additional valid phone numbers in `secondary_contacts`
+
+If no valid phone number can be extracted confidently:
+- set `primary_contact` to `null`
+- reject the ad
+
+If a phone-like string is ambiguous or you are not confident it is a real advertiser phone number for the core ad:
+- do not guess
+- prefer `pending` rather than inventing a phone number or placing a non-phone contact in `primary_contact`
 
 # Acceptance Logic
 Approve only ads that clearly fit these commercial/community intents:
@@ -60,10 +72,10 @@ Approve only ads that clearly fit these commercial/community intents:
 - specific community requests
 
 Reject immediately if:
-1. The core ad has no valid advertiser contact info
+1. The core ad has no valid advertiser phone number for `primary_contact`
 2. The content is unrelated to marketplace use, such as politics, news, jokes, generic educational content, free-item requests, or financial aid requests
 
-If you are not confident about contact attribution, category, or location, prefer `pending`.
+If you are not confident about phone attribution, category, or location, prefer `pending`.
 
 # Dynamic Schema
 Use ONLY the options inside the dynamic schema below. Never invent category keys, location keys, field keys, or choice keys outside this schema.
@@ -106,11 +118,14 @@ If `stage` is `extract`:
 # Formatting Rules
 - Convert all extracted digits to standard English digits `0-9`
 - Remove spaces and dashes from phone numbers
+- `primary_contact` must contain only a normalized phone number, not a username or descriptive text
 - Do not use `@` for social IDs; write them as Persian phrases such as `آیدی اینستاگرام: example`
 - `slug` must be Persian, hyphen-separated, concise, and without emoji
+- Build `slug` from only 3-6 core SEO words of the ad, not the full title or a full sentence
+- Remove filler words such as `و`, `برای`, `در`, and `با` when possible, and never end `slug` with an incomplete word
 - `final_ad_text` must contain only the core ad content and must not repeat the primary phone number
 
 # Output Contract
 Return only valid JSON that matches this contract:
-
+    
 {{OUTPUT_CONTRACT_JSON}}

@@ -452,6 +452,14 @@ if (file_exists($bornado_my_listings_fix_bootstrap)) {
 }
 
 /**
+ * Archive sold/expired ads and 301 them to their exact category/location branch.
+ */
+$bornado_ad_archive_redirects_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-ad-archive-redirects.php';
+if (file_exists($bornado_ad_archive_redirects_bootstrap)) {
+    require_once $bornado_ad_archive_redirects_bootstrap;
+}
+
+/**
  * Keep RTL phone numbers visually stable across frontend views.
  */
 $bornado_phone_display_fix_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-phone-display-fix.php';
@@ -2205,3 +2213,428 @@ if (!function_exists('bornado_enqueue_form_a11y_fixes')) {
     }
 }
 add_action('wp_enqueue_scripts', 'bornado_enqueue_form_a11y_fixes', 245);
+
+if (!function_exists('bornado_enqueue_message_poll_guard')) {
+    /**
+     * Keep AdForest's global unread-message poller from flooding admin-ajax.
+     *
+     * The parent script starts `sb_check_messages` with a raw interval value.
+     * On admin-facing screens that poll is unnecessary, and on any slow page
+     * overlapping requests can pile up until the browser runs out of resources.
+     * Patch the behavior from the child theme without editing theme core files.
+     */
+    function bornado_enqueue_message_poll_guard()
+    {
+        if (!is_user_logged_in()) {
+            return;
+        }
+
+        $script_path = get_stylesheet_directory() . '/assets/js/bornado-message-poll-guard.js';
+        if (!file_exists($script_path)) {
+            return;
+        }
+
+        $deps = array('jquery');
+        if (wp_script_is('adforest-custom', 'registered') || wp_script_is('adforest-custom', 'enqueued')) {
+            $deps[] = 'adforest-custom';
+        }
+
+        wp_enqueue_script(
+            'bornado-message-poll-guard',
+            get_stylesheet_directory_uri() . '/assets/js/bornado-message-poll-guard.js',
+            $deps,
+            (string) filemtime($script_path),
+            true
+        );
+    }
+}
+add_action('wp_enqueue_scripts', 'bornado_enqueue_message_poll_guard', 260);
+add_action('admin_enqueue_scripts', 'bornado_enqueue_message_poll_guard', 260);
+
+if (!function_exists('bornado_dequeue_rank_math_editor_assets_on_widgets_screen')) {
+    /**
+     * Prevent editor-only Rank Math assets from colliding with the block widgets UI.
+     *
+     * The block-based widgets screen already boots its own interface data store.
+     * When SEO/editor bundles meant for post editing are loaded there as well,
+     * WordPress can log `Store "core/interface" is already registered`.
+     * Keep the workaround scoped to `widgets.php` so normal Rank Math editors
+     * remain untouched.
+     *
+     * @param string $hook_suffix Current admin page hook suffix.
+     * @return void
+     */
+    function bornado_dequeue_rank_math_editor_assets_on_widgets_screen($hook_suffix)
+    {
+        $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+        $is_widgets_screen = ($hook_suffix === 'widgets.php')
+            || ($screen && isset($screen->base) && (string) $screen->base === 'widgets');
+
+        if (!$is_widgets_screen) {
+            return;
+        }
+
+        $script_handles = array(
+            'rank-math-editor',
+            'rank-math-formats',
+            'rank-math-primary-term',
+            'rank-math-schema',
+            'rank-math-schema-pro',
+            'rank-math-pro-schema',
+            'rank-math-pro-schema-filters',
+            'rank-math-content-ai',
+            'rank-math-content-ai-media',
+        );
+
+        foreach ($script_handles as $handle) {
+            wp_dequeue_script($handle);
+        }
+
+        $style_handles = array(
+            'rank-math-editor',
+            'rank-math-schema',
+            'rank-math-schema-pro',
+            'rank-math-content-ai-page',
+        );
+
+        foreach ($style_handles as $handle) {
+            wp_dequeue_style($handle);
+        }
+    }
+}
+add_action('admin_enqueue_scripts', 'bornado_dequeue_rank_math_editor_assets_on_widgets_screen', 999);
+
+if (!function_exists('bornado_is_non_production_host')) {
+    /**
+     * Treat any host other than the production domain as non-production.
+     *
+     * @return bool
+     */
+    function bornado_is_non_production_host()
+    {
+        $host = isset($_SERVER['HTTP_HOST']) ? strtolower(trim((string) wp_unslash($_SERVER['HTTP_HOST']))) : '';
+        $host = preg_replace('/:\d+$/', '', $host);
+
+        return !in_array($host, array('bornado.com', 'www.bornado.com'), true);
+    }
+}
+
+if (!function_exists('bornado_cookieyes_markup_strip_patterns')) {
+    /**
+     * Regex patterns matching CookieYes script embeds that must never run inside
+     * the WordPress admin or block-editor widget previews.
+     *
+     * @return array<int,string>
+     */
+    function bornado_cookieyes_markup_strip_patterns()
+    {
+        return array(
+            // Remote CookieYes cloud loader (cdn-cookieyes.com/client_data/.../script.js).
+            '#<script\b[^>]*\bsrc=(["\'])[^"\']*cookieyes[^"\']*\1[^>]*>\s*</script>#i',
+            // CookieYes loader referenced by its fixed id attribute.
+            '#<script\b[^>]*\bid=(["\'])cookieyes\1[^>]*>\s*</script>#i',
+            // Google Consent Mode helper shipped alongside the loader.
+            '#<script\b[^>]*\bid=(["\'])cookie-law-info-gcm[^"\']*\1[^>]*>.*?</script>#is',
+        );
+    }
+}
+
+if (!function_exists('bornado_strip_cookieyes_markup')) {
+    /**
+     * Remove CookieYes script embeds from an HTML fragment.
+     *
+     * @param string $html HTML fragment.
+     * @return string
+     */
+    function bornado_strip_cookieyes_markup($html)
+    {
+        if (!is_string($html) || $html === '' || stripos($html, 'cookieyes') === false) {
+            return $html;
+        }
+
+        return (string) preg_replace(bornado_cookieyes_markup_strip_patterns(), '', $html);
+    }
+}
+
+if (!function_exists('bornado_strip_cookieyes_scripts_from_widgets_admin')) {
+    /**
+     * Remove CookieYes embeds from the block widgets admin page output.
+     *
+     * Acts as a defensive net for any CookieYes markup that reaches the static
+     * widgets.php HTML. The remote loader has no purpose inside the admin and,
+     * when it runs there, throws a noisy domain-mismatch error.
+     *
+     * @param string $html Full admin page HTML.
+     * @return string
+     */
+    function bornado_strip_cookieyes_scripts_from_widgets_admin($html)
+    {
+        return bornado_strip_cookieyes_markup($html);
+    }
+}
+
+if (!function_exists('bornado_buffer_widgets_admin_without_cookieyes')) {
+    /**
+     * Start a one-page output buffer for the widgets admin (all hosts).
+     *
+     * @return void
+     */
+    function bornado_buffer_widgets_admin_without_cookieyes()
+    {
+        if (!is_admin()) {
+            return;
+        }
+
+        $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+        if (!$screen || !isset($screen->base) || (string) $screen->base !== 'widgets') {
+            return;
+        }
+
+        ob_start('bornado_strip_cookieyes_scripts_from_widgets_admin');
+    }
+}
+add_action('current_screen', 'bornado_buffer_widgets_admin_without_cookieyes', 20);
+
+if (!function_exists('bornado_remove_cookieyes_frontend_hooks')) {
+    /**
+     * Detach every CookieYes front-end output callback from the current request.
+     *
+     * The CookieYes plugin registers its loader on the front-end `wp_head`,
+     * `wp_footer` and `wp_enqueue_scripts` actions. WordPress reuses those same
+     * front-end actions when rendering a Legacy Widget preview inside an iframe,
+     * so the loader leaks into the block widgets editor. Removing the callbacks
+     * by class namespace keeps the change targeted and reversible per request.
+     *
+     * @return void
+     */
+    function bornado_remove_cookieyes_frontend_hooks()
+    {
+        global $wp_filter;
+
+        $hooks = array(
+            'wp_head',
+            'wp_footer',
+            'wp_enqueue_scripts',
+            'wp_print_styles',
+            'wp_print_footer_scripts',
+        );
+
+        foreach ($hooks as $hook) {
+            if (empty($wp_filter[$hook]) || !($wp_filter[$hook] instanceof WP_Hook)) {
+                continue;
+            }
+
+            foreach ($wp_filter[$hook]->callbacks as $priority => $callbacks) {
+                foreach ($callbacks as $callback) {
+                    $function = isset($callback['function']) ? $callback['function'] : null;
+                    if (
+                        is_array($function)
+                        && isset($function[0])
+                        && is_object($function[0])
+                        && strpos(get_class($function[0]), 'CookieYes') !== false
+                    ) {
+                        remove_action($hook, $function, $priority);
+                    }
+                }
+            }
+        }
+    }
+}
+
+if (!function_exists('bornado_block_cookieyes_in_iframe_preview')) {
+    /**
+     * Suppress CookieYes output during Legacy Widget preview iframe renders.
+     *
+     * WordPress defines `IFRAME_REQUEST` while building the Legacy Widget
+     * preview document (see `render_legacy_widget_preview_iframe()` and
+     * `handle_legacy_widget_preview_iframe()`), which is the only front-end
+     * `wp_head`/`wp_footer` render that fires from the widgets editor. Running
+     * at priority 0 lets us detach the loader before it prints.
+     *
+     * @return void
+     */
+    function bornado_block_cookieyes_in_iframe_preview()
+    {
+        if (!defined('IFRAME_REQUEST') || !IFRAME_REQUEST) {
+            return;
+        }
+
+        bornado_remove_cookieyes_frontend_hooks();
+    }
+}
+add_action('wp_enqueue_scripts', 'bornado_block_cookieyes_in_iframe_preview', 0);
+add_action('wp_head', 'bornado_block_cookieyes_in_iframe_preview', 0);
+
+if (!function_exists('bornado_reduce_block_editor_assets_on_widgets_screen')) {
+    /**
+     * Drop post-editor-only block assets that bloat (and double-register stores
+     * on) the block widgets screen.
+     *
+     * Third-party editor bundles hook `enqueue_block_editor_assets`, which also
+     * fires on `widgets.php`. Several of them ship their own copy of WordPress
+     * packages, producing `Store "core/interface" is already registered` and
+     * needless load. These blocks are not usable inside widget areas, so the
+     * removal is scoped to the widgets screen only.
+     *
+     * @param string $hook_suffix Current admin page hook suffix.
+     * @return void
+     */
+    function bornado_reduce_block_editor_assets_on_widgets_screen($hook_suffix)
+    {
+        $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+        $is_widgets_screen = ($hook_suffix === 'widgets.php')
+            || ($screen && isset($screen->base) && (string) $screen->base === 'widgets');
+
+        if (!$is_widgets_screen) {
+            return;
+        }
+
+        $script_handles = array(
+            'contact-form-7-contact-form-selector-editor-script',
+            'wpforms-gutenberg-form-selector',
+            'elementor-ai-gutenberg',
+            'rank-math-command-editor-script',
+            'rank-math-faq-block-editor-script-2',
+            'rank-math-howto-block-editor-script-2',
+            'rank-math-howto-block',
+            'rank-math-toc-block-editor-script',
+            'rank-math-rich-snippet-editor-script',
+            'rank-math-related-posts-editor-script',
+        );
+
+        foreach ($script_handles as $handle) {
+            wp_dequeue_script($handle);
+        }
+    }
+}
+add_action('admin_enqueue_scripts', 'bornado_reduce_block_editor_assets_on_widgets_screen', 1000);
+
+/*
+ * -------------------------------------------------------------------------
+ * Front-end performance: safe, additive-only optimizations.
+ *
+ * These helpers never remove functionality or alter behavior. They only add
+ * network resource hints and a single `fetchpriority` attribute to the
+ * largest-contentful-paint image, so they cannot break the site.
+ *
+ * NOTE: The dominant performance issue measured by Lighthouse is the server
+ * response time (TTFB ~9s). That is a hosting/database/page-cache concern and
+ * cannot be fixed from the theme. The hints below help the rendering pipeline
+ * around it but the server response itself must be addressed separately.
+ * -------------------------------------------------------------------------
+ */
+
+if (!function_exists('bornado_add_perf_resource_hints')) {
+    /**
+     * Warm up connections to the third-party origins used on the front end.
+     *
+     * Purely additive: `preconnect`/`dns-prefetch` only open sockets earlier and
+     * never change which assets load or how they execute.
+     *
+     * @param array  $hints         Resource hint URLs for the relation type.
+     * @param string $relation_type Current relation type (preconnect, etc.).
+     * @return array
+     */
+    function bornado_add_perf_resource_hints($hints, $relation_type)
+    {
+        if (is_admin()) {
+            return $hints;
+        }
+
+        if ($relation_type === 'preconnect') {
+            $hints[] = array('href' => 'https://www.gstatic.com', 'crossorigin' => 'anonymous');
+            $hints[] = array('href' => 'https://cdnjs.cloudflare.com', 'crossorigin' => 'anonymous');
+            $hints[] = 'https://www.google.com';
+        }
+
+        if ($relation_type === 'dns-prefetch') {
+            $hints[] = 'https://www.googletagmanager.com';
+            $hints[] = 'https://connect.facebook.net';
+            $hints[] = 'https://fonts.gstatic.com';
+            $hints[] = 'https://secure.gravatar.com';
+        }
+
+        return $hints;
+    }
+}
+add_filter('wp_resource_hints', 'bornado_add_perf_resource_hints', 10, 2);
+
+if (!function_exists('bornado_inject_lcp_fetchpriority')) {
+    /**
+     * Flag the first ad-gallery image as the high-priority LCP candidate.
+     *
+     * The single-ad gallery prints raw `<img>` markup (parent template
+     * `ad-img-carousel.php`), so WordPress cannot auto-apply
+     * `fetchpriority="high"`. We add it to the first lightbox image only.
+     * Fail-safe: any miss or error returns the original HTML untouched.
+     *
+     * @param string $html Buffered page HTML.
+     * @return string
+     */
+    function bornado_inject_lcp_fetchpriority($html)
+    {
+        if (!is_string($html) || $html === '' || stripos($html, 'lightbox') === false) {
+            return $html;
+        }
+
+        try {
+            $pattern = '/(<a\b[^>]*\bclass="[^"]*\blightbox\b[^"]*"[^>]*>\s*<img\b)([^>]*?)(\/?>)/i';
+            $count   = 0;
+
+            $result = preg_replace_callback(
+                $pattern,
+                function ($matches) {
+                    if (stripos($matches[0], 'fetchpriority') !== false) {
+                        return $matches[0];
+                    }
+
+                    $img_attributes = $matches[2];
+                    if (stripos($img_attributes, 'loading=') !== false) {
+                        $img_attributes = preg_replace('/\bloading\s*=\s*"[^"]*"/i', 'loading="eager"', $img_attributes);
+                    }
+
+                    $extra = ' fetchpriority="high"';
+                    if (stripos($matches[0], 'decoding=') === false) {
+                        $extra .= ' decoding="async"';
+                    }
+
+                    return $matches[1] . $img_attributes . $extra . $matches[3];
+                },
+                $html,
+                1,
+                $count
+            );
+
+            if (is_string($result) && $count > 0) {
+                return $result;
+            }
+        } catch (\Throwable $e) {
+            return $html;
+        }
+
+        return $html;
+    }
+}
+
+if (!function_exists('bornado_buffer_single_ad_for_lcp')) {
+    /**
+     * Buffer single ad pages so the LCP image can be prioritized.
+     *
+     * @return void
+     */
+    function bornado_buffer_single_ad_for_lcp()
+    {
+        if (
+            is_admin()
+            || wp_doing_ajax()
+            || (defined('REST_REQUEST') && REST_REQUEST)
+            || is_feed()
+            || !is_singular('ad_post')
+        ) {
+            return;
+        }
+
+        ob_start('bornado_inject_lcp_fetchpriority');
+    }
+}
+add_action('template_redirect', 'bornado_buffer_single_ad_for_lcp', 0);
