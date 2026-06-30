@@ -136,6 +136,11 @@ body.bornado-ad-search-view .bornado-seo-landing-entry > .container {
 	}
 }
 
+body.bornado-ad-search-view #adforest-ajax-sidebar .accordion-button {
+	padding-top: 0.3rem;
+	padding-bottom: 0.3rem;
+}
+
 /* Bornado style-3 list cards: keep posted-time + city under the price. */
 body.bornado-ad-search-view .mcew-theme-list-style-3 .adf-card-list.mcew-style3-search20-card .adf-card-list__footer {
 	align-items: flex-start;

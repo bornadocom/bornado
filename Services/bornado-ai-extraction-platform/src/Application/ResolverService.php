@@ -64,6 +64,31 @@ final class ResolverService
             $status = 'pending';
         }
 
+        $primaryContactInput = $extraction['primary_contact'] ?? null;
+        $primaryContact = $this->normalizePhoneContact($primaryContactInput);
+        if ($this->hasNonEmptyValue($primaryContactInput) && null === $primaryContact) {
+            $errors[] = 'primary_contact must contain only one normalized phone number.';
+        }
+
+        $secondaryContacts = array();
+        foreach ((array) ($extraction['secondary_contacts'] ?? array()) as $index => $secondaryContactInput) {
+            if (!$this->hasNonEmptyValue($secondaryContactInput)) {
+                continue;
+            }
+
+            $secondaryContact = $this->normalizePhoneContact($secondaryContactInput);
+            if (null === $secondaryContact) {
+                $errors[] = sprintf('secondary_contacts[%d] must contain only normalized phone numbers.', (int) $index);
+                continue;
+            }
+
+            if ($secondaryContact === $primaryContact || in_array($secondaryContact, $secondaryContacts, true)) {
+                continue;
+            }
+
+            $secondaryContacts[] = $secondaryContact;
+        }
+
         $dynamicFieldsInput = $this->collectDynamicFieldsInput($schema, $categoryKey, $extraction);
         $categoryFields = isset($schema['fields']['by_category'][$categoryKey]) && is_array($schema['fields']['by_category'][$categoryKey])
             ? $schema['fields']['by_category'][$categoryKey]
@@ -74,9 +99,9 @@ final class ResolverService
             'ad_country' => ($marketCountryId > 0 && $resolvedCityId > 0) ? array($marketCountryId, $resolvedCityId) : array(),
         );
         $meta = array(
-            '_adforest_poster_contact' => $extraction['primary_contact'] ?? '',
+            '_adforest_poster_contact' => $primaryContact ?? '',
             '_adforest_ad_location' => $extraction['exact_address'] ?? '',
-            '_bornado_secondary_contacts' => array_values(array_map('strval', (array) ($extraction['secondary_contacts'] ?? array()))),
+            '_bornado_secondary_contacts' => $secondaryContacts,
             '_bornado_ai_reason' => $extraction['reason'] ?? null,
             '_bornado_ai_schema_version' => (string) ($schema['schema_version'] ?? ''),
         );
@@ -446,6 +471,58 @@ final class ResolverService
         }
 
         return null;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function hasNonEmptyValue($value): bool
+    {
+        return '' !== trim((string) $value);
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function normalizePhoneContact($value): ?string
+    {
+        $raw = trim((string) $value);
+        if ('' === $raw) {
+            return null;
+        }
+
+        $normalizedDigits = strtr(
+            $raw,
+            array(
+                '۰' => '0',
+                '۱' => '1',
+                '۲' => '2',
+                '۳' => '3',
+                '۴' => '4',
+                '۵' => '5',
+                '۶' => '6',
+                '۷' => '7',
+                '۸' => '8',
+                '۹' => '9',
+                '٠' => '0',
+                '١' => '1',
+                '٢' => '2',
+                '٣' => '3',
+                '٤' => '4',
+                '٥' => '5',
+                '٦' => '6',
+                '٧' => '7',
+                '٨' => '8',
+                '٩' => '9',
+            )
+        );
+
+        $candidate = preg_replace('/[\s\-\(\)\+]+/', '', $normalizedDigits);
+        if (!is_string($candidate) || !preg_match('/^[0-9]{7,15}$/', $candidate)) {
+            return null;
+        }
+
+        return $candidate;
     }
 
     private function truncateText(string $value, int $length): string

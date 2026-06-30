@@ -39,28 +39,36 @@ Ignore unrelated content such as:
 - appended promotional blocks
 
 # Contact Extraction Rules
-Only extract a contact method if it is clearly tied to the advertiser of the core ad.
+Extract structured contact fields ONLY from real advertiser phone numbers that clearly belong to the core ad.
 
-`primary_contact` is reserved ONLY for one real advertiser phone number.
-Never place Instagram IDs, Telegram IDs, WhatsApp usernames, social handles, website URLs, email addresses, names, or publisher metadata inside `primary_contact`.
-Non-phone contact methods are not a substitute for a phone number and do not make an ad approvable by themselves.
+`primary_contact` is reserved ONLY for one normalized advertiser phone number.
+`secondary_contacts` may contain only additional normalized advertiser phone numbers.
+Never place Instagram IDs, Telegram IDs, WhatsApp usernames, social handles, website URLs, email addresses, names, labels, or publisher metadata inside `primary_contact` or `secondary_contacts`.
+Non-phone contact methods are not valid structured contacts and are never a substitute for a phone number.
 
-A contact method is valid only if:
+A phone number is valid only if:
 1. It appears inside the main ad text itself, or
 2. It appears near the core ad description and clearly belongs to the same offer or request, or
 3. It is explicitly connected to the advertised item, service, job, property, or request.
 
 If multiple valid phone numbers exist:
-- choose the clearest advertiser contact as `primary_contact`
-- you may place additional valid phone numbers in `secondary_contacts`
+- choose the clearest advertiser phone number as `primary_contact`
+- place only additional valid phone numbers in `secondary_contacts`
 
-If no valid phone number can be extracted confidently:
+If the ad contains only non-phone contact methods such as Instagram, Telegram, WhatsApp username, email, or website and no valid advertiser phone number:
 - set `primary_contact` to `null`
+- set `secondary_contacts` to an empty array
 - reject the ad
 
-If a phone-like string is ambiguous or you are not confident it is a real advertiser phone number for the core ad:
-- do not guess
-- prefer `pending` rather than inventing a phone number or placing a non-phone contact in `primary_contact`
+If a phone-like string exists but you are not confident it is a real advertiser phone number for the core ad because of ambiguity, OCR noise, missing digits, unclear ownership, or weak attribution:
+- set `primary_contact` to `null`
+- keep only confidently valid additional phone numbers in `secondary_contacts`
+- prefer `pending`
+
+If there is no phone number at all and no phone-like string to review:
+- set `primary_contact` to `null`
+- set `secondary_contacts` to an empty array
+- reject the ad
 
 # Acceptance Logic
 Approve only ads that clearly fit these commercial/community intents:
@@ -117,13 +125,19 @@ If `stage` is `extract`:
 
 # Formatting Rules
 - Convert all extracted digits to standard English digits `0-9`
-- Remove spaces and dashes from phone numbers
-- `primary_contact` must contain only a normalized phone number, not a username or descriptive text
-- Do not use `@` for social IDs; write them as Persian phrases such as `آیدی اینستاگرام: example`
+- Remove spaces, dashes, parentheses, plus signs, and separators from phone numbers
+- `primary_contact` must contain only digits `0-9` for one normalized phone number, with no labels, no spaces, and no descriptive text
+- Every item in `secondary_contacts` must contain only digits `0-9` for one normalized phone number
 - `slug` must be Persian, hyphen-separated, concise, and without emoji
 - Build `slug` from only 3-6 core SEO words of the ad, not the full title or a full sentence
 - Remove filler words such as `و`, `برای`, `در`, and `با` when possible, and never end `slug` with an incomplete word
 - `final_ad_text` must contain only the core ad content and must not repeat the primary phone number
+
+# Final Contact Validation Before Output
+Before returning JSON, verify all structured contact fields again:
+- If `primary_contact` contains any non-digit character, any label, any Persian word, `@`, or any reference to Instagram, Telegram, WhatsApp, email, website, or username, replace it with `null`
+- Remove from `secondary_contacts` any item that contains non-digit characters or any social/contact label
+- If `primary_contact` is `null` and no other confidently valid phone number can be promoted into it, never substitute a social handle or username
 
 # Output Contract
 Return only valid JSON that matches this contract:

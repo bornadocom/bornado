@@ -106,44 +106,71 @@ if ( ! class_exists( 'Bornado_Public_Location_Visibility' ) ) {
 			}
 
 			$parent = isset( $args['parent'] ) ? (int) $args['parent'] : null;
+			$fields = isset( $args['fields'] ) ? (string) $args['fields'] : 'all';
 			$filtered = array();
+
+			if ( 'ids' === $fields ) {
+				foreach ( $terms as $term_id ) {
+					$term = get_term( $term_id, self::TAXONOMY );
+					if ( ! $term instanceof WP_Term ) {
+						continue;
+					}
+
+					if ( self::is_term_allowed_in_public_results( $term, $parent, $tree ) ) {
+						$filtered[] = (int) $term->term_id;
+					}
+				}
+
+				return array_values( array_unique( array_map( 'intval', $filtered ) ) );
+			}
 
 			foreach ( $terms as $term ) {
 				if ( ! $term instanceof WP_Term || self::TAXONOMY !== $term->taxonomy ) {
 					continue;
 				}
 
-				if ( 0 === (int) $term->parent ) {
-					if ( self::is_root_country_allowed( (int) $term->term_id ) && in_array( (int) $term->term_id, $tree['root_ids'], true ) ) {
-						$filtered[] = $term;
-					}
-					continue;
-				}
-
-				if ( null !== $parent && $parent > 0 ) {
-					if ( ! self::is_root_country_allowed( $parent ) ) {
-						continue;
-					}
-
-					$allowed_children = isset( $tree['children_by_root'][ $parent ] ) ? (array) $tree['children_by_root'][ $parent ] : array();
-					if ( in_array( (int) $term->term_id, $allowed_children, true ) ) {
-						$filtered[] = $term;
-					}
-					continue;
-				}
-
-				$root_id = self::get_root_country_id_for_term( $term );
-				if ( $root_id < 1 || ! self::is_root_country_allowed( $root_id ) ) {
-					continue;
-				}
-
-				$allowed_children = isset( $tree['children_by_root'][ $root_id ] ) ? (array) $tree['children_by_root'][ $root_id ] : array();
-				if ( in_array( (int) $term->term_id, $allowed_children, true ) ) {
+				if ( self::is_term_allowed_in_public_results( $term, $parent, $tree ) ) {
 					$filtered[] = $term;
 				}
 			}
 
 			return array_values( $filtered );
+		}
+
+		/**
+		 * Determine whether a location term should remain visible in public term queries.
+		 *
+		 * @param WP_Term                   $term
+		 * @param int|null                  $parent
+		 * @param array<string,mixed>       $tree
+		 * @return bool
+		 */
+		private static function is_term_allowed_in_public_results( $term, $parent, array $tree ) {
+			if ( ! $term instanceof WP_Term || self::TAXONOMY !== $term->taxonomy ) {
+				return false;
+			}
+
+			if ( 0 === (int) $term->parent ) {
+				return self::is_root_country_allowed( (int) $term->term_id )
+					&& in_array( (int) $term->term_id, $tree['root_ids'], true );
+			}
+
+			if ( null !== $parent && $parent > 0 ) {
+				if ( ! self::is_root_country_allowed( $parent ) ) {
+					return false;
+				}
+
+				$allowed_children = isset( $tree['children_by_root'][ $parent ] ) ? (array) $tree['children_by_root'][ $parent ] : array();
+				return in_array( (int) $term->term_id, $allowed_children, true );
+			}
+
+			$root_id = self::get_root_country_id_for_term( $term );
+			if ( $root_id < 1 || ! self::is_root_country_allowed( $root_id ) ) {
+				return false;
+			}
+
+			$allowed_children = isset( $tree['children_by_root'][ $root_id ] ) ? (array) $tree['children_by_root'][ $root_id ] : array();
+			return in_array( (int) $term->term_id, $allowed_children, true );
 		}
 
 		/**

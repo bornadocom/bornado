@@ -27,6 +27,30 @@ if (!defined('BORNADO_AFTER_SOLD_REDIRECT_FLAG_OPTION')) {
     define('BORNADO_AFTER_SOLD_REDIRECT_FLAG_OPTION', 'bornado_after_sold_redirect_archive');
 }
 
+if (!defined('BORNADO_AD_ARCHIVE_REDIRECT_SCHEMA_VERSION')) {
+    define('BORNADO_AD_ARCHIVE_REDIRECT_SCHEMA_VERSION', '1.0.0');
+}
+
+if (!defined('BORNADO_AD_ARCHIVE_REDIRECT_SCHEMA_OPTION')) {
+    define('BORNADO_AD_ARCHIVE_REDIRECT_SCHEMA_OPTION', 'bornado_ad_archive_redirect_schema_version');
+}
+
+if (!defined('BORNADO_AD_ARCHIVE_REDIRECT_TABLE_SUFFIX')) {
+    define('BORNADO_AD_ARCHIVE_REDIRECT_TABLE_SUFFIX', 'bornado_ad_archive_redirects');
+}
+
+if (!defined('BORNADO_AD_ARCHIVE_REDIRECT_BACKFILL_OPTION')) {
+    define('BORNADO_AD_ARCHIVE_REDIRECT_BACKFILL_OPTION', 'bornado_ad_archive_redirect_backfill_state');
+}
+
+if (!defined('BORNADO_AD_ARCHIVE_REDIRECT_BACKFILL_VERSION')) {
+    define('BORNADO_AD_ARCHIVE_REDIRECT_BACKFILL_VERSION', '1.0.0');
+}
+
+if (!defined('BORNADO_AD_ARCHIVE_REDIRECT_BACKFILL_BATCH_SIZE')) {
+    define('BORNADO_AD_ARCHIVE_REDIRECT_BACKFILL_BATCH_SIZE', 25);
+}
+
 if (!function_exists('bornado_get_ad_lifecycle_option')) {
     /**
      * Read one AdForest theme option without depending on parent globals only.
@@ -241,6 +265,203 @@ if (!function_exists('bornado_normalize_public_path')) {
     }
 }
 
+if (!function_exists('bornado_is_safe_local_archive_redirect_url')) {
+    /**
+     * Ensure redirect targets stay local to the current site.
+     *
+     * @param string $url Absolute target URL.
+     * @return bool
+     */
+    function bornado_is_safe_local_archive_redirect_url($url)
+    {
+        $url = is_string($url) ? trim($url) : '';
+        if ($url === '') {
+            return false;
+        }
+
+        $validated_url = wp_validate_redirect($url, '');
+        if ($validated_url === '') {
+            return false;
+        }
+
+        $target_host = strtolower((string) wp_parse_url($validated_url, PHP_URL_HOST));
+        $home_host   = strtolower((string) wp_parse_url(home_url('/'), PHP_URL_HOST));
+
+        if ($target_host === '' || $home_host === '') {
+            return false;
+        }
+
+        return $target_host === $home_host;
+    }
+}
+
+if (!function_exists('bornado_get_ad_archive_redirects_table_name')) {
+    /**
+     * Resolve the dedicated redirect registry table name.
+     *
+     * @return string
+     */
+    function bornado_get_ad_archive_redirects_table_name()
+    {
+        global $wpdb;
+
+        return $wpdb->prefix . BORNADO_AD_ARCHIVE_REDIRECT_TABLE_SUFFIX;
+    }
+}
+
+if (!function_exists('bornado_maybe_install_ad_archive_redirect_schema')) {
+    /**
+     * Create or update the child-theme redirect registry schema.
+     *
+     * @return void
+     */
+    function bornado_maybe_install_ad_archive_redirect_schema()
+    {
+        $current_version = (string) get_option(BORNADO_AD_ARCHIVE_REDIRECT_SCHEMA_OPTION, '');
+        if ($current_version === BORNADO_AD_ARCHIVE_REDIRECT_SCHEMA_VERSION) {
+            return;
+        }
+
+        global $wpdb;
+
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
+        $table_name       = bornado_get_ad_archive_redirects_table_name();
+        $charset_collate  = $wpdb->get_charset_collate();
+        $create_statement = "CREATE TABLE {$table_name} (
+            id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            source_path varchar(191) NOT NULL DEFAULT '',
+            source_path_hash char(32) NOT NULL DEFAULT '',
+            target_url varchar(255) NOT NULL DEFAULT '',
+            post_id bigint(20) unsigned NOT NULL DEFAULT 0,
+            ad_status varchar(20) NOT NULL DEFAULT '',
+            created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY  (id),
+            UNIQUE KEY source_path_hash (source_path_hash),
+            KEY post_id (post_id),
+            KEY ad_status (ad_status)
+        ) {$charset_collate};";
+
+        dbDelta($create_statement);
+
+        update_option(BORNADO_AD_ARCHIVE_REDIRECT_SCHEMA_OPTION, BORNADO_AD_ARCHIVE_REDIRECT_SCHEMA_VERSION, false);
+    }
+}
+add_action('init', 'bornado_maybe_install_ad_archive_redirect_schema', 5);
+
+if (!function_exists('bornado_delete_ad_archive_redirect_records_for_post')) {
+    /**
+     * Remove dedicated redirect registry rows for one ad.
+     *
+     * @param int $post_id Ad post ID.
+     * @return void
+     */
+    function bornado_delete_ad_archive_redirect_records_for_post($post_id)
+    {
+        $post_id = (int) $post_id;
+        if ($post_id < 1) {
+            return;
+        }
+
+        global $wpdb;
+
+        $wpdb->delete(
+            bornado_get_ad_archive_redirects_table_name(),
+            array('post_id' => $post_id),
+            array('%d')
+        );
+    }
+}
+
+if (!function_exists('bornado_upsert_ad_archive_redirect_record')) {
+    /**
+     * Persist one redirect snapshot independently from the post meta lifecycle.
+     *
+     * @param int    $post_id     Ad post ID.
+     * @param string $source_path Historical public request path.
+     * @param string $target_url  Archive target URL.
+     * @param string $status      Redirect reason/status.
+     * @return bool
+     */
+    function bornado_upsert_ad_archive_redirect_record($post_id, $source_path, $target_url, $status)
+    {
+        $post_id     = (int) $post_id;
+        $source_path = bornado_normalize_public_path($source_path);
+        $target_url  = is_string($target_url) ? trim($target_url) : '';
+        $status      = sanitize_key($status);
+
+        if ($post_id < 1 || $source_path === '' || $source_path === '/') {
+            return false;
+        }
+
+        if (!bornado_is_safe_local_archive_redirect_url($target_url)) {
+            return false;
+        }
+
+        if (bornado_normalize_public_path($target_url) === $source_path) {
+            return false;
+        }
+
+        global $wpdb;
+
+        $timestamp = current_time('mysql', true);
+        $result    = $wpdb->replace(
+            bornado_get_ad_archive_redirects_table_name(),
+            array(
+                'source_path'      => $source_path,
+                'source_path_hash' => md5($source_path),
+                'target_url'       => esc_url_raw($target_url),
+                'post_id'          => $post_id,
+                'ad_status'        => $status,
+                'created_at'       => $timestamp,
+                'updated_at'       => $timestamp,
+            ),
+            array('%s', '%s', '%s', '%d', '%s', '%s', '%s')
+        );
+
+        return $result !== false;
+    }
+}
+
+if (!function_exists('bornado_get_ad_archive_redirect_record_by_source_path')) {
+    /**
+     * Fetch one redirect registry row by the original public path.
+     *
+     * @param string $source_path Historical public request path.
+     * @return array<string,mixed>
+     */
+    function bornado_get_ad_archive_redirect_record_by_source_path($source_path)
+    {
+        $source_path = bornado_normalize_public_path($source_path);
+        if ($source_path === '' || $source_path === '/') {
+            return array();
+        }
+
+        global $wpdb;
+
+        $table_name = bornado_get_ad_archive_redirects_table_name();
+        $record     = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT source_path, target_url, post_id, ad_status
+                FROM {$table_name}
+                WHERE source_path_hash = %s
+                LIMIT 1",
+                md5($source_path)
+            ),
+            ARRAY_A
+        );
+
+        if (!is_array($record) || empty($record['source_path'])) {
+            return array();
+        }
+
+        return bornado_normalize_public_path((string) $record['source_path']) === $source_path
+            ? $record
+            : array();
+    }
+}
+
 if (!function_exists('bornado_get_current_request_public_path')) {
     /**
      * Get the normalized path for the current frontend request.
@@ -432,9 +653,103 @@ if (!function_exists('bornado_clear_ad_archive_redirect_meta')) {
             return;
         }
 
+        bornado_delete_ad_archive_redirect_records_for_post($post_id);
         delete_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_TARGET_META);
         delete_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_SOURCE_META);
         delete_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_STATUS_META);
+    }
+}
+
+if (!function_exists('bornado_store_ad_archive_redirect_state')) {
+    /**
+     * Persist a stable source-path to archive-target mapping for one ad.
+     *
+     * @param int    $post_id               Ad post ID.
+     * @param string $status                Redirect reason/status.
+     * @param bool   $sync_ad_lifecycle_meta Whether to update the AdForest status meta.
+     * @return string Redirect target URL.
+     */
+    function bornado_store_ad_archive_redirect_state($post_id, $status, $sync_ad_lifecycle_meta = false)
+    {
+        $post_id = (int) $post_id;
+        $status  = sanitize_key($status);
+
+        if ($post_id < 1 || !in_array($status, array('sold', 'expired', 'removed'), true)) {
+            return '';
+        }
+
+        $target_url = trim((string) bornado_get_single_ad_archive_redirect_url($post_id));
+        if (!bornado_is_safe_local_archive_redirect_url($target_url)) {
+            return '';
+        }
+
+        $source_url  = bornado_get_public_ad_permalink($post_id);
+        $source_path = bornado_normalize_public_path((string) $source_url);
+
+        if ($source_path === '/' && is_singular('ad_post') && get_queried_object_id() === $post_id) {
+            $source_path = bornado_get_current_request_public_path();
+        }
+
+        if ($source_path === '/' || $source_path === '' || $source_path === bornado_normalize_public_path($target_url)) {
+            return '';
+        }
+
+        if (!bornado_upsert_ad_archive_redirect_record($post_id, $source_path, $target_url, $status)) {
+            return '';
+        }
+
+        update_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_TARGET_META, esc_url_raw($target_url));
+        update_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_SOURCE_META, $source_path);
+        update_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_STATUS_META, $status);
+
+        if ($sync_ad_lifecycle_meta && in_array($status, array('sold', 'expired'), true)) {
+            update_post_meta($post_id, '_adforest_ad_status_', $status);
+        }
+
+        return $target_url;
+    }
+}
+
+if (!function_exists('bornado_capture_removed_ad_archive_redirect_state')) {
+    /**
+     * Snapshot the public ad URL before a manual removal flow hides or deletes it.
+     *
+     * @param int    $post_id Ad post ID.
+     * @param string $status  Redirect reason/status.
+     * @return string Redirect target URL.
+     */
+    function bornado_capture_removed_ad_archive_redirect_state($post_id, $status = 'removed')
+    {
+        return bornado_store_ad_archive_redirect_state($post_id, $status, false);
+    }
+}
+
+if (!function_exists('bornado_resolve_hidden_ad_archive_redirect_status')) {
+    /**
+     * Keep sold/expired archive redirects from being downgraded to generic removal.
+     *
+     * @param int    $post_id        Ad post ID.
+     * @param string $default_status Fallback status when no lifecycle redirect applies.
+     * @return string
+     */
+    function bornado_resolve_hidden_ad_archive_redirect_status($post_id, $default_status = 'removed')
+    {
+        $post_id         = (int) $post_id;
+        $default_status  = sanitize_key($default_status);
+        $stored_status   = sanitize_key((string) get_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_STATUS_META, true));
+        $candidate_status = bornado_get_ad_archive_redirect_candidate_status($post_id);
+
+        if (in_array($stored_status, array('sold', 'expired'), true)) {
+            return $stored_status;
+        }
+
+        if (in_array($candidate_status, array('sold', 'expired'), true)) {
+            return $candidate_status;
+        }
+
+        return in_array($default_status, array('sold', 'expired', 'removed'), true)
+            ? $default_status
+            : 'removed';
     }
 }
 
@@ -455,26 +770,10 @@ if (!function_exists('bornado_transition_ad_to_archive_redirect_state')) {
             return '';
         }
 
-        $target_url = trim((string) bornado_get_single_ad_archive_redirect_url($post_id));
+        $target_url = bornado_store_ad_archive_redirect_state($post_id, $status, true);
         if ($target_url === '') {
             return '';
         }
-
-        $source_url  = bornado_get_public_ad_permalink($post_id);
-        $source_path = bornado_normalize_public_path((string) $source_url);
-
-        if ($source_path === '/' && is_singular('ad_post') && get_queried_object_id() === $post_id) {
-            $source_path = bornado_get_current_request_public_path();
-        }
-
-        if ($source_path === '/' || $source_path === '') {
-            return '';
-        }
-
-        update_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_TARGET_META, esc_url_raw($target_url));
-        update_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_SOURCE_META, $source_path);
-        update_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_STATUS_META, $status);
-        update_post_meta($post_id, '_adforest_ad_status_', $status);
 
         if (get_post_status($post_id) !== 'draft') {
             wp_update_post(array(
@@ -698,6 +997,169 @@ if (!function_exists('bornado_handle_simple_ads_removal')) {
     }
 }
 
+if (!function_exists('bornado_backfill_existing_ad_archive_redirect')) {
+    /**
+     * Populate redirect snapshots for already hidden ads still present in the database.
+     *
+     * @param int $post_id Ad post ID.
+     * @return void
+     */
+    function bornado_backfill_existing_ad_archive_redirect($post_id)
+    {
+        $post_id = (int) $post_id;
+        if ($post_id < 1) {
+            return;
+        }
+
+        $post = get_post($post_id);
+        if (
+            !$post instanceof WP_Post
+            || $post->post_type !== 'ad_post'
+            || !in_array($post->post_status, array('draft', 'trash', 'private'), true)
+        ) {
+            return;
+        }
+
+        $status = sanitize_key((string) get_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_STATUS_META, true));
+        if (!in_array($status, array('sold', 'expired', 'removed'), true)) {
+            $candidate_status = bornado_get_ad_archive_redirect_candidate_status($post_id);
+            $status           = $candidate_status !== '' ? $candidate_status : 'removed';
+        }
+
+        $source_path = trim((string) get_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_SOURCE_META, true));
+        $target_url  = trim((string) get_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_TARGET_META, true));
+
+        if (
+            $source_path !== ''
+            && $target_url !== ''
+            && bornado_upsert_ad_archive_redirect_record($post_id, $source_path, $target_url, $status)
+        ) {
+            return;
+        }
+
+        bornado_store_ad_archive_redirect_state(
+            $post_id,
+            $status,
+            in_array($status, array('sold', 'expired'), true)
+        );
+    }
+}
+
+if (!function_exists('bornado_run_ad_archive_redirect_backfill_batch')) {
+    /**
+     * Incrementally backfill redirect snapshots for pre-existing hidden ads.
+     *
+     * @return void
+     */
+    function bornado_run_ad_archive_redirect_backfill_batch()
+    {
+        if (
+            !is_admin()
+            || !current_user_can('manage_options')
+            || wp_doing_ajax()
+            || wp_doing_cron()
+            || (defined('REST_REQUEST') && REST_REQUEST)
+        ) {
+            return;
+        }
+
+        $state = get_option(BORNADO_AD_ARCHIVE_REDIRECT_BACKFILL_OPTION, array());
+        if (!is_array($state)) {
+            $state = array();
+        }
+
+        $state = wp_parse_args(
+            $state,
+            array(
+                'version' => '',
+                'last_id' => 0,
+                'complete' => '0',
+            )
+        );
+
+        if ((string) $state['version'] !== BORNADO_AD_ARCHIVE_REDIRECT_BACKFILL_VERSION) {
+            $state = array(
+                'version' => BORNADO_AD_ARCHIVE_REDIRECT_BACKFILL_VERSION,
+                'last_id' => 0,
+                'complete' => '0',
+            );
+        }
+
+        if ((string) $state['complete'] === '1') {
+            return;
+        }
+
+        global $wpdb;
+
+        $last_id = max(0, (int) $state['last_id']);
+        $limit   = max(1, (int) BORNADO_AD_ARCHIVE_REDIRECT_BACKFILL_BATCH_SIZE);
+        $sql     = $wpdb->prepare(
+            "SELECT ID
+            FROM {$wpdb->posts}
+            WHERE post_type = %s
+                AND post_status IN (%s, %s, %s)
+                AND ID > %d
+            ORDER BY ID ASC
+            LIMIT %d",
+            'ad_post',
+            'draft',
+            'trash',
+            'private',
+            $last_id,
+            $limit
+        );
+        $post_ids = array_map('intval', (array) $wpdb->get_col($sql));
+
+        if (empty($post_ids)) {
+            $state['complete'] = '1';
+            update_option(BORNADO_AD_ARCHIVE_REDIRECT_BACKFILL_OPTION, $state, false);
+            return;
+        }
+
+        foreach ($post_ids as $post_id) {
+            bornado_backfill_existing_ad_archive_redirect($post_id);
+            $state['last_id'] = max((int) $state['last_id'], (int) $post_id);
+        }
+
+        update_option(BORNADO_AD_ARCHIVE_REDIRECT_BACKFILL_OPTION, $state, false);
+    }
+}
+add_action('admin_init', 'bornado_run_ad_archive_redirect_backfill_batch', 20);
+
+if (!function_exists('bornado_get_legacy_ad_archive_redirect_post_id_by_source_path')) {
+    /**
+     * Keep existing post-meta redirects working while the dedicated registry fills up.
+     *
+     * @param string $request_path Historical public request path.
+     * @return int
+     */
+    function bornado_get_legacy_ad_archive_redirect_post_id_by_source_path($request_path)
+    {
+        $request_path = bornado_normalize_public_path($request_path);
+        if ($request_path === '' || $request_path === '/') {
+            return 0;
+        }
+
+        $redirected_posts = get_posts(array(
+            'post_type'              => 'ad_post',
+            'post_status'            => array('draft', 'trash', 'private'),
+            'posts_per_page'         => 1,
+            'fields'                 => 'ids',
+            'no_found_rows'          => true,
+            'update_post_meta_cache' => false,
+            'update_post_term_cache' => false,
+            'meta_query'             => array(
+                array(
+                    'key'   => BORNADO_AD_ARCHIVE_REDIRECT_SOURCE_META,
+                    'value' => $request_path,
+                ),
+            ),
+        ));
+
+        return !empty($redirected_posts[0]) ? (int) $redirected_posts[0] : 0;
+    }
+}
+
 if (!function_exists('bornado_maybe_redirect_archived_ad_404')) {
     /**
      * Redirect removed ad URLs to their preserved archive target.
@@ -721,41 +1183,51 @@ if (!function_exists('bornado_maybe_redirect_archived_ad_404')) {
             return;
         }
 
-        $redirected_posts = get_posts(array(
-            'post_type'              => 'ad_post',
-            'post_status'            => array('draft', 'trash', 'private'),
-            'posts_per_page'         => 1,
-            'fields'                 => 'ids',
-            'no_found_rows'          => true,
-            'update_post_meta_cache' => false,
-            'update_post_term_cache' => false,
-            'meta_query'             => array(
-                array(
-                    'key'   => BORNADO_AD_ARCHIVE_REDIRECT_SOURCE_META,
-                    'value' => $request_path,
-                ),
-            ),
-        ));
+        $record     = bornado_get_ad_archive_redirect_record_by_source_path($request_path);
+        $post_id    = !empty($record['post_id']) ? (int) $record['post_id'] : 0;
+        $target_url = !empty($record['target_url']) ? trim((string) $record['target_url']) : '';
+        $status     = !empty($record['ad_status']) ? sanitize_key((string) $record['ad_status']) : '';
 
-        $post_id = !empty($redirected_posts[0]) ? (int) $redirected_posts[0] : 0;
-        if ($post_id < 1) {
+        if ($post_id < 1 || $target_url === '') {
+            $post_id = bornado_get_legacy_ad_archive_redirect_post_id_by_source_path($request_path);
+            if ($post_id > 0) {
+                $target_url = trim((string) get_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_TARGET_META, true));
+                $status     = sanitize_key((string) get_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_STATUS_META, true));
+                if ($target_url !== '') {
+                    bornado_upsert_ad_archive_redirect_record($post_id, $request_path, $target_url, $status !== '' ? $status : 'removed');
+                }
+            }
+        }
+
+        if ($target_url === '' || !bornado_is_safe_local_archive_redirect_url($target_url)) {
             return;
         }
 
-        $target_url = trim((string) get_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_TARGET_META, true));
-        if ($target_url === '') {
+        if (bornado_normalize_public_path($target_url) === $request_path) {
             return;
         }
 
-        $status = (string) get_post_meta($post_id, BORNADO_AD_ARCHIVE_REDIRECT_STATUS_META, true);
-        $refreshed_status = in_array($status, array('expired', 'sold'), true)
-            ? $status
-            : bornado_get_ad_archive_redirect_candidate_status($post_id);
-        if ($refreshed_status !== '' && bornado_should_archive_redirect_ad_status($refreshed_status)) {
-            $refreshed_target = bornado_transition_ad_to_archive_redirect_state($post_id, $refreshed_status);
+        $post = $post_id > 0 ? get_post($post_id) : null;
+        if ($post instanceof WP_Post && $post->post_type === 'ad_post') {
+            if (get_post_status($post_id) === 'publish') {
+                bornado_clear_ad_archive_redirect_meta($post_id);
+                return;
+            }
+
+            $status = in_array($status, array('expired', 'sold', 'removed'), true)
+                ? $status
+                : bornado_get_ad_archive_redirect_candidate_status($post_id);
+            if ($status === '') {
+                $status = 'removed';
+            }
+
+            $refreshed_target = bornado_store_ad_archive_redirect_state(
+                $post_id,
+                $status,
+                in_array($status, array('expired', 'sold'), true)
+            );
             if ($refreshed_target !== '') {
                 $target_url = $refreshed_target;
-                $status     = $refreshed_status;
             }
         }
 
@@ -1216,6 +1688,64 @@ if (!function_exists('bornado_handle_ad_status_update')) {
         die();
     }
 }
+
+if (!function_exists('bornado_capture_removed_ad_redirect_on_status_transition')) {
+    /**
+     * Preserve the last public ad URL when a published ad is manually hidden.
+     *
+     * @param string  $new_status New post status.
+     * @param string  $old_status Previous post status.
+     * @param WP_Post $post       Post object.
+     * @return void
+     */
+    function bornado_capture_removed_ad_redirect_on_status_transition($new_status, $old_status, $post)
+    {
+        if (
+            !($post instanceof WP_Post)
+            || $post->post_type !== 'ad_post'
+            || $old_status !== 'publish'
+            || !in_array($new_status, array('draft', 'trash', 'private'), true)
+        ) {
+            return;
+        }
+
+        bornado_capture_removed_ad_archive_redirect_state(
+            (int) $post->ID,
+            bornado_resolve_hidden_ad_archive_redirect_status((int) $post->ID, 'removed')
+        );
+    }
+}
+add_action('transition_post_status', 'bornado_capture_removed_ad_redirect_on_status_transition', 15, 3);
+
+if (!function_exists('bornado_capture_removed_ad_redirect_before_delete')) {
+    /**
+     * Persist redirect data before a trashed/private/draft ad is permanently deleted.
+     *
+     * @param int     $post_id Ad post ID.
+     * @param WP_Post $post    Post object.
+     * @return void
+     */
+    function bornado_capture_removed_ad_redirect_before_delete($post_id, $post)
+    {
+        $post_id = (int) $post_id;
+        $post    = $post instanceof WP_Post ? $post : get_post($post_id);
+
+        if (
+            $post_id < 1
+            || !$post instanceof WP_Post
+            || $post->post_type !== 'ad_post'
+            || $post->post_status === 'auto-draft'
+        ) {
+            return;
+        }
+
+        bornado_capture_removed_ad_archive_redirect_state(
+            $post_id,
+            bornado_resolve_hidden_ad_archive_redirect_status($post_id, 'removed')
+        );
+    }
+}
+add_action('before_delete_post', 'bornado_capture_removed_ad_redirect_before_delete', 10, 2);
 
 add_action('transition_post_status', function ($new_status, $old_status, $post) {
     if (

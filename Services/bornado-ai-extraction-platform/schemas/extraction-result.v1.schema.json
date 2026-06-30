@@ -38,12 +38,19 @@
       "type": ["string", "null"]
     },
     "primary_contact": {
-      "type": ["string", "null"]
+      "type": ["string", "null"],
+      "pattern": "^[0-9]+$",
+      "minLength": 7,
+      "maxLength": 15
     },
     "secondary_contacts": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
-        "type": "string"
+        "type": "string",
+        "pattern": "^[0-9]+$",
+        "minLength": 7,
+        "maxLength": 15
       }
     },
     "dynamic_fields": {

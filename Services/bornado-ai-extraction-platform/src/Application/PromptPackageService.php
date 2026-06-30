@@ -27,6 +27,7 @@ final class PromptPackageService
     {
         $templatePath = (string) ($this->config['prompt']['core_template_path'] ?? '');
         $template     = is_file($templatePath) ? (string) file_get_contents($templatePath) : '';
+        $templateHash = sha1($template);
         $stage = $this->normalizeStage((string) ($options['stage'] ?? 'extract'));
         $categoryHint = $this->normalizeKey((string) ($options['category_hint'] ?? ''));
         $candidateCategories = $this->normalizeKeyList((array) ($options['candidate_categories'] ?? array()));
@@ -44,7 +45,8 @@ final class PromptPackageService
         );
 
         return array(
-            'prompt_version' => (string) ($schema['schema_version'] ?? ''),
+            'prompt_version' => $this->buildPromptVersion((string) ($schema['schema_version'] ?? ''), $templateHash),
+            'prompt_template_hash' => $templateHash,
             'stage' => $stage,
             'category_hint' => $categoryHint,
             'dynamic_schema' => $dynamicSchema,
@@ -341,9 +343,21 @@ final class PromptPackageService
             'slug' => 'آگهی-نمونه',
             'final_ad_text' => 'متن نهایی آگهی به زبان فارسی.',
             'primary_contact' => '07493995660',
-            'secondary_contacts' => array('آیدی تلگرام: testuser'),
+            'secondary_contacts' => array('02079460000'),
             'dynamic_fields' => $dynamicFields,
         );
+    }
+
+    private function buildPromptVersion(string $schemaVersion, string $templateHash): string
+    {
+        $schemaVersion = trim($schemaVersion);
+        $templateFingerprint = substr($templateHash, 0, 12);
+
+        if ('' === $schemaVersion) {
+            return 'template-' . $templateFingerprint;
+        }
+
+        return $schemaVersion . '-prompt-' . $templateFingerprint;
     }
 
     private function normalizeStage(string $stage): string
