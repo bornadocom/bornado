@@ -51,7 +51,7 @@ final class SchemaService
                     ? $catalog['locations']['country']
                     : array();
                 $cities = isset($catalog['locations']['cities']) && is_array($catalog['locations']['cities'])
-                    ? array_values($catalog['locations']['cities'])
+                    ? $this->normalizeLocations((array) $catalog['locations']['cities'])
                     : array();
                 $templates = $this->normalizeTemplates((array) ($catalog['templates'] ?? array()));
                 $categories = $this->normalizeCategories((array) ($catalog['categories'] ?? array()), $templates);
@@ -138,6 +138,39 @@ final class SchemaService
                 'template_key' => (string) ($category['template_key'] ?? ''),
                 'template_label' => (string) ($category['template_label'] ?? ''),
                 'ai_fields_count' => $this->countTemplateAiFields((string) ($category['template_key'] ?? ''), $templates),
+            );
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * @param array<int,array<string,mixed>> $locations
+     * @return array<int,array<string,mixed>>
+     */
+    private function normalizeLocations(array $locations): array
+    {
+        $normalized = array();
+
+        foreach ($locations as $location) {
+            if (!is_array($location)) {
+                continue;
+            }
+
+            $key = trim((string) ($location['key'] ?? ''));
+            if ('' === $key) {
+                continue;
+            }
+
+            $normalized[] = array(
+                'key' => $key,
+                'label' => (string) ($location['label'] ?? ''),
+                'slug' => (string) ($location['slug'] ?? ''),
+                'term_id' => (int) ($location['term_id'] ?? 0),
+                'geoname_id' => (int) ($location['geoname_id'] ?? 0),
+                'country_key' => (string) ($location['country_key'] ?? ''),
+                'aliases' => array_values(array_map('strval', (array) ($location['aliases'] ?? array()))),
+                'is_default' => !empty($location['is_default']),
             );
         }
 
@@ -277,6 +310,8 @@ final class SchemaService
             'category_key',
             'country_key',
             'city_key',
+            'location_source',
+            'location_evidence',
             'primary_contact',
             'secondary_contacts',
             'final_ad_text',

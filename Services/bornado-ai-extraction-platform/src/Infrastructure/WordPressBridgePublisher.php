@@ -44,10 +44,6 @@ final class WordPressBridgePublisher
         }
 
         $serviceKey = trim((string) ($target['service_key'] ?? ($wordpress['service_key'] ?? '')));
-        if ('' !== $serviceKey) {
-            $separator = false === strpos($endpoint, '?') ? '?' : '&';
-            $endpoint .= $separator . http_build_query(array('key' => $serviceKey));
-        }
 
         $headers = array(
             'Content-Type: application/json',

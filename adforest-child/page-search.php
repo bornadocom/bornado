@@ -17,6 +17,15 @@ $search_layout = 'sidebar';
 if (isset($adforest_theme['search_design']) && $adforest_theme['search_design'] != '') {
     $search_layout = $adforest_theme['search_design'];
 }
+
+$seo_heading_title = function_exists('bornado_get_ad_search_seo_heading_title')
+    ? bornado_get_ad_search_seo_heading_title()
+    : '';
+
+if ($seo_heading_title !== '') {
+    echo '<div class="bornado-ad-search-seo-heading"><div class="container adt-container"><h1 class="bornado-ad-search-seo-title">' . esc_html($seo_heading_title) . '</h1></div></div>';
+}
+
 if ($search_layout !== 'map') {
     adforest_custom_breadcrumbs();
 }

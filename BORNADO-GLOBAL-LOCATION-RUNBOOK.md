@@ -77,6 +77,7 @@ powershell -ExecutionPolicy Bypass -File ".\scripts\prepare-geonames.ps1" -CityD
 wp bornado-geo import-countries "/var/www/geonames/countryInfo.txt"
 wp bornado-geo import-cities "/var/www/geonames/cities1000.zip"
 wp bornado-geo import-fa-names "/var/www/geonames/alternateNamesV2.zip"
+wp bornado-geo import-city-fa-supplement "/var/www/geonames/city-fa-supplement.sample.csv"   # optional but recommended
 wp bornado-geo seed-root-countries
 ```
 
@@ -92,6 +93,7 @@ wp bornado-geo seed-root-countries
 4. تعداد `Root ad_country terms` باید پر شده باشد.
 5. در taxonomy `ad_country` باید countryهای root وجود داشته باشند.
 6. هنوز لازم نیست city termهای زیادی داخل `ad_country` ببینید؛ شهرها قرار است lazy ساخته شوند.
+7. اگر بعضی شهرها هنوز نام فارسی ضعیفی داشتند، supplement city names را کامل کنید و دوباره import بزنید.
 
 ## مرحله 6: چک ارزها
 

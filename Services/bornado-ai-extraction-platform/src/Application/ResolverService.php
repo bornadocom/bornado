@@ -4,9 +4,18 @@ declare(strict_types=1);
 namespace Bornado\AiExtractionPlatform\Application;
 
 use Bornado\AiExtractionPlatform\Domain\CanonicalKey;
+use Bornado\AiExtractionPlatform\Infrastructure\WordPressGeoCityLookupClient;
 
 final class ResolverService
 {
+    /** @var WordPressGeoCityLookupClient|null */
+    private $geoCityLookup;
+
+    public function __construct(?WordPressGeoCityLookupClient $geoCityLookup = null)
+    {
+        $this->geoCityLookup = $geoCityLookup;
+    }
+
     /**
      * @param array<string,mixed> $schema
      * @param array<string,mixed> $extraction
@@ -16,15 +25,23 @@ final class ResolverService
     {
         $errors = array();
 
+        $locations = (array) ($schema['locations'] ?? array());
         $categoryIndex = $this->buildIndex((array) ($schema['categories'] ?? array()));
-        $locationIndex = $this->buildIndex((array) ($schema['locations'] ?? array()));
+        $locationIndex = $this->buildIndex($locations);
+        $locationByGeonameId = $this->buildLocationGeonameIndex($locations);
 
-        $marketCountryKey = (string) ($schema['market']['country']['key'] ?? '');
+        $marketCountryKey = $this->normalizeEntityKey((string) ($schema['market']['country']['key'] ?? ''));
         $marketCountryId  = (int) ($schema['market']['country']['term_id'] ?? 0);
+        $marketCountryIso2 = strtoupper($marketCountryKey);
 
-        $categoryKey = trim((string) ($extraction['category_key'] ?? ''));
-        $countryKey  = trim((string) ($extraction['country_key'] ?? ''));
-        $cityKey     = trim((string) ($extraction['city_key'] ?? ''));
+        $categoryKey = $this->normalizeEntityKey((string) ($extraction['category_key'] ?? ''));
+        $countryKey  = $this->normalizeEntityKey((string) ($extraction['country_key'] ?? ''));
+        $cityKey     = $this->normalizeEntityKey((string) ($extraction['city_key'] ?? ''));
+        $locationSource = $this->normalizeLocationSource((string) ($extraction['location_source'] ?? ''));
+        $locationEvidence = trim((string) ($extraction['location_evidence'] ?? ''));
+        $defaultCountryKey = $this->normalizeEntityKey((string) ($extraction['default_country_key'] ?? ''));
+        $defaultCityGeonameId = $this->extractFallbackGeonameId($extraction);
+        $exactAddress = trim((string) ($extraction['exact_address'] ?? ''));
 
         $resolvedCategoryId = 0;
         if ('' !== $categoryKey) {
@@ -37,37 +54,81 @@ final class ResolverService
             $errors[] = 'Missing category_key.';
         }
 
-        if ('' === $countryKey) {
-            $errors[] = 'Missing country_key.';
-        } elseif ($countryKey !== $marketCountryKey) {
+        if ('' === $countryKey && '' !== $defaultCountryKey) {
+            $countryKey = $defaultCountryKey;
+        }
+        if ('' !== $countryKey && '' !== $marketCountryKey && $countryKey !== $marketCountryKey) {
             $errors[] = sprintf('country_key %s is outside the configured market.', $countryKey);
         }
 
-        $resolvedCityId = 0;
-        if ('' !== $cityKey) {
-            if (isset($locationIndex[$cityKey])) {
-                $city = $locationIndex[$cityKey];
-                if ((string) ($city['country_key'] ?? '') !== $marketCountryKey) {
-                    $errors[] = sprintf('city_key %s does not belong to the market country.', $cityKey);
-                } else {
-                    $resolvedCityId = (int) ($city['term_id'] ?? 0);
+        $cityResolution = $this->resolveCityReference(
+            $locationIndex,
+            $locationByGeonameId,
+            '' !== $countryKey ? $countryKey : $marketCountryKey,
+            $cityKey,
+            $defaultCityGeonameId
+        );
+        $cityKey = (string) ($cityResolution['city_key'] ?? '');
+        $resolvedCityId = (int) ($cityResolution['term_id'] ?? 0);
+        $resolvedCityGeoNameId = (int) ($cityResolution['geoname_id'] ?? 0);
+        $resolvedCityPayload = isset($cityResolution['payload']) && is_array($cityResolution['payload'])
+            ? $cityResolution['payload']
+            : array();
+
+        if (
+            '' !== $countryKey &&
+            '' !== $exactAddress &&
+            (
+                '' === $cityKey ||
+                !$this->resolvedCityMatchesText($resolvedCityPayload, $exactAddress) ||
+                $this->isWeakLocationSource($locationSource)
+            )
+        ) {
+            $exactAddressResolution = $this->resolveCityFromExactAddress(
+                $locationIndex,
+                $locationByGeonameId,
+                $countryKey,
+                $exactAddress
+            );
+            $exactAddressCityKey = (string) ($exactAddressResolution['city_key'] ?? '');
+            if ('' !== $exactAddressCityKey && ('' === $cityKey || $exactAddressCityKey !== $cityKey)) {
+                $cityResolution = $exactAddressResolution;
+                $cityKey = $exactAddressCityKey;
+                $resolvedCityId = (int) ($cityResolution['term_id'] ?? 0);
+                $resolvedCityGeoNameId = (int) ($cityResolution['geoname_id'] ?? 0);
+                $resolvedCityPayload = isset($cityResolution['payload']) && is_array($cityResolution['payload'])
+                    ? $cityResolution['payload']
+                    : array();
+                $locationSource = 'ad_content';
+                if ('' === $locationEvidence) {
+                    $locationEvidence = $exactAddress;
                 }
-            } else {
-                $errors[] = sprintf('Unknown city_key: %s', $cityKey);
             }
-        } else {
-            $errors[] = 'Missing city_key.';
         }
 
-        $status = trim((string) ($extraction['status'] ?? 'pending'));
+        if ('' === $countryKey) {
+            $countryKey = $this->normalizeEntityKey((string) ($resolvedCityPayload['country_key'] ?? ''));
+        }
+
+        $status = $this->normalizeModerationStatus((string) ($extraction['status'] ?? 'pending'));
         if ('' === $status) {
             $status = 'pending';
+        }
+
+        if ('' === $countryKey) {
+            $status = 'rejected';
+            if (!$this->hasNonEmptyValue($extraction['reason'] ?? null)) {
+                $extraction['reason'] = 'کشور آگهی از متن یا داده‌های ورودی قابل تشخیص نبود.';
+            }
         }
 
         $primaryContactInput = $extraction['primary_contact'] ?? null;
         $primaryContact = $this->normalizePhoneContact($primaryContactInput);
         if ($this->hasNonEmptyValue($primaryContactInput) && null === $primaryContact) {
             $errors[] = 'primary_contact must contain only one normalized phone number.';
+        }
+        if ($this->requiresPrimaryContact($status) && null === $primaryContact) {
+            $errors[] = 'Approved records require a valid primary_contact phone number.';
         }
 
         $secondaryContacts = array();
@@ -94,13 +155,27 @@ final class ResolverService
             ? $schema['fields']['by_category'][$categoryKey]
             : array();
 
+        $resolvedCountryKey = '' !== $countryKey ? $countryKey : $marketCountryKey;
+        $resolvedCountryIso2 = strtoupper($resolvedCountryKey);
+        $resolvedCountryTermId = ('' !== $resolvedCountryKey && $resolvedCountryKey === $marketCountryKey)
+            ? $marketCountryId
+            : 0;
+
+        $countryTerms = array();
+        if ($resolvedCountryTermId > 0) {
+            $countryTerms[] = $resolvedCountryTermId;
+        }
+        if ($resolvedCityId > 0) {
+            $countryTerms[] = $resolvedCityId;
+        }
+
         $taxonomies = array(
             'ad_cats' => $resolvedCategoryId > 0 ? array($resolvedCategoryId) : array(),
-            'ad_country' => ($marketCountryId > 0 && $resolvedCityId > 0) ? array($marketCountryId, $resolvedCityId) : array(),
+            'ad_country' => $countryTerms,
         );
         $meta = array(
             '_adforest_poster_contact' => $primaryContact ?? '',
-            '_adforest_ad_location' => $extraction['exact_address'] ?? '',
+            '_adforest_ad_location' => $exactAddress,
             '_bornado_secondary_contacts' => $secondaryContacts,
             '_bornado_ai_reason' => $extraction['reason'] ?? null,
             '_bornado_ai_schema_version' => (string) ($schema['schema_version'] ?? ''),
@@ -125,7 +200,7 @@ final class ResolverService
                 continue;
             }
 
-            $resolvedValue = $this->resolveFieldValue($fieldDescriptor, $fieldValue, $errors);
+            $resolvedValue = $this->resolveFieldValue($fieldDescriptor, $fieldValue, $errors, $schema);
             if (!$resolvedValue['resolved']) {
                 continue;
             }
@@ -164,12 +239,18 @@ final class ResolverService
 
         return array(
             'resolution_status' => empty($errors) ? 'resolved' : 'invalid',
+            'ingest_ready' => empty($errors),
             'errors' => $errors,
             'trace' => array(
                 'schema_version' => (string) ($schema['schema_version'] ?? ''),
                 'category_key' => $categoryKey,
                 'country_key' => $countryKey,
                 'city_key' => $cityKey,
+                'location_source' => '' !== $locationSource ? $locationSource : null,
+                'location_evidence' => '' !== $locationEvidence ? $locationEvidence : null,
+                'default_country_key' => '' !== $defaultCountryKey ? $defaultCountryKey : null,
+                'default_city_geoname_id' => $defaultCityGeonameId > 0 ? $defaultCityGeonameId : null,
+                'resolved_city_geoname_id' => $resolvedCityGeoNameId > 0 ? $resolvedCityGeoNameId : null,
                 'resolved_dynamic_fields' => $resolvedDynamicFields,
             ),
             'target_payload' => array(
@@ -181,6 +262,15 @@ final class ResolverService
                         'slug' => $slug,
                     ),
                     'taxonomies' => $taxonomies,
+                    'geo_location' => array(
+                        'country_iso2' => $resolvedCountryIso2,
+                        'country_key' => $resolvedCountryKey,
+                        'country_term_id' => $resolvedCountryTermId,
+                        'city_key' => '' !== $cityKey ? $cityKey : null,
+                        'city_label' => '' !== trim((string) ($resolvedCityPayload['label'] ?? '')) ? (string) $resolvedCityPayload['label'] : null,
+                        'city_term_id' => $resolvedCityId > 0 ? $resolvedCityId : null,
+                        'city_geoname_id' => $resolvedCityGeoNameId > 0 ? $resolvedCityGeoNameId : null,
+                    ),
                     'meta' => $meta,
                     'dynamic_meta' => $dynamicMeta,
                     'flags' => array(
@@ -204,22 +294,267 @@ final class ResolverService
                 continue;
             }
 
-            $key = trim((string) ($item['key'] ?? ''));
+            $key = $this->normalizeEntityKey((string) ($item['key'] ?? ''));
             if ('' === $key) {
                 continue;
             }
 
             $index[$key] = $item;
 
-            foreach ((array) ($item['aliases'] ?? array()) as $alias) {
-                $alias = trim(strtolower((string) $alias));
+            foreach (array('slug', 'label') as $fieldKey) {
+                $alias = $this->normalizeEntityKey((string) ($item[$fieldKey] ?? ''));
                 if ('' !== $alias && !isset($index[$alias])) {
                     $index[$alias] = $item;
                 }
             }
+
+            foreach ((array) ($item['aliases'] ?? array()) as $aliasValue) {
+                $alias = $this->normalizeEntityKey((string) $aliasValue);
+                if ('' !== $alias && !isset($index[$alias])) {
+                    $index[$alias] = $item;
+                }
+            }
+
+            $geonameId = (int) ($item['geoname_id'] ?? 0);
+            if ($geonameId > 0 && !isset($index[(string) $geonameId])) {
+                $index[(string) $geonameId] = $item;
+            }
         }
 
         return $index;
+    }
+
+    /**
+     * @param array<int,array<string,mixed>> $items
+     * @return array<int,array<string,mixed>>
+     */
+    private function buildLocationGeonameIndex(array $items): array
+    {
+        $index = array();
+
+        foreach ($items as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+
+            $geonameId = (int) ($item['geoname_id'] ?? 0);
+            if ($geonameId > 0 && !isset($index[$geonameId])) {
+                $index[$geonameId] = $item;
+            }
+        }
+
+        return $index;
+    }
+
+    private function extractFallbackGeonameId(array $extraction): int
+    {
+        foreach (array('default_city_geoname_id', 'city_geoname_id') as $key) {
+            $value = $extraction[$key] ?? null;
+            if (is_numeric($value)) {
+                $candidate = (int) $value;
+                if ($candidate > 0) {
+                    return $candidate;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * @param array<string,array<string,mixed>> $locationIndex
+     * @param array<int,array<string,mixed>> $locationByGeonameId
+     * @return array{city_key:string,term_id:int,geoname_id:int,payload:array<string,mixed>}
+     */
+    private function resolveCityReference(
+        array $locationIndex,
+        array $locationByGeonameId,
+        string $countryKey,
+        string $cityKey,
+        int $defaultCityGeonameId
+    ): array {
+        $countryKey = $this->normalizeEntityKey($countryKey);
+        $cityKey = $this->normalizeEntityKey($cityKey);
+        $resolved = array(
+            'city_key' => '',
+            'term_id' => 0,
+            'geoname_id' => 0,
+            'payload' => array(),
+        );
+
+        if ('' !== $cityKey && isset($locationIndex[$cityKey])) {
+            $candidate = $locationIndex[$cityKey];
+            $candidateCountryKey = $this->normalizeEntityKey((string) ($candidate['country_key'] ?? ''));
+            if ('' === $countryKey || '' === $candidateCountryKey || $candidateCountryKey === $countryKey) {
+                return $this->buildResolvedCityResult($candidate);
+            }
+        }
+
+        if ($defaultCityGeonameId > 0) {
+            $this->applyGeonameFallback(
+                $locationByGeonameId,
+                $defaultCityGeonameId,
+                $countryKey,
+                $resolved['term_id'],
+                $resolved['geoname_id'],
+                $resolved['payload'],
+                $resolved['city_key']
+            );
+            if ($resolved['geoname_id'] > 0 && !empty($resolved['payload'])) {
+                return $resolved;
+            }
+
+            if ($this->geoCityLookup instanceof WordPressGeoCityLookupClient && '' !== $countryKey) {
+                $lookup = $this->geoCityLookup->resolveCity($countryKey, '', $defaultCityGeonameId);
+                if (!empty($lookup['resolved']) && !empty($lookup['city']) && is_array($lookup['city'])) {
+                    return $this->buildResolvedCityResult($lookup['city'], $defaultCityGeonameId);
+                }
+            }
+        }
+
+        if ('' !== $cityKey && $this->geoCityLookup instanceof WordPressGeoCityLookupClient && '' !== $countryKey) {
+            $lookup = $this->geoCityLookup->resolveCity($countryKey, $cityKey, 0);
+            if (!empty($lookup['resolved']) && !empty($lookup['city']) && is_array($lookup['city'])) {
+                return $this->buildResolvedCityResult($lookup['city']);
+            }
+        }
+
+        return $resolved;
+    }
+
+    /**
+     * @param array<string,mixed> $payload
+     * @return array{city_key:string,term_id:int,geoname_id:int,payload:array<string,mixed>}
+     */
+    private function buildResolvedCityResult(array $payload, int $fallbackGeonameId = 0): array
+    {
+        return array(
+            'city_key' => $this->normalizeEntityKey((string) ($payload['key'] ?? '')),
+            'term_id' => (int) ($payload['term_id'] ?? 0),
+            'geoname_id' => (int) ($payload['geoname_id'] ?? $fallbackGeonameId),
+            'payload' => $payload,
+        );
+    }
+
+    /**
+     * @param array<string,array<string,mixed>> $locationIndex
+     * @param array<int,array<string,mixed>> $locationByGeonameId
+     * @return array{city_key:string,term_id:int,geoname_id:int,payload:array<string,mixed>}
+     */
+    private function resolveCityFromExactAddress(
+        array $locationIndex,
+        array $locationByGeonameId,
+        string $countryKey,
+        string $exactAddress
+    ): array {
+        $countryKey = $this->normalizeEntityKey($countryKey);
+        $candidates = $this->extractAddressCityCandidates($exactAddress);
+        foreach ($candidates as $candidate) {
+            $resolved = $this->resolveCityReference(
+                $locationIndex,
+                $locationByGeonameId,
+                $countryKey,
+                $candidate,
+                0
+            );
+            if ('' !== (string) ($resolved['city_key'] ?? '')) {
+                return $resolved;
+            }
+        }
+
+        return array(
+            'city_key' => '',
+            'term_id' => 0,
+            'geoname_id' => 0,
+            'payload' => array(),
+        );
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    private function extractAddressCityCandidates(string $exactAddress): array
+    {
+        $exactAddress = trim($exactAddress);
+        if ('' === $exactAddress) {
+            return array();
+        }
+
+        $segments = preg_split('/[\r\n,|;\/]+/u', $exactAddress);
+        if (!is_array($segments) || empty($segments)) {
+            $segments = array($exactAddress);
+        }
+
+        $candidates = array();
+        foreach (array_reverse($segments) as $segment) {
+            $candidate = $this->sanitizeAddressCityCandidate((string) $segment);
+            if ('' !== $candidate && !in_array($candidate, $candidates, true)) {
+                $candidates[] = $candidate;
+            }
+        }
+
+        $fullCandidate = $this->sanitizeAddressCityCandidate($exactAddress);
+        if ('' !== $fullCandidate && !in_array($fullCandidate, $candidates, true)) {
+            $candidates[] = $fullCandidate;
+        }
+
+        return $candidates;
+    }
+
+    private function sanitizeAddressCityCandidate(string $value): string
+    {
+        $value = trim($value);
+        $value = trim($value, " \t\n\r\0\x0B-._()[]{}");
+        $value = preg_replace('/\s+/u', ' ', $value);
+        $value = is_string($value) ? trim($value) : '';
+        $length = function_exists('mb_strlen') ? mb_strlen($value, 'UTF-8') : strlen($value);
+        if ('' === $value || $length < 2 || $length > 120) {
+            return '';
+        }
+
+        if (!preg_match('/[\p{L}]/u', $value)) {
+            return '';
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param array<string,mixed> $resolvedCityPayload
+     */
+    private function resolvedCityMatchesText(array $resolvedCityPayload, string $text): bool
+    {
+        $text = trim($text);
+        if ('' === $text || empty($resolvedCityPayload)) {
+            return false;
+        }
+
+        $normalizedText = $this->normalizeEntityKey($text);
+        $candidates = array(
+            (string) ($resolvedCityPayload['key'] ?? ''),
+            (string) ($resolvedCityPayload['slug'] ?? ''),
+            (string) ($resolvedCityPayload['label'] ?? ''),
+        );
+        foreach ((array) ($resolvedCityPayload['aliases'] ?? array()) as $alias) {
+            $candidates[] = (string) $alias;
+        }
+
+        foreach (array_values(array_unique(array_filter(array_map('strval', $candidates), 'strlen'))) as $candidate) {
+            if (function_exists('mb_stripos')) {
+                if (false !== mb_stripos($text, $candidate, 0, 'UTF-8')) {
+                    return true;
+                }
+            } elseif (false !== stripos($text, $candidate)) {
+                return true;
+            }
+
+            $normalizedCandidate = $this->normalizeEntityKey($candidate);
+            if ('' !== $normalizedText && '' !== $normalizedCandidate && false !== strpos($normalizedText, $normalizedCandidate)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -327,7 +662,7 @@ final class ResolverService
                 )
             );
 
-            if (!empty($filtered)) {
+            if (!empty($filtered) && count($filtered) <= 5) {
                 return $filtered;
             }
         }
@@ -339,9 +674,10 @@ final class ResolverService
      * @param array<string,mixed> $fieldDescriptor
      * @param mixed $value
      * @param array<int,string> $errors
+     * @param array<string,mixed> $schema
      * @return array<string,mixed>
      */
-    private function resolveFieldValue(array $fieldDescriptor, $value, array &$errors): array
+    private function resolveFieldValue(array $fieldDescriptor, $value, array &$errors, array $schema = array()): array
     {
         $fieldKey = (string) ($fieldDescriptor['field_key'] ?? '');
         $type = (string) ($fieldDescriptor['type'] ?? 'text');
@@ -351,6 +687,10 @@ final class ResolverService
         $rules = isset($fieldDescriptor['rules']) && is_array($fieldDescriptor['rules'])
             ? $fieldDescriptor['rules']
             : array();
+
+        if ('currency' === $fieldKey) {
+            $choices = $this->filterCurrencyChoicesForAutoDefault($choices, $schema);
+        }
 
         if (null === $value || '' === $value || array() === $value) {
             return array(
@@ -421,9 +761,21 @@ final class ResolverService
             $numeric = strpos((string) $value, '.') !== false ? (float) $value : (int) $value;
             if (isset($rules['min']) && $numeric < (float) $rules['min']) {
                 $errors[] = sprintf('Field %s is below minimum.', $fieldKey);
+                return array(
+                    'resolved' => false,
+                    'public_value' => null,
+                    'storage_value' => null,
+                    'term_ids' => array(),
+                );
             }
             if (isset($rules['max']) && $numeric > (float) $rules['max']) {
                 $errors[] = sprintf('Field %s is above maximum.', $fieldKey);
+                return array(
+                    'resolved' => false,
+                    'public_value' => null,
+                    'storage_value' => null,
+                    'term_ids' => array(),
+                );
             }
 
             return array(
@@ -479,6 +831,115 @@ final class ResolverService
     private function hasNonEmptyValue($value): bool
     {
         return '' !== trim((string) $value);
+    }
+
+    private function normalizeEntityKey(string $value): string
+    {
+        return CanonicalKey::fromString($value);
+    }
+
+    private function normalizeLocationSource(string $source): string
+    {
+        $source = trim(strtolower($source));
+        if ('' === $source) {
+            return '';
+        }
+
+        $map = array(
+            'ad_content' => 'ad_content',
+            'ad-content' => 'ad_content',
+            'ad' => 'ad_content',
+            'ad_text' => 'ad_content',
+            'ad-text' => 'ad_content',
+            'caption' => 'ad_content',
+            'ocr' => 'ad_content',
+            'address' => 'ad_content',
+            'default_metadata' => 'default_metadata',
+            'default-metadata' => 'default_metadata',
+            'default' => 'default_metadata',
+            'fallback' => 'default_metadata',
+            'publisher_metadata' => 'publisher_metadata',
+            'publisher-metadata' => 'publisher_metadata',
+            'publisher' => 'publisher_metadata',
+            'group' => 'publisher_metadata',
+            'group_title' => 'publisher_metadata',
+            'group-title' => 'publisher_metadata',
+            'none' => 'none',
+            'null' => 'none',
+            'unresolved' => 'none',
+            'unknown' => 'none',
+        );
+
+        return $map[$source] ?? '';
+    }
+
+    private function isWeakLocationSource(string $source): bool
+    {
+        return in_array($source, array('default_metadata', 'publisher_metadata'), true);
+    }
+
+    private function requiresPrimaryContact(string $status): bool
+    {
+        return 'approved' === trim(strtolower($status));
+    }
+
+    private function normalizeModerationStatus(string $status): string
+    {
+        $status = trim(strtolower($status));
+        if ('' === $status) {
+            return '';
+        }
+
+        $map = array(
+            'approve' => 'approved',
+            'approved' => 'approved',
+            'accept' => 'approved',
+            'accepted' => 'approved',
+            'ok' => 'approved',
+            'reject' => 'rejected',
+            'rejected' => 'rejected',
+            'deny' => 'rejected',
+            'denied' => 'rejected',
+            'decline' => 'rejected',
+            'declined' => 'rejected',
+            'pending' => 'pending',
+            'review' => 'pending',
+            'uncertain' => 'pending',
+        );
+
+        return isset($map[$status]) ? $map[$status] : $status;
+    }
+
+    /**
+     * @param array<int,array<string,mixed>> $locationByGeonameId
+     * @param array<string,mixed> $resolvedCityPayload
+     */
+    private function applyGeonameFallback(
+        array $locationByGeonameId,
+        int $defaultCityGeonameId,
+        string $marketCountryKey,
+        int &$resolvedCityId,
+        int &$resolvedCityGeoNameId,
+        array &$resolvedCityPayload,
+        string &$cityKey
+    ): void {
+        $resolvedCityGeoNameId = $defaultCityGeonameId > 0 ? $defaultCityGeonameId : 0;
+        $cityKey = '';
+
+        if ($defaultCityGeonameId < 1 || !isset($locationByGeonameId[$defaultCityGeonameId])) {
+            return;
+        }
+
+        $candidate = $locationByGeonameId[$defaultCityGeonameId];
+        $candidateCountryKey = $this->normalizeEntityKey((string) ($candidate['country_key'] ?? ''));
+        if ('' !== $candidateCountryKey && $candidateCountryKey !== $marketCountryKey) {
+            return;
+        }
+
+        $resolvedCityPayload = $candidate;
+        $resolvedCityId = (int) ($candidate['term_id'] ?? 0);
+        $resolvedCityGeoNameId = (int) ($candidate['geoname_id'] ?? $defaultCityGeonameId);
+        $cityKey = $this->normalizeEntityKey((string) ($candidate['key'] ?? ''));
     }
 
     /**

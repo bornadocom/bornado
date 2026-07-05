@@ -25,6 +25,13 @@
     "city_key": {
       "type": ["string", "null"]
     },
+    "location_source": {
+      "type": ["string", "null"],
+      "enum": ["ad_content", "default_metadata", "publisher_metadata", "none", null]
+    },
+    "location_evidence": {
+      "type": ["string", "null"]
+    },
     "exact_address": {
       "type": ["string", "null"]
     },

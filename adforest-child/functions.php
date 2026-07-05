@@ -252,6 +252,14 @@ if (file_exists($bornado_breadcrumb_bootstrap)) {
 }
 
 /**
+ * Load the schema module tree so page-specific schema logic stays organized.
+ */
+$bornado_schema_bootstrap = trailingslashit(get_stylesheet_directory()) . 'schema/bootstrap.php';
+if (file_exists($bornado_schema_bootstrap)) {
+    require_once $bornado_schema_bootstrap;
+}
+
+/**
  * Respect category-template Show/Hide flags in the category search sidebar.
  */
 $bornado_category_search_sidebar_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-category-search-sidebar.php';
@@ -388,6 +396,22 @@ if (file_exists($bornado_geo_currency_overrides_bootstrap)) {
 }
 
 /**
+ * Supplemental Persian country-name overrides for Geo Catalog country labels.
+ */
+$bornado_geo_country_name_overrides_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-geo-country-name-overrides.php';
+if (file_exists($bornado_geo_country_name_overrides_bootstrap)) {
+    require_once $bornado_geo_country_name_overrides_bootstrap;
+}
+
+/**
+ * Supplemental Persian city-name overrides for Geo Catalog gaps.
+ */
+$bornado_geo_city_name_overrides_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-geo-city-name-overrides.php';
+if (file_exists($bornado_geo_city_name_overrides_bootstrap)) {
+    require_once $bornado_geo_city_name_overrides_bootstrap;
+}
+
+/**
  * Global country/city ad-post UI plus publish-time sync into ad_country.
  */
 $bornado_global_ad_location_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-global-ad-location.php';
@@ -489,6 +513,14 @@ if (file_exists($bornado_performance_optimizations_bootstrap)) {
 $bornado_tracking_guards_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-tracking-guards.php';
 if (file_exists($bornado_tracking_guards_bootstrap)) {
     require_once $bornado_tracking_guards_bootstrap;
+}
+
+/**
+ * Remove global reCAPTCHA noise from pages that do not render matching forms.
+ */
+$bornado_recaptcha_guard_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-recaptcha-guard.php';
+if (file_exists($bornado_recaptcha_guard_bootstrap)) {
+    require_once $bornado_recaptcha_guard_bootstrap;
 }
 
 /**
@@ -736,6 +768,70 @@ if (!function_exists('bornado_is_ad_search_view')) {
         }
 
         return false;
+    }
+}
+
+if (!function_exists('bornado_get_ad_search_seo_heading_title')) {
+    /**
+     * Resolve the current Ad Search SEO title for use in a semantic H1.
+     *
+     * Prefer Rank Math's final frontend title so the heading mirrors the active
+     * SEO title template, then shorten it into a cleaner H1 for listing pages.
+     *
+     * @return string
+     */
+    function bornado_get_ad_search_seo_heading_title()
+    {
+        $title = '';
+
+        if (class_exists('\RankMath\Paper\Paper') && method_exists('\RankMath\Paper\Paper', 'get')) {
+            $paper = \RankMath\Paper\Paper::get();
+            if (is_object($paper) && method_exists($paper, 'get_title')) {
+                $title = (string) $paper->get_title();
+            }
+        }
+
+        if ($title === '') {
+            $title = (string) wp_get_document_title();
+        }
+
+        if ($title === '') {
+            $queried_object_id = get_queried_object_id();
+            if ($queried_object_id > 0) {
+                $title = (string) get_the_title($queried_object_id);
+            }
+        }
+
+        $title = wp_specialchars_decode(wp_strip_all_tags($title), ENT_QUOTES);
+        $title = trim(preg_replace('/\s+/u', ' ', $title));
+
+        if ($title === '') {
+            return '';
+        }
+
+        $site_name = wp_specialchars_decode(wp_strip_all_tags((string) get_bloginfo('name')), ENT_QUOTES);
+        $site_name = trim(preg_replace('/\s+/u', ' ', $site_name));
+
+        $segments = preg_split('/(?:\s*\|\s*|\s*»\s*|\s*–\s*|\s*—\s*|\s+-\s+)/u', $title);
+        if (is_array($segments) && count($segments) > 1) {
+            $segments = array_values(array_filter(array_map('trim', $segments), static function ($segment) use ($site_name) {
+                if (!is_string($segment) || $segment === '') {
+                    return false;
+                }
+
+                if ($site_name !== '' && function_exists('mb_stripos') && mb_stripos($segment, $site_name) !== false) {
+                    return false;
+                }
+
+                return true;
+            }));
+
+            if (!empty($segments) && isset($segments[0]) && is_string($segments[0])) {
+                $title = $segments[0];
+            }
+        }
+
+        return trim($title);
     }
 }
 
@@ -1375,36 +1471,11 @@ if (!function_exists('bornado_frontend_language_tag')) {
      * Keep frontend language markup explicit for SEO and accessibility.
      *
      * WordPress locale can stay on fa_IR for translations while frontend pages
-     * emit a short BCP 47 language tag that matches the page content language.
+     * emit a full BCP 47 language tag that matches the page content language.
      */
     function bornado_frontend_language_tag()
     {
-        return apply_filters('bornado_frontend_language_tag', 'fa');
-    }
-}
-
-if (!function_exists('bornado_schema_entity_has_type')) {
-    /**
-     * Check whether a schema graph node contains one of the expected types.
-     *
-     * @param mixed        $entity
-     * @param array<int,string> $expected_types
-     * @return bool
-     */
-    function bornado_schema_entity_has_type($entity, array $expected_types)
-    {
-        if (!is_array($entity) || empty($entity['@type'])) {
-            return false;
-        }
-
-        $types = is_array($entity['@type']) ? $entity['@type'] : array($entity['@type']);
-        foreach ($types as $type) {
-            if (in_array($type, $expected_types, true)) {
-                return true;
-            }
-        }
-
-        return false;
+        return apply_filters('bornado_frontend_language_tag', 'fa-IR');
     }
 }
 
@@ -1424,61 +1495,6 @@ add_filter('language_attributes', function ($output, $doctype) {
     }
 
     return $attributes;
-}, 20, 2);
-
-add_filter('rank_math/json_ld', function ($data, $json_ld) {
-    if (is_admin() || !is_array($data)) {
-        return $data;
-    }
-
-    $language_tag = bornado_frontend_language_tag();
-    $route_context = function_exists('bornado_seo_routing_get_context') ? bornado_seo_routing_get_context() : array();
-    $country_term = !empty($route_context['country_term']) && $route_context['country_term'] instanceof WP_Term
-        ? $route_context['country_term']
-        : null;
-    $city_term = !empty($route_context['city_term']) && $route_context['city_term'] instanceof WP_Term
-        ? $route_context['city_term']
-        : null;
-    $country_data = $country_term instanceof WP_Term && function_exists('bornado_get_country_data')
-        ? bornado_get_country_data($country_term)
-        : array();
-
-    foreach ($data as $key => $entity) {
-        if (!is_array($entity)) {
-            continue;
-        }
-
-        if (
-            bornado_schema_entity_has_type($entity, array('WebSite', 'WebPage', 'CollectionPage', 'Article', 'BlogPosting', 'ItemPage'))
-            && empty($entity['inLanguage'])
-        ) {
-            $data[$key]['inLanguage'] = $language_tag;
-        }
-
-        if (
-            $country_term instanceof WP_Term
-            && bornado_schema_entity_has_type($entity, array('WebPage', 'CollectionPage', 'Article', 'BlogPosting', 'ItemPage'))
-            && empty($entity['contentLocation'])
-        ) {
-            $content_location = array(
-                '@type' => 'Place',
-                'name'  => $country_term->name,
-            );
-
-            if ($city_term instanceof WP_Term) {
-                $content_location['name'] = $city_term->name . ', ' . $country_term->name;
-                $content_location['address'] = array(
-                    '@type'           => 'PostalAddress',
-                    'addressLocality' => $city_term->name,
-                    'addressCountry'  => !empty($country_data['country_code']) ? $country_data['country_code'] : $country_term->name,
-                );
-            }
-
-            $data[$key]['contentLocation'] = $content_location;
-        }
-    }
-
-    return $data;
 }, 20, 2);
 
 if (!function_exists('bornado_is_public_seo_request')) {

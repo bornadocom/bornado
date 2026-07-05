@@ -1,5 +1,5 @@
 <?php
-define( 'WP_CACHE', true ); 
+define( 'WP_CACHE', false ); 
 /**
  * The base configurations of the WordPress.
  *
@@ -16,11 +16,11 @@ define( 'WP_CACHE', true );
  */
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'wsbnkntxpb');
+define('DB_NAME', 'prvrwyvkuj');
 /** MySQL database username */
-define('DB_USER', 'wsbnkntxpb');
+define('DB_USER', 'prvrwyvkuj');
 /** MySQL database password */
-define('DB_PASSWORD', 'MpDtBkMVH5');
+define('DB_PASSWORD', '7h38eQmME2');
 /** MySQL hostname */
 define('DB_HOST', 'localhost:/run/mysqld/mysqld.sock');
 /** Database Charset to use in creating database tables. */
@@ -33,10 +33,6 @@ define('DB_COLLATE', '');
  * You can generate these using the {@link https://api.wordpress.org/secret-key/1.1/salt/ WordPress.org secret-key service}
  */
 require('wp-salt.php');
-
-if ( ! defined( 'BORNADO_AD_HASHIDS_SALT' ) ) {
-	define( 'BORNADO_AD_HASHIDS_SALT', 'Bornado-AdPermalinks-2026-v1!8Qm@4Lp#7Xs$2Nr%9Kd' );
-}
 /**
  * WordPress Database Table prefix.
  *
@@ -67,10 +63,10 @@ define('WP_DEBUG', false);
 define( 'WP_REDIS_CONFIG', [
    'token' => "e279430effe043b8c17d3f3c751c4c0846bc70c97f0eaaea766b4079001c",
    'host' => '127.0.0.1',
-   'username' => "wsbnkntxpb",
-   'password' => "TEpHaKZF95",
+   'username' => "prvrwyvkuj",
+   'password' => "tkk5NYBKDs",
    'port' => 6379,
-   'database' => "2354", 
+   'database' => "6420", 
    'timeout' => 2.5,
    'read_timeout' => 2.5,
    'split_alloptions' => true,
@@ -81,21 +77,10 @@ define( 'WP_REDIS_CONFIG', [
    'prefetch' => true, 
    'debug' => false,
    'save_commands' => false,
-   'prefix' => "wsbnkntxpb:",  
+   'prefix' => "prvrwyvkuj:",  
    ] );
 define( 'WP_REDIS_DISABLED', false );
-
-
-define( 'WP_ALLOW_MULTISITE', true );
-define( 'MULTISITE', true );
-define( 'SUBDOMAIN_INSTALL', false );
-$base = '/';
-define( 'DOMAIN_CURRENT_SITE', 'bornado.com' );
-define( 'PATH_CURRENT_SITE', '/' );
-define( 'SITE_ID_CURRENT_SITE', 1 );
-define( 'BLOG_ID_CURRENT_SITE', 1 );
-
-define( 'DISABLE_WP_CRON', true );
+define('BORNADO_AI_EXTRACTION_SERVICE_KEY', 'e6306ce022904a42bd963b822764b780');
 /* That's all, stop editing! Happy blogging. */
 /** Absolute path to the WordPress directory. */
 if ( !defined('ABSPATH') )

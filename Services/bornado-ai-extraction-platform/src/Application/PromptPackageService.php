@@ -124,6 +124,7 @@ final class PromptPackageService
                         'key' => (string) ($location['key'] ?? ''),
                         'label' => (string) ($location['label'] ?? ''),
                         'term_id' => (int) ($location['term_id'] ?? 0),
+                        'geoname_id' => (int) ($location['geoname_id'] ?? 0),
                         'aliases' => array_values(array_map('strval', (array) ($location['aliases'] ?? array()))),
                     );
                 },
@@ -316,12 +317,13 @@ final class PromptPackageService
      */
     private function buildOutputContract(array $dynamicSchema): array
     {
+        $stage = (string) ($dynamicSchema['stage'] ?? 'extract');
         $dynamicFields = new stdClass();
         $categorySchema = isset($dynamicSchema['category_schema']) && is_array($dynamicSchema['category_schema'])
             ? $dynamicSchema['category_schema']
             : array();
 
-        if (!empty($categorySchema['fields']) && is_array($categorySchema['fields'])) {
+        if ('extract' === $stage && !empty($categorySchema['fields']) && is_array($categorySchema['fields'])) {
             $dynamicFields = array();
             foreach ($categorySchema['fields'] as $field) {
                 if (!is_array($field)) {
@@ -333,17 +335,19 @@ final class PromptPackageService
         }
 
         return array(
-            'status' => 'approved',
+            'status' => 'classify' === $stage ? 'pending' : 'approved',
             'reason' => null,
-            'category_key' => (string) ($categorySchema['key'] ?? 'property'),
-            'country_key' => (string) ($dynamicSchema['market']['country']['key'] ?? 'gb'),
-            'city_key' => 'london',
-            'exact_address' => 'Wembley',
-            'seo_title' => 'آگهی نمونه',
-            'slug' => 'آگهی-نمونه',
-            'final_ad_text' => 'متن نهایی آگهی به زبان فارسی.',
-            'primary_contact' => '07493995660',
-            'secondary_contacts' => array('02079460000'),
+            'category_key' => ('extract' === $stage && !empty($categorySchema['key'])) ? (string) $categorySchema['key'] : null,
+            'country_key' => null,
+            'city_key' => null,
+            'location_source' => null,
+            'location_evidence' => null,
+            'exact_address' => null,
+            'seo_title' => null,
+            'slug' => null,
+            'final_ad_text' => null,
+            'primary_contact' => null,
+            'secondary_contacts' => array(),
             'dynamic_fields' => $dynamicFields,
         );
     }

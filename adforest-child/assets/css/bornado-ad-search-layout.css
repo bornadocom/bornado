@@ -12,8 +12,27 @@ body.bornado-ad-search-view .adt-breadcrumb {
 	padding-top: 20px !important;
 }
 
+body.bornado-ad-search-view .bornado-ad-search-seo-heading {
+	padding: 14px 0 0 !important;
+	margin: 0 !important;
+	position: relative;
+	z-index: 1;
+}
+
+body.bornado-ad-search-view .bornado-ad-search-seo-heading > .container,
+body.bornado-ad-search-view .bornado-ad-search-seo-heading > .container.adt-container {
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+	display: flex;
+	justify-content: center;
+}
+
 body.bornado-ad-search-view .adt-search-ads-grid {
 	margin-top: 0 !important;
+}
+
+body.bornado-ad-search-view .bornado-ad-search-seo-heading + .adt-breadcrumb {
+	padding-top: 10px !important;
 }
 
 body.bornado-ad-search-view.bornado-windowed-infinite-scroll .load-more-btn-box,
@@ -86,11 +105,52 @@ body.bornado-ad-search-view .adt-ads-with-filters > .container,
 body.bornado-ad-search-view .adt-ads-with-filters > .container.adt-container,
 body.bornado-ad-search-view .adt-ads-topbar-section > .container,
 body.bornado-ad-search-view .adt-recommended-ads-section > .container,
+body.bornado-ad-search-view .bornado-ad-search-seo-heading > .container,
+body.bornado-ad-search-view .bornado-ad-search-seo-heading > .container.adt-container,
 body.bornado-ad-search-view .bornado-seo-landing-entry > .container {
 	max-width: 1200px !important;
 	width: 100% !important;
 	margin-left: auto !important;
 	margin-right: auto !important;
+}
+
+body.bornado-ad-search-view .bornado-ad-search-seo-title {
+	display: inline-block !important;
+	max-width: 100%;
+	margin: 0 auto !important;
+	padding: 0 !important;
+	font-size: 12px !important;
+	line-height: 1.45 !important;
+	font-weight: 500 !important;
+	text-align: center !important;
+	color: #6c757d !important;
+}
+
+@media (min-width: 992px) {
+	body.bornado-ad-search-view .bornado-ad-search-seo-title {
+		font-size: 13px !important;
+	}
+}
+
+@media (max-width: 768px) {
+	body.bornado-ad-search-view .bornado-ad-search-seo-heading {
+		padding-top: 18px !important;
+	}
+
+	body.bornado-ad-search-view .bornado-ad-search-seo-heading > .container,
+	body.bornado-ad-search-view .bornado-ad-search-seo-heading > .container.adt-container {
+		justify-content: flex-start;
+	}
+
+	body.bornado-ad-search-view .bornado-ad-search-seo-title {
+		margin-right: 0 !important;
+		margin-left: auto !important;
+		text-align: right !important;
+	}
+
+	body.bornado-ad-search-view .bornado-ad-search-seo-heading + .adt-breadcrumb {
+		padding-top: 8px !important;
+	}
 }
 
 /* —— Sidebar 1/3 · main 2/3 (desktop) —— */

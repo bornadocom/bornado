@@ -411,6 +411,13 @@ if (!function_exists('bornado_print_semantic_breadcrumb_schema')) {
             return;
         }
 
+        if (
+            function_exists('bornado_schema_manager_should_skip_legacy_breadcrumb_schema')
+            && bornado_schema_manager_should_skip_legacy_breadcrumb_schema()
+        ) {
+            return;
+        }
+
         if (bornado_semantic_breadcrumb_has_external_schema_provider()) {
             return;
         }

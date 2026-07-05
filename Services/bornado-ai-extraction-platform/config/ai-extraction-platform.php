@@ -50,10 +50,19 @@ $config = array(
         'require_auth_for_schema' => true,
         'require_auth_for_prompt' => true,
         'require_auth_for_resolve' => true,
+        'allow_query_key_auth' => in_array(
+            strtolower(trim((string) (getenv('BORNADO_AI_ALLOW_QUERY_KEY_AUTH') ?: 'false'))),
+            array('1', 'true', 'yes', 'on'),
+            true
+        ),
     ),
     'logging' => array(
         'state_dir'        => $storageDir . DIRECTORY_SEPARATOR . 'state',
         'schema_cache_dir' => $storageDir . DIRECTORY_SEPARATOR . 'schema-cache',
+    ),
+    'dedup' => array(
+        'state_file' => $storageDir . DIRECTORY_SEPARATOR . 'state' . DIRECTORY_SEPARATOR . 'dedup-state.json',
+        'version' => 'v1',
     ),
     'source' => array(
         'mode' => getenv('BORNADO_AI_SOURCE_MODE') ?: 'wordpress-rest',
@@ -64,6 +73,7 @@ $config = array(
             'timeout_seconds'       => (int) (getenv('BORNADO_AI_WORDPRESS_TIMEOUT') ?: 12),
             'page_size'             => (int) (getenv('BORNADO_AI_WORDPRESS_PAGE_SIZE') ?: 100),
             'catalog_endpoint'      => trim((string) (getenv('BORNADO_AI_WORDPRESS_CATALOG_ENDPOINT') ?: '')),
+            'geo_city_lookup_endpoint' => trim((string) (getenv('BORNADO_AI_WORDPRESS_GEO_CITY_LOOKUP_ENDPOINT') ?: '')),
             'service_key'           => trim((string) (getenv('BORNADO_AI_WORDPRESS_SERVICE_KEY') ?: ($opsKey ?: $sharedSecret))),
             'taxonomies'            => array('ad_cats', 'ad_country', 'ad_type', 'ad_condition', 'ad_warranty'),
             'country_code_meta_key' => '_bornado_country_code',
@@ -80,6 +90,21 @@ $config = array(
         'core_template_path' => $baseDir . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'core-prompt.md',
     ),
     'markets' => array(
+        'ca' => array(
+            'label' => 'Canada',
+            'country_key' => 'ca',
+            'country_code' => 'CA',
+            'preferred_currency_keys' => array('cad'),
+            'channel_defaults' => array(
+                'facebook' => array(
+                    'platform_label_fa' => 'فیسبوک',
+                ),
+                'instagram' => array(
+                    'platform_label_fa' => 'اینستاگرام',
+                ),
+            ),
+            'location_aliases' => array(),
+        ),
         'uk' => array(
             'label' => 'United Kingdom',
             'country_key' => 'gb',

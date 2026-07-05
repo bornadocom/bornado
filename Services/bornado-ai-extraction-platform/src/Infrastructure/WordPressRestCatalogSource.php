@@ -28,17 +28,14 @@ final class WordPressRestCatalogSource
         $wordpress = isset($this->config['wordpress']) && is_array($this->config['wordpress'])
             ? $this->config['wordpress']
             : array();
+        $marketKey = trim((string) ($marketConfig['country_key'] ?? $marketConfig['country_code'] ?? ''));
 
         $catalogEndpoint = trim((string) ($wordpress['catalog_endpoint'] ?? ''));
         if ('' !== $catalogEndpoint) {
-            $serviceKey = trim((string) ($wordpress['service_key'] ?? ''));
             $query = array(
-                'market' => (string) ($marketConfig['country_key'] ?? ''),
+                'market' => $marketKey,
                 'channel' => 'instagram',
             );
-            if ('' !== $serviceKey) {
-                $query['key'] = $serviceKey;
-            }
 
             return $this->requestCatalogEndpoint(
                 $this->appendQueryArgs(
@@ -58,6 +55,14 @@ final class WordPressRestCatalogSource
         $warranty   = $this->fetchAllTerms('ad_warranty', $wordpress);
 
         $rootCountry = $this->selectRootCountry($countries, $marketConfig, $wordpress);
+        if ('' !== $marketKey && empty($rootCountry)) {
+            throw new RuntimeException(
+                sprintf(
+                    'Root country could not be resolved for market %s.',
+                    $marketKey
+                )
+            );
+        }
         $locations   = $this->buildLocations($countries, $rootCountry, $marketConfig);
 
         return array(
@@ -172,12 +177,6 @@ final class WordPressRestCatalogSource
             }
         }
 
-        foreach ($countries as $term) {
-            if ((int) ($term['parent'] ?? 0) === 0) {
-                return $term;
-            }
-        }
-
         return array();
     }
 
@@ -193,6 +192,13 @@ final class WordPressRestCatalogSource
         $aliasesByKey = isset($marketConfig['location_aliases']) && is_array($marketConfig['location_aliases'])
             ? $marketConfig['location_aliases']
             : array();
+
+        if ($rootId < 1) {
+            return array(
+                'country' => array(),
+                'cities' => array(),
+            );
+        }
 
         $rootKey = CanonicalKey::fromString((string) ($rootCountry['slug'] ?? $marketConfig['country_key'] ?? ''));
         $cities  = array();
@@ -212,6 +218,7 @@ final class WordPressRestCatalogSource
                 'label' => (string) ($term['name'] ?? ''),
                 'slug' => (string) ($term['slug'] ?? ''),
                 'term_id' => (int) ($term['id'] ?? 0),
+                'geoname_id' => (int) ($term['meta']['_bornado_geo_source_id'] ?? 0),
                 'country_key' => $rootKey,
                 'aliases' => array_values(array_unique(array_filter(array_map('strval', (array) ($aliasesByKey[$cityKey] ?? array()))))),
             );

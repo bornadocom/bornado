@@ -66,6 +66,43 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
 
             register_rest_route(
                 'bornado-ai-bridge/v1',
+                '/geo-city-lookup',
+                array(
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => array($this, 'handle_geo_city_lookup_request'),
+                    'permission_callback' => array($this, 'can_access_service_route'),
+                    'args'                => array(
+                        'country_key' => array(
+                            'type' => 'string',
+                            'required' => false,
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ),
+                        'country_iso2' => array(
+                            'type' => 'string',
+                            'required' => false,
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ),
+                        'city_key' => array(
+                            'type' => 'string',
+                            'required' => false,
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ),
+                        'query' => array(
+                            'type' => 'string',
+                            'required' => false,
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ),
+                        'geoname_id' => array(
+                            'type' => 'integer',
+                            'required' => false,
+                            'sanitize_callback' => 'absint',
+                        ),
+                    ),
+                )
+            );
+
+            register_rest_route(
+                'bornado-ai-bridge/v1',
                 '/ingest',
                 array(
                     'methods'             => WP_REST_Server::CREATABLE,
@@ -75,15 +112,34 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
             );
         }
 
-        public function can_access_service_route() {
+        public function can_access_service_route($request = null) {
             if (current_user_can('manage_options')) {
                 return true;
             }
 
-            $expected = $this->get_service_key();
-            $provided = trim((string) ($_SERVER['HTTP_X_BORNADO_SERVICE_KEY'] ?? ($_GET['key'] ?? '')));
+            if (
+                $request instanceof WP_REST_Request &&
+                WP_REST_Server::READABLE === $request->get_method() &&
+                get_current_user_id() > 0
+            ) {
+                return true;
+            }
 
-            return '' !== $expected && '' !== $provided && hash_equals($expected, $provided);
+            $expected = $this->get_service_key();
+            $provided = trim((string) ($_SERVER['HTTP_X_BORNADO_SERVICE_KEY'] ?? ''));
+
+            if ('' !== $expected && '' !== $provided && hash_equals($expected, $provided)) {
+                return true;
+            }
+
+            $allow_query_key = (bool) apply_filters('bornado_ai_extraction_bridge_allow_query_key_auth', false);
+            if (!$allow_query_key) {
+                return false;
+            }
+
+            $provided_query = trim((string) ($_GET['key'] ?? ''));
+
+            return '' !== $expected && '' !== $provided_query && hash_equals($expected, $provided_query);
         }
 
         public function handle_health_request(WP_REST_Request $request) {
@@ -98,12 +154,58 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
             );
         }
 
+        public function handle_geo_city_lookup_request(WP_REST_Request $request) {
+            $country_iso2 = $this->resolve_geo_lookup_country_iso2(
+                (string) $request->get_param('country_iso2'),
+                (string) $request->get_param('country_key')
+            );
+            $geoname_id = absint($request->get_param('geoname_id'));
+            $city_key = sanitize_text_field((string) $request->get_param('city_key'));
+            $query = sanitize_text_field((string) $request->get_param('query'));
+            $lookup_query = '' !== trim($city_key) ? $city_key : $query;
+
+            if ('' === $country_iso2) {
+                return new WP_REST_Response(
+                    array(
+                        'resolved' => false,
+                        'ambiguous' => false,
+                        'message' => 'Country is required for geo city lookup.',
+                    ),
+                    422
+                );
+            }
+
+            if ($geoname_id < 1 && '' === trim($lookup_query)) {
+                return new WP_REST_Response(
+                    array(
+                        'resolved' => false,
+                        'ambiguous' => false,
+                        'message' => 'Either geoname_id or city query is required.',
+                    ),
+                    400
+                );
+            }
+
+            $result = $this->lookup_geo_catalog_city($country_iso2, $lookup_query, $geoname_id);
+
+            return rest_ensure_response($result);
+        }
+
         public function handle_catalog_request(WP_REST_Request $request) {
             $market  = sanitize_key((string) $request->get_param('market'));
             $channel = sanitize_key((string) $request->get_param('channel'));
             $channel = '' !== $channel ? $channel : 'instagram';
 
             $root_country    = $this->resolve_root_country($market);
+            if ('' !== $market && !$root_country instanceof WP_Term) {
+                return new WP_REST_Response(
+                    array(
+                        'message' => 'Unknown market.',
+                        'market' => $market,
+                    ),
+                    422
+                );
+            }
             $root_country_id = $root_country instanceof WP_Term ? (int) $root_country->term_id : 0;
             $templates       = $this->get_template_index();
 
@@ -120,8 +222,8 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
                     'categories' => $this->get_category_terms($templates),
                     'templates' => array_values($templates),
                     'locations' => array(
-                        'country' => $this->map_root_country($root_country),
-                        'cities' => $this->get_city_terms($root_country_id),
+                        'country' => $root_country instanceof WP_Term ? $this->map_root_country($root_country) : array(),
+                        'cities' => $root_country_id > 0 ? $this->get_city_terms($root_country_id) : array(),
                     ),
                     'enums' => array(
                         'ad_type' => $this->get_taxonomy_terms('ad_type'),
@@ -129,7 +231,7 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
                         'ad_warranty' => $this->get_taxonomy_terms('ad_warranty'),
                         'ad_currency' => $this->get_taxonomy_terms('ad_currency'),
                     ),
-                    'root_country' => $this->map_root_country($root_country),
+                    'root_country' => $root_country instanceof WP_Term ? $this->map_root_country($root_country) : array(),
                 )
             );
         }
@@ -212,6 +314,11 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
             $meta = isset($record['meta']) && is_array($record['meta']) ? $record['meta'] : array();
             $dynamic_meta = isset($record['dynamic_meta']) && is_array($record['dynamic_meta']) ? $record['dynamic_meta'] : array();
             $flags = isset($record['flags']) && is_array($record['flags']) ? $record['flags'] : array();
+            $geo_location = isset($record['geo_location']) && is_array($record['geo_location']) ? $record['geo_location'] : array();
+
+            if (!empty($geo_location)) {
+                $taxonomies = $this->apply_geo_location_taxonomy_fallback($taxonomies, $geo_location);
+            }
 
             $this->save_taxonomy_terms($post_id, $taxonomies);
             $this->save_post_meta_map($post_id, $meta);
@@ -267,7 +374,7 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
                 if ('test_service_health' === $action) {
                     $service_health = $this->request_remote_service('/health', false);
                 } elseif ('test_service_schema' === $action) {
-                    $service_schema = $this->request_remote_service('/schema?market=uk&channel=instagram', true);
+                    $service_schema = $this->request_remote_service('/schema?channel=instagram', true);
                 } elseif ('validate_template_fields' === $action) {
                     $template_validation = $this->validate_all_template_fields();
                 }
@@ -747,6 +854,7 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
             if ($root_country_id < 1) {
                 return array();
             }
+            $root_country_key = $this->resolve_country_key_for_term($root_country_id);
 
             $aliases_by_key = apply_filters(
                 'bornado_ai_extraction_bridge_location_aliases',
@@ -769,13 +877,15 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
                         continue;
                     }
 
+                    $term_id = (int) ($item['id'] ?? 0);
                     $key = $this->canonical_key((string) ($item['slug'] ?? $item['label'] ?? ''));
                     $cities[] = array(
                         'key' => $key,
                         'label' => (string) ($item['label'] ?? ''),
                         'slug' => (string) ($item['slug'] ?? ''),
-                        'term_id' => (int) ($item['id'] ?? 0),
-                        'country_key' => $this->canonical_key((string) ($this->get_country_data_value($root_country_id, 'country_code') ?: '')),
+                        'term_id' => $term_id,
+                        'geoname_id' => (int) ($item['geoname_id'] ?? get_term_meta($term_id, '_bornado_geo_source_id', true)),
+                        'country_key' => $root_country_key,
                         'aliases' => array_values(array_unique(array_map('strval', (array) ($aliases_by_key[$key] ?? array())))),
                         'is_default' => false,
                     );
@@ -811,7 +921,8 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
                     'label' => (string) $term->name,
                     'slug' => (string) $term->slug,
                     'term_id' => (int) $term->term_id,
-                    'country_key' => $this->canonical_key((string) ($this->get_country_data_value($root_country_id, 'country_code') ?: '')),
+                    'geoname_id' => (int) get_term_meta($term->term_id, '_bornado_geo_source_id', true),
+                    'country_key' => $root_country_key,
                     'aliases' => array_values(array_unique(array_map('strval', (array) ($aliases_by_key[$key] ?? array())))),
                     'is_default' => false,
                 );
@@ -1365,6 +1476,80 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
             return 1;
         }
 
+        private function apply_geo_location_taxonomy_fallback($taxonomies, $geo_location) {
+            $taxonomies = is_array($taxonomies) ? $taxonomies : array();
+            $geo_location = is_array($geo_location) ? $geo_location : array();
+
+            $existing_terms = array_values(
+                array_filter(
+                    array_map('intval', (array) ($taxonomies['ad_country'] ?? array())),
+                    static function ($term_id) {
+                        return $term_id > 0;
+                    }
+                )
+            );
+
+            $existing_country_term_id = $this->extract_root_country_term_id($existing_terms);
+            $existing_city_term_id = $this->extract_child_city_term_id($existing_terms);
+            $country_term_id = (int) ($geo_location['country_term_id'] ?? 0);
+            if ($country_term_id < 1 && $existing_country_term_id > 0) {
+                $country_term_id = $existing_country_term_id;
+            }
+
+            $country_iso2 = strtoupper(sanitize_text_field((string) ($geo_location['country_iso2'] ?? '')));
+            if ('' === $country_iso2 && $country_term_id > 0) {
+                $country_iso2 = $this->resolve_country_iso2_for_term($country_term_id);
+            }
+            if (
+                $country_term_id < 1 &&
+                '' !== $country_iso2 &&
+                class_exists('Bornado_Geo_Term_Manager') &&
+                method_exists('Bornado_Geo_Term_Manager', 'ensure_root_country_term_by_iso2')
+            ) {
+                $country_term_id = (int) Bornado_Geo_Term_Manager::ensure_root_country_term_by_iso2($country_iso2);
+            }
+
+            $city_term_id = (int) ($geo_location['city_term_id'] ?? 0);
+            if ($city_term_id < 1 && $existing_city_term_id > 0) {
+                $city_term_id = $existing_city_term_id;
+            }
+            $city_geoname_id = (int) ($geo_location['city_geoname_id'] ?? 0);
+            if (
+                $city_term_id < 1 &&
+                $city_geoname_id > 0 &&
+                $country_term_id > 0 &&
+                '' !== $country_iso2 &&
+                class_exists('Bornado_Geo_Catalog') &&
+                class_exists('Bornado_Geo_Term_Manager') &&
+                method_exists('Bornado_Geo_Catalog', 'get_country_by_iso2') &&
+                method_exists('Bornado_Geo_Catalog', 'get_city_by_country_and_geoname') &&
+                method_exists('Bornado_Geo_Term_Manager', 'ensure_city_term')
+            ) {
+                $country = Bornado_Geo_Catalog::get_country_by_iso2($country_iso2);
+                $city = Bornado_Geo_Catalog::get_city_by_country_and_geoname($country_iso2, $city_geoname_id);
+                if (is_array($country) && !empty($country) && is_array($city) && !empty($city)) {
+                    $city_term_id = (int) Bornado_Geo_Term_Manager::ensure_city_term($country, $city, $country_term_id);
+                    if ($city_term_id > 0) {
+                        $this->flush_location_picker_cache();
+                    }
+                }
+            }
+
+            $resolved_terms = array();
+            if ($country_term_id > 0) {
+                $resolved_terms[] = $country_term_id;
+            }
+            if ($city_term_id > 0) {
+                $resolved_terms[] = $city_term_id;
+            }
+
+            if (!empty($resolved_terms)) {
+                $taxonomies['ad_country'] = array_values(array_unique(array_map('intval', $resolved_terms)));
+            }
+
+            return $taxonomies;
+        }
+
         private function save_taxonomy_terms($post_id, $taxonomies) {
             foreach ((array) $taxonomies as $taxonomy => $term_ids) {
                 $taxonomy = sanitize_key((string) $taxonomy);
@@ -1417,11 +1602,244 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
             );
         }
 
+        private function resolve_geo_lookup_country_iso2($country_iso2, $country_key) {
+            $country_iso2 = strtoupper(sanitize_text_field((string) $country_iso2));
+            if (preg_match('/^[A-Z]{2}$/', $country_iso2)) {
+                return $country_iso2;
+            }
+
+            $country_key = $this->canonical_key((string) $country_key);
+            if (preg_match('/^[a-z]{2}$/', $country_key)) {
+                return strtoupper($country_key);
+            }
+
+            $root_country = $this->resolve_root_country($country_key);
+            if ($root_country instanceof WP_Term) {
+                return $this->resolve_country_iso2_for_term((int) $root_country->term_id);
+            }
+
+            return '';
+        }
+
+        /**
+         * @return array<string,mixed>
+         */
+        private function lookup_geo_catalog_city($country_iso2, $lookup_query, $geoname_id) {
+            $country_iso2 = strtoupper(sanitize_text_field((string) $country_iso2));
+            $lookup_query = sanitize_text_field((string) $lookup_query);
+            $geoname_id = absint($geoname_id);
+
+            if (
+                '' === $country_iso2 ||
+                !class_exists('Bornado_Geo_Catalog')
+            ) {
+                return array(
+                    'resolved' => false,
+                    'ambiguous' => false,
+                );
+            }
+
+            if ($geoname_id > 0 && method_exists('Bornado_Geo_Catalog', 'get_city_by_country_and_geoname')) {
+                $city = Bornado_Geo_Catalog::get_city_by_country_and_geoname($country_iso2, $geoname_id);
+                if (is_array($city) && !empty($city)) {
+                    return array(
+                        'resolved' => true,
+                        'ambiguous' => false,
+                        'matched_by' => 'geoname_id',
+                        'country_iso2' => $country_iso2,
+                        'city' => $this->map_geo_catalog_city_payload($country_iso2, $city),
+                    );
+                }
+            }
+
+            if ('' === trim($lookup_query)) {
+                return array(
+                    'resolved' => false,
+                    'ambiguous' => false,
+                    'country_iso2' => $country_iso2,
+                );
+            }
+
+            $canonical_query = $this->canonical_key($lookup_query);
+            $exact_searches = array(
+                'slug_candidate' => array_unique(array_filter(array($canonical_query))),
+                'asciiname' => array_unique(array_filter(array($lookup_query))),
+                'name_en' => array_unique(array_filter(array($lookup_query))),
+                'name_fa' => array_unique(array_filter(array($lookup_query))),
+            );
+
+            if (method_exists('Bornado_Geo_Catalog', 'find_cities_by_exact_field')) {
+                foreach ($exact_searches as $field => $values) {
+                    foreach ($values as $value) {
+                        $matches = Bornado_Geo_Catalog::find_cities_by_exact_field($country_iso2, $field, (string) $value, 5);
+                        if (1 === count($matches) && is_array($matches[0])) {
+                            return array(
+                                'resolved' => true,
+                                'ambiguous' => false,
+                                'matched_by' => $field,
+                                'country_iso2' => $country_iso2,
+                                'city' => $this->map_geo_catalog_city_payload($country_iso2, $matches[0]),
+                            );
+                        }
+
+                        if (count($matches) > 1) {
+                            return array(
+                                'resolved' => false,
+                                'ambiguous' => true,
+                                'matched_by' => $field,
+                                'country_iso2' => $country_iso2,
+                                'candidate_geoname_ids' => $this->collect_geo_catalog_candidate_ids($matches),
+                            );
+                        }
+                    }
+                }
+            }
+
+            if (method_exists('Bornado_Geo_Catalog', 'search_cities')) {
+                $matches = Bornado_Geo_Catalog::search_cities($country_iso2, $lookup_query, 5);
+                if (
+                    1 === count($matches) &&
+                    is_array($matches[0]) &&
+                    $this->geo_catalog_city_matches_query($matches[0], $lookup_query)
+                ) {
+                    return array(
+                        'resolved' => true,
+                        'ambiguous' => false,
+                        'matched_by' => 'search',
+                        'country_iso2' => $country_iso2,
+                        'city' => $this->map_geo_catalog_city_payload($country_iso2, $matches[0]),
+                    );
+                }
+
+                if (count($matches) > 1) {
+                    return array(
+                        'resolved' => false,
+                        'ambiguous' => true,
+                        'matched_by' => 'search',
+                        'country_iso2' => $country_iso2,
+                        'candidate_geoname_ids' => $this->collect_geo_catalog_candidate_ids($matches),
+                    );
+                }
+            }
+
+            return array(
+                'resolved' => false,
+                'ambiguous' => false,
+                'country_iso2' => $country_iso2,
+            );
+        }
+
+        /**
+         * @param array<string,mixed> $city
+         */
+        private function geo_catalog_city_matches_query($city, $query) {
+            $query = trim((string) $query);
+            if ('' === $query) {
+                return false;
+            }
+
+            $canonical_query = $this->canonical_key($query);
+            $raw_query = strtolower($query);
+            foreach (array('slug_candidate', 'asciiname', 'name_en', 'name_fa') as $field) {
+                $value = trim((string) ($city[$field] ?? ''));
+                if ('' === $value) {
+                    continue;
+                }
+
+                if ('' !== $canonical_query && $canonical_query === $this->canonical_key($value)) {
+                    return true;
+                }
+
+                if ('' === $canonical_query && $raw_query === strtolower($value)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * @param array<string,mixed> $city
+         * @return array<string,mixed>
+         */
+        private function map_geo_catalog_city_payload($country_iso2, $city) {
+            $country_iso2 = strtoupper(sanitize_text_field((string) $country_iso2));
+            $term_id = 0;
+            $term = null;
+
+            if (
+                !empty($city['geoname_id']) &&
+                class_exists('Bornado_Geo_Term_Manager') &&
+                method_exists('Bornado_Geo_Term_Manager', 'find_city_term_by_source_id')
+            ) {
+                $term = Bornado_Geo_Term_Manager::find_city_term_by_source_id((int) $city['geoname_id']);
+                if ($term instanceof WP_Term) {
+                    $term_id = (int) $term->term_id;
+                }
+            }
+
+            $label = $term instanceof WP_Term
+                ? (string) $term->name
+                : (!empty($city['name_fa']) ? (string) $city['name_fa'] : (string) ($city['name_en'] ?? ''));
+            $slug = $term instanceof WP_Term
+                ? (string) $term->slug
+                : sanitize_title((string) ($city['slug_candidate'] ?? $city['asciiname'] ?? $city['name_en'] ?? $label));
+            $key = $this->canonical_key($slug);
+            if ('' === $key) {
+                $key = $this->canonical_key((string) ($city['name_en'] ?? $city['asciiname'] ?? $label));
+            }
+
+            return array(
+                'key' => $key,
+                'label' => $label,
+                'slug' => $slug,
+                'term_id' => $term_id,
+                'geoname_id' => (int) ($city['geoname_id'] ?? 0),
+                'country_key' => strtolower($country_iso2),
+                'aliases' => array_values(
+                    array_unique(
+                        array_filter(
+                            array_map(
+                                'strval',
+                                array(
+                                    $city['slug_candidate'] ?? '',
+                                    $city['asciiname'] ?? '',
+                                    $city['name_en'] ?? '',
+                                    $city['name_fa'] ?? '',
+                                )
+                            )
+                        )
+                    )
+                ),
+            );
+        }
+
+        /**
+         * @param array<int,array<string,mixed>> $matches
+         * @return array<int,int>
+         */
+        private function collect_geo_catalog_candidate_ids($matches) {
+            return array_values(
+                array_filter(
+                    array_map(
+                        static function ($item) {
+                            return is_array($item) && !empty($item['geoname_id']) ? (int) $item['geoname_id'] : 0;
+                        },
+                        (array) $matches
+                    )
+                )
+            );
+        }
+
         /**
          * @return WP_Term|null
          */
         private function resolve_root_country($market) {
             $market = sanitize_key((string) $market);
+
+            if ('' === $market) {
+                return null;
+            }
 
             if (class_exists('Bornado_Location_Picker_Service') && method_exists('Bornado_Location_Picker_Service', 'get_root_country_options')) {
                 $items = Bornado_Location_Picker_Service::get_root_country_options(false);
@@ -1435,7 +1853,7 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
                         continue;
                     }
 
-                    $country_code = $this->canonical_key((string) $this->get_country_data_value($term, 'country_code'));
+                    $country_code = $this->resolve_country_key_for_term((int) $term->term_id);
                     $market_slug  = $this->canonical_key((string) $term->slug);
 
                     if ('' !== $market && ($market === $market_slug || $market === strtolower($country_code))) {
@@ -1443,14 +1861,22 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
                     }
                 }
 
-                foreach ((array) $items as $item) {
-                    if (!is_array($item) || empty($item['id'])) {
-                        continue;
-                    }
+                if ('' !== $market) {
+                    return null;
+                }
+            }
 
-                    $term = get_term((int) $item['id'], 'ad_country');
-                    if ($term instanceof WP_Term) {
-                        return $term;
+            if (
+                '' !== $market &&
+                preg_match('/^[a-z]{2}$/', $market) &&
+                class_exists('Bornado_Geo_Term_Manager') &&
+                method_exists('Bornado_Geo_Term_Manager', 'ensure_root_country_term_by_iso2')
+            ) {
+                $ensured_term_id = (int) Bornado_Geo_Term_Manager::ensure_root_country_term_by_iso2(strtoupper($market));
+                if ($ensured_term_id > 0) {
+                    $ensured_term = get_term($ensured_term_id, 'ad_country');
+                    if ($ensured_term instanceof WP_Term) {
+                        return $ensured_term;
                     }
                 }
             }
@@ -1480,7 +1906,61 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
                 }
             }
 
-            return $terms[0] instanceof WP_Term ? $terms[0] : null;
+            if ('' !== $market) {
+                return null;
+            }
+
+            return null;
+        }
+
+        private function extract_root_country_term_id($term_ids) {
+            foreach ((array) $term_ids as $term_id) {
+                $term = get_term((int) $term_id, 'ad_country');
+                if ($term instanceof WP_Term && 0 === (int) $term->parent) {
+                    return (int) $term->term_id;
+                }
+            }
+
+            return 0;
+        }
+
+        private function extract_child_city_term_id($term_ids) {
+            foreach ((array) $term_ids as $term_id) {
+                $term = get_term((int) $term_id, 'ad_country');
+                if ($term instanceof WP_Term && (int) $term->parent > 0) {
+                    return (int) $term->term_id;
+                }
+            }
+
+            return 0;
+        }
+
+        private function resolve_country_iso2_for_term($term_id) {
+            $term_id = (int) $term_id;
+            if ($term_id < 1) {
+                return '';
+            }
+
+            $country_code = strtoupper($this->canonical_key((string) $this->get_country_data_value($term_id, 'country_code')));
+            if ('' !== $country_code) {
+                return $country_code;
+            }
+
+            $meta_keys = array('_bornado_country_code', '_bornado_geo_country_iso2');
+            foreach ($meta_keys as $meta_key) {
+                $value = strtoupper(sanitize_text_field((string) get_term_meta($term_id, $meta_key, true)));
+                if ('' !== $value) {
+                    return $value;
+                }
+            }
+
+            return '';
+        }
+
+        private function flush_location_picker_cache() {
+            if (class_exists('Bornado_Location_Picker_Service') && method_exists('Bornado_Location_Picker_Service', 'flush_cache')) {
+                Bornado_Location_Picker_Service::flush_cache();
+            }
         }
 
         /**
@@ -1498,7 +1978,7 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
             $currency_name = (string) $this->get_country_data_value($term, 'currency_name');
 
             return array(
-                'key' => '' !== $country_code ? strtolower($country_code) : $this->canonical_key((string) $term->slug),
+                'key' => $this->resolve_country_key_for_term((int) $term->term_id),
                 'label' => (string) $term->name,
                 'slug' => (string) $term->slug,
                 'term_id' => (int) $term->term_id,
@@ -1519,6 +1999,28 @@ if (!class_exists('Bornado_AI_Extraction_Bridge')) {
             }
 
             return '';
+        }
+
+        private function resolve_country_key_for_term($term_id) {
+            $term = get_term((int) $term_id, 'ad_country');
+            if (!$term instanceof WP_Term) {
+                return '';
+            }
+
+            $country_code = $this->canonical_key((string) $this->get_country_data_value($term, 'country_code'));
+            if ('' !== $country_code) {
+                return $country_code;
+            }
+
+            $meta_keys = array('_bornado_country_code', '_bornado_geo_country_iso2');
+            foreach ($meta_keys as $meta_key) {
+                $meta_value = $this->canonical_key((string) get_term_meta($term->term_id, $meta_key, true));
+                if ('' !== $meta_value) {
+                    return $meta_value;
+                }
+            }
+
+            return $this->canonical_key((string) $term->slug);
         }
 
         /**

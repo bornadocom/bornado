@@ -25,6 +25,16 @@ foreach ($item in $downloads) {
     Invoke-WebRequest -Uri $item.Url -OutFile $destination
 }
 
+$supplementTemplate = Join-Path $outputPath "city-fa-supplement.sample.csv"
+if (-not (Test-Path -LiteralPath $supplementTemplate)) {
+    @(
+        "geoname_id,name_fa"
+        "# 6173331,ونکوور"
+        "# 6167865,تورنتو"
+        "# 5907364,برنابی"
+    ) | Set-Content -LiteralPath $supplementTemplate -Encoding UTF8
+}
+
 Write-Host ""
 Write-Host "GeoNames snapshot آماده شد در:"
 Write-Host "  $outputPath"
@@ -33,4 +43,5 @@ Write-Host "وقتی محیط وردپرسی/سروری در دسترس بود،
 Write-Host "  wp bornado-geo import-countries `"$outputPath\countryInfo.txt`""
 Write-Host "  wp bornado-geo import-cities `"$outputPath\$CityDataset`""
 Write-Host "  wp bornado-geo import-fa-names `"$outputPath\alternateNamesV2.zip`""
+Write-Host "  wp bornado-geo import-city-fa-supplement `"$outputPath\city-fa-supplement.sample.csv`"   # optional"
 Write-Host "  wp bornado-geo seed-root-countries"
