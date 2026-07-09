@@ -12,7 +12,7 @@ if (!function_exists('bornado_schema_manager_page_uses_shared_breadcrumb')) {
      */
     function bornado_schema_manager_page_uses_shared_breadcrumb($page_type)
     {
-        return in_array((string) $page_type, array('home_collection', 'country_collection', 'city_collection'), true)
+        return in_array((string) $page_type, array('country_collection', 'city_collection'), true)
             || (
                 function_exists('bornado_schema_manager_is_category_shape')
                 && bornado_schema_manager_is_category_shape($page_type)

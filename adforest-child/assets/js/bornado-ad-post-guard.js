@@ -25,6 +25,7 @@
     var contactMethodsConfig = config.contactMethods && typeof config.contactMethods === "object"
         ? config.contactMethods
         : null;
+    var categoryAndLocationFieldNames = rootCategoryNames.concat(countryNames);
 
     function isFormField(element) {
         return !!(
@@ -147,6 +148,46 @@
 
         control.dispatchEvent(new window.Event("change", { bubbles: true }));
         control.dispatchEvent(new window.Event("input", { bubbles: true }));
+    }
+
+    function createRestoreState() {
+        return {
+            cancelled: false,
+            userInteracted: false
+        };
+    }
+
+    function isRestorableChainField(name) {
+        return categoryAndLocationFieldNames.indexOf(String(name || "")) !== -1;
+    }
+
+    function hasDraftValues(draft, names) {
+        return names.some(function (name) {
+            return !!draft && Object.prototype.hasOwnProperty.call(draft, name) && String(draft[name] || "").trim() !== "";
+        });
+    }
+
+    function hasLiveSelection(form, names) {
+        return names.some(function (name) {
+            var control = form.querySelector('[name="' + name.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"]');
+            return !!(control && String(control.value || "").trim() !== "");
+        });
+    }
+
+    function bindRestoreInterruption(form, state) {
+        function maybeCancel(event) {
+            var target = event.target;
+
+            if (!target || !form.contains(target) || !event.isTrusted || !isRestorableChainField(target.name)) {
+                return;
+            }
+
+            state.userInteracted = true;
+            state.cancelled = true;
+        }
+
+        document.addEventListener("change", maybeCancel, true);
+        document.addEventListener("input", maybeCancel, true);
     }
 
     function waitForControl(form, name, timeoutMs) {
@@ -440,6 +481,184 @@
         return /^\+\d{8,16}$/.test(cleaned) ? cleaned : "";
     }
 
+    function getResolvedDefaultPhoneCountry() {
+        var runtimeCountry = window.BornadoPhoneCountryPickerResolvedCountry
+            && typeof window.BornadoPhoneCountryPickerResolvedCountry === "object"
+            ? window.BornadoPhoneCountryPickerResolvedCountry
+            : null;
+
+        if (runtimeCountry && runtimeCountry.dialCode) {
+            return runtimeCountry;
+        }
+
+        runtimeCountry = resolveBrowserSuggestedCountry();
+        if (runtimeCountry && runtimeCountry.dialCode) {
+            return runtimeCountry;
+        }
+
+        return defaultPhoneCountry && defaultPhoneCountry.dialCode ? defaultPhoneCountry : null;
+    }
+
+    function getCountryByCountryCode(countryCode) {
+        var normalized = String(countryCode || "").trim().toUpperCase();
+        var match = null;
+
+        if (!normalized) {
+            return null;
+        }
+
+        phoneCountries.some(function (country) {
+            if (String(country && country.countryCode ? country.countryCode : "").trim().toUpperCase() === normalized) {
+                match = country;
+                return true;
+            }
+
+            return false;
+        });
+
+        return match;
+    }
+
+    function countryCodeFromLocale(locale) {
+        var normalized = String(locale || "").trim().replace(/_/g, "-");
+        var parts = normalized.split("-").filter(Boolean);
+        var languageMap = {
+            fa: "IR",
+            ar: "AE",
+            en: "GB"
+        };
+
+        if (parts.length > 1 && /^[A-Za-z]{2}$/.test(parts[parts.length - 1])) {
+            return String(parts[parts.length - 1]).toUpperCase();
+        }
+
+        if (parts.length && languageMap[parts[0].toLowerCase()]) {
+            return languageMap[parts[0].toLowerCase()];
+        }
+
+        return "";
+    }
+
+    function countryCodeFromTimezone(timezone) {
+        var timezoneMap = {
+            "Europe/London": "GB",
+            "Asia/Tehran": "IR",
+            "Asia/Dubai": "AE",
+            "Asia/Baku": "AZ",
+            "Europe/Berlin": "DE",
+            "Europe/Paris": "FR",
+            "Europe/Amsterdam": "NL",
+            "Europe/Stockholm": "SE",
+            "Europe/Oslo": "NO",
+            "Europe/Copenhagen": "DK",
+            "Europe/Brussels": "BE",
+            "Europe/Vienna": "AT",
+            "Europe/Zurich": "CH",
+            "America/Toronto": "CA",
+            "America/Vancouver": "CA",
+            "America/New_York": "US",
+            "America/Los_Angeles": "US",
+            "Australia/Sydney": "AU"
+        };
+
+        return timezoneMap[String(timezone || "").trim()] || "";
+    }
+
+    function resolveBrowserSuggestedCountry() {
+        var locales = [];
+        var timezone = "";
+        var idx;
+        var country;
+
+        if (document.documentElement && document.documentElement.lang) {
+            locales.push(String(document.documentElement.lang));
+        }
+
+        if (Array.isArray(navigator.languages)) {
+            navigator.languages.forEach(function (locale) {
+                if (locale) {
+                    locales.push(String(locale));
+                }
+            });
+        }
+
+        if (navigator.language) {
+            locales.push(String(navigator.language));
+        }
+
+        for (idx = 0; idx < locales.length; idx += 1) {
+            country = getCountryByCountryCode(countryCodeFromLocale(locales[idx]));
+            if (country) {
+                return country;
+            }
+        }
+
+        try {
+            timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+        } catch (_error) {
+            timezone = "";
+        }
+
+        return getCountryByCountryCode(countryCodeFromTimezone(timezone));
+    }
+
+    function hasExplicitDialCode(value) {
+        var cleaned = String(value || "").trim().replace(/[^\d+]/g, "");
+        return cleaned.indexOf("+") === 0 || cleaned.indexOf("00") === 0;
+    }
+
+    function rememberPhoneSyncState(input, mode, dialCode, localDigits) {
+        if (!input || !input.dataset) {
+            return;
+        }
+
+        input.dataset.phoneSyncMode = String(mode || "");
+        input.dataset.phoneSyncDialCode = sanitizeDialCode(dialCode || "");
+        input.dataset.phoneSyncLocalDigits = String(localDigits || "");
+    }
+
+    function resolveLocalDigitsForSync(input, dialCode) {
+        var raw = input ? String(input.value || "").trim() : "";
+        var normalizedDialCode = sanitizeDialCode(dialCode || "");
+        var dialDigits = normalizedDialCode.replace(/[^\d]/g, "");
+        var cleaned = raw.replace(/[^\d+]/g, "");
+        var rawDigits = cleaned.replace(/[^\d]/g, "");
+        var storedLocalDigits = input && input.dataset ? String(input.dataset.phoneSyncLocalDigits || "") : "";
+        var storedDialDigits = input && input.dataset ? String(input.dataset.phoneSyncDialCode || "").replace(/[^\d]/g, "") : "";
+
+        if (storedLocalDigits) {
+            return storedLocalDigits;
+        }
+
+        if (!rawDigits) {
+            return "";
+        }
+
+        if (cleaned.charAt(0) === "+" && storedDialDigits && rawDigits.indexOf(storedDialDigits) === 0) {
+            return rawDigits.slice(storedDialDigits.length);
+        }
+
+        if (cleaned.charAt(0) === "+" && dialDigits && rawDigits.indexOf(dialDigits) === 0) {
+            return rawDigits.slice(dialDigits.length);
+        }
+
+        return rawDigits.replace(/^0+/, "");
+    }
+
+    function rewritePhoneForSelectedDial(input, dialCode) {
+        var normalizedDialCode = sanitizeDialCode(dialCode);
+        var dialDigits = normalizedDialCode.replace(/[^\d]/g, "");
+        var localDigits = resolveLocalDigitsForSync(input, normalizedDialCode);
+
+        if (!input || !normalizedDialCode || !dialDigits || !localDigits) {
+            return false;
+        }
+
+        input.value = "+" + dialDigits + localDigits;
+        rememberPhoneSyncState(input, "auto", normalizedDialCode, localDigits);
+        return true;
+    }
+
     function getCountryByTermId(termId) {
         var normalized = String(termId || "");
         var match = null;
@@ -464,6 +683,26 @@
         }
 
         return hint;
+    }
+
+    function ensureHiddenField(form, name) {
+        var field;
+
+        if (!form || !name) {
+            return null;
+        }
+
+        field = form.querySelector('input[type="hidden"][name="' + name.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"]');
+        if (field) {
+            return field;
+        }
+
+        field = document.createElement("input");
+        field.type = "hidden";
+        field.name = name;
+        form.appendChild(field);
+
+        return field;
     }
 
     function getLocalPhoneExample() {
@@ -631,26 +870,43 @@
         var phoneInput = form.querySelector('input[name="ad_contact_number"]');
         var rootCountry = form.querySelector('select[name="ad_country"]');
         var phoneHint;
+        var dialCodeField;
+        var countryCodeField;
 
         if (!phoneInput) {
             return;
         }
 
         phoneHint = ensurePhoneHint(phoneInput);
+        dialCodeField = ensureHiddenField(form, "bornado_phone_dial_code");
+        countryCodeField = ensureHiddenField(form, "bornado_phone_country_code");
         phoneInput.setAttribute("dir", "ltr");
 
         function currentCountry() {
             if (!rootCountry) {
-                return defaultPhoneCountry;
+                return getResolvedDefaultPhoneCountry();
             }
 
-            return getCountryByTermId(rootCountry.value) || defaultPhoneCountry;
+            return getCountryByTermId(rootCountry.value) || getResolvedDefaultPhoneCountry();
+        }
+
+        function syncCountryFields(country) {
+            if (dialCodeField) {
+                dialCodeField.value = country && country.dialCode ? sanitizeDialCode(country.dialCode) : "";
+            }
+
+            if (countryCodeField) {
+                countryCodeField.value = country && country.countryCode
+                    ? String(country.countryCode).trim().toUpperCase()
+                    : "";
+            }
         }
 
         function syncPhoneHelp() {
             var country = currentCountry();
             var normalized = normalizePhone(phoneInput.value, country && country.dialCode ? country.dialCode : "");
 
+            syncCountryFields(country);
             phoneInput.setAttribute("placeholder", getLocalPhoneExample());
 
             if (!phoneHint) {
@@ -669,10 +925,18 @@
 
         function applyNormalization() {
             var country = currentCountry();
+            var wasExplicit = hasExplicitDialCode(phoneInput.value);
             var normalized = normalizePhone(phoneInput.value, country && country.dialCode ? country.dialCode : "");
 
+            syncCountryFields(country);
             if (normalized) {
                 phoneInput.value = normalized;
+                rememberPhoneSyncState(
+                    phoneInput,
+                    wasExplicit ? "explicit" : "auto",
+                    country && country.dialCode ? country.dialCode : "",
+                    resolveLocalDigitsForSync(phoneInput, country && country.dialCode ? country.dialCode : "")
+                );
             }
 
             syncPhoneHelp();
@@ -680,11 +944,30 @@
 
         if (rootCountry) {
             rootCountry.addEventListener("change", function () {
+                var country = currentCountry();
+                if (String(phoneInput.value || "").trim() && (!hasExplicitDialCode(phoneInput.value) || String(phoneInput.dataset.phoneSyncMode || "") === "auto")) {
+                    rewritePhoneForSelectedDial(phoneInput, country && country.dialCode ? country.dialCode : "");
+                }
                 window.setTimeout(syncPhoneHelp, 200);
             });
         }
 
-        phoneInput.addEventListener("input", syncPhoneHelp);
+        phoneInput.addEventListener("input", function () {
+            var country = currentCountry();
+
+            if (hasExplicitDialCode(phoneInput.value)) {
+                rememberPhoneSyncState(phoneInput, "explicit", country && country.dialCode ? country.dialCode : "", "");
+            } else {
+                rememberPhoneSyncState(
+                    phoneInput,
+                    "local",
+                    country && country.dialCode ? country.dialCode : "",
+                    normalizePhoneLikeValue(phoneInput.value).replace(/^\+/, "").replace(/^0+/, "")
+                );
+            }
+
+            syncPhoneHelp();
+        });
         phoneInput.addEventListener("blur", applyNormalization);
         form.addEventListener("submit", applyNormalization, true);
 
@@ -701,7 +984,7 @@
         });
     }
 
-    function restoreSelectChain(form, names, draft) {
+    function restoreSelectChain(form, names, draft, state) {
         var sequence = window.Promise.resolve();
 
         names.forEach(function (name, index) {
@@ -711,6 +994,10 @@
             }
 
             sequence = sequence.then(function () {
+                if (state && state.cancelled) {
+                    return null;
+                }
+
                 if (index === 0) {
                     var firstControl = form.querySelector('[name="' + name + '"]');
                     if (!firstControl) {
@@ -723,6 +1010,10 @@
                 }
 
                 return waitForControl(form, name, 5000).then(function (control) {
+                    if (state && state.cancelled) {
+                        return null;
+                    }
+
                     if (!control) {
                         return null;
                     }
@@ -838,28 +1129,62 @@
             .concat(countryNames)
             .concat(getManagedFieldNames())
             .concat(getContactMethodsFieldNames());
+        var restoreState = createRestoreState();
+        var shouldRestoreCategories = false;
+        var shouldRestoreLocations = false;
 
         if (!draft || typeof draft !== "object") {
             syncManagedProfileFields(form);
             return;
         }
 
+        bindRestoreInterruption(form, restoreState);
         restoreImmediateFields(form, draft, excludedNames);
+        shouldRestoreCategories = hasDraftValues(draft, rootCategoryNames) && !hasLiveSelection(form, rootCategoryNames);
+        shouldRestoreLocations = hasDraftValues(draft, countryNames) && !hasLiveSelection(form, countryNames);
 
-        restoreSelectChain(form, rootCategoryNames, draft)
+        window.Promise.resolve()
             .then(function () {
-                return restoreSelectChain(form, countryNames, draft);
+                if (!shouldRestoreCategories) {
+                    return null;
+                }
+
+                return restoreSelectChain(form, rootCategoryNames, draft, restoreState);
             })
             .then(function () {
+                if (!shouldRestoreLocations || restoreState.cancelled) {
+                    return null;
+                }
+
+                return restoreSelectChain(form, countryNames, draft, restoreState);
+            })
+            .then(function () {
+                if (restoreState.cancelled) {
+                    syncManagedProfileFields(form);
+                    return;
+                }
+
                 window.setTimeout(function () {
+                    if (restoreState.cancelled) {
+                        return;
+                    }
+
                     restoreImmediateFields(form, draft, []);
                 }, 400);
 
                 window.setTimeout(function () {
+                    if (restoreState.cancelled) {
+                        return;
+                    }
+
                     restoreImmediateFields(form, draft, []);
                 }, 1400);
 
                 window.setTimeout(function () {
+                    if (restoreState.cancelled) {
+                        return;
+                    }
+
                     saveDraft(form);
                 }, 1800);
 
@@ -1090,6 +1415,14 @@
         if (!form) {
             return;
         }
+
+        try {
+            var url = new window.URL(window.location.href);
+            if (url.searchParams.has("bornado_auth") && window.history && typeof window.history.replaceState === "function") {
+                url.searchParams.delete("bornado_auth");
+                window.history.replaceState({}, document.title, url.toString());
+            }
+        } catch (error) {}
 
         bindTermsAgreementCheckbox(form);
         renderContactMethodsUi(form);

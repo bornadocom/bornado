@@ -516,6 +516,14 @@ if (file_exists($bornado_tracking_guards_bootstrap)) {
 }
 
 /**
+ * Keep Rank Math sitemap rewrites self-healing after rewrite-affecting changes.
+ */
+$bornado_sitemap_self_heal_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-sitemap-self-heal.php';
+if (file_exists($bornado_sitemap_self_heal_bootstrap)) {
+    require_once $bornado_sitemap_self_heal_bootstrap;
+}
+
+/**
  * Remove global reCAPTCHA noise from pages that do not render matching forms.
  */
 $bornado_recaptcha_guard_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-recaptcha-guard.php';
@@ -634,6 +642,188 @@ if (!function_exists('bornado_filter_unpublished_ad_post_permalink')) {
     add_filter('post_type_link', 'bornado_filter_unpublished_ad_post_permalink', 20, 4);
 }
 
+if (!function_exists('bornado_resolve_safe_redirect_url')) {
+    /**
+     * Resolve the safest available post-auth redirect target.
+     *
+     * Priority:
+     * 1. Explicit function argument.
+     * 2. `redirect_to` query arg.
+     * 3. Legacy `u` query arg.
+     * 4. Internal fallback URL.
+     *
+     * @param string $requested_url Explicit redirect target.
+     * @param string $fallback_url Internal fallback target.
+     * @return string
+     */
+    function bornado_resolve_safe_redirect_url($requested_url = '', $fallback_url = '')
+    {
+        $site_fallback = home_url('/');
+        $fallback_url  = is_string($fallback_url) ? trim($fallback_url) : '';
+        $fallback_url  = wp_validate_redirect($fallback_url, $site_fallback);
+        $candidates    = array();
+
+        if (is_string($requested_url)) {
+            $requested_url = trim($requested_url);
+            if ('' !== $requested_url) {
+                $candidates[] = $requested_url;
+            }
+        }
+
+        foreach (array('redirect_to', 'u') as $query_key) {
+            if (!isset($_GET[$query_key])) {
+                continue;
+            }
+
+            $candidate = wp_unslash($_GET[$query_key]);
+            if (!is_scalar($candidate)) {
+                continue;
+            }
+
+            $candidate = trim((string) $candidate);
+            if ('' !== $candidate) {
+                $candidates[] = $candidate;
+            }
+        }
+
+        foreach ($candidates as $candidate) {
+            $validated = wp_validate_redirect($candidate, '');
+            if ('' !== $validated) {
+                return $validated;
+            }
+        }
+
+        return $fallback_url;
+    }
+}
+
+if (!function_exists('bornado_build_auth_redirect_url')) {
+    /**
+     * Append backward-compatible auth redirect params to an auth URL.
+     *
+     * @param string $base_url Auth page URL.
+     * @param string $redirect_url Target URL after auth.
+     * @param string $fallback_url Fallback redirect target.
+     * @return string
+     */
+    function bornado_build_auth_redirect_url($base_url = '', $redirect_url = '', $fallback_url = '')
+    {
+        $base_url = is_string($base_url) ? trim($base_url) : '';
+        if ('' === $base_url || '#' === $base_url) {
+            return $base_url;
+        }
+
+        $safe_redirect = bornado_resolve_safe_redirect_url($redirect_url, $fallback_url);
+        if ('' === $safe_redirect) {
+            return $base_url;
+        }
+
+        return add_query_arg(
+            array(
+                'redirect_to' => $safe_redirect,
+                'u'           => $safe_redirect,
+            ),
+            $base_url
+        );
+    }
+}
+
+if (!function_exists('bornado_get_auth_page_url')) {
+    /**
+     * Resolve the configured auth page URL from the child theme layer.
+     *
+     * @param string $mode Either `login` or `register`.
+     * @return string
+     */
+    function bornado_get_auth_page_url($mode = 'login')
+    {
+        global $adforest_theme;
+
+        $mode = 'register' === $mode ? 'register' : 'login';
+        if (function_exists('bornado_auth_modal_fallback_url')) {
+            $auth_url = (string) bornado_auth_modal_fallback_url($mode);
+            if ('' !== $auth_url && '#' !== $auth_url) {
+                return $auth_url;
+            }
+        }
+
+        $page_key = 'register' === $mode ? 'sb_sign_up_page' : 'sb_sign_in_page';
+        $page_id  = isset($adforest_theme[$page_key]) ? apply_filters('adforest_language_page_id', $adforest_theme[$page_key]) : 0;
+        if ($page_id) {
+            $auth_url = get_permalink($page_id);
+            if ($auth_url) {
+                return (string) $auth_url;
+            }
+        }
+
+        return '';
+    }
+}
+
+if (!function_exists('bornado_is_same_site_page_url')) {
+    /**
+     * Compare two same-site URLs by origin/path, ignoring trailing slashes.
+     *
+     * @param string $candidate_url URL to inspect.
+     * @param string $reference_url Expected site URL.
+     * @return bool
+     */
+    function bornado_is_same_site_page_url($candidate_url, $reference_url)
+    {
+        $candidate_url = is_string($candidate_url) ? trim($candidate_url) : '';
+        $reference_url = is_string($reference_url) ? trim($reference_url) : '';
+        if ('' === $candidate_url || '' === $reference_url) {
+            return false;
+        }
+
+        $candidate_host = (string) wp_parse_url($candidate_url, PHP_URL_HOST);
+        $reference_host = (string) wp_parse_url($reference_url, PHP_URL_HOST);
+        if ('' !== $candidate_host && '' !== $reference_host && strtolower($candidate_host) !== strtolower($reference_host)) {
+            return false;
+        }
+
+        $candidate_path = untrailingslashit((string) wp_parse_url($candidate_url, PHP_URL_PATH));
+        $reference_path = untrailingslashit((string) wp_parse_url($reference_url, PHP_URL_PATH));
+
+        return '' !== $candidate_path && $candidate_path === $reference_path;
+    }
+}
+
+if (!function_exists('bornado_get_current_auth_redirect_url')) {
+    /**
+     * Resolve a current-page redirect target, but avoid looping back to auth pages.
+     *
+     * @param string $fallback_url Internal fallback target.
+     * @return string
+     */
+    function bornado_get_current_auth_redirect_url($fallback_url = '')
+    {
+        $site_fallback = home_url('/');
+        $fallback_url  = bornado_resolve_safe_redirect_url($fallback_url, $site_fallback);
+        $current_url   = function_exists('adforest_get_current_url') ? (string) adforest_get_current_url() : '';
+        $current_url   = bornado_resolve_safe_redirect_url($current_url, $fallback_url);
+        $current_path  = untrailingslashit((string) wp_parse_url($current_url, PHP_URL_PATH));
+
+        if ('' === $current_path) {
+            return $fallback_url;
+        }
+
+        foreach (array('login', 'register') as $mode) {
+            $auth_url = bornado_get_auth_page_url($mode);
+            if ('' === $auth_url) {
+                continue;
+            }
+
+            $auth_path = untrailingslashit((string) wp_parse_url($auth_url, PHP_URL_PATH));
+            if ('' !== $auth_path && $current_path === $auth_path) {
+                return $fallback_url;
+            }
+        }
+
+        return $current_url;
+    }
+}
+
 if (!function_exists('bornado_get_safe_login_redirect_url')) {
     /**
      * Build a resilient login URL with a safe post-login redirect target.
@@ -650,29 +840,176 @@ if (!function_exists('bornado_get_safe_login_redirect_url')) {
         $fallback_url = home_url('/');
         $redirect_url = is_string($redirect_url) ? trim($redirect_url) : '';
 
-        if ('' === $redirect_url && function_exists('adforest_get_current_url')) {
-            $redirect_url = (string) adforest_get_current_url();
+        if ('' === $redirect_url) {
+            $redirect_url = function_exists('bornado_get_current_auth_redirect_url')
+                ? bornado_get_current_auth_redirect_url($fallback_url)
+                : $fallback_url;
         }
 
-        $redirect_url = wp_validate_redirect($redirect_url, $fallback_url);
+        $redirect_url = bornado_resolve_safe_redirect_url($redirect_url, $fallback_url);
 
-        if (function_exists('adforest_login_with_redirect_url_param')) {
-            $login_url = (string) adforest_login_with_redirect_url_param(rawurlencode($redirect_url));
-            if ('' !== $login_url) {
-                return $login_url;
-            }
-        }
-
-        if (function_exists('bornado_auth_modal_fallback_url')) {
-            $login_url = (string) bornado_auth_modal_fallback_url('login');
-            if ('' !== $login_url && '#' !== $login_url) {
-                return add_query_arg('redirect_to', $redirect_url, $login_url);
-            }
+        $login_url = bornado_get_auth_page_url('login');
+        if ('' !== $login_url && '#' !== $login_url) {
+            return bornado_build_auth_redirect_url($login_url, $redirect_url, $fallback_url);
         }
 
         return wp_login_url($redirect_url);
     }
 }
+
+if (!function_exists('bornado_filter_auth_redirect_page_urls')) {
+    /**
+     * Sanitize auth-page redirect query args without editing parent theme files.
+     *
+     * @param string $page_url URL being filtered by AdForest.
+     * @return string
+     */
+    function bornado_filter_auth_redirect_page_urls($page_url = '')
+    {
+        $page_url = is_string($page_url) ? trim($page_url) : '';
+        if ('' === $page_url) {
+            return $page_url;
+        }
+
+        $is_auth_url = false;
+        foreach (array('login', 'register') as $mode) {
+            $auth_url = bornado_get_auth_page_url($mode);
+            if ('' !== $auth_url && bornado_is_same_site_page_url($page_url, $auth_url)) {
+                $is_auth_url = true;
+                break;
+            }
+        }
+
+        if (!$is_auth_url) {
+            return $page_url;
+        }
+
+        $query_string = (string) wp_parse_url($page_url, PHP_URL_QUERY);
+        if ('' === $query_string) {
+            return $page_url;
+        }
+
+        parse_str($query_string, $query_args);
+        $requested_redirect = '';
+        if (!empty($query_args['redirect_to']) && is_scalar($query_args['redirect_to'])) {
+            $requested_redirect = (string) $query_args['redirect_to'];
+        } elseif (!empty($query_args['u']) && is_scalar($query_args['u'])) {
+            $requested_redirect = (string) $query_args['u'];
+        }
+
+        if ('' === trim($requested_redirect)) {
+            return $page_url;
+        }
+
+        $clean_url = remove_query_arg(array('redirect_to', 'u'), $page_url);
+        return bornado_build_auth_redirect_url($clean_url, $requested_redirect, home_url('/'));
+    }
+}
+add_filter('adforest_page_lang_url', 'bornado_filter_auth_redirect_page_urls', 120);
+
+if (!function_exists('bornado_harden_legacy_auth_redirect_globals')) {
+    /**
+     * Normalize legacy auth globals before parent scripts read them.
+     *
+     * @return void
+     */
+    function bornado_harden_legacy_auth_redirect_globals()
+    {
+        if (is_admin()) {
+            return;
+        }
+
+        $js = <<<'JS'
+(function () {
+    var siteUrl = %s;
+
+    function safeUrl(url, fallback) {
+        try {
+            return new URL(url, fallback || window.location.origin);
+        } catch (error) {
+            return new URL(fallback || window.location.origin, window.location.origin);
+        }
+    }
+
+    function getSiteOrigin() {
+        return safeUrl(siteUrl, window.location.origin).origin;
+    }
+
+    function isSafeTarget(parsedUrl) {
+        return Boolean(
+            parsedUrl
+            && /^(https?:)$/.test(parsedUrl.protocol)
+            && parsedUrl.origin === getSiteOrigin()
+        );
+    }
+
+    function normalizeFallback() {
+        var candidates = [];
+        if (window.sb_options && window.sb_options.sb_after_login_page) {
+            candidates.push(window.sb_options.sb_after_login_page);
+        }
+        if (window.sb_options && window.sb_options.profile_page) {
+            candidates.push(window.sb_options.profile_page);
+        }
+        candidates.push(siteUrl);
+        candidates.push(window.location.origin);
+
+        for (var index = 0; index < candidates.length; index += 1) {
+            if (!candidates[index]) {
+                continue;
+            }
+
+            var parsed = safeUrl(candidates[index], window.location.origin);
+            if (isSafeTarget(parsed)) {
+                return parsed.toString();
+            }
+        }
+
+        return safeUrl(window.location.origin, window.location.origin).toString();
+    }
+
+    function resolveSafeTarget(candidateUrl, fallbackUrl) {
+        var fallback = safeUrl(fallbackUrl || normalizeFallback(), window.location.origin);
+        if (!candidateUrl) {
+            return fallback.toString();
+        }
+
+        try {
+            var parsed = new URL(candidateUrl, fallback.toString());
+            if (!isSafeTarget(parsed)) {
+                return fallback.toString();
+            }
+
+            return parsed.toString();
+        } catch (error) {
+            return fallback.toString();
+        }
+    }
+
+    function getQueryRedirectTarget() {
+        var current = safeUrl(window.location.href, window.location.href);
+        return current.searchParams.get('redirect_to') || current.searchParams.get('u') || '';
+    }
+
+    if (!window.sb_options || typeof window.sb_options !== 'object') {
+        return;
+    }
+
+    var fallback = normalizeFallback();
+    var queryRedirect = getQueryRedirectTarget();
+    window.sb_options.sb_after_login_page = resolveSafeTarget(queryRedirect || window.sb_options.sb_after_login_page, fallback);
+})();
+JS;
+
+        $inline_js = sprintf($js, wp_json_encode(home_url('/')));
+        foreach (array('adforest-custom', 'firebase-custom') as $handle) {
+            if (wp_script_is($handle, 'registered') || wp_script_is($handle, 'enqueued')) {
+                wp_add_inline_script($handle, $inline_js, 'before');
+            }
+        }
+    }
+}
+add_action('wp_enqueue_scripts', 'bornado_harden_legacy_auth_redirect_globals', 999);
 
 if (!function_exists('bornado_allow_unpublished_ad_preview_queries')) {
     /**
@@ -2044,7 +2381,7 @@ if (!function_exists('bornado_enforce_price_slider_step')) {
         });
         JS;
 
-        wp_register_script('bornado-price-slider-step', '', array('adforest-custom'), null, true);
+        wp_register_script('bornado-price-slider-step', '', array('jquery'), null, true);
         wp_enqueue_script('bornado-price-slider-step');
         wp_add_inline_script('bornado-price-slider-step', $js);
     }
@@ -2059,6 +2396,20 @@ if (!function_exists('bornado_enqueue_dashboard_mobile_menu_assets')) {
     {
         if (is_admin() || !is_page_template('page-theme-dashboard.php')) {
             return;
+        }
+
+        $child_style_path = get_stylesheet_directory() . '/style.css';
+        if (
+            is_readable($child_style_path)
+            && !wp_style_is('adforest-pro-style', 'enqueued')
+            && !wp_style_is('adforest-pro-style', 'done')
+        ) {
+            wp_enqueue_style(
+                'adforest-pro-style',
+                get_stylesheet_uri(),
+                array('dashboard-main'),
+                (string) filemtime($child_style_path)
+            );
         }
 
         $style_path = get_stylesheet_directory() . '/assets/css/bornado-dashboard-mobile-menu.css';
@@ -2250,15 +2601,10 @@ if (!function_exists('bornado_enqueue_message_poll_guard')) {
             return;
         }
 
-        $deps = array('jquery');
-        if (wp_script_is('adforest-custom', 'registered') || wp_script_is('adforest-custom', 'enqueued')) {
-            $deps[] = 'adforest-custom';
-        }
-
         wp_enqueue_script(
             'bornado-message-poll-guard',
             get_stylesheet_directory_uri() . '/assets/js/bornado-message-poll-guard.js',
-            $deps,
+            array('jquery'),
             (string) filemtime($script_path),
             true
         );
@@ -2266,6 +2612,513 @@ if (!function_exists('bornado_enqueue_message_poll_guard')) {
 }
 add_action('wp_enqueue_scripts', 'bornado_enqueue_message_poll_guard', 260);
 add_action('admin_enqueue_scripts', 'bornado_enqueue_message_poll_guard', 260);
+
+if (!function_exists('adforest_save_selected_category')) {
+    /**
+     * Safe child-theme override for the category-template AJAX callback.
+     *
+     * AdForest always returns a `more_options` payload, but the parent callback
+     * only initializes its default-template flags inside the "no template
+     * selected" branch. That leaves the variables undefined for categories that
+     * do have a custom template, even though the frontend ignores those flags in
+     * that path. We keep the original behavior, but initialize the flags
+     * predictably so the response is valid in every branch.
+     *
+     * @return void
+     */
+    function adforest_save_selected_category()
+    {
+        if (
+            !isset($_POST['security'])
+            || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['security'])), 'save_selected_category_nonce')
+        ) {
+            wp_send_json_error(esc_html__('Security check failed.', 'adforest'));
+        }
+
+        global $adforest_theme;
+
+        $ai_intent_in_category = false;
+        if (function_exists('adforest_is_ai_ready') && function_exists('adforest_should_show_intent_tab')) {
+            $ai_intent_in_category = adforest_is_ai_ready() && adforest_should_show_intent_tab();
+        }
+
+        if (!isset($_POST['category_id'], $_POST['category_name'])) {
+            wp_send_json_error(esc_html__('Category ID or name not set.', 'adforest'));
+        }
+
+        $category_id = sanitize_text_field(wp_unslash($_POST['category_id']));
+        $post_id = isset($_POST['post_id']) ? sanitize_text_field(wp_unslash($_POST['post_id'])) : '';
+        $category_name = sanitize_text_field(wp_unslash($_POST['category_name']));
+        $category_template_id = get_term_meta($category_id, '_sb_category_template', true);
+
+        $encoded_meta = '';
+        if (isset($category_template_id)) {
+            $category_template = get_term($category_template_id);
+            if (isset($category_template->term_id)) {
+                $encoded_meta = get_term_meta($category_template->term_id, '_sb_dynamic_form_fields', true);
+            }
+        }
+
+        $decoded_meta = '';
+        if ($encoded_meta !== '') {
+            $decoded_meta = base64_decode($encoded_meta, true);
+            if ($decoded_meta === false) {
+                $decoded_meta = '';
+            }
+        }
+
+        $template_meta_array = array();
+        if ($decoded_meta !== '') {
+            $template_meta_array = json_decode($decoded_meta, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $template_meta_array = array();
+            }
+        }
+
+        $html = array();
+        $cat_template_img_allowed = false;
+        if (isset($template_meta_array)) {
+            $html = adforest_load_ad_post_fields($template_meta_array, $post_id, $ai_intent_in_category);
+            if (
+                isset($template_meta_array['_sb_default_cat_image_show'])
+                && $template_meta_array['_sb_default_cat_image_show'] == 1
+            ) {
+                $cat_template_img_allowed = true;
+            }
+        }
+
+        $no_template_selected = '';
+        if ((!is_array($html) || empty($html['html'])) && (!is_array($template_meta_array) || count($template_meta_array) === 0)) {
+            $no_template_selected = 'no_template_selected';
+        }
+
+        $default_template_html = '';
+        $default_template_warranty_and_condition = '';
+        $default_template_image_container = '';
+        $default_template_on = false;
+        $default_intent_ad_type_html = '';
+        $default_intent_condition_warranty_html = '';
+
+        // These flags only matter for the fallback default-template branch, but
+        // the response contract always includes them. Initialize them once so
+        // categories with custom templates still return a clean payload.
+        $video_link_on = 1;
+        $ad_tags_on = 1;
+        $ad_images_on = 1;
+        $ad_condition_on = 1;
+        $ad_warranty_on = 1;
+
+        if ($no_template_selected == 'no_template_selected') {
+            if (isset($adforest_theme['sb_default_adpost_template_on']) && $adforest_theme['sb_default_adpost_template_on'] == '1') {
+                $price = '';
+                $price_to = '';
+                $price_from = '';
+                $ad_price_type = '';
+                $ad_type = '';
+                $ad_yvideo = '';
+                $tags = '';
+                $ad_condition_value = '';
+                $ad_warranty_value = '';
+                $default_template_on = true;
+                $tags_allowed = true;
+                $video_allowed = true;
+
+                if ($post_id !== '') {
+                    $price = get_post_meta($post_id, '_adforest_ad_price', true);
+                    $price_to = get_post_meta($post_id, '_adforest_ad_price_to', true);
+                    $price_from = get_post_meta($post_id, '_adforest_ad_price_from', true);
+                    $ad_price_type = get_post_meta($post_id, '_adforest_ad_price_type', true);
+                    $ad_type = get_post_meta($post_id, '_adforest_ad_type', true);
+                    $ad_yvideo = get_post_meta($post_id, '_adforest_ad_yvideo', true);
+                    $tags_array = wp_get_object_terms($post_id, 'ad_tags', array('fields' => 'names'));
+                    $tags = implode(',', $tags_array);
+                    $ad_condition_value = get_post_meta($post_id, '_adforest_ad_condition', true);
+                    $ad_warranty_value = get_post_meta($post_id, '_adforest_ad_warranty', true);
+                    $ad_post_package = get_post_meta($post_id, '_adforest_ad_post_package', true);
+                    $user_packages = get_user_meta(get_current_user_id(), 'adforest_ads_package_details', true);
+                    $user_packages_default = prepare_default_packages();
+
+                    if (is_array($user_packages) && is_array($user_packages_default)) {
+                        $user_packages = $user_packages_default + $user_packages;
+                    } else {
+                        $user_packages = $user_packages_default;
+                    }
+
+                    if (isset($user_packages[$ad_post_package])) {
+                        $tags_pkg = isset($user_packages[$ad_post_package]['allow_tags']) ? $user_packages[$ad_post_package]['allow_tags'] : '';
+                        $video = isset($user_packages[$ad_post_package]['video_links']) ? $user_packages[$ad_post_package]['video_links'] : '';
+
+                        $tags_allowed = ($tags_pkg === 'yes');
+                        $video_allowed = ($video === 'yes');
+                    }
+                }
+
+                if (isset($adforest_theme['sb_default_adpost_template_ad_type']) && $adforest_theme['sb_default_adpost_template_ad_type'] == '1') {
+                    $ad_type_terms = adforest_get_ad_taxonomy_callback('ad_type');
+                    $is_required = isset($template_meta_array['_sb_default_cat_ad_type_required']) && $template_meta_array['_sb_default_cat_ad_type_required'] == 1 ? 'true' : 'false';
+
+                    $ad_type_options = '';
+                    if (!empty($ad_type_terms) && !is_wp_error($ad_type_terms) && is_array($ad_type_terms)) {
+                        foreach ($ad_type_terms as $term) {
+                            $ad_type_val = $term->term_id . '|' . $term->name;
+                            $is_checked = ($ad_type === $term->name) ? 'checked' : '';
+                            $ad_type_options .= '<li>
+                                                        <input type="radio" name="ad_type" id="' . esc_attr($term->slug) . '" value="' . esc_attr($ad_type_val) . '" data-parsley-required="' . esc_attr($is_required) . '" data-parsley-error-message="' . __('Please Select the ad type.', 'adforest') . '" ' . $is_checked . ' />
+                                                        <label class="dont_change_color" for="' . esc_attr($term->slug) . '">' . esc_html($term->name) . '</label>
+                                                    </li>';
+                        }
+                    } else {
+                        $ad_type_options .= '<p>' . __('No ad types available', 'adforest') . '</p>';
+                    }
+
+                    $ad_type_field_html = '<div class="col-lg-12">
+                                                <div class="field-box">
+                                                    <label for="ad_type" class="form-label">' . __("Ad Type", "adforest") . '</label>
+                                                    <div id="ad_type">
+                                                        <ul class="select-user-type ad_type_list_adpost">
+                                                            ' . $ad_type_options . '
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>';
+
+                    if ($ai_intent_in_category) {
+                        $default_intent_ad_type_html = $ad_type_field_html;
+                    } else {
+                        $default_template_html .= $ad_type_field_html;
+                    }
+                }
+
+                if (isset($adforest_theme['sb_default_adpost_template_price_type']) && $adforest_theme['sb_default_adpost_template_price_type'] == '1') {
+                    $sb_price_types_strings = array('Fixed' => __('Fixed', 'adforest'), 'Negotiable' => __('Negotiable', 'adforest'), 'on_call' => __('Price on call', 'adforest'), 'auction' => __('Auction', 'adforest'), 'free' => __('Free', 'adforest'), 'no_price' => __('No price', 'adforest'), 'range' => __('Range', 'adforest'));
+                    $is_required = isset($template_meta_array['_sb_default_cat_price_type_required']) && $template_meta_array['_sb_default_cat_price_type_required'] == 1 ? 'true' : 'false';
+
+                    $new_types_array = array();
+                    if (isset($adforest_theme['sb_price_types']) && count($adforest_theme['sb_price_types']) > 0) {
+                        $sb_price_types = $adforest_theme['sb_price_types'];
+                    } elseif (isset($adforest_theme['sb_price_types']) && count($adforest_theme['sb_price_types']) == 0 && isset($adforest_theme['sb_price_types_more']) && $adforest_theme['sb_price_types_more'] == '') {
+                        $sb_price_types = array('Fixed', 'Negotiable', 'on_call', 'auction', 'free', 'no_price', 'range');
+                    } else {
+                        $sb_price_types = array();
+                    }
+
+                    if (is_array($sb_price_types) && count($sb_price_types) > 0) {
+                        foreach ($sb_price_types as $p_val) {
+                            $new_types_array[$p_val] = $sb_price_types_strings[$p_val];
+                        }
+                    }
+
+                    if (isset($adforest_theme['sb_price_types_more']) && $adforest_theme['sb_price_types_more'] != '') {
+                        $sb_price_types_more_array = explode('|', $adforest_theme['sb_price_types_more']);
+                        if (isset($sb_price_types_more_array) && is_array($sb_price_types_more_array) && count($sb_price_types_more_array)) {
+                            foreach ($sb_price_types_more_array as $p_type_more) {
+                                $new_types_array[str_replace(' ', '_', $p_type_more)] = $p_type_more;
+                            }
+                        }
+                    }
+
+                    $price_type_options = '';
+                    if (is_array($new_types_array) && count($new_types_array) > 0) {
+                        foreach ($new_types_array as $key => $value) {
+                            $selected = $key === $ad_price_type ? ' selected' : '';
+                            $price_type_options .= '<option value="' . esc_attr($key) . '"' . $selected . '>' . esc_html($value) . '</option>';
+                        }
+                    }
+
+                    $default_template_html .= '<div class="row" style="display: flex; flex-wrap: wrap;"><div class="col-6" style="padding-right: 10px;">
+                                                <div class="field-box">
+                                                    <label for="ad_post_price_type" class="form-label">' . __("Price Type", "adforest") . '</label>
+                                                    <select id="ad_post_price_type" name="ad_post_price_type" class="default-select" data-parsley-required="' . $is_required . '" data-parsley-error-message="' . __('This field is required . ', 'adforest') . '">
+                                                        <option value="">' . __("Select Option", 'adforest') . '</option>
+                                                        ' . $price_type_options . '
+                                                    </select>
+                                                </div>
+                                            </div>';
+                }
+
+                if (isset($adforest_theme['sb_default_adpost_template_price']) && $adforest_theme['sb_default_adpost_template_price'] == '1') {
+                    $default_template_html .= '<div class="col-6" style="padding-left: 10px;">
+                                                <div class="field-box ad_price_container">
+                                                    <label for="ad_price" class="form-label"> ' . __("Price", "adforest") . '</label>
+                                                    <input type="text" class="form-control" name="ad_price" id="ad_price" value="' . $price . '"
+                                                        placeholder="' . esc_attr__("Enter Your Price", "adforest") . '" data-parsley-required="' . $is_required . '" data-parsley-error-message="' . __('This field is required . ', 'adforest') . '">
+                                                </div>
+                                                <div class="field-box price_range_container" style="display: none;">
+                                                    <label class="form-label">' . __("Price Range", "adforest") . '</label>
+                                                    <div style="display: flex; gap: 10px;">
+                                                        <input type="text" class="form-control" name="ad_price_from" id="ad_price_from" value="' . $price_from . '" placeholder="' . esc_attr("From") . '">
+                                                        <input type="text" class="form-control" name="ad_price_to" id="ad_price_to" value="' . $price_to . '" placeholder="' . esc_attr("To") . '">
+                                                    </div>
+                                                </div>
+                                            </div></div>';
+                }
+
+                if (isset($adforest_theme['sb_default_adpost_template_videoURL']) && $adforest_theme['sb_default_adpost_template_videoURL'] == '1' && $video_allowed) {
+                    $default_template_html .= '<div class="col-lg-6 ad_yvideo_container">
+                                                <div class="field-box">
+                                                    <label for="ad_yvideo" class="form-label">' . __("Video Link", "adforest") . '</label>
+                                                    <input class="form-control" name="ad_yvideo"
+                                                           type="text"
+                                                           id="ad_yvideo"
+                                                           value="' . esc_attr($ad_yvideo) . '"
+                                                           data-parsley-error-message="' . __("Should be valid youtube video url.", "adforest") . '"
+                                                           data-parsley-pattern="/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/">
+                                                </div>
+                                            </div>';
+                }
+
+                if (isset($adforest_theme['sb_default_adpost_template_tags']) && $adforest_theme['sb_default_adpost_template_tags'] == '1' && $tags_allowed) {
+                    $default_template_html .= '<div class="col-lg-12 ad_tags_container">
+                                                <div class="field-box">
+                                                    <div class="tags">
+                                                        <label for="tags" class="control-label">
+                                                            ' . __("Tags", "adforest") . '
+                                                            <small>' . __("Comma separated", "adforest") . '</small>
+                                                        </label>
+                                                        <input class="form-control" name="tags" id="tags" value="' . esc_attr($tags) . '">
+                                                    </div>
+                                                </div>
+                                            </div>';
+                }
+
+                if (isset($adforest_theme['sb_default_adpost_template_images']) && $adforest_theme['sb_default_adpost_template_images'] == '1') {
+                    $img_size_arr = explode('-', $adforest_theme['sb_upload_size']);
+                    $display_size = $img_size_arr[1];
+                    ob_start();
+                    ?>
+                    <label for="img_dropzone"
+                           class="form-label"><?php echo esc_html__("Ad Images", 'adforest'); ?></label>
+                    <div id="img_dropzone" class="dropzone"></div>
+                    <small><?php echo esc_html(sprintf(__('Maximum file size: %s', 'adforest'), $display_size)); ?></small>
+                    <?php
+                    $default_template_image_container .= ob_get_clean();
+                }
+
+                if (isset($adforest_theme['sb_default_adpost_template_condition']) && $adforest_theme['sb_default_adpost_template_condition'] == '1') {
+                    $ad_condition_taxonomies = adforest_get_ad_taxonomy_callback('ad_condition');
+                    ob_start();
+                    ?>
+                    <div class="col-lg-6 ad_condition_container">
+                        <div class="field-box">
+                            <label for="condition"
+                                   class="form-label"><?php echo __("Condition", 'adforest'); ?></label>
+                            <div class="switch-btns-box" id="condition">
+                                <ul class="select-user-type ad_type_list_adpost">
+                                    <?php if (!empty($ad_condition_taxonomies) && !is_wp_error($ad_condition_taxonomies) && is_array($ad_condition_taxonomies)): ?>
+                                        <?php
+                                        $selected_condition_value = $ad_condition_value;
+                                        foreach ($ad_condition_taxonomies as $condition):
+                                            $ad_condition_val = $condition->term_id . '|' . $condition->name;
+                                            $is_checked = ($selected_condition_value === $condition->name);
+                                            ?>
+                                            <li>
+                                                <input type="radio" name="ad_condition"
+                                                       id="check-condition-<?php echo esc_attr($condition->slug); ?>"
+                                                       value="<?php echo esc_attr($ad_condition_val); ?>"
+                                                       <?php echo $is_checked ? 'checked="checked"' : ''; ?>
+                                                       data-parsley-error-message="<?php echo __('This field is required . ', 'adforest'); ?>"/>
+                                                <label class="dont_change_color"
+                                                       for="check-condition-<?php echo esc_attr($condition->slug); ?>">
+                                                    <?php echo esc_html($condition->name); ?>
+                                                </label>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <?php
+                    $condition_field_html = ob_get_clean();
+
+                    if ($ai_intent_in_category) {
+                        $default_intent_condition_warranty_html .= $condition_field_html;
+                    } else {
+                        $default_template_warranty_and_condition .= $condition_field_html;
+                    }
+                }
+
+                if (isset($adforest_theme['sb_default_adpost_template_warranty']) && $adforest_theme['sb_default_adpost_template_warranty'] == '1') {
+                    $ad_warranty_taxonomies = adforest_get_ad_taxonomy_callback('ad_warranty');
+                    ob_start();
+                    ?>
+                    <div class="col-lg-6 ad_warranty_container">
+                        <div class="field-box">
+                            <label for="warranty"
+                                   class="form-label"><?php echo __("Warranty", 'adforest'); ?></label>
+                            <div class="switch-btns-box" id="warranty">
+                                <ul class="select-user-type ad_type_list_adpost">
+                                    <?php if (!empty($ad_warranty_taxonomies) && !is_wp_error($ad_warranty_taxonomies) && is_array($ad_warranty_taxonomies)): ?>
+                                        <?php
+                                        $selected_warranty_value = $ad_warranty_value;
+                                        foreach ($ad_warranty_taxonomies as $warranty):
+                                            $ad_warranty_val = $warranty->term_id . '|' . $warranty->name;
+                                            $is_checked = ($selected_warranty_value === $warranty->name);
+                                            ?>
+                                            <li>
+                                                <input type="radio" name="ad_warranty"
+                                                       id="check-warranty-<?php echo esc_attr($warranty->slug); ?>"
+                                                       value="<?php echo esc_attr($ad_warranty_val); ?>"
+                                                       <?php echo $is_checked ? 'checked="checked"' : ''; ?>
+                                                       data-parsley-error-message="<?php echo __('This field is required . ', 'adforest'); ?>"/>
+                                                <label class="dont_change_color"
+                                                       for="check-warranty-<?php echo esc_attr($warranty->slug); ?>">
+                                                    <?php echo esc_html($warranty->name); ?>
+                                                </label>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <?php
+                    $warranty_field_html = ob_get_clean();
+
+                    if ($ai_intent_in_category) {
+                        $default_intent_condition_warranty_html .= $warranty_field_html;
+                    } else {
+                        $default_template_warranty_and_condition .= $warranty_field_html;
+                    }
+                }
+            }
+        }
+
+        $intent_ad_type_html = isset($html['intent_ad_type_html']) ? $html['intent_ad_type_html'] : '';
+        $intent_condition_warranty_html = isset($html['intent_condition_warranty_html']) ? $html['intent_condition_warranty_html'] : '';
+
+        if ($default_template_on && isset($default_intent_ad_type_html)) {
+            $intent_ad_type_html = $default_intent_ad_type_html;
+        }
+        if ($default_template_on && isset($default_intent_condition_warranty_html)) {
+            $intent_condition_warranty_html = $default_intent_condition_warranty_html;
+        }
+
+        wp_send_json_success(array(
+            'id' => $category_id,
+            'name' => $category_name,
+            'category_template_html' => isset($html['html']) ? $html['html'] : '',
+            'custom_fields_html' => isset($html['custom_fields']) ? $html['custom_fields'] : '',
+            'condition_and_value_fields' => isset($html['condition_and_value_fields']) ? $html['condition_and_value_fields'] : '',
+            'tags_and_video_fields' => isset($html['tags_and_video_fields']) ? $html['tags_and_video_fields'] : '',
+            'image_field' => isset($html['image_field']) ? $html['image_field'] : '',
+            'no_template_selected' => $no_template_selected,
+            'default_template_html' => $default_template_html,
+            'default_template_on' => $default_template_on,
+            'more_options' => array(
+                'video_link_on' => $video_link_on,
+                'ad_tags_on' => $ad_tags_on,
+                'ad_images_on' => $ad_images_on,
+                'ad_condition_on' => $ad_condition_on,
+                'ad_warranty_on' => $ad_warranty_on,
+                'default_template_warranty_and_condition' => $default_template_warranty_and_condition,
+                'default_template_image_container' => $default_template_image_container,
+            ),
+            'cat_template_img_allowed' => $cat_template_img_allowed,
+            'ai_intent_in_category' => $ai_intent_in_category,
+            'intent_ad_type_html' => $intent_ad_type_html,
+            'intent_condition_warranty_html' => $intent_condition_warranty_html,
+        ));
+    }
+}
+
+if (!function_exists('bornado_log_missing_message_poll_payload')) {
+    /**
+     * Log missing message-poll payloads with throttling so real issues stay visible
+     * without flooding the debug log.
+     *
+     * @param int $user_id Current user ID.
+     * @return void
+     */
+    function bornado_log_missing_message_poll_payload($user_id)
+    {
+        $user_id = (int) $user_id;
+        $cache_key = 'bornado_missing_new_msgs_' . $user_id;
+
+        if (get_transient($cache_key)) {
+            return;
+        }
+
+        set_transient($cache_key, 1, 15 * MINUTE_IN_SECONDS);
+
+        $request_uri = isset($_SERVER['REQUEST_URI']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+        $referer = wp_get_referer();
+
+        error_log(
+            sprintf(
+                '[Bornado Message Poll] Missing `new_msgs` payload; defaulted safely to 0. user_id=%d request_uri=%s referer=%s',
+                $user_id,
+                $request_uri !== '' ? $request_uri : '(unknown)',
+                $referer ? $referer : '(unknown)'
+            )
+        );
+    }
+}
+
+if (!function_exists('bornado_override_adforest_message_check_ajax')) {
+    /**
+     * Replace the parent AJAX callback with a warning-safe version.
+     *
+     * AdForest reads `$_POST['new_msgs']` without checking it exists, but the
+     * current implementation never uses that value afterwards. We keep the same
+     * response contract and harden the entrypoint from the child theme layer.
+     *
+     * @return void
+     */
+    function bornado_override_adforest_message_check_ajax()
+    {
+        if (!function_exists('adforest_check_messages')) {
+            return;
+        }
+
+        remove_action('wp_ajax_sb_check_messages', 'adforest_check_messages');
+        add_action('wp_ajax_sb_check_messages', 'bornado_check_messages_safe');
+    }
+}
+add_action('after_setup_theme', 'bornado_override_adforest_message_check_ajax', 20);
+
+if (!function_exists('bornado_check_messages_safe')) {
+    /**
+     * Safe drop-in replacement for AdForest's unread-message poll endpoint.
+     *
+     * @return void
+     */
+    function bornado_check_messages_safe()
+    {
+        check_ajax_referer('adforest_check_messages_nonce', 'security');
+
+        if (adforest_is_demo()) {
+            echo esc_html__('Not allowed in demo mode', 'adforest');
+            die();
+        }
+
+        adforest_authenticate_check();
+
+        global $wpdb, $adforest_theme;
+
+        $current_user_id = get_current_user_id();
+        if (!isset($_POST['new_msgs'])) {
+            bornado_log_missing_message_poll_payload($current_user_id);
+        }
+
+        $unread_msgs = (int) $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM {$wpdb->prefix}sb_chat_messages WHERE receiver_id = %d AND read_status = 0",
+                $current_user_id
+            )
+        );
+
+        if ($unread_msgs > 0) {
+            $message_template = isset($adforest_theme['msg_notification_text'])
+                ? (string) $adforest_theme['msg_notification_text']
+                : '%count%';
+
+            echo '1|' . str_replace('%count%', (string) $unread_msgs, $message_template) . '|' . $unread_msgs;
+        }
+
+        die();
+    }
+}
 
 if (!function_exists('bornado_dequeue_rank_math_editor_assets_on_widgets_screen')) {
     /**

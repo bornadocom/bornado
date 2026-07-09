@@ -237,6 +237,43 @@ if ( ! function_exists( 'bornado_enqueue_ad_post_checkbox_fix_styles' ) ) {
 	display: none !important;
 }
 
+/*
+ * Dynamic category-template checkboxes in the ad-post form use the same
+ * pretty-checkbox markup as the terms checkbox, but the parent theme only
+ * ships RTL overrides for signup widgets. On Persian/Arabic pages that leaves
+ * the visual box pinned to the left while the text flows from the right.
+ * Scope the repair to ad-post field-box checkboxes only.
+ */
+#adforest-ad-post-form .field-box .form-check:has(.pretty) {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+#adforest-ad-post-form .field-box .form-check .pretty {
+	display: inline-flex;
+	align-items: flex-start;
+	margin: 0;
+	white-space: normal;
+}
+
+body.rtl #adforest-ad-post-form .field-box .form-check .pretty {
+	margin-right: 0;
+	margin-left: 16px;
+}
+
+body.rtl #adforest-ad-post-form .field-box .form-check .pretty .state label {
+	padding-left: 0;
+	padding-right: calc(1em + 10px);
+	text-indent: 0;
+	text-align: right;
+}
+
+body.rtl #adforest-ad-post-form .field-box .form-check .pretty .state label::before,
+body.rtl #adforest-ad-post-form .field-box .form-check .pretty .state label::after {
+	left: auto;
+	right: 0;
+}
+
 body.rtl #adforest-ad-post-form .skin-minimal.check-detail .pretty {
 	margin-right: 0;
 }

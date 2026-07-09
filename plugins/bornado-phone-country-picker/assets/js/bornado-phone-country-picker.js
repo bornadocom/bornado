@@ -264,6 +264,93 @@
         return /^\+\d{1,4}$/.test(cleaned) ? cleaned : "";
     }
 
+    function replaceEasternDigits(value) {
+        return String(value || "").replace(/[\u0660-\u0669\u06f0-\u06f9]/g, function (char) {
+            var code = char.charCodeAt(0);
+
+            if (code >= 1632 && code <= 1641) {
+                return String(code - 1632);
+            }
+
+            if (code >= 1776 && code <= 1785) {
+                return String(code - 1776);
+            }
+
+            return char;
+        });
+    }
+
+    function normalizeSearchText(value) {
+        var normalized = String(value || "");
+
+        if (typeof normalized.normalize === "function") {
+            normalized = normalized.normalize("NFKC");
+        }
+
+        normalized = replaceEasternDigits(normalized)
+            .replace(/[\u200c\u200d\u200e\u200f\u202a-\u202e\u2066-\u2069]/g, " ")
+            .replace(/[\u064b-\u065f\u0670\u06d6-\u06ed]/g, "")
+            .replace(/[إأٱآ]/g, "ا")
+            .replace(/ى/g, "ی")
+            .replace(/ي/g, "ی")
+            .replace(/ك/g, "ک")
+            .replace(/ؤ/g, "و")
+            .replace(/ئ/g, "ی")
+            .replace(/ة/g, "ه")
+            .toLowerCase()
+            .replace(/[^a-z0-9\u0600-\u06ff+]+/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+
+        return normalized;
+    }
+
+    function compactSearchText(value) {
+        return normalizeSearchText(value).replace(/\s+/g, "");
+    }
+
+    function buildFlagUrlFromCountryCode(countryCode) {
+        var normalized = String(countryCode || "").trim().toLowerCase().replace(/[^a-z]/g, "");
+
+        if (normalized.length !== 2) {
+            return "";
+        }
+
+        return "https://flagcdn.com/w40/" + normalized + ".png";
+    }
+
+    function readOptionMeta(option) {
+        var dataset = option && option.dataset ? option.dataset : {};
+
+        return {
+            termId: Number(dataset.termId || 0),
+            countryCode: String(dataset.countryCode || "").trim().toUpperCase(),
+            displayNameFa: String(dataset.displayNameFa || "").trim(),
+            displayNameEn: String(dataset.displayNameEn || "").trim(),
+            searchTokens: String(dataset.searchTokens || "").trim(),
+            flagUrl: String(dataset.flagUrl || "").trim(),
+            flagEmoji: String(dataset.flagEmoji || "").trim()
+        };
+    }
+
+    function mergeSearchTokens(parts) {
+        var seen = Object.create(null);
+
+        return parts.reduce(function (tokens, part) {
+            var value = String(part || "").trim();
+            if (!value) {
+                return tokens;
+            }
+
+            if (!seen[value]) {
+                seen[value] = true;
+                tokens.push(value);
+            }
+
+            return tokens;
+        }, []).join(" ");
+    }
+
     function buildCountryMap(items) {
         var map = Object.create(null);
 
@@ -331,22 +418,40 @@
         Array.prototype.forEach.call(select.options || [], function (option) {
             var dialCode = normalizeDialCode(option.value);
             var base = dialCode && countryMap[dialCode] ? countryMap[dialCode] : null;
+            var optionMeta = readOptionMeta(option);
             var label = option.textContent ? String(option.textContent).trim() : "";
             var fallbackName = label.replace(/\s*\(.+?\)\s*$/, "").trim();
+            var displayNameFa = optionMeta.displayNameFa || (base && base.displayNameFa ? String(base.displayNameFa) : "") || fallbackName;
+            var displayNameEn = optionMeta.displayNameEn || (base && base.displayNameEn ? String(base.displayNameEn) : "");
+            var countryCode = optionMeta.countryCode || (base && base.countryCode ? String(base.countryCode) : "");
+            var searchTokens = mergeSearchTokens([
+                optionMeta.searchTokens,
+                displayNameFa,
+                displayNameEn,
+                countryCode,
+                label,
+                dialCode,
+                dialCode.replace(/^\+/, ""),
+                base && base.searchTokens ? String(base.searchTokens) : ""
+            ]);
+            var normalizedSearchTokens = normalizeSearchText(searchTokens);
+            var compactSearchTokens = compactSearchText(searchTokens);
 
             if (!dialCode) {
                 return;
             }
 
             options.push({
-                termId: base && base.termId ? Number(base.termId) : 0,
+                termId: optionMeta.termId || (base && base.termId ? Number(base.termId) : 0),
                 dialCode: dialCode,
-                countryCode: base && base.countryCode ? String(base.countryCode) : "",
-                flagEmoji: base && base.flagEmoji ? String(base.flagEmoji) : "",
-                flagUrl: base && base.flagUrl ? String(base.flagUrl) : "",
-                displayNameFa: base && base.displayNameFa ? String(base.displayNameFa) : fallbackName,
-                displayNameEn: base && base.displayNameEn ? String(base.displayNameEn) : "",
-                searchTokens: base && base.searchTokens ? String(base.searchTokens) : label + " " + dialCode,
+                countryCode: countryCode,
+                flagEmoji: optionMeta.flagEmoji || (base && base.flagEmoji ? String(base.flagEmoji) : ""),
+                flagUrl: optionMeta.flagUrl || buildFlagUrlFromCountryCode(countryCode) || (base && base.flagUrl ? String(base.flagUrl) : ""),
+                displayNameFa: displayNameFa,
+                displayNameEn: displayNameEn,
+                searchTokens: searchTokens,
+                normalizedSearchTokens: normalizedSearchTokens,
+                compactSearchTokens: compactSearchTokens,
                 isPinned: !!(base && base.isPinned),
                 isTierOne: !!(base && base.isTierOne),
                 sourceLabel: base && base.source ? String(base.source) : "",
@@ -546,15 +651,19 @@
 
     function renderList(state) {
         var activeDialCode = normalizeDialCode(state.select.value);
-        var query = String(state.search.value || "").trim().toLowerCase();
+        var query = normalizeSearchText(state.search.value || "");
+        var compactQuery = compactSearchText(state.search.value || "");
         var visibleCount = 0;
 
         state.list.innerHTML = "";
 
         sortOptions(state.options, activeDialCode).forEach(function (country) {
-            var searchTokens = String(country.searchTokens || "").toLowerCase();
+            var searchTokens = String(country.normalizedSearchTokens || normalizeSearchText(country.searchTokens || ""));
+            var compactTokens = String(country.compactSearchTokens || compactSearchText(country.searchTokens || ""));
             var isActive = normalizeDialCode(country.dialCode) === activeDialCode;
-            var shouldShow = !query || searchTokens.indexOf(query) !== -1;
+            var shouldShow = !query
+                || searchTokens.indexOf(query) !== -1
+                || (!!compactQuery && compactTokens.indexOf(compactQuery) !== -1);
 
             if (!shouldShow) {
                 return;
@@ -585,7 +694,40 @@
         state.empty.hidden = visibleCount > 0;
     }
 
-    function syncSelectedState(state) {
+    function publishSelectionState(state, currentCountry, source) {
+        var dialCode = currentCountry ? normalizeDialCode(currentCountry.dialCode) : "";
+        var detail;
+
+        if (!state || !state.root || !state.root.dataset) {
+            return;
+        }
+
+        state.root.dataset.currentDialCode = dialCode;
+        state.root.dataset.currentCountryCode = currentCountry && currentCountry.countryCode
+            ? String(currentCountry.countryCode)
+            : "";
+
+        if (state.lastPublishedDialCode === dialCode && source !== "picker") {
+            return;
+        }
+
+        state.lastPublishedDialCode = dialCode;
+        detail = {
+            dialCode: dialCode,
+            countryCode: currentCountry && currentCountry.countryCode ? String(currentCountry.countryCode) : "",
+            termId: currentCountry && currentCountry.termId ? Number(currentCountry.termId) : 0,
+            source: String(source || "sync")
+        };
+
+        if (typeof window.CustomEvent === "function") {
+            state.root.dispatchEvent(new window.CustomEvent("bpcp:change", {
+                bubbles: true,
+                detail: detail
+            }));
+        }
+    }
+
+    function syncSelectedState(state, source) {
         var currentDialCode = normalizeDialCode(state.select.value);
         var currentCountry = state.options.find(function (country) {
             return normalizeDialCode(country.dialCode) === currentDialCode;
@@ -593,6 +735,16 @@
 
         renderTrigger(state.trigger, currentCountry);
         renderList(state);
+        publishSelectionState(state, currentCountry, source);
+    }
+
+    function isAuthModalPicker(state) {
+        return !!(state && state.select && state.select.closest
+            && state.select.closest(".bornado-auth-modal, .bornado-auth-inline"));
+    }
+
+    function shouldInlinePanel(state) {
+        return window.innerWidth <= 767 && isAuthModalPicker(state);
     }
 
     function positionPanel(state) {
@@ -601,12 +753,67 @@
         }
 
         if (window.innerWidth <= 767) {
-            state.panel.style.width = "";
-            state.panel.style.left = "";
-            state.panel.style.top = "";
-            state.panel.style.bottom = "";
+            if (!shouldInlinePanel(state)) {
+                state.panel.style.width = "";
+                state.panel.style.left = "";
+                state.panel.style.right = "";
+                state.panel.style.top = "";
+                state.panel.style.bottom = "";
+                state.panel.style.maxHeight = "";
+                state.list.style.maxHeight = "";
+                return;
+            }
+
+            if (state.portalParent && state.panel.parentNode !== state.portalParent) {
+                state.portalParent.appendChild(state.panel);
+            }
+
+            state.panel.style.position = "fixed";
+
+            var mobileTriggerRect = state.trigger.getBoundingClientRect();
+            var mobileViewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+            var mobileViewportHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+            var mobileModalBody = state.root.closest(".bornado-auth-modal__body, .modal-body, .bornado-auth-inline");
+            var mobileModalRect = mobileModalBody && mobileModalBody.getBoundingClientRect
+                ? mobileModalBody.getBoundingClientRect()
+                : state.root.getBoundingClientRect();
+            var mobileHorizontalGutter = 18;
+            var mobilePanelLeft = Math.max(12, Math.round(mobileModalRect.left));
+            var mobilePanelWidth = Math.min(
+                Math.max(220, Math.round(mobileModalRect.width)),
+                mobileViewportWidth - 24
+            );
+            var mobilePanelTop = Math.round(mobileTriggerRect.bottom + 8);
+            var mobileAvailableBelow = Math.max(180, mobileViewportHeight - mobilePanelTop - 12);
+            var mobileMaxHeight = Math.min(360, mobileAvailableBelow);
+
+            if (mobilePanelLeft + mobilePanelWidth > mobileViewportWidth - 12) {
+                mobilePanelLeft = Math.max(12, mobileViewportWidth - mobilePanelWidth - 12);
+            }
+
+            if (mobileModalRect.width > 0 && mobileModalRect.width < mobileViewportWidth) {
+                mobilePanelLeft = Math.max(12, Math.round(mobileModalRect.left + mobileHorizontalGutter - 18));
+                mobilePanelWidth = Math.min(
+                    Math.round(mobileModalRect.width),
+                    mobileViewportWidth - mobilePanelLeft - 12
+                );
+            }
+
+            state.panel.style.left = mobilePanelLeft + "px";
+            state.panel.style.right = "auto";
+            state.panel.style.width = mobilePanelWidth + "px";
+            state.panel.style.top = mobilePanelTop + "px";
+            state.panel.style.bottom = "auto";
+            state.panel.style.maxHeight = mobileMaxHeight + "px";
+            state.list.style.maxHeight = Math.max(140, mobileMaxHeight - 74) + "px";
             return;
         }
+
+        if (state.portalParent && state.panel.parentNode !== state.portalParent) {
+            state.portalParent.appendChild(state.panel);
+        }
+
+        state.panel.style.position = "fixed";
 
         var rect = state.trigger.getBoundingClientRect();
         var viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
@@ -630,6 +837,7 @@
 
         state.panel.style.width = Math.round(panelWidth) + "px";
         state.panel.style.left = Math.max(gutter, Math.round(left)) + "px";
+        state.panel.style.right = "auto";
         state.panel.style.maxHeight = Math.round(maxHeight + 64) + "px";
         state.list.style.maxHeight = Math.max(160, Math.round(maxHeight - 74)) + "px";
     }
@@ -677,6 +885,7 @@
             select: select,
             trigger: trigger,
             panel: panelParts.panel,
+            portalParent: portalParent,
             search: panelParts.search,
             list: panelParts.list,
             empty: panelParts.empty,
@@ -706,6 +915,7 @@
 
         panelParts.search.addEventListener("input", function () {
             renderList(state);
+            positionPanel(state);
         });
 
         panelParts.panel.addEventListener("mousedown", function (event) {
@@ -724,16 +934,16 @@
 
             select.value = String(button.dataset.dialCode || "");
             select.dispatchEvent(new Event("change", { bubbles: true }));
-            syncSelectedState(state);
+            syncSelectedState(state, "picker");
             closePanel(state);
             trigger.focus();
         });
 
         select.addEventListener("change", function () {
-            syncSelectedState(state);
+            syncSelectedState(state, "native");
         });
 
-        syncSelectedState(state);
+        syncSelectedState(state, "init");
     }
 
     function enhanceAll(root) {
@@ -815,6 +1025,10 @@
             return;
         }
 
+        window.BornadoPhoneCountryPickerResolvedCountry = resolveRuntimeSuggestedCountry()
+            || suggestedCountry
+            || legacyDefaultCountry
+            || null;
         enhanceAll(document);
         bindGlobalEvents();
         bindObserver();

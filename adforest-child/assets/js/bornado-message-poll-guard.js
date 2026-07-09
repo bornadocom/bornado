@@ -43,6 +43,29 @@
         return promise;
     }
 
+    function ensureNewMessagesPayload(data) {
+        if (typeof data === 'string') {
+            if (/(?:^|&)new_msgs=/.test(data)) {
+                return data;
+            }
+
+            return data + (data ? '&' : '') + 'new_msgs=0';
+        }
+
+        if (data && typeof data === 'object') {
+            if (typeof data.new_msgs === 'undefined' || data.new_msgs === null || data.new_msgs === '') {
+                data.new_msgs = '0';
+            }
+
+            return data;
+        }
+
+        return {
+            action: 'sb_check_messages',
+            new_msgs: '0'
+        };
+    }
+
     function attachGuard($) {
         if (!$ || typeof $.ajax !== 'function' || $.__bornadoPollGuardAttached) {
             return;
@@ -64,6 +87,8 @@
                     ? originalAjax.call(this, options)
                     : originalAjax.call(this, url, options);
             }
+
+            options.data = ensureNewMessagesPayload(options.data);
 
             var now = Date.now();
             if (guard.inFlight || (now - guard.lastSentAt) < guard.minIntervalMs) {

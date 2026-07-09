@@ -461,8 +461,21 @@ if (isset($adforest_theme['sb_show_recently_viewed_on_ad_detail']) && 1 == $adfo
 
 if ($is_price_enabled) {
     $price_html = adforest_adPrice($pid, 'negotiable-single', '');
+    $bornado_is_free_price_type = function_exists('bornado_is_free_price_type')
+        ? bornado_is_free_price_type((string) $price_type)
+        : ('free' === strtolower(trim((string) $price_type)));
 
-    if ('' !== $price_html) {
+    if ($bornado_is_free_price_type) {
+        $price_amount_html = esc_html(
+            function_exists('bornado_normalize_price_type_label')
+                ? bornado_normalize_price_type_label((string) $price_type)
+                : (string) $price_type
+        );
+        $price_type_label  = function_exists('bornado_normalize_price_type_label')
+            ? bornado_normalize_price_type_label((string) $price_type)
+            : (string) $price_type;
+        $price_type_html   = '';
+    } elseif ('' !== $price_html) {
         if (preg_match('/<small>(.*)<\/small>/Us', $price_html, $price_type_match)) {
             $price_type_html = trim($price_type_match[1]);
         }
@@ -472,7 +485,13 @@ if ($is_price_enabled) {
         }
     }
 
-    if (function_exists('bornado_ad_has_numeric_price_value') && bornado_ad_has_numeric_price_value($pid) && '' !== $price_type && 'no_price' !== $price_type) {
+    if (
+        function_exists('bornado_ad_has_numeric_price_value')
+        && bornado_ad_has_numeric_price_value($pid)
+        && '' !== $price_type
+        && 'no_price' !== $price_type
+        && !$bornado_is_free_price_type
+    ) {
         if ('Fixed' === $price_type) {
             $price_type_label = __('Fixed', 'adforest');
         } elseif ('Negotiable' === $price_type) {

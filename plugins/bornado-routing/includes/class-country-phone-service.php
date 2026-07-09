@@ -57,6 +57,13 @@ final class Bornado_Country_Phone_Service {
 			);
 		}
 
+		$explicit_payload = self::get_explicit_global_payload( $raw_phone );
+		if ( ! empty( $explicit_payload['is_valid'] ) ) {
+			$explicit_payload['location_term'] = $location_term;
+
+			return $explicit_payload;
+		}
+
 		$country_term = self::get_root_country_term( $location_term );
 		if ( ! $country_term instanceof WP_Term ) {
 			return self::get_empty_payload(
@@ -371,6 +378,84 @@ final class Bornado_Country_Phone_Service {
 		}
 
 		return trim( (string) get_post_meta( (int) $post_id, self::POST_PHONE_META, true ) );
+	}
+
+	/**
+	 * Preserve explicitly-entered international numbers before country enforcement.
+	 *
+	 * @param string $raw_phone Raw phone input.
+	 * @return array<string,mixed>
+	 */
+	private static function get_explicit_global_payload( $raw_phone ) {
+		$raw_phone = trim( (string) $raw_phone );
+		$cleaned   = preg_replace( '/[^\d+]/', '', $raw_phone ) ?? '';
+
+		if (
+			'' === $cleaned ||
+			(
+				'+' !== substr( $cleaned, 0, 1 ) &&
+				0 !== strpos( $cleaned, '00' )
+			)
+		) {
+			return self::get_empty_payload(
+				array(
+					'raw_phone' => $raw_phone,
+				)
+			);
+		}
+
+		$normalized_phone = self::normalize_global_phone( $cleaned );
+		if ( '' === $normalized_phone ) {
+			return self::get_empty_payload(
+				array(
+					'raw_phone' => $raw_phone,
+					'reason'    => 'invalid_phone_format',
+				)
+			);
+		}
+
+		return array(
+			'is_valid'         => true,
+			'reason'           => '',
+			'post_id'          => 0,
+			'raw_phone'        => $raw_phone,
+			'location_term'    => null,
+			'country_term'     => null,
+			'phone_dial_code'  => self::infer_phone_dial_code_from_global_phone( $normalized_phone ),
+			'normalized_phone' => $normalized_phone,
+		);
+	}
+
+	/**
+	 * Infer the best matching dial code from known country options.
+	 *
+	 * @param string $normalized_phone Canonical global phone.
+	 * @return string
+	 */
+	private static function infer_phone_dial_code_from_global_phone( $normalized_phone ) {
+		$normalized_phone = self::normalize_global_phone( $normalized_phone );
+		$matched_dial     = '';
+
+		if ( '' === $normalized_phone || ! function_exists( 'bornado_get_phone_country_options' ) ) {
+			return '';
+		}
+
+		foreach ( (array) bornado_get_phone_country_options() as $country ) {
+			if ( ! is_array( $country ) ) {
+				continue;
+			}
+
+			$dial_code = self::sanitize_phone_dial_code( $country['dialCode'] ?? '' );
+			if ( '' === $dial_code || 0 !== strpos( $normalized_phone, $dial_code ) ) {
+				continue;
+			}
+
+			if ( strlen( $dial_code ) > strlen( $matched_dial ) ) {
+				$matched_dial = $dial_code;
+			}
+		}
+
+		return $matched_dial;
 	}
 
 	/**

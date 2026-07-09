@@ -13,6 +13,11 @@ if (file_exists($bornado_schema_shared_context)) {
     require_once $bornado_schema_shared_context;
 }
 
+$bornado_schema_shared_site_entities = __DIR__ . '/shared/site-entities.php';
+if (file_exists($bornado_schema_shared_site_entities)) {
+    require_once $bornado_schema_shared_site_entities;
+}
+
 $bornado_schema_shared_category = __DIR__ . '/shared/category.php';
 if (file_exists($bornado_schema_shared_category)) {
     require_once $bornado_schema_shared_category;
@@ -31,6 +36,11 @@ if (file_exists($bornado_schema_shared_item_list)) {
 $bornado_schema_home_collection = __DIR__ . '/pages/home-collection/collection-page.php';
 if (file_exists($bornado_schema_home_collection)) {
     require_once $bornado_schema_home_collection;
+}
+
+$bornado_schema_home_collection_item_list = __DIR__ . '/pages/home-collection/item-list.php';
+if (file_exists($bornado_schema_home_collection_item_list)) {
+    require_once $bornado_schema_home_collection_item_list;
 }
 
 $bornado_schema_country_collection = __DIR__ . '/pages/country-collection/collection-page.php';

@@ -105,7 +105,7 @@
 
             openModal({
                 mode: matchUrlPath(link.href, config.signUpUrl) ? 'register' : 'login',
-                redirectUrl: safeUrl(link.href).searchParams.get('u') || window.location.href
+                redirectUrl: resolveRedirectUrl(link.href)
             });
         });
     }
@@ -205,7 +205,7 @@
     function openModal(options) {
         resetJourney(true);
         state.intent = options.mode === 'register' ? 'register' : 'login';
-        state.redirectUrl = options.redirectUrl || getDefaultRedirectTarget();
+        state.redirectUrl = resolveSafeRedirectTarget(options.redirectUrl, getDefaultRedirectTarget());
         switchView('phone-entry');
         showNotice('info', '');
 
@@ -273,7 +273,10 @@
                 throw new Error(getI18n('genericError'));
             }
 
-            state.redirectUrl = data.redirect_url || config.profileUrl || window.location.href;
+            state.redirectUrl = resolveSafeRedirectTarget(
+                data.redirect_url,
+                config.profileUrl || getDefaultRedirectTarget()
+            );
             state.continueFlowSource = flowSource;
             state.claimAdId = parseInt(data.claim_ad_id, 10) || 0;
             state.intent = data.mode === 'register' ? 'register' : 'login';
@@ -322,6 +325,7 @@
         }
 
         const phoneInput = forms.phoneEntry.querySelector('input[name="phone_number"]');
+        syncPhoneCountrySelection(forms.phoneEntry, phoneInput ? phoneInput.value : '', true);
         const phoneDialCode = getPhoneDialCode(forms.phoneEntry);
         const phoneNumber = normalizePhone(phoneInput ? phoneInput.value : '', phoneDialCode);
 
@@ -940,7 +944,140 @@
         return '+' + dialDigits + digitsOnly.replace(/^0+/, '');
     }
 
+    function hasExplicitDialCode(value) {
+        const cleaned = String(value || '').trim().replace(/[^\d+]/g, '');
+        return cleaned.indexOf('+') === 0 || cleaned.indexOf('00') === 0;
+    }
+
+    function getResolvedDefaultPhoneCountry() {
+        const runtimeCountry = window.BornadoPhoneCountryPickerResolvedCountry
+            && typeof window.BornadoPhoneCountryPickerResolvedCountry === 'object'
+            ? window.BornadoPhoneCountryPickerResolvedCountry
+            : null;
+
+        if (runtimeCountry && runtimeCountry.dialCode) {
+            return runtimeCountry;
+        }
+
+        const browserCountry = resolveBrowserSuggestedCountry();
+        if (browserCountry && browserCountry.dialCode) {
+            return browserCountry;
+        }
+
+        return defaultPhoneCountry && defaultPhoneCountry.dialCode ? defaultPhoneCountry : null;
+    }
+
+    function getCountryByCountryCode(countryCode) {
+        const normalized = String(countryCode || '').trim().toUpperCase();
+        let match = null;
+
+        if (!normalized) {
+            return null;
+        }
+
+        phoneCountries.some(function (country) {
+            if (String(country && country.countryCode ? country.countryCode : '').trim().toUpperCase() === normalized) {
+                match = country;
+                return true;
+            }
+
+            return false;
+        });
+
+        return match;
+    }
+
+    function countryCodeFromLocale(locale) {
+        const normalized = String(locale || '').trim().replace(/_/g, '-');
+        const parts = normalized.split('-').filter(Boolean);
+        const languageMap = {
+            fa: 'IR',
+            ar: 'AE',
+            en: 'GB'
+        };
+
+        if (parts.length > 1 && /^[A-Za-z]{2}$/.test(parts[parts.length - 1])) {
+            return String(parts[parts.length - 1]).toUpperCase();
+        }
+
+        if (parts.length && languageMap[parts[0].toLowerCase()]) {
+            return languageMap[parts[0].toLowerCase()];
+        }
+
+        return '';
+    }
+
+    function countryCodeFromTimezone(timezone) {
+        const timezoneMap = {
+            'Europe/London': 'GB',
+            'Asia/Tehran': 'IR',
+            'Asia/Dubai': 'AE',
+            'Asia/Baku': 'AZ',
+            'Europe/Berlin': 'DE',
+            'Europe/Paris': 'FR',
+            'Europe/Amsterdam': 'NL',
+            'Europe/Stockholm': 'SE',
+            'Europe/Oslo': 'NO',
+            'Europe/Copenhagen': 'DK',
+            'Europe/Brussels': 'BE',
+            'Europe/Vienna': 'AT',
+            'Europe/Zurich': 'CH',
+            'America/Toronto': 'CA',
+            'America/Vancouver': 'CA',
+            'America/New_York': 'US',
+            'America/Los_Angeles': 'US',
+            'Australia/Sydney': 'AU'
+        };
+
+        return timezoneMap[String(timezone || '').trim()] || '';
+    }
+
+    function resolveBrowserSuggestedCountry() {
+        const locales = [];
+        let timezone = '';
+        let country;
+
+        if (document.documentElement && document.documentElement.lang) {
+            locales.push(String(document.documentElement.lang));
+        }
+
+        if (Array.isArray(navigator.languages)) {
+            navigator.languages.forEach(function (locale) {
+                if (locale) {
+                    locales.push(String(locale));
+                }
+            });
+        }
+
+        if (navigator.language) {
+            locales.push(String(navigator.language));
+        }
+
+        for (let index = 0; index < locales.length; index += 1) {
+            country = getCountryByCountryCode(countryCodeFromLocale(locales[index]));
+            if (country) {
+                return country;
+            }
+        }
+
+        try {
+            timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+        } catch (_error) {
+            timezone = '';
+        }
+
+        return getCountryByCountryCode(countryCodeFromTimezone(timezone));
+    }
+
+    function digitsOnly(value) {
+        return String(value || '').replace(/[^\d]/g, '');
+    }
+
     function inferCountryFromPhone(value) {
+        if (!hasExplicitDialCode(value)) {
+            return null;
+        }
+
         const normalized = normalizePhone(value, '');
         let match = null;
 
@@ -965,19 +1102,119 @@
         return match;
     }
 
+    function updateDialCodeSelect(select, dialCode) {
+        const normalizedDialCode = sanitizeDialCode(dialCode);
+
+        if (!select || !normalizedDialCode) {
+            return '';
+        }
+
+        if (sanitizeDialCode(select.value) === normalizedDialCode) {
+            return normalizedDialCode;
+        }
+
+        select.value = normalizedDialCode;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+
+        return normalizedDialCode;
+    }
+
+    function getPickerDialCode(select) {
+        const root = select && select.closest ? select.closest('.bpcp') : null;
+        return root && root.dataset && root.dataset.currentDialCode
+            ? sanitizeDialCode(root.dataset.currentDialCode)
+            : '';
+    }
+
+    function rememberPhoneSyncState(input, mode, dialCode, localDigits) {
+        if (!input || !input.dataset) {
+            return;
+        }
+
+        input.dataset.phoneSyncMode = String(mode || '');
+        input.dataset.phoneSyncDialCode = sanitizeDialCode(dialCode || '');
+        input.dataset.phoneSyncLocalDigits = String(localDigits || '');
+    }
+
+    function resolveLocalDigitsForSync(input, dialCode) {
+        const raw = input ? String(input.value || '').trim() : '';
+        const normalizedDialCode = sanitizeDialCode(dialCode || '');
+        const dialDigits = digitsOnly(normalizedDialCode);
+        const cleaned = raw.replace(/[^\d+]/g, '');
+        const rawDigits = digitsOnly(cleaned);
+        const storedLocalDigits = input && input.dataset ? String(input.dataset.phoneSyncLocalDigits || '') : '';
+        const storedDialDigits = input && input.dataset ? digitsOnly(input.dataset.phoneSyncDialCode || '') : '';
+
+        if (storedLocalDigits) {
+            return storedLocalDigits;
+        }
+
+        if (!rawDigits) {
+            return '';
+        }
+
+        if (cleaned.charAt(0) === '+' && storedDialDigits && rawDigits.indexOf(storedDialDigits) === 0) {
+            return rawDigits.slice(storedDialDigits.length);
+        }
+
+        if (cleaned.charAt(0) === '+' && dialDigits && rawDigits.indexOf(dialDigits) === 0) {
+            return rawDigits.slice(dialDigits.length);
+        }
+
+        return rawDigits.replace(/^0+/, '');
+    }
+
+    function rewritePhoneForSelectedDial(input, dialCode) {
+        const normalizedDialCode = sanitizeDialCode(dialCode);
+        const dialDigits = digitsOnly(normalizedDialCode);
+        const localDigits = resolveLocalDigitsForSync(input, normalizedDialCode);
+
+        if (!input || !normalizedDialCode || !dialDigits || !localDigits) {
+            return false;
+        }
+
+        input.value = '+' + dialDigits + localDigits;
+        rememberPhoneSyncState(input, 'auto', normalizedDialCode, localDigits);
+        return true;
+    }
+
+    function syncPhoneCountrySelection(form, phoneValue, applyDefaultFallback) {
+        const select = form ? form.querySelector('select[name="phone_dial_code"]') : null;
+        const inferredCountry = inferCountryFromPhone(phoneValue);
+        const resolvedDefaultPhoneCountry = getResolvedDefaultPhoneCountry();
+
+        if (select && inferredCountry && inferredCountry.dialCode) {
+            return updateDialCodeSelect(select, inferredCountry.dialCode);
+        }
+
+        if (select && applyDefaultFallback && !sanitizeDialCode(select.value) && resolvedDefaultPhoneCountry && resolvedDefaultPhoneCountry.dialCode) {
+            return updateDialCodeSelect(select, resolvedDefaultPhoneCountry.dialCode);
+        }
+
+        return select ? sanitizeDialCode(select.value) : '';
+    }
+
     function getPhoneDialCode(form) {
+        const resolvedDefaultPhoneCountry = getResolvedDefaultPhoneCountry();
         if (!form) {
-            return defaultPhoneCountry && defaultPhoneCountry.dialCode ? defaultPhoneCountry.dialCode : '';
+            return resolvedDefaultPhoneCountry && resolvedDefaultPhoneCountry.dialCode ? resolvedDefaultPhoneCountry.dialCode : '';
         }
 
         const select = form.querySelector('select[name="phone_dial_code"]');
-        return select && select.value
-            ? select.value
-            : (defaultPhoneCountry && defaultPhoneCountry.dialCode ? defaultPhoneCountry.dialCode : '');
+        const pickerDialCode = getPickerDialCode(select);
+        return pickerDialCode
+            ? pickerDialCode
+            : (select && select.value
+                ? select.value
+                : (resolvedDefaultPhoneCountry && resolvedDefaultPhoneCountry.dialCode ? resolvedDefaultPhoneCountry.dialCode : ''));
     }
 
     function formatCountryOptionLabel(country) {
-        const name = String(country && country.name ? country.name : '').trim();
+        const name = String(
+            country && (country.displayNameFa || country.name || country.displayNameEn)
+                ? (country.displayNameFa || country.name || country.displayNameEn)
+                : ''
+        ).trim();
         const dialCode = String(country && country.dialCode ? country.dialCode : '').trim();
 
         if (!dialCode) {
@@ -985,6 +1222,18 @@
         }
 
         return name + ' (\u2066' + dialCode + '\u2069)';
+    }
+
+    function decorateCountryOption(option, country) {
+        if (!option || !country) {
+            return;
+        }
+
+        option.dataset.termId = String(country.termId || '');
+        option.dataset.countryCode = String(country.countryCode || '');
+        option.dataset.displayNameFa = String(country.displayNameFa || country.name || '');
+        option.dataset.displayNameEn = String(country.displayNameEn || '');
+        option.dataset.searchTokens = String(country.searchTokens || '');
     }
 
     function primePhoneInput(phoneNumber) {
@@ -997,7 +1246,9 @@
         }
 
         if (country && select && country.dialCode) {
-            select.value = country.dialCode;
+            updateDialCodeSelect(select, country.dialCode);
+        } else if (select && getResolvedDefaultPhoneCountry() && getResolvedDefaultPhoneCountry().dialCode) {
+            updateDialCodeSelect(select, getResolvedDefaultPhoneCountry().dialCode);
         }
 
         syncPasswordLoginUsername(phoneNumber);
@@ -1029,6 +1280,7 @@
                 const option = document.createElement('option');
                 option.value = String(country.dialCode || '');
                 option.textContent = formatCountryOptionLabel(country);
+                decorateCountryOption(option, country);
                 select.appendChild(option);
             });
         }
@@ -1052,14 +1304,57 @@
             row.appendChild(input);
         }
 
-        if (defaultPhoneCountry && defaultPhoneCountry.dialCode) {
-            select.value = String(defaultPhoneCountry.dialCode);
-        }
+        syncPhoneCountrySelection(forms.phoneEntry, input.value, true);
+
+        forms.phoneEntry.addEventListener('bpcp:change', function (event) {
+            const dialCode = event && event.detail && event.detail.dialCode ? event.detail.dialCode : getPhoneDialCode(forms.phoneEntry);
+
+            if (!input || !String(input.value || '').trim()) {
+                return;
+            }
+
+            if (!hasExplicitDialCode(input.value) || String(input.dataset.phoneSyncMode || '') === 'auto') {
+                rewritePhoneForSelectedDial(input, dialCode);
+            }
+        });
+
+        select.addEventListener('change', function () {
+            if (!input || !String(input.value || '').trim()) {
+                return;
+            }
+
+            if (!hasExplicitDialCode(input.value) || String(input.dataset.phoneSyncMode || '') === 'auto') {
+                rewritePhoneForSelectedDial(input, select.value);
+            }
+        });
+
+        input.addEventListener('input', function () {
+            if (hasExplicitDialCode(input.value)) {
+                rememberPhoneSyncState(input, 'explicit', getPhoneDialCode(forms.phoneEntry), '');
+                syncPhoneCountrySelection(forms.phoneEntry, input.value, false);
+                return;
+            }
+
+            rememberPhoneSyncState(
+                input,
+                'local',
+                getPhoneDialCode(forms.phoneEntry),
+                digitsOnly(input.value).replace(/^0+/, '')
+            );
+        });
 
         input.addEventListener('blur', function () {
+            const wasExplicit = hasExplicitDialCode(input.value);
+            syncPhoneCountrySelection(forms.phoneEntry, input.value, true);
             const normalized = normalizePhone(input.value, getPhoneDialCode(forms.phoneEntry));
             if (normalized) {
                 input.value = normalized;
+                rememberPhoneSyncState(
+                    input,
+                    wasExplicit ? 'explicit' : 'auto',
+                    getPhoneDialCode(forms.phoneEntry),
+                    resolveLocalDigitsForSync(input, getPhoneDialCode(forms.phoneEntry))
+                );
             }
         });
     }
@@ -1248,17 +1543,93 @@
         }
     }
 
+    function getSiteOrigin() {
+        const siteUrl = config.siteUrl || window.location.origin;
+        return safeUrl(siteUrl).origin;
+    }
+
+    function isAllowedRedirectTarget(parsedUrl) {
+        return Boolean(
+            parsedUrl
+            && /^(https?:)$/.test(parsedUrl.protocol)
+            && parsedUrl.origin === getSiteOrigin()
+        );
+    }
+
+    function normalizeSafeRedirectFallback(fallbackUrl) {
+        const candidates = [
+            fallbackUrl,
+            config.afterLoginUrl,
+            config.profileUrl,
+            window.location.href,
+            config.siteUrl,
+            window.location.origin
+        ];
+
+        for (let index = 0; index < candidates.length; index += 1) {
+            const candidate = candidates[index];
+            if (!candidate) {
+                continue;
+            }
+
+            const parsed = safeUrl(candidate);
+            if (isAllowedRedirectTarget(parsed)) {
+                return parsed;
+            }
+        }
+
+        return safeUrl(window.location.origin);
+    }
+
+    function resolveSafeRedirectTarget(candidateUrl, fallbackUrl) {
+        const fallback = normalizeSafeRedirectFallback(fallbackUrl);
+
+        if (!candidateUrl) {
+            return fallback.toString();
+        }
+
+        try {
+            const parsedCandidate = new URL(candidateUrl, fallback.toString());
+            if (!isAllowedRedirectTarget(parsedCandidate)) {
+                return fallback.toString();
+            }
+
+            return parsedCandidate.toString();
+        } catch (error) {
+            return fallback.toString();
+        }
+    }
+
+    function getRedirectQueryValue(parsedUrl) {
+        if (!parsedUrl || !parsedUrl.searchParams) {
+            return '';
+        }
+
+        return parsedUrl.searchParams.get('redirect_to') || parsedUrl.searchParams.get('u') || '';
+    }
+
     function resolveRedirectUrl(fallbackHref) {
         if (!fallbackHref) {
             return getDefaultRedirectTarget();
         }
 
         const parsed = safeUrl(fallbackHref);
-        return parsed.searchParams.get('u') || getDefaultRedirectTarget();
+        return resolveSafeRedirectTarget(getRedirectQueryValue(parsed), getDefaultRedirectTarget());
     }
 
     function getDefaultRedirectTarget() {
-        return config.afterLoginUrl || config.profileUrl || window.location.href;
+        return normalizeSafeRedirectFallback(config.afterLoginUrl || config.profileUrl || window.location.href).toString();
+    }
+
+    function decorateRedirectTarget(targetUrl) {
+        const decorated = safeUrl(resolveSafeRedirectTarget(targetUrl, getDefaultRedirectTarget()));
+
+        // Force the first post-login visit to bypass stale guest page caches.
+        if (config.postAdUrl && matchUrlPath(decorated.toString(), config.postAdUrl)) {
+            decorated.searchParams.set('bornado_auth', String(Date.now()));
+        }
+
+        return decorated.toString();
     }
 
     function redirectAfterSuccess(flowType) {
@@ -1274,7 +1645,7 @@
         }
 
         window.setTimeout(function () {
-            window.location.href = target;
+            window.location.href = decorateRedirectTarget(target);
         }, 160);
     }
 

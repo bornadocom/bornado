@@ -51,6 +51,17 @@ final class Bornado_Ad_Phone_Sync {
 			return;
 		}
 
+		$posted_dial_code = isset( $params['bornado_phone_dial_code'] ) ? trim( (string) $params['bornado_phone_dial_code'] ) : '';
+		if ( '' !== $posted_dial_code && class_exists( 'Bornado_Country_Phone_Service' ) ) {
+			$payload = Bornado_Country_Phone_Service::normalize_phone_for_country( $raw_phone, $posted_dial_code );
+			if ( ! empty( $payload['is_valid'] ) && ! empty( $payload['normalized_phone'] ) ) {
+				$params['ad_contact_number'] = (string) $payload['normalized_phone'];
+				$_POST['sb_data']            = wp_slash( http_build_query( $params, '', '&', PHP_QUERY_RFC3986 ) );
+
+				return;
+			}
+		}
+
 		$location_term_id = self::get_location_term_id_from_params( $params );
 		if ( $location_term_id < 1 ) {
 			return;

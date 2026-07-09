@@ -9,8 +9,24 @@ if (function_exists('icl_t')) {
     $ad_in_menu_text = icl_t('adforest_theme', 'ad_in_menu_text', $ad_in_menu_text);
 }
 $sb_post_ad_page = isset($adforest_theme['sb_post_ad_page']) ? $adforest_theme['sb_post_ad_page'] : "";
+$post_ad_url = function_exists('bornado_get_preferred_post_ad_url')
+    ? bornado_get_preferred_post_ad_url()
+    : (!empty($sb_post_ad_page) ? get_the_permalink($sb_post_ad_page) : home_url('/'));
+$profile_redirect_fallback = !empty($sb_profile_page) ? get_the_permalink($sb_profile_page) : home_url('/');
+$current_auth_redirect = function_exists('bornado_get_current_auth_redirect_url')
+    ? bornado_get_current_auth_redirect_url($profile_redirect_fallback)
+    : (function_exists('adforest_get_current_url') ? (string) adforest_get_current_url() : home_url('/'));
 $sign_in_url = !empty($sb_sign_in_page) ? get_the_permalink($sb_sign_in_page) : '';
 $sign_up_url = !empty($sb_sign_up_page) ? get_the_permalink($sb_sign_up_page) : '';
+if (function_exists('bornado_build_auth_redirect_url')) {
+    if (!empty($sign_in_url)) {
+        $sign_in_url = bornado_build_auth_redirect_url($sign_in_url, $current_auth_redirect, home_url('/'));
+    }
+
+    if (!empty($sign_up_url)) {
+        $sign_up_url = bornado_build_auth_redirect_url($sign_up_url, $current_auth_redirect, home_url('/'));
+    }
+}
 $show_sign_in = !empty($sign_in_url);
 $show_sign_up = !empty($sign_up_url);
 $responsive_logo = isset($adforest_theme['sb_site_logo_mobile']['url']) ? $adforest_theme['sb_site_logo_mobile']['url'] : ADFOREST_IMAGE_PATH . "/adt-logo.png";
@@ -1474,7 +1490,7 @@ if (!function_exists('adforest_header_get_clean_hidden_query_args')) {
 
                 <?php } ?>
                 <?php if ( isset($adforest_theme['ad_in_menu']) && $adforest_theme['ad_in_menu'] ) { ?>
-                    <a href="<?php echo get_the_permalink($sb_post_ad_page); ?>"
+                    <a href="<?php echo esc_url($post_ad_url); ?>"
                        class="btn-theme-secondary ad-post-btn"><i
                                 class="fas fa-plus"></i><?php echo esc_html($ad_in_menu_text) ?></a>
                 <?php } ?>

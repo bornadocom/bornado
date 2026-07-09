@@ -72,6 +72,7 @@ if ( ! function_exists( 'bornado_bootstrap_empty_ad_price_module' ) ) {
 		bornado_require_first_existing_file( array_values( array_unique( $module_paths ) ) );
 	}
 
+	bornado_bootstrap_empty_ad_price_module();
 	add_action( 'plugins_loaded', 'bornado_bootstrap_empty_ad_price_module', 5 );
 }
 

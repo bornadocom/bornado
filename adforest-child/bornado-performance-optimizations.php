@@ -41,6 +41,34 @@ if ( ! function_exists( 'bornado_disable_frontend_emoji_assets' ) ) {
 }
 add_action( 'init', 'bornado_disable_frontend_emoji_assets', 1 );
 
+if ( ! function_exists( 'bornado_remove_jquery_migrate_from_frontend' ) ) {
+	/**
+	 * Drop jQuery Migrate on the public site to remove console noise and reduce
+	 * one extra legacy script when the current stack does not require it.
+	 *
+	 * @param WP_Scripts $scripts Registered scripts object.
+	 * @return void
+	 */
+	function bornado_remove_jquery_migrate_from_frontend( $scripts ) {
+		if ( is_admin() || wp_doing_ajax() || wp_doing_cron() || wp_is_json_request() ) {
+			return;
+		}
+
+		if ( ! ( $scripts instanceof WP_Scripts ) ) {
+			return;
+		}
+
+		if ( empty( $scripts->registered['jquery'] ) || empty( $scripts->registered['jquery']->deps ) || ! is_array( $scripts->registered['jquery']->deps ) ) {
+			return;
+		}
+
+		$scripts->registered['jquery']->deps = array_values(
+			array_diff( $scripts->registered['jquery']->deps, array( 'jquery-migrate' ) )
+		);
+	}
+}
+add_action( 'wp_default_scripts', 'bornado_remove_jquery_migrate_from_frontend' );
+
 if ( ! function_exists( 'bornado_is_header_search_clone_active' ) ) {
 	/**
 	 * Whether the current page is using the child-theme header search clone.

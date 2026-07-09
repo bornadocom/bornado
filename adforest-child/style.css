@@ -20,7 +20,8 @@ button.cky-btn.cky-btn-accept {
 }
 
 @media (max-width: 767.98px) {
-    .cky-btn-revisit-wrapper.cky-revisit-bottom-left {
+    .cky-btn-revisit-wrapper,
+    [data-cky-tag="revisit-consent"] {
         display: none !important;
     }
 }

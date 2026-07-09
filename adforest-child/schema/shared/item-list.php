@@ -5,13 +5,14 @@ if (!defined('ABSPATH')) {
 
 if (!function_exists('bornado_schema_manager_get_item_page_type')) {
     /**
-     * The listing results point to ad detail pages, so describe them as pages.
+     * The listing results point to single listing pages, so use the more
+     * specific ItemPage type instead of a generic WebPage.
      *
      * @return string
      */
     function bornado_schema_manager_get_item_page_type()
     {
-        return 'WebPage';
+        return 'ItemPage';
     }
 }
 
@@ -453,12 +454,13 @@ if (!function_exists('bornado_schema_manager_build_query_item_list_entity')) {
         $entity = array(
             '@type'           => 'ItemList',
             '@id'             => $item_list_id,
-            'numberOfItems'   => count($item_list),
+            'numberOfItems'   => max(count($item_list), (int) $source_query->found_posts),
             'itemListElement' => $item_list,
         );
 
         if ($canonical_url !== '') {
             $entity['url'] = $canonical_url;
+            $entity['mainEntityOfPage'] = $canonical_url;
         }
 
         if ($item_list_name !== '') {

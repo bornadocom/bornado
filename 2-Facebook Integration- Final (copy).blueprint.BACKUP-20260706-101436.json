@@ -41,7 +41,260 @@
       }
     },
     {
-      "id": 300,
+      "id": 15,
+      "module": "apify:fetchDatasetItems",
+      "version": 1,
+      "parameters": {
+        "__IMTCONN__": 8698918
+      },
+      "mapper": {
+        "type": "clean",
+        "limit": "100",
+        "format": "json",
+        "datasetId": "{{202.resource.defaultDatasetId}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 471,
+          "y": 1304
+        },
+        "restore": {
+          "expect": {
+            "type": {
+              "mode": "chose",
+              "label": "Clean"
+            },
+            "format": {
+              "mode": "chose",
+              "label": "JSON"
+            }
+          },
+          "parameters": {
+            "__IMTCONN__": {
+              "data": {
+                "scoped": "true",
+                "connection": "apify2"
+              },
+              "label": "My Apify [Recommended] connection (bornado.com@gmail.com)"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "__IMTCONN__",
+            "type": "account:apify2,apify",
+            "label": "Connection",
+            "required": true
+          }
+        ],
+        "expect": [
+          {
+            "name": "datasetId",
+            "type": "text",
+            "label": "Dataset ID",
+            "required": true
+          },
+          {
+            "name": "type",
+            "type": "select",
+            "label": "Data transformation",
+            "required": true,
+            "validate": {
+              "enum": [
+                "clean",
+                "simplified",
+                "none"
+              ]
+            }
+          },
+          {
+            "name": "format",
+            "type": "select",
+            "label": "Format",
+            "required": true,
+            "validate": {
+              "enum": [
+                "json",
+                "csv",
+                "html",
+                "xml",
+                "rss",
+                "xlsx"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "type": "uinteger",
+            "label": "Limit",
+            "validate": {
+              "max": 100000,
+              "min": 1
+            }
+          },
+          {
+            "name": "offset",
+            "type": "uinteger",
+            "label": "Offset",
+            "validate": {
+              "min": 0
+            }
+          },
+          {
+            "name": "fields",
+            "type": "text",
+            "label": "Fields"
+          },
+          {
+            "name": "omit",
+            "type": "text",
+            "label": "Omit Fields"
+          }
+        ]
+      },
+      "onerror": [
+        {
+          "id": 201,
+          "module": "builtin:Break",
+          "version": 1,
+          "parameters": {},
+          "mapper": {
+            "count": "3",
+            "retry": true,
+            "interval": "1"
+          },
+          "metadata": {
+            "designer": {
+              "x": 715,
+              "y": 1305
+            },
+            "restore": {
+              "expect": {
+                "retry": {
+                  "mode": "chose"
+                }
+              }
+            },
+            "expect": [
+              {
+                "name": "retry",
+                "type": "boolean",
+                "label": "Retry automatically",
+                "required": true
+              },
+              {
+                "name": "count",
+                "type": "uinteger",
+                "label": "Number of retries",
+                "required": true,
+                "validate": {
+                  "max": 10000,
+                  "min": 1
+                }
+              },
+              {
+                "name": "interval",
+                "type": "uinteger",
+                "label": "Minutes between retries",
+                "required": true,
+                "validate": {
+                  "max": 44640,
+                  "min": 1
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 112,
+      "module": "datastore:AddRecord",
+      "version": 1,
+      "parameters": {
+        "datastore": 114670
+      },
+      "filter": null,
+      "mapper": {
+        "key": "{{15.id}}",
+        "data": {
+          "status": "",
+          "username": "{{ifempty(ifempty(15.sharedPost.user.name; 15.user.name); 15.groupTitle)}}"
+        },
+        "overwrite": false
+      },
+      "metadata": {
+        "designer": {
+          "x": 471,
+          "y": 1043
+        },
+        "restore": {
+          "expect": {
+            "overwrite": {
+              "mode": "chose"
+            }
+          },
+          "parameters": {
+            "datastore": {
+              "label": "Instagram_Ads_Log"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "datastore",
+            "type": "datastore",
+            "label": "Data store",
+            "required": true
+          }
+        ],
+        "expect": [
+          {
+            "name": "key",
+            "type": "text",
+            "label": "Key"
+          },
+          {
+            "name": "overwrite",
+            "type": "boolean",
+            "label": "Overwrite an existing record",
+            "required": true
+          },
+          {
+            "name": "data",
+            "spec": [
+              {
+                "name": "username",
+                "type": "text",
+                "label": null
+              },
+              {
+                "name": "status",
+                "type": "text",
+                "label": null
+              }
+            ],
+            "type": "collection",
+            "label": "Record"
+          }
+        ]
+      },
+      "onerror": [
+        {
+          "id": 115,
+          "module": "builtin:Ignore",
+          "version": 1,
+          "metadata": {
+            "designer": {
+              "x": 223,
+              "y": 1059
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 17,
       "module": "google-sheets:filterRows",
       "version": 2,
       "parameters": {
@@ -52,8 +305,9 @@
         "filter": [
           [
             {
-              "a": "A",
-              "o": "exist"
+              "a": "B",
+              "b": "https://www.facebook.com/groups/{{get(split(15.url; \"/\"); 4)}}/",
+              "o": "text:equal"
             }
           ]
         ],
@@ -67,14 +321,16 @@
       },
       "metadata": {
         "designer": {
-          "x": 260,
-          "y": 1500,
-          "name": "Group config - get ALL rows (once per run)"
+          "x": 470,
+          "y": 741
         },
         "restore": {
           "expect": {
             "from": {
               "label": "Select from My Drive"
+            },
+            "orderBy": {
+              "mode": "chose"
             },
             "sheetId": {
               "mode": "chose",
@@ -782,330 +1038,6 @@
       }
     },
     {
-      "id": 301,
-      "module": "builtin:BasicAggregator",
-      "version": 1,
-      "parameters": {
-        "feeder": 300
-      },
-      "mapper": {
-        "1": "{{300.`1`}}",
-        "2": "{{300.`2`}}",
-        "4": "{{300.`4`}}",
-        "5": "{{300.`5`}}",
-        "7": "{{300.`7`}}",
-        "10": "{{300.`10`}}",
-        "11": "{{300.`11`}}"
-      },
-      "metadata": {
-        "designer": {
-          "x": 350,
-          "y": 1500,
-          "name": "Group config cache (array, built once per run)"
-        },
-        "restore": {
-          "extra": {
-            "feeder": {
-              "label": "Google Sheets - Search Rows [300]"
-            },
-            "target": {
-              "label": "Custom"
-            }
-          }
-        },
-        "expect": [
-          {
-            "name": "1",
-            "type": "text",
-            "label": "Username / group URL (B)"
-          },
-          {
-            "name": "2",
-            "type": "text",
-            "label": "Processing_Type (C)"
-          },
-          {
-            "name": "4",
-            "type": "text",
-            "label": "default country (E)"
-          },
-          {
-            "name": "5",
-            "type": "text",
-            "label": "default_city_geoname_id (F)"
-          },
-          {
-            "name": "7",
-            "type": "text",
-            "label": "img slice no (H)"
-          },
-          {
-            "name": "10",
-            "type": "text",
-            "label": "market_key (K)"
-          },
-          {
-            "name": "11",
-            "type": "text",
-            "label": "channel_key (L)"
-          }
-        ]
-      }
-    },
-    {
-      "id": 15,
-      "module": "apify:fetchDatasetItems",
-      "version": 1,
-      "parameters": {
-        "__IMTCONN__": 8698918
-      },
-      "mapper": {
-        "type": "clean",
-        "limit": "100",
-        "format": "json",
-        "datasetId": "{{202.resource.defaultDatasetId}}"
-      },
-      "metadata": {
-        "designer": {
-          "x": 471,
-          "y": 1304
-        },
-        "restore": {
-          "expect": {
-            "type": {
-              "mode": "chose",
-              "label": "Clean"
-            },
-            "format": {
-              "mode": "chose",
-              "label": "JSON"
-            }
-          },
-          "parameters": {
-            "__IMTCONN__": {
-              "data": {
-                "scoped": "true",
-                "connection": "apify2"
-              },
-              "label": "My Apify [Recommended] connection (bornado.com@gmail.com)"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "__IMTCONN__",
-            "type": "account:apify2,apify",
-            "label": "Connection",
-            "required": true
-          }
-        ],
-        "expect": [
-          {
-            "name": "datasetId",
-            "type": "text",
-            "label": "Dataset ID",
-            "required": true
-          },
-          {
-            "name": "type",
-            "type": "select",
-            "label": "Data transformation",
-            "required": true,
-            "validate": {
-              "enum": [
-                "clean",
-                "simplified",
-                "none"
-              ]
-            }
-          },
-          {
-            "name": "format",
-            "type": "select",
-            "label": "Format",
-            "required": true,
-            "validate": {
-              "enum": [
-                "json",
-                "csv",
-                "html",
-                "xml",
-                "rss",
-                "xlsx"
-              ]
-            }
-          },
-          {
-            "name": "limit",
-            "type": "uinteger",
-            "label": "Limit",
-            "validate": {
-              "max": 100000,
-              "min": 1
-            }
-          },
-          {
-            "name": "offset",
-            "type": "uinteger",
-            "label": "Offset",
-            "validate": {
-              "min": 0
-            }
-          },
-          {
-            "name": "fields",
-            "type": "text",
-            "label": "Fields"
-          },
-          {
-            "name": "omit",
-            "type": "text",
-            "label": "Omit Fields"
-          }
-        ]
-      },
-      "onerror": [
-        {
-          "id": 201,
-          "module": "builtin:Break",
-          "version": 1,
-          "parameters": {},
-          "mapper": {
-            "count": "3",
-            "retry": true,
-            "interval": "1"
-          },
-          "metadata": {
-            "designer": {
-              "x": 715,
-              "y": 1305
-            },
-            "restore": {
-              "expect": {
-                "retry": {
-                  "mode": "chose"
-                }
-              }
-            },
-            "expect": [
-              {
-                "name": "retry",
-                "type": "boolean",
-                "label": "Retry automatically",
-                "required": true
-              },
-              {
-                "name": "count",
-                "type": "uinteger",
-                "label": "Number of retries",
-                "required": true,
-                "validate": {
-                  "max": 10000,
-                  "min": 1
-                }
-              },
-              {
-                "name": "interval",
-                "type": "uinteger",
-                "label": "Minutes between retries",
-                "required": true,
-                "validate": {
-                  "max": 44640,
-                  "min": 1
-                }
-              }
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "id": 112,
-      "module": "datastore:AddRecord",
-      "version": 1,
-      "parameters": {
-        "datastore": 114670
-      },
-      "filter": null,
-      "mapper": {
-        "key": "{{15.id}}",
-        "data": {
-          "status": "",
-          "username": "{{ifempty(ifempty(15.sharedPost.user.name; 15.user.name); 15.groupTitle)}}"
-        },
-        "overwrite": false
-      },
-      "metadata": {
-        "designer": {
-          "x": 471,
-          "y": 1043
-        },
-        "restore": {
-          "expect": {
-            "overwrite": {
-              "mode": "chose"
-            }
-          },
-          "parameters": {
-            "datastore": {
-              "label": "Instagram_Ads_Log"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "datastore",
-            "type": "datastore",
-            "label": "Data store",
-            "required": true
-          }
-        ],
-        "expect": [
-          {
-            "name": "key",
-            "type": "text",
-            "label": "Key"
-          },
-          {
-            "name": "overwrite",
-            "type": "boolean",
-            "label": "Overwrite an existing record",
-            "required": true
-          },
-          {
-            "name": "data",
-            "spec": [
-              {
-                "name": "username",
-                "type": "text",
-                "label": null
-              },
-              {
-                "name": "status",
-                "type": "text",
-                "label": null
-              }
-            ],
-            "type": "collection",
-            "label": "Record"
-          }
-        ]
-      },
-      "onerror": [
-        {
-          "id": 115,
-          "module": "builtin:Ignore",
-          "version": 1,
-          "metadata": {
-            "designer": {
-              "x": 223,
-              "y": 1059
-            }
-          }
-        }
-      ]
-    },
-    {
       "id": 214,
       "module": "util:SetVariables",
       "version": 1,
@@ -1199,55 +1131,6 @@
             "name": "effective_origin_url",
             "type": "any",
             "label": "effective_origin_url"
-          }
-        ]
-      }
-    },
-    {
-      "id": 17,
-      "module": "util:SetVariables",
-      "version": 1,
-      "parameters": {},
-      "mapper": {
-        "scope": "roundtrip",
-        "variables": [
-          {
-            "name": "2",
-            "value": "{{first(map(301.array; \"2\"; \"1\"; 214.effective_group_url))}}"
-          },
-          {
-            "name": "4",
-            "value": "{{first(map(301.array; \"4\"; \"1\"; 214.effective_group_url))}}"
-          },
-          {
-            "name": "5",
-            "value": "{{first(map(301.array; \"5\"; \"1\"; 214.effective_group_url))}}"
-          },
-          {
-            "name": "7",
-            "value": "{{first(map(301.array; \"7\"; \"1\"; 214.effective_group_url))}}"
-          },
-          {
-            "name": "10",
-            "value": "{{first(map(301.array; \"10\"; \"1\"; 214.effective_group_url))}}"
-          },
-          {
-            "name": "11",
-            "value": "{{first(map(301.array; \"11\"; \"1\"; 214.effective_group_url))}}"
-          }
-        ]
-      },
-      "metadata": {
-        "designer": {
-          "x": 470,
-          "y": 741,
-          "name": "Group config lookup (from cache, was Google Sheets)"
-        },
-        "interface": [
-          {
-            "name": "2",
-            "type": "any",
-            "label": "2"
           }
         ]
       }

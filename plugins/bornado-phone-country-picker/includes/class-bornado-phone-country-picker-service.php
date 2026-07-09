@@ -92,6 +92,13 @@ final class Bornado_Phone_Country_Picker_Service {
 	 * @return array<string,mixed>
 	 */
 	public static function get_legacy_default_country() {
+		if ( function_exists( 'bornado_get_default_phone_country_option' ) ) {
+			$default = bornado_get_default_phone_country_option();
+			if ( ! empty( $default ) && is_array( $default ) ) {
+				return $default;
+			}
+		}
+
 		$countries = self::get_country_options();
 
 		return ! empty( $countries[0] ) && is_array( $countries[0] ) ? $countries[0] : array();

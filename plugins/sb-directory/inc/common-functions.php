@@ -648,12 +648,19 @@ function event_get_default_timer()
 					</div>';
 }
 
-add_filter('get_meta_sql', 'adforest_cast_decimal_precision');
+if (!has_filter('get_meta_sql', 'adforest_cast_decimal_precision')) {
+    add_filter('get_meta_sql', 'adforest_cast_decimal_precision');
+}
 
-function adforest_cast_decimal_precision($array)
-{
-    $array['where'] = str_replace('DECIMAL', 'DECIMAL(10,3)', $array['where']);
-    return $array;
+if (!function_exists('adforest_cast_decimal_precision')) {
+    function adforest_cast_decimal_precision($array)
+    {
+        if (isset($array['where'])) {
+            $array['where'] = str_replace('DECIMAL', 'DECIMAL(10,3)', $array['where']);
+        }
+
+        return $array;
+    }
 }
 
 

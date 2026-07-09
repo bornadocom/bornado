@@ -38,6 +38,7 @@ if (!function_exists('bornado_schema_manager_get_graph_extenders')) {
         $extenders = array(
             'home_collection' => array(
                 'bornado_schema_manager_extend_graph_with_shared_breadcrumb',
+                'bornado_schema_manager_extend_home_collection_with_item_list_graph',
             ),
             'country_collection' => array(
                 'bornado_schema_manager_extend_graph_with_shared_breadcrumb',
@@ -139,14 +140,51 @@ if (!function_exists('bornado_schema_manager_enrich_graph')) {
         $page_type         = bornado_schema_manager_get_page_type();
         $handlers          = bornado_schema_manager_get_page_handlers();
         $graph_extenders   = bornado_schema_manager_get_graph_extenders();
-        $language_tag      = function_exists('bornado_frontend_language_tag')
-            ? (string) bornado_frontend_language_tag()
+        $language_tag      = function_exists('bornado_schema_manager_get_site_language_tag')
+            ? (string) bornado_schema_manager_get_site_language_tag()
             : '';
         $content_location  = bornado_schema_manager_build_content_location($route_context);
+        $graph_refs        = bornado_schema_manager_get_base_graph_refs();
+        $website_entity    = function_exists('bornado_schema_manager_build_shared_website_entity')
+            ? bornado_schema_manager_build_shared_website_entity()
+            : array();
+        $organization_entity = function_exists('bornado_schema_manager_build_shared_organization_entity')
+            ? bornado_schema_manager_build_shared_organization_entity()
+            : array();
+        $logo_entity       = function_exists('bornado_schema_manager_build_site_logo_entity')
+            ? bornado_schema_manager_build_site_logo_entity()
+            : array();
+        $website_found     = false;
+        $organization_found = false;
+        $logo_found        = false;
 
         foreach ($data as $key => $entity) {
             if (!is_array($entity)) {
                 continue;
+            }
+
+            if (bornado_schema_entity_has_type($entity, array('WebSite'))) {
+                $website_found = true;
+                if (!empty($website_entity)) {
+                    $data[$key] = array_merge($entity, $website_entity);
+                    $entity = $data[$key];
+                }
+            }
+
+            if (bornado_schema_entity_has_type($entity, array('Organization')) && !empty($entity['@id']) && (string) $entity['@id'] === (string) $graph_refs['publisher']['@id']) {
+                $organization_found = true;
+                if (!empty($organization_entity)) {
+                    $data[$key] = array_merge($entity, $organization_entity);
+                    $entity = $data[$key];
+                }
+            }
+
+            if (bornado_schema_entity_has_type($entity, array('ImageObject')) && !empty($entity['@id']) && (string) $entity['@id'] === bornado_schema_manager_get_logo_graph_id()) {
+                $logo_found = true;
+                if (!empty($logo_entity)) {
+                    $data[$key] = array_merge($entity, $logo_entity);
+                    $entity = $data[$key];
+                }
             }
 
             if (
@@ -164,6 +202,34 @@ if (!function_exists('bornado_schema_manager_enrich_graph')) {
             ) {
                 $data[$key]['contentLocation'] = $content_location;
             }
+
+            if (
+                bornado_schema_entity_has_type($entity, array('WebPage', 'CollectionPage', 'SearchResultsPage', 'Article', 'BlogPosting', 'ItemPage'))
+                && empty($entity['publisher'])
+                && !empty($graph_refs['publisher']['@id'])
+            ) {
+                $data[$key]['publisher'] = bornado_schema_manager_get_ref((string) $graph_refs['publisher']['@id']);
+            }
+
+            if (
+                bornado_schema_entity_has_type($entity, array('WebPage', 'CollectionPage', 'SearchResultsPage', 'Article', 'BlogPosting', 'ItemPage'))
+                && empty($entity['isPartOf'])
+                && !empty($graph_refs['website']['@id'])
+            ) {
+                $data[$key]['isPartOf'] = bornado_schema_manager_get_ref((string) $graph_refs['website']['@id']);
+            }
+        }
+
+        if (!$website_found && !empty($website_entity)) {
+            $data['bornado_shared_website'] = $website_entity;
+        }
+
+        if (!$organization_found && !empty($organization_entity)) {
+            $data['bornado_shared_organization'] = $organization_entity;
+        }
+
+        if (!$logo_found && !empty($logo_entity)) {
+            $data['bornado_shared_logo'] = $logo_entity;
         }
 
         if (!isset($handlers[$page_type]) || !is_string($handlers[$page_type]) || !function_exists($handlers[$page_type])) {

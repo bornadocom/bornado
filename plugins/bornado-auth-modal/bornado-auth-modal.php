@@ -123,9 +123,11 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 			$sign_up = isset( $adforest_theme['sb_sign_up_page'] ) ? apply_filters( 'adforest_language_page_id', $adforest_theme['sb_sign_up_page'] ) : 0;
 
 			return array(
-				'ajaxUrl'                => apply_filters( 'adforest_set_query_param', admin_url( 'admin-ajax.php' ) ),
+				'ajaxUrl'                => apply_filters( 'adforest_set_query_param', home_url( '/wp-admin/admin-ajax.php' ) ),
 				'afterLoginUrl'          => isset( $strings['sb_after_login_page'] ) ? (string) $strings['sb_after_login_page'] : home_url( '/' ),
 				'profileUrl'             => $profile,
+				'siteUrl'                => home_url( '/' ),
+				'postAdUrl'              => $this->get_post_ad_url(),
 				'registerRedirectUrl'    => $profile,
 				'phonePreflightNonce'    => wp_create_nonce( 'bornado_auth_phone_preflight' ),
 				'continueTokenNonce'     => wp_create_nonce( 'bornado_auth_resolve_continue_token' ),
@@ -214,12 +216,18 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 				return $this->render_logged_in_shortcode_state( $atts );
 			}
 
-			$mode     = 'register' === strtolower( $atts['mode'] ) ? 'register' : 'login';
-			$method   = 'email' === strtolower( $atts['method'] ) ? 'email' : 'phone';
-			$tag      = 'a' === strtolower( $atts['tag'] ) ? 'a' : 'button';
-			$label    = trim( (string) $atts['label'] );
-			$class    = trim( (string) $atts['class'] );
-			$fallback = 'register' === $mode ? $this->get_sign_up_url() : $this->get_sign_in_url();
+			$mode          = 'register' === strtolower( $atts['mode'] ) ? 'register' : 'login';
+			$method        = 'email' === strtolower( $atts['method'] ) ? 'email' : 'phone';
+			$tag           = 'a' === strtolower( $atts['tag'] ) ? 'a' : 'button';
+			$label         = trim( (string) $atts['label'] );
+			$class         = trim( (string) $atts['class'] );
+			$fallback_base = 'register' === $mode ? $this->get_sign_up_url() : $this->get_sign_in_url();
+			$current_url   = function_exists( 'bornado_get_current_auth_redirect_url' )
+				? (string) bornado_get_current_auth_redirect_url( $this->get_profile_url() )
+				: ( function_exists( 'adforest_get_current_url' ) ? (string) adforest_get_current_url() : home_url( '/' ) );
+			$fallback      = function_exists( 'bornado_build_auth_redirect_url' ) && '' !== $fallback_base
+				? (string) bornado_build_auth_redirect_url( $fallback_base, $current_url, home_url( '/' ) )
+				: $fallback_base;
 
 			if ( '' === $label ) {
 				$label = 'register' === $mode ? __( 'عضویت', 'bornado-auth-modal' ) : __( 'ورود', 'bornado-auth-modal' );
@@ -528,9 +536,12 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 				wp_send_json_error( array( 'message' => $resolution->get_error_message() ), 403 );
 			}
 
-			$redirect_url = isset( $payload['redirect_url'] ) ? esc_url_raw( (string) $payload['redirect_url'] ) : '';
-			if ( '' === $redirect_url ) {
-				$redirect_url = $this->get_profile_url();
+			$redirect_fallback = $this->get_profile_url();
+			$requested_redirect = isset( $payload['redirect_url'] ) ? (string) $payload['redirect_url'] : '';
+			if ( function_exists( 'bornado_resolve_safe_redirect_url' ) ) {
+				$redirect_url = bornado_resolve_safe_redirect_url( $requested_redirect, $redirect_fallback );
+			} else {
+				$redirect_url = wp_validate_redirect( $requested_redirect, $redirect_fallback );
 			}
 
 			$flow_source = $this->resolve_continue_flow_source( $payload );
@@ -584,8 +595,11 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 				wp_send_json_error( array( 'message' => __( 'رمز عبور صحیح نیست.', 'bornado-auth-modal' ) ), 422 );
 			}
 
+			update_user_meta( $user_id, '_sb_is_ph_verified', '1' );
+			wp_clear_auth_cookie();
 			wp_set_current_user( $user_id );
 			wp_set_auth_cookie( $user_id, $remember, is_ssl() );
+			do_action( 'wp_login', $user->user_login, $user );
 
 			do_action( 'bornado_auth_modal_phone_login_success', $user_id, $phone );
 
@@ -629,8 +643,10 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 			}
 
 			update_user_meta( $user_id, '_sb_is_ph_verified', '1' );
+			wp_clear_auth_cookie();
 			wp_set_current_user( $user_id );
 			wp_set_auth_cookie( $user_id, $remember, is_ssl() );
+			do_action( 'wp_login', $user->user_login, $user );
 
 			do_action(
 				'bornado_auth_modal_firebase_login_success',
@@ -744,8 +760,15 @@ if ( ! class_exists( 'Bornado_Auth_Modal' ) ) {
 				update_user_meta( $user_id, '_sb_user_type', 'Indiviual' );
 			}
 
+			$user = get_user_by( 'ID', $user_id );
+			if ( ! $user instanceof WP_User ) {
+				wp_send_json_error( array( 'message' => __( 'حساب کاربری معتبر نیست.', 'bornado-auth-modal' ) ), 404 );
+			}
+
+			wp_clear_auth_cookie();
 			wp_set_current_user( $user_id );
 			wp_set_auth_cookie( $user_id, $remember, is_ssl() );
+			do_action( 'wp_login', $user->user_login, $user );
 
 			do_action(
 				'bornado_auth_modal_firebase_register_success',

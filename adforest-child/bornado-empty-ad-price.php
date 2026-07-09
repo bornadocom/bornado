@@ -85,6 +85,48 @@ if (!function_exists('bornado_normalize_price_type_label')) {
     }
 }
 
+if (!function_exists('bornado_is_free_price_type')) {
+    /**
+     * Detect all supported variants of the "free" price type.
+     *
+     * Some legacy data stores the raw key (`free`), while other records may keep
+     * a translated label such as `رایگان`.
+     *
+     * @param string $price_type Raw stored price type.
+     * @return bool
+     */
+    function bornado_is_free_price_type($price_type)
+    {
+        $price_type = trim((string) $price_type);
+        if ('' === $price_type) {
+            return false;
+        }
+
+        $lower = function_exists('mb_strtolower')
+            ? mb_strtolower($price_type, 'UTF-8')
+            : strtolower($price_type);
+
+        if ('free' === $lower) {
+            return true;
+        }
+
+        if (false !== mb_strpos($price_type, 'رایگان')) {
+            return true;
+        }
+
+        $labels = array_filter(
+            array(
+                __('Free', 'adforest'),
+                __('Free', 'adforest-elementor'),
+                function_exists('bornado_normalize_price_type_label') ? bornado_normalize_price_type_label('free') : '',
+            ),
+            'is_string'
+        );
+
+        return in_array($price_type, array_map('trim', $labels), true);
+    }
+}
+
 if (!function_exists('bornado_ad_has_numeric_price_value')) {
     /**
      * Determine whether an ad has a displayable numeric price value.
@@ -111,6 +153,27 @@ if (!function_exists('bornado_ad_has_numeric_price_value')) {
         $price = get_post_meta($post_id, '_adforest_ad_price', true);
 
         return ('' !== (string) $price);
+    }
+}
+
+if (!function_exists('bornado_should_render_free_price_type_only')) {
+    /**
+     * Free ads should show only the price type label, not a numeric zero amount.
+     *
+     * This is intentionally narrower than "price equals 0" because some ads use
+     * zero alongside other price types such as Negotiable.
+     *
+     * @param int $post_id Ad post ID.
+     * @return bool
+     */
+    function bornado_should_render_free_price_type_only($post_id)
+    {
+        $post_id = absint($post_id);
+        if ($post_id <= 0) {
+            return false;
+        }
+
+        return bornado_is_free_price_type((string) get_post_meta($post_id, '_adforest_ad_price_type', true));
     }
 }
 
@@ -249,6 +312,10 @@ if (!function_exists('adforest_adPrice')) {
             }
 
             return $price_range;
+        }
+
+        if (bornado_should_render_free_price_type_only($id)) {
+            return bornado_normalize_price_type_label('free');
         }
 
         if (get_post_meta($id, '_adforest_ad_price', true) === '' && get_post_meta($id, '_adforest_ad_price_type', true) === 'on_call') {
@@ -457,7 +524,9 @@ if (!function_exists('get_ad_post_details')) {
         $decimals           = isset($adforest_theme['sb_price_decimals']) ? (int) $adforest_theme['sb_price_decimals'] : 0;
         $decimals_separator = isset($adforest_theme['sb_price_decimals_separator']) ? $adforest_theme['sb_price_decimals_separator'] : '.';
 
-        if (isset($ad_price) && $ad_price != '') {
+        if (bornado_should_render_free_price_type_only($post_id)) {
+            $price_html = '<strong>' . esc_html(bornado_normalize_price_type_label((string) $ad_price_type)) . '</strong>';
+        } elseif (isset($ad_price) && $ad_price != '') {
             $formatted_price = is_numeric($ad_price) ? number_format($ad_price, $decimals, $decimals_separator, $thousands_sep) : $ad_price;
             $price_with_currency = '';
 

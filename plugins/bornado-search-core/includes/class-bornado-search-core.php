@@ -139,7 +139,9 @@ final class Bornado_Search_Core {
 		$route_country = ! empty( $route_context['country_term'] ) && $route_context['country_term'] instanceof WP_Term ? (string) $route_context['country_term']->term_id : '';
 		$route_city    = ! empty( $route_context['city_term'] ) && $route_context['city_term'] instanceof WP_Term ? (string) $route_context['city_term']->term_id : '';
 		$route_cat     = ! empty( $route_context['deepest_term'] ) && $route_context['deepest_term'] instanceof WP_Term ? (string) $route_context['deepest_term']->term_id : '';
-		$persisted     = $include_persisted ? self::get_persisted_context() : array();
+		$persisted     = ( $include_persisted && ! self::should_ignore_persisted_context_for_request() )
+			? self::get_persisted_context()
+			: array();
 
 		return array(
 			'ad_title' => self::get_query_value( array( 'ad_title', 'title' ) ),
@@ -157,6 +159,14 @@ final class Bornado_Search_Core {
 	 */
 	public static function sync_persisted_context() {
 		if ( is_admin() || wp_doing_ajax() || wp_doing_cron() || wp_is_json_request() ) {
+			return;
+		}
+
+		if ( self::should_ignore_persisted_context_for_request() ) {
+			$current = self::get_persisted_context();
+			if ( ! empty( $current ) ) {
+				self::write_persisted_context( array() );
+			}
 			return;
 		}
 
@@ -533,6 +543,55 @@ final class Bornado_Search_Core {
 		}
 
 		return self::build_clean_query_args( $data, self::get_persistable_context_keys() );
+	}
+
+	/**
+	 * Return whether persisted location context should be ignored for this request.
+	 *
+	 * A visitor who manually navigates back to the naked brand home URL should see
+	 * the global homepage instead of a previously persisted country/city context.
+	 *
+	 * @return bool
+	 */
+	private static function should_ignore_persisted_context_for_request() {
+		$route_context = function_exists( 'bornado_seo_routing_get_context' ) ? bornado_seo_routing_get_context() : array();
+		if ( ! empty( $route_context['is_valid'] ) ) {
+			return false;
+		}
+
+		if ( '' !== self::get_query_value( self::get_persistable_context_keys() ) ) {
+			return false;
+		}
+
+		if ( ! self::is_plain_brand_home_request() ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Return whether the current request targets the bare site home URL.
+	 *
+	 * @return bool
+	 */
+	private static function is_plain_brand_home_request() {
+		global $wp;
+
+		$request_path = isset( $wp ) && isset( $wp->request ) ? trim( (string) $wp->request, '/' ) : '';
+		if ( '' !== $request_path ) {
+			return false;
+		}
+
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( (string) $_SERVER['REQUEST_URI'] ) : '';
+		if ( '' === $request_uri ) {
+			return true;
+		}
+
+		$request_path = (string) wp_parse_url( $request_uri, PHP_URL_PATH );
+		$home_path    = (string) wp_parse_url( home_url( '/' ), PHP_URL_PATH );
+
+		return untrailingslashit( $request_path ) === untrailingslashit( $home_path );
 	}
 
 	/**

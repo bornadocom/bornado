@@ -194,6 +194,46 @@ if (!function_exists('bornado_print_meta_pixel_dedupe_guard')) {
                         return candidate;
                     }
 
+                    function getQueuedCommand(entry) {
+                        if (!entry || typeof entry.length === "undefined") {
+                            return "";
+                        }
+
+                        return entry.length > 0 ? String(entry[0] || "") : "";
+                    }
+
+                    function getQueuedPixelId(entry) {
+                        if (!entry || typeof entry.length === "undefined") {
+                            return "";
+                        }
+
+                        return entry.length > 1 ? String(entry[1] || "").trim() : "";
+                    }
+
+                    function dedupeQueue(queue) {
+                        if (!queue || typeof queue.length === "undefined") {
+                            return queue;
+                        }
+
+                        var seenInitIds = Object.create(null);
+                        return Array.prototype.filter.call(queue, function (entry) {
+                            var command = getQueuedCommand(entry);
+                            var pixelId = getQueuedPixelId(entry);
+
+                            if (command !== "init" || pixelId === "") {
+                                return true;
+                            }
+
+                            if (initializedPixelIds[pixelId] || seenInitIds[pixelId]) {
+                                return false;
+                            }
+
+                            seenInitIds[pixelId] = true;
+                            initializedPixelIds[pixelId] = true;
+                            return true;
+                        });
+                    }
+
                     function guardedFbq() {
                         var command = arguments.length > 0 ? String(arguments[0] || "") : "";
                         var pixelId = arguments.length > 1 ? String(arguments[1] || "").trim() : "";
@@ -213,7 +253,7 @@ if (!function_exists('bornado_print_meta_pixel_dedupe_guard')) {
                     guardedFbq.__bornadoPixelGuardWrapped = true;
 
                     if (candidate.queue) {
-                        guardedFbq.queue = candidate.queue;
+                        guardedFbq.queue = dedupeQueue(candidate.queue);
                     }
 
                     if (typeof candidate.push === "function") {
