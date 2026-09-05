@@ -4983,6 +4983,7 @@ jQuery(document).ready(function ($) {
 
     jQuery(document).ready(function ($) {
         let loading = false;
+        let loadMoreDone = false;
         let loadingMode = $('#load-more-ads-btn').data('loading-mode');
         let searchQuery = $('#load-more-ads-btn').data('search-query');
         let adCount = $('#load-more-ads-btn').data('ad-count');
@@ -4990,6 +4991,7 @@ jQuery(document).ready(function ($) {
         let searchPageType = $('#load-more-ads-btn').data('search-page');
         let viewType = $('#load-more-ads-btn').data('view-type');
         let paged = 2;
+        const mcewOwnsPageScroll = document.body.classList.contains('mcew-loading-mode-page-scroll');
 
         // Function to reinitialize JavaScript components for newly loaded content
         function reinitializeComponents() {
@@ -5310,7 +5312,13 @@ jQuery(document).ready(function ($) {
         }
 
         function loadMoreAds() {
-            if (loading) return;
+            // MCEW page-scroll owns auto-loading; avoid dual requests and stuck locks.
+            if (mcewOwnsPageScroll) {
+                return;
+            }
+            if (loading || loadMoreDone) {
+                return;
+            }
             loading = true;
             $("#sb_loading").show();
 
@@ -5330,8 +5338,9 @@ jQuery(document).ready(function ($) {
                     }
                 },
                 success: function (response) {
-                    $("#sb_loading").hide();
-                    if (response.trim() == '0') {
+                    var normalized = (response == null ? '' : String(response)).trim();
+                    if (normalized === '0' || normalized === '-1') {
+                        loadMoreDone = true;
                         $('#no_more_ads_p').html(
                             '<div role="alert" class="alert alert-info alert-dismissible">' +
                             '<i class="fa fa-info-circle"></i>' +
@@ -5342,55 +5351,67 @@ jQuery(document).ready(function ($) {
                         if (loadingMode === 'show_more') {
                             $('#load-more-ads-btn').text(sb_options.no_more_ads).prop('disabled', true).hide();
                         }
-                    } else {
-                        if (searchPageType === 'map') {
-                            $('.search-ads-result-box').append(response);
-                        }
-                        if (viewType === 'list') {
-                            $('.adt-search-ads-list').append(response);
-                        } else {
-                            $('.adt-search-ads-grid').append(response);
-                        }
-
-                        // Reinitialize JavaScript components for newly loaded content
-                        reinitializeComponents();
-
-                        if (loadingMode === 'show_more') {
-                            $('#load-more-ads-btn').text(sb_options.show_more_btn_text).show();
-                        }
-                        paged++;
-                        loading = false;
+                        return;
                     }
+
+                    if (searchPageType === 'map') {
+                        $('.search-ads-result-box').append(response);
+                    }
+                    if (viewType === 'list') {
+                        $('.adt-search-ads-list').append(response);
+                    } else {
+                        $('.adt-search-ads-grid').append(response);
+                    }
+
+                    // Reinitialize JavaScript components for newly loaded content
+                    reinitializeComponents();
+
+                    if (loadingMode === 'show_more') {
+                        $('#load-more-ads-btn').text(sb_options.show_more_btn_text).show();
+                    }
+                    paged++;
+                },
+                error: function () {
+                    if (loadingMode === 'show_more') {
+                        $('#load-more-ads-btn').text(sb_options.show_more_btn_text).prop('disabled', false).show();
+                    }
+                },
+                complete: function () {
+                    loading = false;
+                    $("#sb_loading").hide();
                 }
             });
         }
 
-        if (loadingMode === 'show_more') {
-            if (adCount < postsPerPage) {
+        // When MCEW owns page scroll, do not bind theme click/scroll loaders.
+        if (!mcewOwnsPageScroll) {
+            if (loadingMode === 'show_more') {
+                if (adCount < postsPerPage) {
+                    $('#load-more-ads-btn').hide();
+                } else {
+                    $('#load-more-ads-btn').show();
+                }
+                $('#load-more-ads-btn').on('click', function () {
+                    loadMoreAds();
+                });
+            } else if (loadingMode === 'infinity_scroll') {
                 $('#load-more-ads-btn').hide();
-            } else {
-                $('#load-more-ads-btn').show();
+                $('.adt-search-ads-grid').on('scroll', function () {
+                    if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight - 100) {
+                        loadMoreAds();
+                    }
+                });
+                $('.adt-search-ads-list').on('scroll', function () {
+                    if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight - 100) {
+                        loadMoreAds();
+                    }
+                });
+                $('.search-content-side').on('scroll', function () {
+                    if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight - 100) {
+                        loadMoreAds();
+                    }
+                });
             }
-            $('#load-more-ads-btn').on('click', function () {
-                loadMoreAds();
-            });
-        } else if (loadingMode === 'infinity_scroll') {
-            $('#load-more-ads-btn').hide();
-            $('.adt-search-ads-grid').on('scroll', function () {
-                if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight - 100) {
-                    loadMoreAds();
-                }
-            });
-            $('.adt-search-ads-list').on('scroll', function () {
-                if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight - 100) {
-                    loadMoreAds();
-                }
-            });
-            $('.search-content-side').on('scroll', function () {
-                if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight - 100) {
-                    loadMoreAds();
-                }
-            });
         }
     });
 

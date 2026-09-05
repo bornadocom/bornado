@@ -102,7 +102,7 @@ if ( ! function_exists( 'bornado_enqueue_windowed_infinite_scroll_assets' ) ) {
 				'windowing'           => array(
 					'keepBeforeCards' => 24,
 					'keepAfterCards'  => 24,
-					'preloadThresholdPx' => 900,
+					'preloadThresholdPx' => 2500,
 				),
 				'strings'             => array(
 					'loading' => __( 'Loading more results...', 'adforest' ),

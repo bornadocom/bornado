@@ -13,12 +13,66 @@ if ( ! defined( 'ABSPATH' ) ) {
 const MCEW_PAGE_SCROLL_MODE_FLAG_OPTION = 'mcew_adforest_loading_page_scroll_enabled';
 
 /**
- * Allow child/theme integrations to replace the legacy page-scroll runtime.
+ * Allow integrations to intentionally disable the page-scroll runtime.
+ *
+ * Intentionally NOT tied to Bornado DOM windowing. An earlier mismatched filter
+ * name (`bornado_windowed_infinite_scroll_enabled`) never fired; wiring it to
+ * Bornado's real `*_is_enabled` filter would disable page loading while
+ * windowing stayed on, breaking infinite scroll.
  *
  * @return bool
  */
 function mcew_should_skip_page_scroll_runtime() {
-	return (bool) apply_filters( 'bornado_windowed_infinite_scroll_enabled', false );
+	return (bool) apply_filters( 'mcew_disable_page_scroll_runtime', false );
+}
+
+/**
+ * Whether the current request is an Ad Search / listing surface.
+ *
+ * Prefer Bornado's detector; fall back to search layout markers so Elementor
+ * homepage widgets with a colliding load-more button ID are skipped.
+ *
+ * @return bool
+ */
+function mcew_is_ad_search_listing_view() {
+	if ( function_exists( 'bornado_is_ad_search_view' ) ) {
+		return (bool) bornado_is_ad_search_view();
+	}
+
+	if ( is_page_template( 'page-search.php' ) ) {
+		return true;
+	}
+
+	return (bool) apply_filters( 'mcew_is_ad_search_listing_view', false );
+}
+
+/**
+ * Preload distance in pixels before the results bottom.
+ *
+ * @return int
+ */
+function mcew_get_page_scroll_preload_threshold_px() {
+	$threshold = (int) apply_filters( 'mcew_page_scroll_preload_threshold_px', 2500 );
+	return max( 600, $threshold );
+}
+
+/**
+ * Whether the dedicated page-scroll mode flag is active.
+ *
+ * @return bool
+ */
+function mcew_is_page_scroll_mode_flag_enabled() {
+	$custom_flag = (string) get_option( MCEW_PAGE_SCROLL_MODE_FLAG_OPTION, '0' );
+	if ( '1' === $custom_flag ) {
+		return true;
+	}
+
+	$theme_opts = get_option( 'adforest_theme', array() );
+	if ( is_array( $theme_opts ) && isset( $theme_opts['mcew_loading_mode_page_scroll_active'] ) && '1' === (string) $theme_opts['mcew_loading_mode_page_scroll_active'] ) {
+		return true;
+	}
+
+	return false;
 }
 
 /**
@@ -186,6 +240,12 @@ function mcew_bridge_loading_mode_option_for_frontend( $option_value ) {
 		return $option_value;
 	}
 
+	// Keep the option bridge scoped to listing views so Elementor homepage
+	// widgets are not forced into show_more / page-scroll behavior.
+	if ( ! is_admin() && ! wp_doing_ajax() && ! mcew_is_ad_search_listing_view() ) {
+		return $option_value;
+	}
+
 	$array_flag  = isset( $option_value['mcew_loading_mode_page_scroll_active'] ) ? (string) $option_value['mcew_loading_mode_page_scroll_active'] : '0';
 	$custom_flag = (string) get_option( MCEW_PAGE_SCROLL_MODE_FLAG_OPTION, '0' );
 
@@ -219,10 +279,11 @@ function mcew_add_page_scroll_loading_body_class( $classes ) {
 		return $classes;
 	}
 
-	$custom_flag = (string) get_option( MCEW_PAGE_SCROLL_MODE_FLAG_OPTION, '0' );
-	$theme_opts  = get_option( 'adforest_theme', array() );
-	$array_flag  = ( is_array( $theme_opts ) && isset( $theme_opts['mcew_loading_mode_page_scroll_active'] ) ) ? (string) $theme_opts['mcew_loading_mode_page_scroll_active'] : '0';
-	if ( '1' !== $custom_flag && '1' !== $array_flag ) {
+	if ( ! mcew_is_page_scroll_mode_flag_enabled() ) {
+		return $classes;
+	}
+
+	if ( ! mcew_is_ad_search_listing_view() ) {
 		return $classes;
 	}
 
@@ -376,12 +437,15 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 		return;
 	}
 
-	$custom_flag = (string) get_option( MCEW_PAGE_SCROLL_MODE_FLAG_OPTION, '0' );
-	$theme_opts  = get_option( 'adforest_theme', array() );
-	$array_flag  = ( is_array( $theme_opts ) && isset( $theme_opts['mcew_loading_mode_page_scroll_active'] ) ) ? (string) $theme_opts['mcew_loading_mode_page_scroll_active'] : '0';
-	if ( '1' !== $custom_flag && '1' !== $array_flag ) {
+	if ( ! mcew_is_page_scroll_mode_flag_enabled() ) {
 		return;
 	}
+
+	if ( ! mcew_is_ad_search_listing_view() ) {
+		return;
+	}
+
+	$preload_threshold_px = mcew_get_page_scroll_preload_threshold_px();
 	?>
 	<style>
 		body.mcew-loading-mode-page-scroll .load-more-btn-box {
@@ -416,9 +480,22 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 	<script>
 	(function () {
 		var ajaxUrl = <?php echo wp_json_encode( admin_url( 'admin-ajax.php' ) ); ?>;
+		var configuredThresholdPx = <?php echo (int) $preload_threshold_px; ?>;
+		var cardSelectors = [
+			'.adf-card-item',
+			'.adt-category-ad-list',
+			'.adt-car-dealer-card'
+		];
 		var triggerLock = false;
+		var requestInFlight = false;
 		var lastKnownItemsCount = 0;
+		var itemsAtRequestStart = 0;
 		var lastTriggerAt = 0;
+		var requestGeneration = 0;
+		var abortController = null;
+		var debounceTimer = null;
+		var ticking = false;
+		var authFailed = false;
 
 		function hideLoadingUi() {
 			var ids = ['sb_loading', 'no_more_ads_p'];
@@ -433,12 +510,42 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 		}
 
 		function getLoadButton() {
-			return document.getElementById('load-more-ads-btn');
+			var results = document.getElementById('adforest-ajax-results');
+			if (results) {
+				var scoped = results.querySelector('#load-more-ads-btn');
+				if (scoped) {
+					return scoped;
+				}
+			}
+			var mapBox = document.querySelector('.search-ads-result-box, .adt-map-search-section');
+			if (mapBox) {
+				var mapBtn = mapBox.querySelector('#load-more-ads-btn') || document.getElementById('load-more-ads-btn');
+				if (mapBtn && mapBtn.closest('.adt-map-search-section, .search-ads-result-box, .adt-ads-with-filters, .adt-ads-topbar-section')) {
+					return mapBtn;
+				}
+			}
+			var btn = document.getElementById('load-more-ads-btn');
+			if (!btn) {
+				return null;
+			}
+			if (btn.closest('.elementor-widget, .elementor-section') && !btn.closest('#adforest-ajax-results, .adt-ads-with-filters, .adt-ads-topbar-section, .adt-map-search-section')) {
+				return null;
+			}
+			return btn;
 		}
 
 		function getNonceValue() {
 			var nonceField = document.getElementById('sb_load_more_ads_nonce');
 			return nonceField ? (nonceField.value || '') : '';
+		}
+
+		function parseIntAttr(el, name, fallback) {
+			if (!el) {
+				return fallback;
+			}
+			var raw = el.getAttribute(name);
+			var n = parseInt(raw, 10);
+			return isNaN(n) ? fallback : n;
 		}
 
 		function getButtonConfig(button) {
@@ -462,6 +569,8 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 				searchPageType: (button.getAttribute('data-search-page') || '').trim(),
 				viewType: (button.getAttribute('data-view-type') || '').trim(),
 				paged: parseInt(button.dataset.mcewCurrentPage || '2', 10) || 2,
+				adCount: parseIntAttr(button, 'data-ad-count', 0),
+				postsPerPage: parseIntAttr(button, 'data-posts-per-page', 0),
 				nonce: getNonceValue(),
 				searchAjaxNonce: window.adforestAjaxSearch && window.adforestAjaxSearch.nonce ? window.adforestAjaxSearch.nonce : '',
 				searchAjaxUrl: window.adforestAjaxSearch && window.adforestAjaxSearch.ajaxUrl ? window.adforestAjaxSearch.ajaxUrl : ajaxUrl
@@ -478,6 +587,37 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 			return document.querySelector('.adt-search-ads-grid') || document.querySelector('.search-ads-result-box') || document.querySelector('.adt-search-ads-list');
 		}
 
+		function getResultsAnchor() {
+			return document.getElementById('adforest-ajax-results')
+				|| document.querySelector('.adt-search-ads-grid')
+				|| document.querySelector('.adt-search-ads-list')
+				|| document.querySelector('.search-ads-result-box');
+		}
+
+		function getPreloadThresholdPx() {
+			return Math.max(configuredThresholdPx, Math.round(window.innerHeight * 2.5));
+		}
+
+		function isNearResultsBottom() {
+			var anchor = getResultsAnchor();
+			var scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+			var viewportBottom = scrollTop + window.innerHeight;
+			var threshold = getPreloadThresholdPx();
+			var bottomEdge;
+
+			if (anchor && typeof anchor.getBoundingClientRect === 'function') {
+				var rect = anchor.getBoundingClientRect();
+				bottomEdge = scrollTop + rect.bottom;
+			} else {
+				bottomEdge = Math.max(
+					document.body.scrollHeight,
+					document.documentElement.scrollHeight
+				);
+			}
+
+			return viewportBottom >= (bottomEdge - threshold);
+		}
+
 		function setButtonIdle(button) {
 			if (!button) return;
 			button.disabled = false;
@@ -490,10 +630,28 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 			button.textContent = 'Loading...';
 		}
 
+		function clearNoMoreAds() {
+			var el = document.getElementById('no_more_ads_p');
+			if (!el) return;
+			el.innerHTML = '';
+			el.style.visibility = 'hidden';
+			el.style.opacity = '0';
+			el.style.pointerEvents = 'none';
+		}
+
 		function showNoMoreAds() {
 			var el = document.getElementById('no_more_ads_p');
 			if (!el) return;
 			el.innerHTML = '<div role="alert" class="alert alert-info alert-dismissible"><i class="fa fa-info-circle"></i> ' + 'آگهی بیشتری وجود ندارد.' + '</div>';
+			el.style.visibility = 'visible';
+			el.style.opacity = '1';
+			el.style.pointerEvents = 'auto';
+		}
+
+		function showAuthFailureNotice() {
+			var el = document.getElementById('no_more_ads_p');
+			if (!el) return;
+			el.innerHTML = '<div role="alert" class="alert alert-warning alert-dismissible"><i class="fa fa-exclamation-triangle"></i> جلسه منقضی شده است. صفحه را رفرش کنید.</div>';
 			el.style.visibility = 'visible';
 			el.style.opacity = '1';
 			el.style.pointerEvents = 'auto';
@@ -556,7 +714,41 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 			return params.toString();
 		}
 
-		function extractResponseItems(html, config) {
+		function isCardNode(node) {
+			if (!node || node.nodeType !== 1) {
+				return false;
+			}
+			if (node.id === 'load-more-ads-btn' || node.id === 'no_more_ads_p') {
+				return false;
+			}
+			if (node.classList && (node.classList.contains('load-more-btn-box') || node.classList.contains('bornado-wis-spacer'))) {
+				return false;
+			}
+			for (var i = 0; i < cardSelectors.length; i++) {
+				if (node.matches && node.matches(cardSelectors[i])) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		function collectCardNodes(root) {
+			var cards = [];
+			if (!root) {
+				return cards;
+			}
+			if (isCardNode(root)) {
+				cards.push(root);
+				return cards;
+			}
+			var nodes = root.querySelectorAll(cardSelectors.join(','));
+			for (var i = 0; i < nodes.length; i++) {
+				cards.push(nodes[i]);
+			}
+			return cards;
+		}
+
+		function extractCardNodesFromHtml(html, config) {
 			var temp = document.createElement('div');
 			temp.innerHTML = html || '';
 			var selector = '.adt-search-ads-grid';
@@ -565,30 +757,29 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 			} else if (config && config.searchPageType === 'map') {
 				selector = '.search-ads-result-box';
 			}
-
-			var source = temp.querySelector(selector);
-			if (!source) {
-				return temp;
-			}
-			return source;
+			var source = temp.querySelector(selector) || temp;
+			return collectCardNodes(source);
 		}
 
-		function appendResponseItems(appendTarget, source) {
-			if (!appendTarget || !source) return 0;
+		function appendCardNodes(appendTarget, cards) {
+			if (!appendTarget || !cards || !cards.length) {
+				return 0;
+			}
 			var added = 0;
-			while (source.firstChild) {
-				appendTarget.appendChild(source.firstChild);
+			for (var i = 0; i < cards.length; i++) {
+				appendTarget.appendChild(cards[i]);
 				added++;
 			}
 			return added;
 		}
 
-		function responseHasEmptyState(source) {
-			if (!source || !source.querySelector) return false;
-			if (source.classList && (source.classList.contains('no_ads_found') || source.classList.contains('adforest-ajax-empty'))) {
+		function responseHasEmptyState(html) {
+			var temp = document.createElement('div');
+			temp.innerHTML = html || '';
+			if (temp.querySelector('.no_ads_found, .adforest-ajax-empty')) {
 				return true;
 			}
-			return !!source.querySelector('.no_ads_found, .adforest-ajax-empty');
+			return false;
 		}
 
 		function disableLoadButton(button) {
@@ -708,6 +899,9 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 			if (window.jQuery.fn.tooltip) {
 				$root.find('[data-toggle="tooltip"]').tooltip();
 			}
+			if (typeof window.adfInitTooltips === 'function') {
+				window.adfInitTooltips();
+			}
 		}
 
 		function getRenderedItemsCount() {
@@ -718,7 +912,8 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 				'.adt-search-ads-grid .adt-category-ad-list, ' +
 				'.adt-search-ads-grid .adt-car-dealer-card, ' +
 				'.search-ads-result-box .adt-category-ad-list, ' +
-				'.search-ads-result-box .adt-car-dealer-card'
+				'.search-ads-result-box .adt-car-dealer-card, ' +
+				'.search-ads-result-box > .adf-card-item'
 			).length;
 		}
 
@@ -729,34 +924,80 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 			return text !== '';
 		}
 
+		function abortInFlightRequest() {
+			if (abortController) {
+				try {
+					abortController.abort();
+				} catch (e) {}
+				abortController = null;
+			}
+			requestInFlight = false;
+		}
+
 		function markTriggered(button) {
 			if (!button) return;
 			triggerLock = true;
+			requestInFlight = true;
 			lastTriggerAt = Date.now();
-			lastKnownItemsCount = getRenderedItemsCount();
+			itemsAtRequestStart = getRenderedItemsCount();
+			lastKnownItemsCount = itemsAtRequestStart;
 			button.dataset.mcewPageScrollLoading = '1';
 			setButtonLoading(button);
 		}
 
 		function releaseTrigger(button) {
 			triggerLock = false;
+			requestInFlight = false;
 			if (button && button.dataset) {
 				delete button.dataset.mcewPageScrollLoading;
 			}
 			setButtonIdle(button);
 		}
 
+		function isShortFirstPage(button) {
+			var config = getButtonConfig(button);
+			if (!config) {
+				return true;
+			}
+			if (config.postsPerPage > 0 && config.adCount > 0 && config.adCount < config.postsPerPage) {
+				return true;
+			}
+			return false;
+		}
+
 		function canTrigger(button) {
+			if (authFailed) return false;
 			if (!button) return false;
 			if (button.disabled) return false;
-			if (triggerLock) return false;
+			if (triggerLock || requestInFlight) return false;
 			if (button.dataset && button.dataset.mcewPageScrollLoading === '1') return false;
 			if (hasNoMoreAdsMessage()) return false;
+			if (isShortFirstPage(button)) return false;
 
 			var text = (button.textContent || '').toLowerCase();
 			if (text.indexOf('loading') !== -1) return false;
 			if (text.indexOf('no more') !== -1) return false;
 			return true;
+		}
+
+		function resetAfterFilterRender() {
+			abortInFlightRequest();
+			requestGeneration += 1;
+			authFailed = false;
+			var button = getLoadButton();
+			if (button) {
+				button.dataset.mcewCurrentPage = '2';
+				delete button.dataset.mcewPageScrollLoading;
+				setButtonIdle(button);
+				button.style.display = '';
+			}
+			clearNoMoreAds();
+			triggerLock = false;
+			requestInFlight = false;
+			lastKnownItemsCount = getRenderedItemsCount();
+			itemsAtRequestStart = lastKnownItemsCount;
+			hideLoadingUi();
+			window.setTimeout(maybeLoadNextPage, 120);
 		}
 
 		function loadNextPage(button) {
@@ -771,6 +1012,7 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 			var useSearchAjax = !!(config.searchAjaxNonce && config.searchAjaxUrl && filtersRaw);
 			var requestUrl = useSearchAjax ? config.searchAjaxUrl : ajaxUrl;
 			var params = new URLSearchParams();
+			var generation = requestGeneration;
 
 			if (useSearchAjax) {
 				params.append('action', 'adforest_ajax_search');
@@ -788,17 +1030,36 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 				params.append('security', config.nonce);
 			}
 
-			fetch(requestUrl, {
+			abortInFlightRequest();
+			abortController = typeof AbortController !== 'undefined' ? new AbortController() : null;
+			requestInFlight = true;
+
+			var fetchOpts = {
 				method: 'POST',
 				credentials: 'same-origin',
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
 				body: params.toString()
-			}).then(function (response) {
+			};
+			if (abortController) {
+				fetchOpts.signal = abortController.signal;
+			}
+
+			fetch(requestUrl, fetchOpts).then(function (response) {
+				if (generation !== requestGeneration) {
+					throw new Error('stale_generation');
+				}
+				if (response.status === 403) {
+					throw new Error('auth_failed');
+				}
 				if (!response.ok) {
 					throw new Error('load_more_failed');
 				}
 				return useSearchAjax ? response.json() : response.text();
 			}).then(function (payload) {
+				if (generation !== requestGeneration) {
+					return;
+				}
+
 				var html = '';
 				var maxPages = 0;
 				if (useSearchAjax) {
@@ -812,38 +1073,66 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 				}
 
 				var normalized = (html || '').trim();
-				if (!normalized || normalized === '0') {
+				if (!normalized || normalized === '0' || normalized === '-1') {
+					if (normalized === '-1') {
+						authFailed = true;
+						showAuthFailureNotice();
+						releaseTrigger(button);
+						return;
+					}
 					showNoMoreAds();
 					disableLoadButton(button);
-					triggerLock = false;
+					releaseTrigger(button);
 					return;
 				}
 
 				if (useSearchAjax && maxPages > 0 && config.paged > maxPages) {
 					showNoMoreAds();
 					disableLoadButton(button);
-					triggerLock = false;
+					releaseTrigger(button);
 					return;
 				}
 
-				var source = useSearchAjax ? extractResponseItems(html, config) : (function () {
-					var temp = document.createElement('div');
-					temp.innerHTML = html;
-					return temp;
-				})();
-
-				if (responseHasEmptyState(source)) {
+				if (responseHasEmptyState(html)) {
 					showNoMoreAds();
 					disableLoadButton(button);
-					triggerLock = false;
+					releaseTrigger(button);
 					return;
 				}
-				var addedItems = appendResponseItems(appendTarget, source);
 
+				var cards;
+				if (useSearchAjax) {
+					cards = extractCardNodesFromHtml(html, config);
+				} else {
+					var temp = document.createElement('div');
+					temp.innerHTML = html;
+					cards = collectCardNodes(temp);
+					if (!cards.length) {
+						// Classic load_more_ads returns bare card markup fragments.
+						var fragCards = [];
+						while (temp.firstChild) {
+							var child = temp.firstChild;
+							temp.removeChild(child);
+							if (child.nodeType === 1) {
+								fragCards.push(child);
+							}
+						}
+						cards = fragCards;
+					}
+				}
+
+				if (!cards.length) {
+					showNoMoreAds();
+					disableLoadButton(button);
+					releaseTrigger(button);
+					return;
+				}
+
+				var addedItems = appendCardNodes(appendTarget, cards);
 				if (!addedItems) {
 					showNoMoreAds();
 					disableLoadButton(button);
-					triggerLock = false;
+					releaseTrigger(button);
 					return;
 				}
 
@@ -853,19 +1142,40 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 				releaseTrigger(button);
 				hideLoadingUi();
 
+				if (window.jQuery) {
+					window.jQuery(document).trigger('ajax_content_loaded');
+				}
+
 				if (useSearchAjax && maxPages > 0 && config.paged >= maxPages) {
 					showNoMoreAds();
 					disableLoadButton(button);
 				} else {
-					setTimeout(maybeLoadNextPage, 80);
+					window.setTimeout(maybeLoadNextPage, 80);
 				}
-			}).catch(function () {
+			}).catch(function (err) {
+				if (generation !== requestGeneration) {
+					return;
+				}
+				if (err && err.name === 'AbortError') {
+					return;
+				}
+				if (err && err.message === 'stale_generation') {
+					return;
+				}
+				if (err && err.message === 'auth_failed') {
+					authFailed = true;
+					showAuthFailureNotice();
+				}
 				releaseTrigger(button);
 				hideLoadingUi();
+			}).then(function () {
+				if (generation === requestGeneration) {
+					requestInFlight = false;
+					abortController = null;
+				}
 			});
 		}
 
-		var ticking = false;
 		function maybeLoadNextPage() {
 			if (ticking) return;
 			ticking = true;
@@ -873,44 +1183,105 @@ function mcew_page_scroll_loading_frontend_enhancer() {
 				ticking = false;
 				var button = getLoadButton();
 				if (!canTrigger(button)) return;
-				var scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
-				var viewportBottom = scrollTop + window.innerHeight;
-				var docHeight = Math.max(
-					document.body.scrollHeight,
-					document.documentElement.scrollHeight
-				);
-				if (viewportBottom >= docHeight - 900) {
-					markTriggered(button);
-					loadNextPage(button);
-				}
+				if (!isNearResultsBottom()) return;
+				markTriggered(button);
+				loadNextPage(button);
 			});
 		}
 
-		window.addEventListener('scroll', maybeLoadNextPage, { passive: true });
-		window.addEventListener('resize', maybeLoadNextPage);
+		function scheduleMaybeLoadNextPage() {
+			if (debounceTimer) {
+				window.clearTimeout(debounceTimer);
+			}
+			debounceTimer = window.setTimeout(function () {
+				debounceTimer = null;
+				maybeLoadNextPage();
+			}, 100);
+		}
+
+		function mutationLooksLikeWindowing(mutations) {
+			if (!mutations || !mutations.length) {
+				return false;
+			}
+			for (var i = 0; i < mutations.length; i++) {
+				var m = mutations[i];
+				var nodes = [];
+				if (m.addedNodes && m.addedNodes.length) {
+					for (var a = 0; a < m.addedNodes.length; a++) nodes.push(m.addedNodes[a]);
+				}
+				if (m.removedNodes && m.removedNodes.length) {
+					for (var r = 0; r < m.removedNodes.length; r++) nodes.push(m.removedNodes[r]);
+				}
+				for (var n = 0; n < nodes.length; n++) {
+					var node = nodes[n];
+					if (!node || node.nodeType !== 1) continue;
+					if (
+						(node.classList && node.classList.contains('bornado-wis-spacer')) ||
+						(node.getAttribute && node.getAttribute('data-bornado-wis-spacer') === '1') ||
+						(node.getAttribute && node.getAttribute('data-bornado-wis-id'))
+					) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		window.addEventListener('scroll', scheduleMaybeLoadNextPage, { passive: true });
+		window.addEventListener('resize', scheduleMaybeLoadNextPage);
+		window.addEventListener('pageshow', function (event) {
+			if (event && event.persisted) {
+				abortInFlightRequest();
+				triggerLock = false;
+				requestInFlight = false;
+				authFailed = false;
+				var button = getLoadButton();
+				if (button && button.dataset) {
+					delete button.dataset.mcewPageScrollLoading;
+					setButtonIdle(button);
+				}
+				lastKnownItemsCount = getRenderedItemsCount();
+				hideLoadingUi();
+				scheduleMaybeLoadNextPage();
+			}
+		});
+
+		if (window.jQuery) {
+			window.jQuery(document).on('adforest:search:rendered', function () {
+				resetAfterFilterRender();
+			});
+		} else {
+			document.addEventListener('adforest:search:rendered', resetAfterFilterRender);
+		}
+
 		if (document.readyState !== 'loading') {
 			bindMobileFilterCompatibility();
 		}
 		document.addEventListener('DOMContentLoaded', function () {
 			hideLoadingUi();
 			bindMobileFilterCompatibility();
-			maybeLoadNextPage();
+			scheduleMaybeLoadNextPage();
 		});
-		setTimeout(maybeLoadNextPage, 400);
-		setTimeout(hideLoadingUi, 100);
-		setTimeout(hideLoadingUi, 600);
+		window.setTimeout(scheduleMaybeLoadNextPage, 400);
+		window.setTimeout(hideLoadingUi, 100);
+		window.setTimeout(hideLoadingUi, 600);
 
-		var observer = new MutationObserver(function () {
+		var observer = new MutationObserver(function (mutations) {
+			var windowingOnly = mutationLooksLikeWindowing(mutations);
 			var button = getLoadButton();
 			var currentItemsCount = getRenderedItemsCount();
-			if (triggerLock && currentItemsCount > lastKnownItemsCount) {
-				releaseTrigger(button);
+
+			if (requestInFlight && currentItemsCount > itemsAtRequestStart) {
+				// Content arrived; lock will clear in the fetch path. Avoid false unlocks from remounts.
 				lastKnownItemsCount = currentItemsCount;
-			} else if (triggerLock && Date.now() - lastTriggerAt > 4000) {
+			} else if (triggerLock && requestInFlight && Date.now() - lastTriggerAt > 4000) {
 				releaseTrigger(button);
 			}
+
 			hideLoadingUi();
-			maybeLoadNextPage();
+			if (!windowingOnly) {
+				scheduleMaybeLoadNextPage();
+			}
 		});
 		observer.observe(document.body, { childList: true, subtree: true });
 	})();

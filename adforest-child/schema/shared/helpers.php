@@ -98,6 +98,13 @@ if (!function_exists('bornado_schema_manager_get_collection_headline')) {
      */
     function bornado_schema_manager_get_collection_headline()
     {
+        if (function_exists('bornado_listing_seo_get_copy')) {
+            $copy = bornado_listing_seo_get_copy();
+            if (!empty($copy['h1']) && is_string($copy['h1'])) {
+                return $copy['h1'];
+            }
+        }
+
         if (function_exists('bornado_get_ad_search_seo_heading_title')) {
             $headline = (string) bornado_get_ad_search_seo_heading_title();
             if ($headline !== '') {

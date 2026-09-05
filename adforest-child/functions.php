@@ -252,11 +252,32 @@ if (file_exists($bornado_breadcrumb_bootstrap)) {
 }
 
 /**
+ * Route-aware H1/title/meta for Ad Search listing pages.
+ */
+$bornado_listing_seo_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-listing-seo.php';
+if (file_exists($bornado_listing_seo_bootstrap)) {
+    require_once $bornado_listing_seo_bootstrap;
+}
+
+/**
  * Load the schema module tree so page-specific schema logic stays organized.
  */
 $bornado_schema_bootstrap = trailingslashit(get_stylesheet_directory()) . 'schema/bootstrap.php';
 if (file_exists($bornado_schema_bootstrap)) {
     require_once $bornado_schema_bootstrap;
+}
+
+/**
+ * Load Iranians geo-guide CPT, then the existing guide template helpers.
+ */
+$bornado_geo_guide_cpt_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-geo-guide-cpt.php';
+if (file_exists($bornado_geo_guide_cpt_bootstrap)) {
+    require_once $bornado_geo_guide_cpt_bootstrap;
+}
+
+$bornado_geo_guide_template_bootstrap = trailingslashit(get_stylesheet_directory()) . 'bornado-geo-guide-template.php';
+if (file_exists($bornado_geo_guide_template_bootstrap)) {
+    require_once $bornado_geo_guide_template_bootstrap;
 }
 
 /**
@@ -546,6 +567,39 @@ $bornado_windowed_infinite_scroll_bootstrap = trailingslashit(get_stylesheet_dir
 if (file_exists($bornado_windowed_infinite_scroll_bootstrap)) {
     require_once $bornado_windowed_infinite_scroll_bootstrap;
 }
+
+/**
+ * Serve the child-theme adforest-custom.js so load-more lock fixes actually run.
+ * Parent still registers/localizes the handle; we only swap the script src.
+ */
+if (!function_exists('bornado_use_child_adforest_custom_script')) {
+    /**
+     * Point the live adforest-custom handle at the child copy.
+     *
+     * @return void
+     */
+    function bornado_use_child_adforest_custom_script()
+    {
+        if (is_admin()) {
+            return;
+        }
+
+        $relative = '/assets/js/adforest-custom.js';
+        $path     = get_stylesheet_directory() . $relative;
+        if (!file_exists($path)) {
+            return;
+        }
+
+        $scripts = wp_scripts();
+        if (!$scripts instanceof WP_Scripts || !isset($scripts->registered['adforest-custom'])) {
+            return;
+        }
+
+        $scripts->registered['adforest-custom']->src = get_stylesheet_directory_uri() . $relative;
+        $scripts->registered['adforest-custom']->ver = (string) filemtime($path);
+    }
+}
+add_action('wp_enqueue_scripts', 'bornado_use_child_adforest_custom_script', 100);
 
 /**
  * Force legacy edit-ad links onto the modern Add New page.
@@ -1108,17 +1162,122 @@ if (!function_exists('bornado_is_ad_search_view')) {
     }
 }
 
+if (!function_exists('bornado_patch_ad_search_listing_html')) {
+    /**
+     * Cheap listing-page HTML patches without regex over the full document.
+     *
+     * @param string $html Full HTML response.
+     * @return string
+     */
+    function bornado_patch_ad_search_listing_html($html)
+    {
+        if (!is_string($html) || $html === '') {
+            return $html;
+        }
+
+        $heading_pos = strpos($html, 'mobile-filter-heading');
+        if ($heading_pos !== false) {
+            $window_start = max(0, $heading_pos - 96);
+            $window = substr($html, $window_start, 480);
+            $patched_window = preg_replace(
+                '/(<div\b[^>]*class=(["\'])[^"\']*\bmobile-filter-heading\b[^"\']*\2[^>]*>\s*)<h1(\b[^>]*)>(.*?)<\/h1>/is',
+                '$1<h2$3>$4</h2>',
+                $window,
+                1
+            );
+            if (is_string($patched_window) && $patched_window !== $window) {
+                $html = substr_replace($html, $patched_window, $window_start, strlen($window));
+            }
+        }
+
+        if (strpos($html, 'bornado-ad-search-seo-title') === false && strpos($html, 'adt-ads-sort-box') !== false) {
+            $title = function_exists('bornado_get_ad_search_seo_heading_title')
+                ? bornado_get_ad_search_seo_heading_title()
+                : '';
+            if (is_string($title) && $title !== '') {
+                $box_pos = strpos($html, 'adt-ads-sort-box');
+                $box_end = $box_pos !== false ? strpos($html, '>', $box_pos) : false;
+                if ($box_end !== false) {
+                    $html = substr_replace(
+                        $html,
+                        '<h1 class="bornado-ad-search-seo-title">' . esc_html($title) . '</h1>',
+                        $box_end + 1,
+                        0
+                    );
+                }
+            }
+        }
+
+        if (strpos($html, 'bornado-sort-icon') === false) {
+            $form_pos = strpos($html, 'id="sort-form"');
+            if ($form_pos === false) {
+                $form_pos = strpos($html, "id='sort-form'");
+            }
+            $form_end = $form_pos !== false ? strpos($html, '>', $form_pos) : false;
+            if ($form_end !== false) {
+                $html = substr_replace(
+                    $html,
+                    '<span class="bornado-sort-icon" aria-hidden="true"><i class="fas fa-sort-amount-down"></i></span>',
+                    $form_end + 1,
+                    0
+                );
+            }
+        }
+
+        return $html;
+    }
+}
+
+if (!function_exists('bornado_fix_ad_search_mobile_filter_heading_markup')) {
+    /**
+     * Normalize listing markup on Ad Search views in one output-buffer pass.
+     *
+     * @param string $html Full HTML response.
+     * @return string
+     */
+    function bornado_fix_ad_search_mobile_filter_heading_markup($html)
+    {
+        return bornado_patch_ad_search_listing_html($html);
+    }
+}
+
+add_action('template_redirect', function () {
+    if (
+        is_admin()
+        || !bornado_is_ad_search_view()
+        || wp_doing_ajax()
+        || (defined('REST_REQUEST') && REST_REQUEST)
+        || is_feed()
+        || is_robots()
+        || is_trackback()
+        || (function_exists('wp_is_json_request') && wp_is_json_request())
+    ) {
+        return;
+    }
+
+    ob_start('bornado_fix_ad_search_mobile_filter_heading_markup');
+}, 0);
+
 if (!function_exists('bornado_get_ad_search_seo_heading_title')) {
     /**
-     * Resolve the current Ad Search SEO title for use in a semantic H1.
+     * Visible H1 for Ad Search listing pages.
      *
-     * Prefer Rank Math's final frontend title so the heading mirrors the active
-     * SEO title template, then shorten it into a cleaner H1 for listing pages.
+     * Prefer the route-aware listing copy. Fall back to a shortened Rank Math
+     * title only when that copy is unavailable.
      *
      * @return string
      */
     function bornado_get_ad_search_seo_heading_title()
     {
+        if (function_exists('bornado_listing_seo_get_copy')) {
+            $copy = bornado_listing_seo_get_copy();
+            if (!empty($copy['h1']) && is_string($copy['h1'])) {
+                return $copy['h1'];
+            }
+
+            return '';
+        }
+
         $title = '';
 
         if (class_exists('\RankMath\Paper\Paper') && method_exists('\RankMath\Paper\Paper', 'get')) {
@@ -1660,6 +1819,17 @@ add_action('wp_enqueue_scripts', function () {
             get_stylesheet_directory_uri() . '/assets/js/bornado-search-chip-labels.js',
             array('adforest-search-ux'),
             (string) filemtime($search_chip_labels_js),
+            true
+        );
+    }
+
+    $search_toolbar_js = get_stylesheet_directory() . '/assets/js/bornado-search-toolbar.js';
+    if (file_exists($search_toolbar_js)) {
+        wp_enqueue_script(
+            'bornado-search-toolbar',
+            get_stylesheet_directory_uri() . '/assets/js/bornado-search-toolbar.js',
+            array('jquery'),
+            (string) filemtime($search_toolbar_js),
             true
         );
     }
@@ -2531,29 +2701,6 @@ add_action('wp_enqueue_scripts', function () {
         sprintf($js, wp_json_encode($selectors))
     );
 }, 230);
-
-if (!function_exists('bornado_hide_adt_ads_sort_box_everywhere')) {
-    /**
-     * Hide AdForest sort box globally from the child theme layer.
-     */
-    function bornado_hide_adt_ads_sort_box_everywhere()
-    {
-        if (is_admin()) {
-            return;
-        }
-
-        $css = <<<'CSS'
-        .adt-ads-sort-box {
-            display: none !important;
-        }
-        CSS;
-
-        wp_register_style('bornado-hide-adt-ads-sort-box', false, array(), null);
-        wp_enqueue_style('bornado-hide-adt-ads-sort-box');
-        wp_add_inline_style('bornado-hide-adt-ads-sort-box', $css);
-    }
-}
-add_action('wp_enqueue_scripts', 'bornado_hide_adt_ads_sort_box_everywhere', 240);
 
 if (!function_exists('bornado_enqueue_form_a11y_fixes')) {
     /**

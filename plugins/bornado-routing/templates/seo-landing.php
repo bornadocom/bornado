@@ -53,9 +53,16 @@ if ( $search_layout !== 'map' && function_exists( 'adforest_custom_breadcrumbs' 
 	</div>
 </section>
 <?php
-$search_template = trailingslashit( get_template_directory() ) . 'template-parts/layouts/search/search-' . $search_layout . '.php';
-if ( file_exists( $search_template ) ) {
+$search_template_relative = 'template-parts/layouts/search/search-' . $search_layout . '.php';
+$search_template          = locate_template( array( $search_template_relative ), false, false );
+
+if ( $search_template ) {
 	require $search_template;
+} else {
+	$search_template = trailingslashit( get_template_directory() ) . $search_template_relative;
+	if ( file_exists( $search_template ) ) {
+		require $search_template;
+	}
 }
 ?>
 <div class="modal fade" id="cat_modal" tabindex="-1" aria-hidden="true">

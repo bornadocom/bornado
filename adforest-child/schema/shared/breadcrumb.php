@@ -20,6 +20,20 @@ if (!function_exists('bornado_schema_manager_page_uses_shared_breadcrumb')) {
     }
 }
 
+if (!function_exists('bornado_schema_manager_page_owns_breadcrumb_schema')) {
+    /**
+     * Whether the schema module owns BreadcrumbList output for this page type.
+     *
+     * @param string $page_type
+     * @return bool
+     */
+    function bornado_schema_manager_page_owns_breadcrumb_schema($page_type)
+    {
+        return bornado_schema_manager_page_uses_shared_breadcrumb($page_type)
+            || in_array((string) $page_type, array('single_ad', 'geo_guide'), true);
+    }
+}
+
 if (!function_exists('bornado_schema_manager_build_shared_breadcrumb_entity')) {
     /**
      * Build a shared BreadcrumbList entity for schema-managed collection pages.
@@ -159,6 +173,12 @@ if (!function_exists('bornado_schema_manager_should_skip_legacy_breadcrumb_schem
      */
     function bornado_schema_manager_should_skip_legacy_breadcrumb_schema()
     {
-        return bornado_schema_manager_page_uses_shared_breadcrumb(bornado_schema_manager_get_page_type());
+        $page_type = bornado_schema_manager_get_page_type();
+
+        if (function_exists('bornado_schema_manager_page_owns_breadcrumb_schema')) {
+            return bornado_schema_manager_page_owns_breadcrumb_schema($page_type);
+        }
+
+        return bornado_schema_manager_page_uses_shared_breadcrumb($page_type);
     }
 }

@@ -86,6 +86,10 @@ if (!function_exists('bornado_schema_manager_get_page_type')) {
             }
         }
 
+        if (function_exists('bornado_geo_guide_is_template') && bornado_geo_guide_is_template()) {
+            return 'geo_guide';
+        }
+
         if (is_singular('ad_post')) {
             return 'single_ad';
         }
@@ -218,7 +222,7 @@ if (!function_exists('bornado_schema_manager_find_primary_page_entity_key')) {
     function bornado_schema_manager_find_primary_page_entity_key(array $data)
     {
         foreach ($data as $key => $entity) {
-            if (bornado_schema_entity_has_type($entity, array('WebPage', 'CollectionPage', 'SearchResultsPage'))) {
+            if (bornado_schema_entity_has_type($entity, array('WebPage', 'CollectionPage', 'SearchResultsPage', 'ItemPage'))) {
                 return $key;
             }
         }

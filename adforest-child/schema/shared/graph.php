@@ -18,6 +18,8 @@ if (!function_exists('bornado_schema_manager_get_page_handlers')) {
             'category_root_collection' => 'bornado_schema_manager_build_category_root_collection_page_entity',
             'category_country_collection' => 'bornado_schema_manager_build_category_country_collection_page_entity',
             'category_country_city_collection' => 'bornado_schema_manager_build_category_country_city_collection_page_entity',
+            'single_ad'           => 'bornado_schema_manager_build_single_ad_item_page_entity',
+            'geo_guide'           => 'bornado_schema_manager_build_geo_guide_web_page_entity',
         );
 
         return (array) apply_filters('bornado_schema_manager_page_handlers', $handlers);
@@ -59,6 +61,13 @@ if (!function_exists('bornado_schema_manager_get_graph_extenders')) {
             'category_country_city_collection' => array(
                 'bornado_schema_manager_extend_graph_with_shared_breadcrumb',
                 'bornado_schema_manager_extend_category_country_city_with_item_list_graph',
+            ),
+            'single_ad' => array(
+                'bornado_schema_manager_extend_single_ad_with_breadcrumb_graph',
+                'bornado_schema_manager_extend_single_ad_with_main_entity_graph',
+            ),
+            'geo_guide' => array(
+                'bornado_schema_manager_extend_geo_guide_graph',
             ),
         );
 
@@ -189,7 +198,7 @@ if (!function_exists('bornado_schema_manager_enrich_graph')) {
 
             if (
                 $language_tag !== ''
-                && bornado_schema_entity_has_type($entity, array('WebSite', 'WebPage', 'CollectionPage', 'Article', 'BlogPosting', 'ItemPage'))
+                && bornado_schema_entity_has_type($entity, array('WebSite', 'WebPage', 'CollectionPage', 'Article', 'BlogPosting', 'ItemPage', 'FAQPage', 'HowTo'))
                 && empty($entity['inLanguage'])
             ) {
                 $data[$key]['inLanguage'] = $language_tag;
@@ -236,6 +245,17 @@ if (!function_exists('bornado_schema_manager_enrich_graph')) {
             return $data;
         }
 
+        if ($page_type === 'single_ad' && function_exists('bornado_schema_manager_get_single_ad_context')) {
+            $single_ad_context = bornado_schema_manager_get_single_ad_context();
+            if (!empty($single_ad_context) && function_exists('bornado_schema_manager_sanitize_single_ad_rank_math_nodes')) {
+                $data = bornado_schema_manager_sanitize_single_ad_rank_math_nodes($data, $single_ad_context);
+            }
+        }
+
+        if ($page_type === 'geo_guide' && function_exists('bornado_schema_manager_sanitize_geo_guide_rank_math_nodes')) {
+            $data = bornado_schema_manager_sanitize_geo_guide_rank_math_nodes($data);
+        }
+
         $primary_key = bornado_schema_manager_find_primary_page_entity_key($data);
         $entity      = $primary_key !== null && isset($data[$primary_key]) && is_array($data[$primary_key])
             ? $data[$primary_key]
@@ -244,7 +264,13 @@ if (!function_exists('bornado_schema_manager_enrich_graph')) {
         $entity = $handlers[$page_type]($entity, $page_type, $route_context);
 
         if ($primary_key === null) {
-            $data['bornado_collection_page'] = $entity;
+            $fallback_key = 'bornado_collection_page';
+            if ($page_type === 'single_ad') {
+                $fallback_key = 'bornado_item_page';
+            } elseif ($page_type === 'geo_guide') {
+                $fallback_key = 'bornado_web_page';
+            }
+            $data[$fallback_key] = $entity;
         } else {
             $data[$primary_key] = $entity;
         }

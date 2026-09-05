@@ -260,13 +260,16 @@ if (!function_exists('bornado_schema_manager_build_live_ad_search_query_args')) 
         }
 
         $args = array(
-            'post_type'           => 'ad_post',
-            'post_status'         => 'publish',
-            'posts_per_page'      => $posts_per_page,
-            'paged'               => bornado_schema_manager_get_item_list_query_paged(),
-            'order'               => $sort_args['order'],
-            'orderby'             => $sort_args['orderby'],
-            'ignore_sticky_posts' => true,
+            'post_type'              => 'ad_post',
+            'post_status'            => 'publish',
+            'posts_per_page'         => min(10, $posts_per_page),
+            'paged'                  => bornado_schema_manager_get_item_list_query_paged(),
+            'order'                  => $sort_args['order'],
+            'orderby'                => $sort_args['orderby'],
+            'ignore_sticky_posts'    => true,
+            'no_found_rows'          => true,
+            'update_post_meta_cache' => false,
+            'update_post_term_cache' => false,
         );
 
         if (!empty($sort_args['meta_key'])) {
@@ -356,6 +359,10 @@ if (!function_exists('bornado_schema_manager_get_item_list_source_query')) {
         }
 
         if (function_exists('bornado_is_ad_search_view') && bornado_is_ad_search_view()) {
+            if (doing_action('wp_head') || doing_action('rank_math/json_ld') || doing_action('rank_math/head')) {
+                return $wp_query instanceof WP_Query ? $wp_query : null;
+            }
+
             return bornado_schema_manager_get_live_ad_search_query();
         }
 

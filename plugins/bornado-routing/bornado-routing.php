@@ -65,6 +65,9 @@ final class Bornado_SEO_Routing {
 		add_action( 'parse_request', array( __CLASS__, 'capture_route_context' ) );
 		add_filter( 'pre_handle_404', array( __CLASS__, 'filter_pre_handle_404' ), 10, 2 );
 		add_action( 'send_headers', array( __CLASS__, 'maybe_send_debug_headers' ) );
+		// Run before Rank Math redirections (`wp` priority 11) so legacy /ad_cats/{slug}/
+		// paths are not hijacked by orphan attachment redirects to the homepage.
+		add_action( 'wp', array( __CLASS__, 'maybe_redirect_legacy_ad_cats_path' ), 1 );
 		add_action( 'template_redirect', array( __CLASS__, 'maybe_redirect_noncanonical_request' ), 1 );
 		add_action( 'template_redirect', array( __CLASS__, 'inject_internal_search_state' ), 5 );
 		add_filter( 'template_include', array( __CLASS__, 'filter_template_include' ), 99 );
@@ -119,8 +122,12 @@ final class Bornado_SEO_Routing {
 			return $query_vars;
 		}
 
+		if ( ! empty( $query_vars['sitemap'] ) || ! empty( $query_vars['xsl'] ) ) {
+			return $query_vars;
+		}
+
 		$route_path = self::get_current_request_path();
-		if ( '' === $route_path ) {
+		if ( '' === $route_path || self::is_reserved_front_path( $route_path ) ) {
 			return $query_vars;
 		}
 
@@ -220,6 +227,10 @@ final class Bornado_SEO_Routing {
 				'is_seo_route' => true,
 				'is_valid'     => false,
 			);
+			return;
+		}
+
+		if ( self::is_reserved_front_path( $route_path ) ) {
 			return;
 		}
 
@@ -334,6 +345,33 @@ final class Bornado_SEO_Routing {
 		header( 'X-Bornado-Route-City: ' . ( ! empty( self::$context['city_term'] ) && self::$context['city_term'] instanceof WP_Term ? self::$context['city_term']->slug : 'none' ) );
 		header( 'X-Bornado-Route-Category: ' . ( ! empty( self::$context['deepest_term'] ) && self::$context['deepest_term'] instanceof WP_Term ? self::$context['deepest_term']->slug : 'none' ) );
 		header( 'X-Bornado-Landing-Id: ' . ( ! empty( self::$context['landing_post'] ) && self::$context['landing_post'] instanceof WP_Post ? (string) self::$context['landing_post']->ID : 'none' ) );
+	}
+
+	/**
+	 * Redirect legacy /ad_cats/{slug}/ URLs before Rank Math attachment handling.
+	 *
+	 * WordPress can resolve these paths as orphan attachments when a media file
+	 * shares the category slug (e.g. vehicles.svg → /vehicles/). Rank Math then
+	 * 301s them to the homepage. Catch the path from REQUEST_URI instead.
+	 *
+	 * @return void
+	 */
+	public static function maybe_redirect_legacy_ad_cats_path() {
+		if ( is_admin() || wp_doing_ajax() || wp_doing_cron() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+			return;
+		}
+
+		$target = self::build_legacy_ad_cats_path_redirect_target();
+		if ( ! $target ) {
+			return;
+		}
+
+		if ( self::urls_match( self::current_request_url(), $target ) ) {
+			return;
+		}
+
+		wp_safe_redirect( $target, 301 );
+		exit;
 	}
 
 	/**
@@ -788,6 +826,16 @@ final class Bornado_SEO_Routing {
 	 * @return array<string,string>
 	 */
 	public static function filter_document_title_parts( $parts ) {
+		if ( function_exists( 'bornado_listing_seo_get_copy' ) ) {
+			$copy = bornado_listing_seo_get_copy();
+			if ( ! empty( $copy['title'] ) && is_string( $copy['title'] ) ) {
+				$parts['title'] = $copy['title'];
+				unset( $parts['site'], $parts['tagline'] );
+
+				return $parts;
+			}
+		}
+
 		if ( ! self::is_current_seo_route() || empty( self::$context['is_valid'] ) ) {
 			return $parts;
 		}
@@ -1271,6 +1319,91 @@ final class Bornado_SEO_Routing {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Build a semantic redirect target for a legacy /ad_cats/... request path.
+	 *
+	 * @return string
+	 */
+	private static function build_legacy_ad_cats_path_redirect_target() {
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+		$request_uri = is_string( $request_uri ) ? $request_uri : '';
+		if ( $request_uri === '' ) {
+			return '';
+		}
+
+		$path = wp_parse_url( $request_uri, PHP_URL_PATH );
+		$path = is_string( $path ) ? rawurldecode( $path ) : '';
+		$path = trim( $path, '/' );
+		if ( $path === '' ) {
+			return '';
+		}
+
+		$home_path = wp_parse_url( home_url( '/' ), PHP_URL_PATH );
+		$home_path = trim( is_string( $home_path ) ? $home_path : '', '/' );
+		if ( $home_path !== '' ) {
+			$prefix = $home_path . '/';
+			if ( $path === $home_path ) {
+				return '';
+			}
+			if ( strpos( $path, $prefix ) === 0 ) {
+				$path = substr( $path, strlen( $prefix ) );
+			}
+		}
+
+		$path = trim( (string) $path, '/' );
+		if ( $path === '' || strpos( $path, 'ad_cats/' ) !== 0 ) {
+			return '';
+		}
+
+		$remainder = trim( substr( $path, strlen( 'ad_cats/' ) ), '/' );
+		if ( $remainder === '' ) {
+			return '';
+		}
+
+		$segments = array_values( array_filter( explode( '/', $remainder ), 'strlen' ) );
+		if ( empty( $segments ) ) {
+			return '';
+		}
+
+		$paged     = 1;
+		$seg_count = count( $segments );
+		if ( $seg_count >= 3 && 'page' === $segments[ $seg_count - 2 ] && ctype_digit( (string) $segments[ $seg_count - 1 ] ) ) {
+			$paged    = max( 1, (int) $segments[ $seg_count - 1 ] );
+			$segments = array_slice( $segments, 0, -2 );
+		}
+
+		if ( empty( $segments ) ) {
+			return '';
+		}
+
+		$category_terms = self::resolve_category_chain( $segments );
+		if ( false === $category_terms || empty( $category_terms ) ) {
+			return '';
+		}
+
+		$deepest = end( $category_terms );
+		if ( ! ( $deepest instanceof WP_Term ) ) {
+			return '';
+		}
+
+		$query_args = self::get_request_query_args();
+		unset(
+			$query_args['country_id'],
+			$query_args['ad_country'],
+			$query_args['cat_id'],
+			$query_args['ad_cats'],
+			$query_args['paged'],
+			$query_args['page'],
+			$query_args['page-number'],
+			$query_args['ad_cat_sub'],
+			$query_args['ad_cat_sub_sub'],
+			$query_args['ad_cat_sub_sub_sub'],
+			$query_args['ad_cat_sub_sub_sub_sub']
+		);
+
+		return self::build_semantic_url( 0, 0, (int) $deepest->term_id, $paged, $query_args );
 	}
 
 	/**
@@ -2088,6 +2221,41 @@ final class Bornado_SEO_Routing {
 	}
 
 	/**
+	 * Prefixes that belong to other public content, not listing archives.
+	 *
+	 * @param string $route_path Normalized request path.
+	 * @return bool
+	 */
+	private static function is_reserved_front_path( $route_path ) {
+		$path = trim( (string) $route_path, '/' );
+		if ( $path === '' ) {
+			return false;
+		}
+
+		if ( preg_match( '/(?:^|\/)(?:sitemap_index\.xml|(?:[a-z0-9_-]+-)?sitemap[0-9]*\.xml)$/i', $path ) ) {
+			return true;
+		}
+
+		$prefixes = apply_filters( 'bornado_seo_routing_reserved_prefixes', array( 'iranians' ) );
+		if ( ! is_array( $prefixes ) ) {
+			return false;
+		}
+
+		foreach ( $prefixes as $prefix ) {
+			$prefix = sanitize_title( (string) $prefix );
+			if ( $prefix === '' ) {
+				continue;
+			}
+
+			if ( $path === $prefix || strpos( $path, $prefix . '/' ) === 0 ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Resolve country-first routes plus no-country category UX hubs.
 	 *
 	 * @param string $route_path Requested semantic path.
@@ -2111,6 +2279,14 @@ final class Bornado_SEO_Routing {
 	 * @return array<string,mixed>
 	 */
 	private static function do_resolve_semantic_route( $route_path ) {
+		$route_path = self::normalize_route_path( (string) $route_path );
+		if ( self::is_reserved_front_path( $route_path ) ) {
+			return array(
+				'is_seo_route' => false,
+				'is_valid'     => false,
+			);
+		}
+
 		$segments = array_values( array_filter( array_map( 'sanitize_title', explode( '/', trim( (string) $route_path, '/' ) ) ) ) );
 		if ( empty( $segments ) ) {
 			return array(

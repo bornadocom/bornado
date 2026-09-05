@@ -370,6 +370,21 @@ if (!function_exists('bornado_schema_manager_build_category_collection_copy')) {
             : null;
         $site_name     = bornado_schema_manager_get_site_name();
 
+        if (function_exists('bornado_listing_seo_get_copy')) {
+            $listing_copy = bornado_listing_seo_get_copy();
+            if (!empty($listing_copy['h1'])) {
+                $headline = (string) $listing_copy['h1'];
+                $title    = !empty($listing_copy['title']) ? (string) $listing_copy['title'] : $headline;
+                $description = !empty($listing_copy['description']) ? (string) $listing_copy['description'] : '';
+
+                return array(
+                    'name'        => $title,
+                    'headline'    => $headline,
+                    'description' => $description,
+                );
+            }
+        }
+
         if ($category_name === '') {
             return array();
         }
@@ -378,33 +393,24 @@ if (!function_exists('bornado_schema_manager_build_category_collection_copy')) {
         $description = '';
 
         if ($shape === 'category_country_city_collection' && $country_term instanceof WP_Term && $city_term instanceof WP_Term) {
-            $headline = sprintf('آگهی رایگان %s ایرانیان %s', $category_name, $city_term->name);
-            $description = sprintf(
-                'مرجع درج آگهی رایگان %s برای ایرانیان %s، %s؛ مشاهده و درج آگهی‌های مرتبط با %s در برنادو.',
-                $category_name,
-                $city_term->name,
-                $country_term->name,
-                $category_name
-            );
+            $headline = sprintf('آگهی‌های %s در %s', $category_name, $city_term->name);
+            $description = function_exists('bornado_listing_seo_meta_for_term')
+                ? bornado_listing_seo_meta_for_term($category_name . ' در ' . $city_term->name)
+                : '';
         } elseif ($shape === 'category_country_collection' && $country_term instanceof WP_Term) {
-            $headline = sprintf('آگهی رایگان %s ایرانیان %s', $category_name, $country_term->name);
-            $description = sprintf(
-                'مرجع درج آگهی رایگان %s برای ایرانیان %s؛ مشاهده و درج آگهی‌های مرتبط با %s در برنادو.',
-                $category_name,
-                $country_term->name,
-                $category_name
-            );
+            $headline = sprintf('آگهی‌های %s در %s', $category_name, $country_term->name);
+            $description = function_exists('bornado_listing_seo_meta_for_term')
+                ? bornado_listing_seo_meta_for_term($category_name . ' در ' . $country_term->name)
+                : '';
         } else {
-            $headline = sprintf('آگهی رایگان %s ایرانیان خارج کشور', $category_name);
-            $description = sprintf(
-                'مرجع درج آگهی رایگان %s برای ایرانیان خارج کشور؛ مشاهده و درج آگهی‌های مرتبط با %s در برنادو.',
-                $category_name,
-                $category_name
-            );
+            $headline = sprintf('آگهی‌های %s', $category_name);
+            $description = function_exists('bornado_listing_seo_meta_for_term')
+                ? bornado_listing_seo_meta_for_term($category_name)
+                : '';
         }
 
         return array(
-            'name'        => $site_name !== '' ? $headline . ' - ' . $site_name : $headline,
+            'name'        => $site_name !== '' ? $headline . ' | ' . $site_name : $headline,
             'headline'    => $headline,
             'description' => $description,
         );

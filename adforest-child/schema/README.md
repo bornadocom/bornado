@@ -21,11 +21,15 @@ schema/
     category.php
     breadcrumb.php
     item-list.php
+    ad-context.php
+    offer.php
+    dynamic-properties.php
     graph.php
   pages/
     home-collection/
     country-collection/
     city-collection/
+    single-ad/
   shapes/
     category-root/
     category-country/
@@ -126,6 +130,34 @@ Category pages currently ship:
 - shared-query `ItemList`
 - vertical enrichment metadata
 
+### Single ad pages (`ad_post`)
+
+Single ads are owned by `pages/single-ad/` and ship:
+
+- `ItemPage`
+- `BreadcrumbList` (home → country → city → category chain → ad title)
+- vertical main entity:
+  - `items` → `Product`
+  - `vehicles` → `Vehicle`
+  - `property` → `Accommodation` / `House` / `Apartment` (not `RealEstateListing`)
+  - `jobs` → `JobPosting` when minimum employer-job fields exist, otherwise `CreativeWork`
+  - `services` → `Service`
+  - `community` / unknown → `CreativeWork` (not `ClassifiedAd`; many validators reject it)
+- `Offer` only when a concrete numeric/`free` price exists, or for commercial verticals with negotiable/on-call pricing without inventing numbers (not for `JobPosting`)
+  - Product/Vehicle/Service may reference `offers`
+  - Accommodation is linked only via `Offer.itemOffered`
+- `Place` from `ad_country` (+ geo when lat/long are valid)
+- gallery `ImageObject` nodes
+- dynamic template fields:
+  - known slugs via `bornado_schema_manager_single_ad_field_map`
+  - remaining non-empty fields as `additionalProperty` (`PropertyValue`)
+
+Display names in JSON-LD always use live taxonomy term names (for example `کالا و لوازم`), never internal vertical keys.
+
+Single-ad data is read from the post itself (`ad_cats`, `ad_country`, `_adforest_*`, template metas). Archive `route_context` is not required.
+
+Boundary: implement only inside `adforest-child/schema` (plus legacy breadcrumb skip ownership in child). Do not edit the parent `adforest/` theme.
+
 ## Why shape + vertical?
 
 This prevents an explosion of duplicated files.
@@ -187,6 +219,12 @@ When changing schema output:
 2. Register config with `bornado_schema_manager_category_vertical_configs`
 3. Map term IDs and slug aliases
 4. Add labels and keyword set
+5. For single ads, also add `verticals/<key>/single.php` and register the builder through `bornado_schema_manager_single_ad_vertical_builders`
+
+### Map a dynamic ad template field to a formal schema property
+
+Add/override entries with the filter `bornado_schema_manager_single_ad_field_map`.
+Unmapped non-empty fields continue to emit automatically as `additionalProperty`.
 
 ### Add a new shared node
 
